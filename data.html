@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Towers Ing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #1a2a6c;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 1;
+    }
+    header .content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #3498db;
+    }
+    .stat-card h3 {
+      font-size: 2.5rem;
+      color: #1a2a6c;
+      margin-bottom: 5px;
+    }
+    .stat-card p {
+      color: #7f8c8d;
+      font-weight: 500;
+    }
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .section h2 {
+      color: #1a2a6c;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+    }
+    .section h2 i {
+      color: #3498db;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f8f9fa;
+      color: #1a2a6c;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #f1f1f1;
+    }
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .btn-refresh {
+      background: #27ae60;
+      color: white;
+    }
+    .btn-refresh:hover {
+      background: #229954;
+    }
+    .btn-update-groups {
+      background: #e67e22;
+      color: white;
+    }
+    .btn-update-groups:hover {
+      background: #d35400;
+    }
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+      font-size: 0.8rem;
+      padding: 5px 10px;
+    }
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+    .back-home {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 10px 25px;
+      background: #3498db;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .back-home:hover {
+      background: #2980b9;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="content">
+      <h1><i class="fas fa-chart-line"></i> Dashboard de Roles Colaborativos</h1>
+      <p>Visualización, edición y gestión de registros y grupos.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="dashboard-grid" id="stats-container">
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <h3 id="total-estudiantes">0</h3>
+        <p>Total Estudiantes</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-user-tie"></i>
+        <h3 id="coordinadores">0</h3>
+        <p>Coordinadores</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-comments"></i>
+        <h3 id="comunicadores">0</h3>
+        <p>Comunicadores</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-search"></i>
+        <h3 id="investigadores">0</h3>
+        <p>Investigadores</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-chart-bar"></i>
+        <h3 id="analistas">0</h3>
+        <p>Analistas de Datos</p>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn-refresh" id="btn-refresh">🔄 Actualizar Datos</button>
+      <button class="btn-update-groups" id="btn-update-groups">🧩 Actualizar Grupos</button>
+    </div>
+
+    <section class="section">
+      <h2><i class="fas fa-list"></i> Estudiantes Registrados</h2>
+      <div id="tabla-estudiantes">
+        <p style="text-align: center; color: #7f8c8d;">Cargando datos desde Firebase...</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-users-cog"></i> Grupos Formados</h2>
+      <div id="grupos-resultados">
+        <p style="text-align: center; color: #7f8c8d;">Cargando datos desde Firebase...</p>
+      </div>
+    </section>
+
+    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+
+  </main>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importar Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+      authDomain: "tower-ing.firebaseapp.com",
+      databaseURL: "https://tower-ing-default-rtdb.firebaseio.com",
+      projectId: "tower-ing",
+      storageBucket: "tower-ing.firebasestorage.app",
+      messagingSenderId: "440636238988",
+      appId: "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    function cargarDatos() {
+      const estudiantesRef = ref(database, 'estudiantes');
+      onValue(estudiantesRef, (snapshot) => {
+        let estudiantes = [];
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          estudiantes.push({
+            id: childSnapshot.key,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            identificacion: data.identificacion,
+            rolNatural: data.rolNatural,
+            puntajes: data.puntajes,
+            fechaRegistro: data.fechaRegistro
+          });
+        });
+
+        // Actualizar estadísticas
+        const total = estudiantes.length;
+        const coordinadores = estudiantes.filter(e => e.rolNatural === 'coordinador').length;
+        const comunicadores = estudiantes.filter(e => e.rolNatural === 'comunicador').length;
+        const investigadores = estudiantes.filter(e => e.rolNatural === 'investigador').length;
+        const analistas = estudiantes.filter(e => e.rolNatural === 'analista de datos').length;
+
+        document.getElementById('total-estudiantes').textContent = total;
+        document.getElementById('coordinadores').textContent = coordinadores;
+        document.getElementById('comunicadores').textContent = comunicadores;
+        document.getElementById('investigadores').textContent = investigadores;
+        document.getElementById('analistas').textContent = analistas;
+
+        // Mostrar tabla de estudiantes
+        const tablaDiv = document.getElementById('tabla-estudiantes');
+        if (total === 0) {
+          tablaDiv.innerHTML = `<p style="text-align: center; color: #7f8c8d;">No hay estudiantes registrados aún.</p>`;
+          return;
+        }
+
+        let tablaHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Identificación</th>
+                <th>Rol Natural</th>
+                <th>Fecha Registro</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        estudiantes.forEach(est => {
+          tablaHTML += `
+            <tr>
+              <td><strong>${est.id}</strong></td>
+              <td>${est.nombre}</td>
+              <td>${est.apellido}</td>
+              <td>${est.identificacion}</td>
+              <td><span style="color: #2980b9; font-weight: bold;">${est.rolNatural.toUpperCase()}</span></td>
+              <td><small>${est.fechaRegistro}</small></td>
+              <td>
+                <button class="btn-delete" onclick="eliminarEstudiante('${est.id}')">🗑️ Eliminar</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        tablaHTML += `</tbody></table>`;
+        tablaDiv.innerHTML = tablaHTML;
+      }, (error) => {
+        console.error('Error al leer de Firebase:', error);
+        alert('Error al cargar datos. Revisa la consola.');
+      });
+    }
+
+    function eliminarEstudiante(id) {
+      if (!confirm(`¿Estás seguro de eliminar el registro #${id}?`)) return;
+
+      const estudianteRef = ref(database, `estudiantes/${id}`);
+      remove(estudianteRef)
+        .then(() => {
+          alert(`✅ Registro #${id} eliminado.`);
+        })
+        .catch((error) => {
+          console.error('Error al eliminar en Firebase:', error);
+          alert('❌ Error al eliminar.');
+        });
+    }
+
+    function actualizarGrupos() {
+      const estudiantesRef = ref(database, 'estudiantes');
+      onValue(estudiantesRef, (snapshot) => {
+        let estudiantes = [];
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          estudiantes.push({
+            id: childSnapshot.key,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            identificacion: data.identificacion,
+            rolNatural: data.rolNatural,
+            puntajes: data.puntajes,
+            fechaRegistro: data.fechaRegistro
+          });
+        });
+
+        if (estudiantes.length < 4) {
+          alert("Necesitas al menos 4 estudiantes para formar grupos.");
+          return;
+        }
+
+        const roles = ['coordinador', 'comunicador', 'investigador', 'analista de datos'];
+        const totalEstudiantes = estudiantes.length;
+        const estudiantesPorRol = Math.floor(totalEstudiantes / 4);
+        let sobrantes = totalEstudiantes % 4;
+
+        estudiantes.forEach(est => {
+          est.maxPuntaje = est.puntajes[est.rolNatural];
+          const entradas = Object.entries(est.puntajes).sort((a, b) => b[1] - a[1]);
+          est.primerRol = entradas[0][0];
+          est.segundoRol = entradas[1][0];
+          est.tercerRol = entradas[2][0];
+        });
+
+        let asignados = [];
+        let conteoRoles = { coordinador: 0, comunicador: 0, investigador: 0, 'analista de datos': 0 };
+
+        for (let rol of roles) {
+          let candidatos = estudiantes.filter(est => est.rolNatural === rol).sort((a, b) => b.maxPuntaje - a.maxPuntaje);
+          for (let i = 0; i < estudiantesPorRol && candidatos.length > 0; i++) {
+            let est = candidatos.shift();
+            est.rolAsignado = rol;
+            asignados.push(est);
+            conteoRoles[rol]++;
+          }
+        }
+
+        let noAsignados = estudiantes.filter(est => !est.rolAsignado);
+        for (let est of noAsignados) {
+          for (let rol of [est.segundoRol, est.tercerRol, ...roles]) {
+            if (conteoRoles[rol] < estudiantesPorRol + (sobrantes > 0 ? 1 : 0)) {
+              est.rolAsignado = rol;
+              asignados.push(est);
+              conteoRoles[rol]++;
+              if (sobrantes > 0) sobrantes--;
+              break;
+            }
+          }
+        }
+
+        let pool = { coordinador: [], comunicador: [], investigador: [], 'analista de datos': [] };
+        asignados.forEach(est => pool[est.rolAsignado].push(est));
+        const numGrupos = Math.min(...Object.values(pool).map(arr => arr.length));
+        let grupos = [];
+
+        for (let i = 0; i < numGrupos; i++) {
+          grupos.push({
+            numero: i + 1,
+            integrantes: [
+              pool.coordinador[i],
+              pool.comunicador[i],
+              pool.investigador[i],
+              pool['analista de datos'][i]
+            ]
+          });
+        }
+
+        let gruposDiv = document.getElementById('grupos-resultados');
+        let gruposHTML = `<h3>Grupos actualizados el ${new Date().toLocaleString()}</h3>`;
+        grupos.forEach(grupo => {
+          gruposHTML += `
+            <div style="background: #e8f4fc; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #3498db;">
+              <h4>Grupo ${grupo.numero}</h4>
+              <ul>
+                ${grupo.integrantes.map(int => `
+                  <li><strong>${int.nombre} ${int.apellido}</strong> - <span style="color: #2980b9;">${int.rolAsignado.toUpperCase()}</span> (Natural: ${int.rolNatural})</li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        });
+        gruposDiv.innerHTML = gruposHTML;
+      }, { onlyOnce: true });
+    }
+
+    // Cargar al inicio
+    document.addEventListener('DOMContentLoaded', cargarDatos);
+
+    // Eventos
+    document.getElementById('btn-refresh').addEventListener('click', function() {
+      cargarDatos();
+      alert('✅ Datos actualizados desde Firebase.');
+    });
+
+    document.getElementById('btn-update-groups').addEventListener('click', function() {
+      actualizarGrupos();
+      alert('✅ Grupos actualizados.');
+    });
+  </script>
+
+</body>
+</html>
