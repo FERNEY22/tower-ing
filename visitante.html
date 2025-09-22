@@ -45,8 +45,8 @@
   <!-- Firebase SDK -->
   <script type="module">
     // Importar Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
 
     // Configuración de Firebase
     const firebaseConfig = {
@@ -60,8 +60,8 @@
     };
 
     // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
     // Definición de preguntas
     const preguntas = [
@@ -239,15 +239,15 @@
       localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
 
       // Guardar en Firebase
-      const newEstudianteRef = push(ref(database, 'estudiantes'));
-      set(newEstudianteRef, {
+      const newEstudianteRef = database.ref('estudiantes').push();
+      newEstudianteRef.set({
         nombre: nombre,
         apellido: apellido,
         identificacion: identificacion,
         rolNatural: maxRol,
         puntajes: puntajes,
         fechaRegistro: new Date().toISOString()
-      })
+         })
       .then(() => {
         console.log('✅ Guardado en Firebase');
       })
