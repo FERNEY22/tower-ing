@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administrador - Towers Ing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 25px;
+      font-size: 16px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #229954;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: white;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin: 30px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .grupo {
+      background: #e8f4fc;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📊 Panel de Administrador</h1>
+
+  <button id="btn-actualizar">🔄 Actualizar Datos</button>
+
+  <div class="section">
+    <h2>📋 Estudiantes Registrados</h2>
+    <div id="tabla-estudiantes">
+      <p style="text-align: center; color: #7f8c8d;">Cargando datos desde Firebase...</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>👥 Grupos Formados</h2>
+    <div id="grupos-resultados">
+      <p style="text-align: center; color: #7f8c8d;">Cargando datos desde Firebase...</p>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importar Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+      authDomain: "tower-ing.firebaseapp.com",
+      databaseURL: "https://tower-ing-default-rtdb.firebaseio.com",
+      projectId: "tower-ing",
+      storageBucket: "tower-ing.firebasestorage.app",
+      messagingSenderId: "440636238988",
+      appId: "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    function cargarDatos() {
+      const estudiantesRef = ref(database, 'estudiantes');
+      onValue(estudiantesRef, (snapshot) => {
+        let estudiantes = [];
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          estudiantes.push({
+            id: childSnapshot.key,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            identificacion: data.identificacion,
+            rolNatural: data.rolNatural,
+            puntajes: data.puntajes,
+            fechaRegistro: data.fechaRegistro
+          });
+        });
+
+        // Actualizar estadísticas
+        const total = estudiantes.length;
+        const coordinadores = estudiantes.filter(e => e.rolNatural === 'coordinador').length;
+        const comunicadores = estudiantes.filter(e => e.rolNatural === 'comunicador').length;
+        const investigadores = estudiantes.filter(e => e.rolNatural === 'investigador').length;
+        const analistas = estudiantes.filter(e => e.rolNatural === 'analista de datos').length;
+
+        // Mostrar tabla de estudiantes
+        const tablaDiv = document.getElementById('tabla-estudiantes');
+        if (total === 0) {
+          tablaDiv.innerHTML = `<p style="text-align: center; color: #7f8c8d;">No hay estudiantes registrados aún.</p>`;
+          return;
+        }
+
+        let tablaHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Identificación</th>
+                <th>Rol Natural</th>
+                <th>Fecha Registro</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        estudiantes.forEach(est => {
+          tablaHTML += `
+            <tr>
+              <td><strong>${est.id}</strong></td>
+              <td>${est.nombre}</td>
+              <td>${est.apellido}</td>
+              <td>${est.identificacion}</td>
+              <td><span style="color: #2980b9; font-weight: bold;">${est.rolNatural.toUpperCase()}</span></td>
+              <td><small>${est.fechaRegistro}</small></td>
+            </tr>
+          `;
+        });
+
+        tablaHTML += `</tbody></table>`;
+        tablaDiv.innerHTML = tablaHTML;
+
+        // Mostrar grupos si existen
+        const gruposDiv = document.getElementById('grupos-resultados');
+        gruposDiv.innerHTML = `<p style="text-align: center; color: #7f8c8d;">No se han formado grupos aún.</p>`;
+
+        if (estudiantes.length >= 4) {
+          const roles = ['coordinador', 'comunicador', 'investigador', 'analista de datos'];
+          const totalEstudiantes = estudiantes.length;
+          const estudiantesPorRol = Math.floor(totalEstudiantes / 4);
+          let sobrantes = totalEstudiantes % 4;
+
+          estudiantes.forEach(est => {
+            est.maxPuntaje = est.puntajes[est.rolNatural];
+            const entradas = Object.entries(est.puntajes).sort((a, b) => b[1] - a[1]);
+            est.primerRol = entradas[0][0];
+            est.segundoRol = entradas[1][0];
+            est.tercerRol = entradas[2][0];
+          });
+
+          let asignados = [];
+          let conteoRoles = { coordinador: 0, comunicador: 0, investigador: 0, 'analista de datos': 0 };
+
+          for (let rol of roles) {
+            let candidatos = estudiantes.filter(est => est.rolNatural === rol).sort((a, b) => b.maxPuntaje - a.maxPuntaje);
+            for (let i = 0; i < estudiantesPorRol && candidatos.length > 0; i++) {
+              let est = candidatos.shift();
+              est.rolAsignado = rol;
+              asignados.push(est);
+              conteoRoles[rol]++;
+            }
+          }
+
+          let noAsignados = estudiantes.filter(est => !est.rolAsignado);
+          for (let est of noAsignados) {
+            for (let rol of [est.segundoRol, est.tercerRol, ...roles]) {
+              if (conteoRoles[rol] < estudiantesPorRol + (sobrantes > 0 ? 1 : 0)) {
+                est.rolAsignado = rol;
+                asignados.push(est);
+                conteoRoles[rol]++;
+                if (sobrantes > 0) sobrantes--;
+                break;
+              }
+            }
+          }
+
+          let pool = { coordinador: [], comunicador: [], investigador: [], 'analista de datos': [] };
+          asignados.forEach(est => pool[est.rolAsignado].push(est));
+          const numGrupos = Math.min(...Object.values(pool).map(arr => arr.length));
+          let grupos = [];
+
+          for (let i = 0; i < numGrupos; i++) {
+            grupos.push({
+              numero: i + 1,
+              integrantes: [
+                pool.coordinador[i],
+                pool.comunicador[i],
+                pool.investigador[i],
+                pool['analista de datos'][i]
+              ]
+            });
+          }
+
+          let gruposHTML = `<h3>Grupos generados (actualizados automáticamente)</h3>`;
+          grupos.forEach(grupo => {
+            gruposHTML += `
+              <div class="grupo">
+                <h4>Grupo ${grupo.numero}</h4>
+                <ul>
+                  ${grupo.integrantes.map(int => `
+                    <li><strong>${int.nombre} ${int.apellido}</strong> - <span style="color: #2980b9;">${int.rolAsignado.toUpperCase()}</span> (Natural: ${int.rolNatural})</li>
+                  `).join('')}
+                </ul>
+              </div>
+            `;
+          });
+          gruposDiv.innerHTML = gruposHTML;
+        }
+      }, (error) => {
+        console.error('Error al leer de Firebase:', error);
+        alert('Error al cargar datos. Revisa la consola.');
+      });
+    }
+
+    // Cargar al inicio
+    document.addEventListener('DOMContentLoaded', cargarDatos);
+
+    // Actualizar al hacer clic
+    document.getElementById('btn-actualizar').addEventListener('click', function() {
+      cargarDatos();
+      alert('✅ Datos actualizados desde Firebase.');
+    });
+  </script>
+
+</body>
+</html>
