@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formularios - Towers Ing</title>
+  <meta name="description" content="Herramientas interactivas para análisis de roles, evaluación de equipos y formación colaborativa.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1a2a6c;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 1;
+    }
+    header .content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .forms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .form-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: #e74c3c;
+    }
+    .form-card h3 {
+      color: #1a2a6c;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+    .form-card .purpose {
+      font-size: 0.95rem;
+      color: #27ae60;
+      margin-bottom: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .form-card p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+    .btn-access {
+      display: inline-block;
+      padding: 10px 25px;
+      background: #e74c3c;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-access:hover {
+      background: #c0392b;
+    }
+
+    .back-home {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 10px 25px;
+      background: #3498db;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .back-home:hover {
+      background: #2980b9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="content">
+      <h1><i class="fas fa-code"></i> Herramientas Interactivas</h1>
+      <p>Formularios inteligentes para análisis, evaluación y formación de equipos colaborativos.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="forms-grid">
+
+      <!-- Formulario 1 -->
+      <div class="form-card">
+        <h3>Identificador de Rol Colaborativo</h3>
+        <div class="purpose"><i class="fas fa-bullseye"></i> Propósito: Autoconocimiento</div>
+        <p>Descubre tu rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista de Datos. Basado en 20 preguntas contextuales.</p>
+        <a href="../estudiante.html" class="btn-access"><i class="fas fa-external-link-alt"></i> Acceder al Formulario</a>
+      </div>
+
+      <!-- Formulario 2 -->
+      <div class="form-card">
+        <h3>Evaluación de Desempeño Grupal</h3>
+        <div class="purpose"><i class="fas fa-users"></i> Propósito: Retroalimentación</div>
+        <p>Evalúa el desempeño de tus compañeros en proyectos colaborativos. Genera reportes individuales y grupales.</p>
+        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
+      </div>
+
+      <!-- Formulario 3 -->
+      <div class="form-card">
+        <h3>Encuesta de Satisfacción del Equipo</h3>
+        <div class="purpose"><i class="fas fa-smile"></i> Propósito: Mejora continua</div>
+        <p>Mide el clima, comunicación y organización de tu equipo. Recibe sugerencias personalizadas para mejorar.</p>
+        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
+      </div>
+
+      <!-- Formulario 4 -->
+      <div class="form-card">
+        <h3>Formulario de Autoevaluación Técnica</h3>
+        <div class="purpose"><i class="fas fa-chart-bar"></i> Propósito: Diagnóstico</div>
+        <p>Evalúa tus habilidades técnicas en áreas clave: programación, bases de datos, redes, metodologías ágiles.</p>
+        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
+      </div>
+
+      <!-- Formulario 5 -->
+      <div class="form-card">
+        <h3>Registro de Progreso de Proyecto</h3>
+        <div class="purpose"><i class="fas fa-tasks"></i> Propósito: Seguimiento</div>
+        <p>Registra avances semanales de tu proyecto. Visualiza gráficos de progreso y alertas de retraso.</p>
+        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
+      </div>
+
+      <!-- Formulario 6 -->
+      <div class="form-card">
+        <h3>Asignador de Tareas Inteligente</h3>
+        <div class="purpose"><i class="fas fa-brain"></i> Propósito: Optimización</div>
+        <p>Asigna tareas a miembros del equipo según habilidades, carga de trabajo y preferencias. ¡Equilibrio perfecto!</p>
+        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
+      </div>
+
+    </div>
+
+    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

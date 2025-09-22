@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proyectos - Towers Ing</title>
+  <meta name="description" content="Mis desarrollos tecnológicos: formularios, dashboards, herramientas educativas y más.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1a2a6c;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0777ea0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 1;
+    }
+    header .content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .project-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: #3498db;
+    }
+    .project-card h3 {
+      color: #1a2a6c;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+    .project-card .meta {
+      font-size: 0.9rem;
+      color: #e74c3c;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .project-card p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tech-tag {
+      background: #e8f4fc;
+      color: #1a2a6c;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .btn-details {
+      display: inline-block;
+      padding: 8px 20px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+    .btn-details:hover {
+      background: #2980b9;
+    }
+
+    .back-home {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 10px 25px;
+      background: #3498db;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .back-home:hover {
+      background: #2980b9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="content">
+      <h1><i class="fas fa-folder-open"></i> Mis Proyectos</h1>
+      <p>Desarrollos tecnológicos aplicados a la educación, ingeniería y colaboración.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="projects-grid">
+
+      <!-- Proyecto 1 -->
+      <div class="project-card">
+        <h3>Sistema de Identificación de Roles Colaborativos</h3>
+        <div class="meta">Finalizado: Abril 2025</div>
+        <p>Formulario interactivo que analiza el comportamiento del usuario y le asigna un rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">HTML</span>
+          <span class="tech-tag">CSS</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">localStorage</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Proyecto 2 -->
+      <div class="project-card">
+        <h3>Dashboard de Gestión de Equipos</h3>
+        <div class="meta">Finalizado: Abril 2025</div>
+        <p>Panel de control que visualiza en tiempo real los registros de estudiantes, permite eliminarlos, actualizar grupos y ver estadísticas por rol.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Dashboard</span>
+          <span class="tech-tag">Grupos Equilibrados</span>
+          <span class="tech-tag">localStorage</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Proyecto 3 -->
+      <div class="project-card">
+        <h3>Portal Educativo Towers Ing</h3>
+        <div class="meta">En desarrollo</div>
+        <p>Plataforma central que integra formularios, dashboard, blog, CV y proyectos. Diseño moderno enfocado en ingeniería y educación.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">HTML5</span>
+          <span class="tech-tag">CSS3</span>
+          <span class="tech-tag">Responsive</span>
+          <span class="tech-tag">UI/UX</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Proyecto 4 -->
+      <div class="project-card">
+        <h3>Formulario Dinámico con Preguntas Contextuales</h3>
+        <div class="meta">Finalizado: Marzo 2025</div>
+        <p>Formulario adaptativo que cambia preguntas según respuestas anteriores, con lógica de puntuación avanzada y retroalimentación inmediata.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Lógica condicional</span>
+          <span class="tech-tag">Dinámico</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Proyecto 5 -->
+      <div class="project-card">
+        <h3>Exportador de Datos a Excel</h3>
+        <div class="meta">Prototipo</div>
+        <p>Herramienta que permite exportar los registros del dashboard a formato Excel (CSV) para análisis externo.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">CSV</span>
+          <span class="tech-tag">Exportación</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Proyecto 6 -->
+      <div class="project-card">
+        <h3>Algoritmo de Formación de Grupos Equilibrados</h3>
+        <div class="meta">Finalizado: Febrero 2025</div>
+        <p>Motor de asignación que distribuye estudiantes en grupos con equilibrio de habilidades, basado en puntuaciones múltiples y preferencias secundarias.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Algoritmos</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Optimización</span>
+        </div>
+        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+    </div>
+
+    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

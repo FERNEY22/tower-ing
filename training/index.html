@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Capacitación - Towers Ing</title>
+  <meta name="description" content="Cursos y talleres en habilidades colaborativas, ingeniería de equipos y desarrollo personal.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1a2a6c;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 1;
+    }
+    header .content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .training-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .course-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: #9b59b6;
+    }
+    .course-card h3 {
+      color: #1a2a6c;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+    .course-card .meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+    .course-card .meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .course-card p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+    .btn-info {
+      display: inline-block;
+      padding: 10px 25px;
+      background: #9b59b6;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-info:hover {
+      background: #8e44ad;
+    }
+
+    .back-home {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 10px 25px;
+      background: #3498db;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .back-home:hover {
+      background: #2980b9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="content">
+      <h1><i class="fas fa-graduation-cap"></i> Cursos y Talleres</h1>
+      <p>Capacitación en habilidades colaborativas, ingeniería de equipos y desarrollo personal técnico.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="training-grid">
+
+      <!-- Curso 1 -->
+      <div class="course-card">
+        <h3>Identificación y Gestión de Roles en Equipos Técnicos</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 8 horas</span>
+          <span><i class="fas fa-signal"></i> Intermedio</span>
+        </div>
+        <p>Aprende a identificar los roles naturales en tu equipo y cómo gestionarlos para maximizar la productividad y el bienestar grupal.</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+      <!-- Curso 2 -->
+      <div class="course-card">
+        <h3>Formación de Grupos Equilibrados: Metodología y Práctica</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 6 horas</span>
+          <span><i class="fas fa-signal"></i> Básico</span>
+        </div>
+        <p>Domina el algoritmo de formación de grupos equilibrados. Aprende a aplicarlo en clases, proyectos y entornos laborales.</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+      <!-- Curso 3 -->
+      <div class="course-card">
+        <h3>Comunicación Efectiva en Equipos de Ingeniería</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 10 horas</span>
+          <span><i class="fas fa-signal"></i> Intermedio</span>
+        </div>
+        <p>Herramientas y técnicas para mejorar la comunicación, resolver conflictos y fomentar la colaboración en equipos técnicos.</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+      <!-- Curso 4 -->
+      <div class="course-card">
+        <h3>Liderazgo Colaborativo sin Jerarquías</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 12 horas</span>
+          <span><i class="fas fa-signal"></i> Avanzado</span>
+        </div>
+        <p>Desarrolla habilidades de liderazgo horizontal. Aprende a coordinar sin autoridad formal, motivando y facilitando el trabajo colectivo.</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+      <!-- Curso 5 -->
+      <div class="course-card">
+        <h3>Dashboard y Visualización de Datos para Equipos</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 8 horas</span>
+          <span><i class="fas fa-signal"></i> Básico</span>
+        </div>
+        <p>Crea dashboards simples para monitorear el desempeño de tu equipo. Usa HTML, CSS y JavaScript. ¡Sin frameworks!</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+      <!-- Curso 6 -->
+      <div class="course-card">
+        <h3>Autoconocimiento Técnico y Plan de Desarrollo Personal</h3>
+        <div class="meta">
+          <span><i class="fas fa-clock"></i> 6 horas</span>
+          <span><i class="fas fa-signal"></i> Básico</span>
+        </div>
+        <p>Identifica tus fortalezas y áreas de mejora. Construye un plan personalizado de crecimiento profesional en entornos técnicos.</p>
+        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      </div>
+
+    </div>
+
+    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
