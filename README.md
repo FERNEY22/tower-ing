@@ -1,5 +1,5 @@
 # 🚀 Towers Ing
-Portal educativo para la identificación de roles colaborativos en equipos técnicos.
+Portal ingeniería, energía y educación.
 
 ## 📁 Estructura
 - `index.html` → Página principal
@@ -17,3 +17,4 @@ HTML5, CSS3, JavaScript, localStorage.
 
 ## 🌐 Despliegue
 Listo para desplegar en Vercel, Netlify o GitHub Pages.
+
