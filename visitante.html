@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuestionario de Roles Colaborativos</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f9f9f9; }
+    h1 { text-align: center; color: #2c3e50; }
+    .question { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .question p { font-weight: bold; margin-bottom: 10px; }
+    label { display: block; margin: 8px 0; cursor: pointer; }
+    button { display: block; margin: 30px auto; padding: 12px 30px; font-size: 18px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #2980b9; }
+    #resultado { text-align: center; font-size: 24px; font-weight: bold; margin-top: 30px; padding: 20px; background: #e8f4fc; border-radius: 8px; display: none; }
+    .oculto { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>¿Cuál es tu rol ideal en un equipo colaborativo?</h1>
+  <p>Responde las siguientes 20 preguntas eligiendo la opción que más te represente. Al final, descubrirás tu rol natural: Coordinador, Comunicador, Investigador o Analista de Datos.</p>
+
+  <form id="cuestionario">
+    <!-- DATOS PERSONALES -->
+    <div class="question" style="background: #e3f2fd;">
+      <h3>Datos Personales</h3>
+      <label>
+        <strong>Nombre:</strong><br>
+        <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px;">
+      </label>
+      <label>
+        <strong>Apellido:</strong><br>
+        <input type="text" id="apellido" name="apellido" required placeholder="Ej: Pérez" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px;">
+      </label>
+      <label>
+        <strong>Identificación (ID):</strong><br>
+        <input type="text" id="identificacion" name="identificacion" required placeholder="Ej: 123456789" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px;">
+      </label>
+    </div>
+    <!-- PREGUNTAS DINÁMICAS -->
+  </form>
+
+  <div id="resultado" class="oculto"></div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importar Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+      authDomain: "tower-ing.firebaseapp.com",
+      databaseURL: "https://tower-ing-default-rtdb.firebaseio.com",
+      projectId: "tower-ing",
+      storageBucket: "tower-ing.firebasestorage.app",
+      messagingSenderId: "440636238988",
+      appId: "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Definición de preguntas
+    const preguntas = [
+      { texto: "Estás en un grupo de estudio y todos están desorganizados. El examen es en 3 días. ¿Qué haces?", opciones: [
+        { texto: "Hago un cronograma de repaso, asigno temas y verifico avances diarios.", puntos: { coordinador: 3, analista: 1 } },
+        { texto: "Reúno a todos, les explico la importancia de organizarse y trato de motivarlos.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Busco los mejores recursos, resúmenes, videos y artículos para compartir.", puntos: { investigador: 3, comunicador: 1 } },
+        { texto: "Hago un cuadro comparativo de lo que sabemos vs lo que falta y priorizo por dificultad.", puntos: { analista: 3, coordinador: 1 } }
+      ]},
+      { texto: "En una reunión grupal, dos compañeros no se entienden y la discusión se pone tensa. ¿Tu reacción?", opciones: [
+        { texto: "Propongo pausar, escucho a ambos y busco un punto medio para seguir adelante.", puntos: { comunicador: 3, coordinador: 2 } },
+        { texto: "Anoto lo que cada uno dice, identifico el punto de conflicto y propongo soluciones basadas en datos.", puntos: { analista: 3, comunicador: 1 } },
+        { texto: "Prefiero investigar el tema por mi cuenta para aportar algo sólido y evitar discusiones vacías.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Tomo el control de la reunión, pongo reglas y reasigno tareas para evitar más roces.", puntos: { coordinador: 3, comunicador: 1 } }
+      ]},
+      { texto: "Te piden preparar una presentación grupal. ¿Qué parte te gustaría hacer?", opciones: [
+        { texto: "Organizar quién hace qué, los plazos y revisar que todo quede integrado.", puntos: { coordinador: 3 } },
+        { texto: "Diseñar las diapositivas, buscar imágenes y hacer que se vea atractivo y claro.", puntos: { comunicador: 3, analista: 1 } },
+        { texto: "Profundizar en el tema, buscar fuentes confiables y datos poco conocidos.", puntos: { investigador: 3 } },
+        { texto: "Hacer gráficos, tablas y resúmenes numéricos que respalden los argumentos.", puntos: { analista: 3, investigador: 1 } }
+      ]},
+      { texto: "Tienes acceso a una gran cantidad de información sobre un tema, pero está desordenada. ¿Qué haces primero?", opciones: [
+        { texto: "Clasifico la información por temas, fechas o fuentes para tener una estructura clara.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Busco lo más relevante y preparo un resumen fácil de entender para compartir.", puntos: { comunicador: 3, investigador: 1 } },
+        { texto: "Me sumerjo en los detalles, leo todo y trato de encontrar conexiones o datos ocultos.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Asigno partes del material a otras personas para procesarlo en paralelo.", puntos: { coordinador: 3, comunicador: 1 } }
+      ]},
+      { texto: "Tu grupo tiene que tomar una decisión importante, pero hay opiniones divididas. ¿Cómo actúas?", opciones: [
+        { texto: "Propongo votar, pero antes hago un cuadro con pros y contras de cada opción.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Hablo con cada uno en privado para entender sus razones y luego busco consenso.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Busco estudios, casos o datos que apoyen una de las opciones para fundamentar la decisión.", puntos: { investigador: 3, analista: 2 } },
+        { texto: "Decido yo por el bien del grupo, porque alguien tiene que tomar la rienda.", puntos: { coordinador: 3 } }
+      ]},
+      { texto: "Ves que un compañero no entiende un tema clave. ¿Qué haces?", opciones: [
+        { texto: "Le explico con mis palabras, uso ejemplos y me aseguro que capte la idea.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Le busco un video, artículo o recurso que lo explique mejor que yo.", puntos: { investigador: 3, comunicador: 1 } },
+        { texto: "Le ayudo a hacer un mapa mental o esquema para organizar la información.", puntos: { analista: 3, coordinador: 1 } },
+        { texto: "Le propongo que estudiemos juntos y repartamos temas para enseñarnos mutuamente.", puntos: { coordinador: 3, comunicador: 2 } }
+      ]},
+      { texto: "Tienes que elegir entre varias opciones para resolver un problema. ¿Cómo decides?", opciones: [
+        { texto: "Hago una lista de ventajas y desventajas de cada una y elijo la más equilibrada.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Pregunto a otros qué harían y elijo lo que tenga más consenso.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Profundizo en cada opción, busco antecedentes o casos similares antes de decidir.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Elijo la que permita avanzar más rápido y delego tareas para implementarla.", puntos: { coordinador: 3, analista: 1 } }
+      ]},
+      { texto: "En un proyecto grupal, te das cuenta de que hay un error en los datos usados. ¿Qué haces?", opciones: [
+        { texto: "Verifico el origen del error, corrijo los datos y actualizo los informes.", puntos: { analista: 3, investigador: 2 } },
+        { texto: "Reúno al grupo, explico el problema y propongo cómo corregirlo sin culpar a nadie.", puntos: { comunicador: 3, coordinador: 2 } },
+        { texto: "Busco fuentes alternativas o métodos para validar los datos nuevamente.", puntos: { investigador: 3, analista: 2 } },
+        { texto: "Reorganizo las tareas para que alguien verifique los datos y otro corrija las conclusiones.", puntos: { coordinador: 3, analista: 1 } }
+      ]},
+      { texto: "Estás en una discusión y te das cuenta de que tienes poca información. ¿Qué haces?", opciones: [
+        { texto: "Pido un tiempo para investigar mejor antes de seguir opinando.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Pregunto a otros qué saben y trato de construir una opinión con lo que me dicen.", puntos: { comunicador: 3, investigador: 1 } },
+        { texto: "Anoto lo que se ha dicho, identifico lagunas y propongo buscar datos concretos.", puntos: { analista: 3, investigador: 2 } },
+        { texto: "Propongo posponer la decisión hasta tener mejor información y asigno quién la busca.", puntos: { coordinador: 3, investigador: 2 } }
+      ]},
+      { texto: "Te invitan a unirte a un equipo para un concurso. ¿Qué te motiva más a aceptar?", opciones: [
+        { texto: "La oportunidad de liderar y asegurarme de que ganemos por buena organización.", puntos: { coordinador: 3 } },
+        { texto: "La posibilidad de conocer gente nueva y trabajar en equipo con buena química.", puntos: { comunicador: 3 } },
+        { texto: "El reto intelectual, aprender cosas nuevas y profundizar en el tema.", puntos: { investigador: 3 } },
+        { texto: "El análisis de estrategias ganadoras y optimizar nuestro desempeño con datos.", puntos: { analista: 3 } }
+      ]},
+      { texto: "Tu equipo tiene que entregar un informe, pero cada uno hizo su parte de forma diferente. ¿Qué haces?", opciones: [
+        { texto: "Unifico el estilo, formato y estructura para que todo se vea como un solo documento coherente.", puntos: { coordinador: 3, analista: 2 } },
+        { texto: "Reúno a todos, les muestro cómo integrar sus partes y animo a que colaboren en los ajustes.", puntos: { comunicador: 3, coordinador: 2 } },
+        { texto: "Busco ejemplos de informes exitosos y propongo un modelo basado en buenas prácticas.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Hago un análisis de qué partes son más fuertes/débiles y sugiero mejoras basadas en evidencia.", puntos: { analista: 3, coordinador: 1 } }
+      ]},
+      { texto: "Estás en una actividad grupal y notas que un integrante está callado y no participa. ¿Tu reacción?", opciones: [
+        { texto: "En la pausa, le pregunto en privado si está bien o si necesita algo para integrarse.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Le asigno una tarea concreta que sé que puede hacer bien, para motivar su participación.", puntos: { coordinador: 3, comunicador: 1 } },
+        { texto: "Le comparto material extra o datos interesantes del tema, por si quiere aportar desde ahí.", puntos: { investigador: 3, comunicador: 1 } },
+        { texto: "Observo su lenguaje corporal y patrones de participación para entender por qué no habla.", puntos: { analista: 3, comunicador: 1 } }
+      ]},
+      { texto: "Te piden mejorar un proceso que ya existe. ¿Por dónde empiezas?", opciones: [
+        { texto: "Hago un diagrama del proceso actual, identifico cuellos de botella y propongo cambios.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Entrevisto a quienes lo usan para entender sus frustraciones y sugerencias.", puntos: { comunicador: 3, investigador: 2 } },
+        { texto: "Busco cómo lo hacen en otros contextos o empresas y adapto lo mejor.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Armo un plan de implementación, con plazos, responsables y métricas de éxito.", puntos: { coordinador: 3, analista: 2 } }
+      ]},
+      { texto: "En un trabajo en equipo, todos quieren hacer lo mismo y nadie quiere encargarse de lo aburrido. ¿Qué haces?", opciones: [
+        { texto: "Propongo turnos o sorteo, pero con incentivos para quien haga la parte menos deseada.", puntos: { coordinador: 3, comunicador: 2 } },
+        { texto: "Me ofrezco yo a hacerlo, y trato de hacerlo divertido o más llevadero para los demás.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Analizo cuánto tiempo toma cada parte y propongo repartirlo según habilidades, no preferencias.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Busco una manera de automatizar o simplificar la parte aburrida para que sea menos pesada.", puntos: { investigador: 3, analista: 2 } }
+      ]},
+      { texto: "Tienes que presentar una idea compleja a personas que no entienden el tema. ¿Cómo lo haces?", opciones: [
+        { texto: "Uso analogías de la vida diaria y ejemplos visuales para hacerlo comprensible.", puntos: { comunicador: 3, analista: 1 } },
+        { texto: "Preparo una secuencia lógica paso a paso, con apoyos gráficos claros.", puntos: { analista: 3, comunicador: 2 } },
+        { texto: "Busco qué saben ya y construyo a partir de eso, llenando solo los vacíos necesarios.", puntos: { investigador: 3, comunicador: 1 } },
+        { texto: "Asigno a alguien del público como “representante” y ajusto mi explicación según sus preguntas.", puntos: { coordinador: 2, comunicador: 3 } }
+      ]},
+      { texto: "Tu grupo tiene muchos datos, pero no sabe qué hacer con ellos. ¿Qué propones?", opciones: [
+        { texto: "Clasifico los datos por tipo, fuente o relevancia y propongo qué podemos responder con ellos.", puntos: { analista: 3, coordinador: 1 } },
+        { texto: "Hago gráficos o visualizaciones para que todos entiendan patrones o hallazgos clave.", puntos: { analista: 3, comunicador: 2 } },
+        { texto: "Busco métodos o herramientas (como encuestas o software) para sacar más provecho.", puntos: { investigador: 3, analista: 2 } },
+        { texto: "Organizo una sesión para que cada uno analice un segmento y luego integramos hallazgos.", puntos: { coordinador: 3, analista: 1 } }
+      ]},
+      { texto: "Estás en un debate y te das cuenta de que tu argumento no es el mejor. ¿Qué haces?", opciones: [
+        { texto: "Cambio de postura y apoyo el mejor argumento, aunque no sea el mío.", puntos: { analista: 3, comunicador: 1 } },
+        { texto: "Reconozco públicamente que el otro argumento es mejor y felicito a quien lo propuso.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Pido tiempo para investigar más y volver con un argumento más sólido.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Propongo votar o buscar un punto medio que combine lo mejor de ambos argumentos.", puntos: { coordinador: 3, comunicador: 2 } }
+      ]},
+      { texto: "Te piden resolver un problema con poca información y poco tiempo. ¿Cómo actúas?", opciones: [
+        { texto: "Priorizo lo esencial, asigno tareas rápidas y superviso para no desviarme.", puntos: { coordinador: 3, analista: 1 } },
+        { texto: "Pido ayuda a otros, aunque sea para dividir la carga o aportar ideas rápidas.", puntos: { comunicador: 3, coordinador: 1 } },
+        { texto: "Busco atajos: tutoriales, plantillas o casos similares que me den una base rápida.", puntos: { investigador: 3, analista: 1 } },
+        { texto: "Hago supuestos razonables, los documento, y avanzo con base en ellos.", puntos: { analista: 3, coordinador: 1 } }
+      ]},
+      { texto: "Tu equipo logró un buen resultado. ¿Cómo celebras o reconoces el logro?", opciones: [
+        { texto: "Hago un resumen de lo que funcionó, para replicarlo en el futuro.", puntos: { analista: 3, coordinador: 2 } },
+        { texto: "Organizo una reunión o detalle simbólico para agradecer a cada uno según su aporte.", puntos: { comunicador: 3, coordinador: 2 } },
+        { texto: "Busco qué podríamos haber hecho aún mejor, para el próximo reto.", puntos: { investigador: 3, analista: 2 } },
+        { texto: "Documento el proceso y lo comparto con otros equipos como ejemplo.", puntos: { coordinador: 3, comunicador: 1 } }
+      ]},
+      { texto: "¿Qué tipo de tarea te hace perder la noción del tiempo?", opciones: [
+        { texto: "Organizar un evento, planificar cada detalle y ver cómo todo encaja perfecto.", puntos: { coordinador: 3 } },
+        { texto: "Explicar algo complejo de forma simple y ver la cara de entendimiento de los demás.", puntos: { comunicador: 3 } },
+        { texto: "Sumergirte en un tema nuevo, leyendo, viendo videos, conectando ideas.", puntos: { investigador: 3 } },
+        { texto: "Resolver un rompecabezas de datos, encontrar patrones o hacer una visualización clara.", puntos: { analista: 3 } }
+      ]}
+    ];
+
+    // Renderizar preguntas
+    const form = document.getElementById('cuestionario');
+    preguntas.forEach((pregunta, index) => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = `<p>${index + 1}. ${pregunta.texto}</p>`;
+      pregunta.opciones.forEach((opcion, i) => {
+        div.innerHTML += `<label><input type="radio" name="q${index}" value="${i}" required> ${opcion.texto}</label>`;
+      });
+      form.appendChild(div);
+    });
+
+    // Añadir botón de envío
+    const boton = document.createElement('button');
+    boton.type = 'submit';
+    boton.textContent = 'Descubrir mi rol ideal';
+    form.appendChild(boton);
+
+    // Procesar envío
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const identificacion = document.getElementById('identificacion').value.trim();
+
+      if (!nombre || !apellido || !identificacion) {
+        alert("Por favor, completa todos los datos personales.");
+        return;
+      }
+
+      let puntajes = { coordinador: 0, comunicador: 0, investigador: 0, 'analista de datos': 0 };
+
+      preguntas.forEach((pregunta, index) => {
+        const seleccion = document.querySelector(`input[name="q${index}"]:checked`);
+        if (!seleccion) return;
+        const opcion = pregunta.opciones[parseInt(seleccion.value)];
+        for (let rol in opcion.puntos) {
+          if (rol === 'analista') puntajes['analista de datos'] += opcion.puntos[rol];
+          else puntajes[rol] += opcion.puntos[rol];
+        }
+      });
+
+      let maxRol = Object.keys(puntajes).reduce((a, b) => puntajes[a] > puntajes[b] ? a : b);
+      const estudiante = { nombre, apellido, identificacion, rolNatural: maxRol, puntajes };
+
+      // Guardar en localStorage (como antes)
+      let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [];
+      estudiantes.push(estudiante);
+      localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
+
+      // Guardar en Firebase
+      const newEstudianteRef = push(ref(database, 'estudiantes'));
+      set(newEstudianteRef, {
+        nombre: nombre,
+        apellido: apellido,
+        identificacion: identificacion,
+        rolNatural: maxRol,
+        puntajes: puntajes,
+        fechaRegistro: new Date().toISOString()
+      })
+      .then(() => {
+        console.log('✅ Guardado en Firebase');
+      })
+      .catch((error) => {
+        console.error('❌ Error al guardar en Firebase:', error);
+      });
+
+      // Mostrar resultado
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = `
+        <h2>🎉 ¡Hola, <span style="color: #2c3e50">${nombre} ${apellido}</span>!</h2>
+        <h3>Tu rol ideal es: <span style="color: #2980b9">${maxRol.toUpperCase()}</span></h3>
+        <p><strong>Identificación:</strong> ${identificacion}</p>
+        <p><strong>Puntajes por rol:</strong></p>
+        <ul>
+          <li>Coordinador: ${puntajes.coordinador}</li>
+          <li>Comunicador: ${puntajes.comunicador}</li>
+          <li>Investigador: ${puntajes.investigador}</li>
+          <li>Analista de Datos: ${puntajes['analista de datos']}</li>
+        </ul>
+        <p style="margin-top: 20px; font-size: 14px; color: #7f8c8d;">
+          *Guarda este resultado. Tu docente usará estos datos para formar grupos equilibrados.
+        </p>
+      `;
+      resultadoDiv.classList.remove('oculto');
+      alert(`🎉 ¡Hola ${nombre} ${apellido}!\nTu rol ideal es: ${maxRol.toUpperCase()}`);
+    });
+  </script>
+</body>
+</html>
