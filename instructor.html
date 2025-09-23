@@ -84,12 +84,11 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Importar Firebase
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+  <!-- Firebase SDK Compatible -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+  <script>
     // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
@@ -106,8 +105,8 @@
     const database = firebase.database();
 
     function cargarDatos() {
-      const estudiantesRef = ref(database, 'estudiantes');
-      onValue(estudiantesRef, (snapshot) => {
+      const estudiantesRef = database.ref('estudiantes');
+      estudiantesRef.on('value', (snapshot) => {
         let estudiantes = [];
         snapshot.forEach((childSnapshot) => {
           const data = childSnapshot.val();
