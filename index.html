@@ -5,6 +5,13 @@
   <title>Towers Ing - Portal de Ingeniería y Aprendizaje</title>
   <meta name="description" content="Portal educativo para estudiantes e instructores de ingeniería. Formación, proyectos, análisis de roles y más.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+
   <style>
     /* Reset */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -179,9 +186,54 @@
       }
       .btn-instructor:hover {
         background: #d35400;
-}
+      }
+
+    /* auth style */     
+      .auth-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      .auth-tabs button {
+        padding: 8px 16px;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        cursor: pointer;
+      }
+      .auth-tabs button.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .form-group button {
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .form-group button:hover {
+        background: #0056b3;
+      }
+
+
   </style>
 </head>
+
 <body>
 
   <!-- Header -->
@@ -198,7 +250,56 @@
     <!-- Sección de selección de rol -->
     <section>
       
+      
+
+
     </section>
+
+    <!-- Formulario de Login/Register -->
+        <section id="auth-form" style="display: none; padding: 20px; border: 1px solid #ccc; margin-top: 20px;">
+          <h2>Iniciar Sesión o Registrarse</h2>
+
+          <!-- Pestañas para cambiar entre Login y Register -->
+          <div class="auth-tabs">
+            <button id="login-tab" class="active">Iniciar Sesión</button>
+            <button id="register-tab">Registrarse</button>
+          </div>
+
+          <!-- Formulario de Inicio de Sesión -->
+          <form id="login-form" style="margin-top: 20px;">
+            <div class="form-group">
+              <label for="login-email">Correo Electrónico:</label>
+              <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Contraseña:</label>
+              <input type="password" id="login-password" required>
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+          </form>
+
+          <!-- Formulario de Registro -->
+          <form id="register-form" style="margin-top: 20px; display: none;">
+            <div class="form-group">
+              <label for="register-email">Correo Electrónico:</label>
+              <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+              <label for="register-password">Contraseña:</label>
+              <input type="password" id="register-password" required>
+            </div>
+            <div class="form-group">
+              <label for="register-confirm-password">Confirmar Contraseña:</label>
+              <input type="password" id="register-confirm-password" required>
+            </div>
+            <button type="submit">Registrarse</button>
+          </form>
+
+          <div id="auth-message" style="margin-top: 10px; color: red;"></div>
+        </section>
+
+
+
 
     <!-- Navegación a secciones -->
     <section>
@@ -249,6 +350,9 @@
   <footer>
     <p>&copy; 2025 Towers Ing. Todos los derechos reservados. | Diseño inspirado en ingeniería y educación.</p>
   </footer>
+
+
+  <script src="firebase-config.js"></script>
 
 </body>
 </html>
