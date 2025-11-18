@@ -1,12 +1,12 @@
 // Inicializar Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyB...tu_api_key...", // Reemplaza con tu API Key real
+  apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
   authDomain: "tower-ing.firebaseapp.com",
   databaseURL: "https://tower-ing-default-rtdb.firebaseio.com",
   projectId: "tower-ing",
-  storageBucket: "tower-ing.appspot.com",
-  messagingSenderId: "123456789012", // Reemplaza con tu ID real
-  appId: "1:123456789012:web:abcdef123456" // Reemplaza con tu App ID real
+  storageBucket: "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId: "1:440636238988:web:58291c1d59c98f695b1fa9"
 };
 
 firebase.initializeApp(firebaseConfig);
