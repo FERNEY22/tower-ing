@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proyecto Ferinmobiliaria | Towers Ing</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --accent: #e74c3c;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #020306 0%, #764ba2 100%);
+      color: white;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: rgba(44, 62, 80, 0.8);
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px var(--shadow);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px var(--shadow);
+      transition: var(--transition);
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px var(--shadow);
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    .card h3 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--secondary);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      max-width: 80%;
+      box-shadow: 0 5px 15px var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timeline-content.left {
+      margin-right: auto;
+      text-align: right;
+    }
+
+    .timeline-content.right {
+      margin-left: auto;
+      text-align: left;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--secondary);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .timeline-dot.left {
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .timeline-dot.right {
+      right: 50%;
+      transform: translate(50%, -50%);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      min-width: 200px;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .accordion {
+      margin: 1.5rem 0;
+    }
+
+    .accordion-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .accordion-header::after {
+      content: '+';
+      font-weight: bold;
+      transition: var(--transition);
+    }
+
+    .accordion-header.active::after {
+      content: '-';
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding: 0 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .accordion-content.show {
+      max-height: 500px;
+      padding: 1rem 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--secondary);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      margin: 0.5rem 0;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .back-btn {
+      background: var(--primary);
+      margin-top: 2rem;
+      display: block;
+      text-align: center;
+    }
+
+    .back-btn:hover {
+      background: #1a252f;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .section {
+        padding: 1.5rem;
+      }
+      .timeline::before {
+        left: 30px;
+      }
+      .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .timeline-content {
+        max-width: 100%;
+        margin-left: 60px;
+      }
+      .timeline-content.left,
+      .timeline-content.right {
+        text-align: left;
+      }
+      .timeline-dot {
+        left: 20px;
+        transform: translateY(-50%);
+      }
+      .timeline-dot.right {
+        left: 20px;
+      }
+      .stats {
+        flex-direction: column;
+      }
+      .stat-card {
+        min-width: 100%;
+      }
+    }
+
+    /* Animations for sections */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header>
+      <h1>🚀 Proyecto Ferinmobiliaria</h1>
+      <p class="subtitle">Plataforma web inteligente para gestión integral de inmuebles urbanos con geolocalización y asistencia basada en NLP.</p>
+    </header>
+
+    <!-- Resumen -->
+    <section class="section animate-in">
+      <h2>📌 Resumen de la Propuesta</h2>
+      <p>El proyecto propuesto tiene como finalidad diseñar e implementar una plataforma web inteligente orientada a optimizar la gestión integral de inmuebles, mediante herramientas tecnológicas avanzadas que permitan centralizar funciones esenciales como reservas, mantenimiento, publicaciones y asistencia automatizada basada en procesamiento del lenguaje natural (NLP), integrando además funcionalidades de geolocalización.</p>
+      <p>Dirigida principalmente a propietarios, inquilinos y técnicos de mantenimiento, la solución busca mejorar los procesos asociados al arrendamiento urbano, promoviendo mayor transparencia, eficiencia y usabilidad.</p>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">ODS impactados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Módulos principales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Meses de desarrollo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Antecedentes y Justificación -->
+    <section class="section animate-in">
+      <h2>📚 Antecedentes y Justificación</h2>
+      <p>El mercado inmobiliario en entornos urbanos enfrenta desafíos complejos en la gestión de propiedades, que afectan tanto a propietarios como a inquilinos. Diversas investigaciones han abordado estas problemáticas desde perspectivas económicas, tecnológicas y sociales.</p>
+      
+      <div class="card-grid">
+        <div class="card">
+          <h3>🔍 Gutiérrez & López (2020)</h3>
+          <p>Señalan que el rápido crecimiento de proyectos inmobiliarios en ciudades latinoamericanas ha incrementado la demanda de servicios de intermediación, pero persisten deficiencias en transparencia y eficiencia operativa.</p>
+        </div>
+        <div class="card">
+          <h3>📊 Rodríguez et al. (2021)</h3>
+          <p>Destacan que el 40% de los arrendatarios en Colombia han enfrentado incumplimientos contractuales, lo cual refleja una clara necesidad de mecanismos más sólidos de garantía y control.</p>
+        </div>
+        <div class="card">
+          <h3>📈 Cámara Colombiana de la Construcción (2022)</h3>
+          <p>Reporta que el 35% de los propietarios tiene dificultades para mantener sus inmuebles, lo que incrementa los costos operativos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problema de Investigación -->
+    <section class="section animate-in">
+      <h2>❓ Problema de Investigación</h2>
+      <p>Con el paso del tiempo, en una sociedad capitalista caracterizada por la dinámica que trae el crecimiento acelerado de los proyectos inmobiliarios, se presenta una alta demanda en los procesos comerciales asociados con la gestión de los inmuebles.</p>
+      <p>Esta situación ocasiona que, en las grandes ciudades como Bogotá, se presenten escenarios de oportunidades y retos para todos los actores del negocio: propietarios, inquilinos e intermediarios.</p>
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">¿Cómo puede diseñarse e implementarse una plataforma web inteligente...?</div>
+          <div class="accordion-content">
+            <p>¿Cómo puede diseñarse e implementarse una plataforma web inteligente que optimice la gestión integral de inmuebles urbanos, integrando funciones como reservas, mantenimiento, publicaciones, asistencia automatizada basada en procesamiento del lenguaje natural (NLP) y geolocalización, con el fin de mejorar la transparencia, eficiencia y experiencia de los actores involucrados —propietarios, inquilinos y técnicos de mantenimiento— en el contexto del arrendamiento urbano en ciudades como Bogotá?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Objetivos -->
+<section class="section animate-in">
+  <h2>🎯 Objetivos</h2>
+  
+  <!-- Fila 1: Objetivo General -->
+  <div class="card-grid" style="grid-template-columns: 1fr;">
+    <div class="card">
+      <h3>✅ Objetivo General</h3>
+      <p>Desarrollar una plataforma integrada para la gestión de productos inmobiliarios que permita la centralización y optimización de las operaciones entre inquilinos, propietarios y mantenimiento.</p>
+    </div>
+  </div>
+
+  <!-- Fila 2: Objetivos Específicos -->
+  <div class="card-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem;">
+    <div class="card">
+      <h3>🔍 Objetivo Específico 1</h3>
+      <p>Recolectar información relevante sobre las necesidades y expectativas de los actores involucrados (propietarios, inquilinos y técnicos de mantenimiento) en la gestión de inmuebles urbanos.</p>
+    </div>
+    <div class="card">
+      <h3>⚙️ Objetivo Específico 2</h3>
+      <p>Análisis de los procesos actuales de gestión inmobiliaria, reservas, pagos, comunicación y mantenimiento, con el propósito de diseñar flujos de trabajo optimizados e integrados.</p>
+    </div>
+    <div class="card">
+      <h3>💻 Objetivo Específico 3</h3>
+      <p>Desarrollar un prototipo funcional de plataforma web y móvil que incluya módulos para la gestión de propiedades, reservas y pagos, comunicación automatizada, y mantenimiento.</p>
+    </div>
+  </div>
+</section>
+
+    <!-- Metodología -->
+    <section class="section animate-in">
+      <h2>🧪 Metodología</h2>
+      <p>El proyecto adopta un enfoque mixto (cualitativo-cuantitativo) para garantizar una comprensión integral del problema y validar la solución propuesta.</p>
+      <p>Se desarrollará bajo un diseño experimental iterativo, basado en la metodología ágil Scrum, estructurado en 4 fases generales que abarcan 6 meses (24 semanas).</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot left"></div>
+          <div class="timeline-content left">
+            <h3>Fase 1: Investigación y Análisis de Requerimientos</h3>
+            <p>Recopilación de datos cualitativos y cuantitativos para definir las necesidades de usuarios y establecer requisitos funcionales y no funcionales.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot right"></div>
+          <div class="timeline-content right">
+            <h3>Fase 2: Diseño de Flujos Optimizados y Prototipado</h3>
+            <p>Diseño de arquitectura técnica, creación de prototipos de UI/UX en Figma, talleres con usuarios y optimización de flujos.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot left"></div>
+          <div class="timeline-content left">
+            <h3>Fase 3: Desarrollo del Prototipo Funcional</h3>
+            <p>Implementación de reservas y pagos, desarrollo de chatbot NLP, pruebas A/B, módulo de mantenimiento y pruebas de seguridad.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot right"></div>
+          <div class="timeline-content right">
+            <h3>Fase 4: Validación y Cierre</h3>
+            <p>Pilotaje con 20 usuarios reales, análisis de impacto, elaboración de informe final RAI y preparación de ponencia académica.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impacto y Productos -->
+    <section class="section animate-in">
+      <h2>💡 Impacto y Productos Esperados</h2>
+      <p>El proyecto fortalecerá las líneas de investigación en ingeniería de software y soluciones tecnológicas para sectores económicos clave, contribuyendo así al mercado inmobiliario colombiano al ofrecer una herramienta digital que optimiza la gestión de propiedades, reduce conflictos entre actores y mejora la transparencia en transacciones.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>📄 Documento Informe RAI</h3>
+          <p>Reporte detallado que registrará el desarrollo técnico del proyecto, incluyendo metodologías aplicadas, resultados de pruebas y análisis de impacto.</p>
+        </div>
+        <div class="card">
+          <h3>🌐 Prototipo Funcional</h3>
+          <p>Plataforma web/móvil con módulos integrados para la gestión de propiedades, reservas, pagos y mantenimiento, probada y optimizada con usuarios reales.</p>
+        </div>
+        <div class="card">
+          <h3>🎤 Ponencia Académica</h3>
+          <p>Presentación de los resultados clave, innovaciones tecnológicas implementadas y lecciones aprendidas en eventos especializados.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Botón de regreso -->
+    <a href="../index.html" class="btn back-btn">
+      ← Volver al Blog Principal
+    </a>
+
+    <div class="footer">
+      <p>© 2025 Towers Ing | autor Arnold Ferney Torres Ome | Proyecto Semillero de Investigación - Ingeniería de Software</p>
+    </div>
+  </div>
+
+  <script>
+    // Animación al hacer scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.section');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+
+      // Acordion functionality
+      const accordionHeaders = document.querySelectorAll('.accordion-header');
+      accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+          const content = header.nextElementSibling;
+          const isActive = header.classList.contains('active');
+          
+          // Close all
+          document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+          document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('show'));
+          
+          // Open current
+          if (!isActive) {
+            header.classList.add('active');
+            content.classList.add('show');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

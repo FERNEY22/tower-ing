@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marco Teórico - Ferinmobiliaria | Towers Ing</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #4a5053;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --accent: #e74c3c;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: rgba(44, 62, 80, 0.8);
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px var(--shadow);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px var(--shadow);
+      transition: var(--transition);
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px var(--shadow);
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      color: #ffffff; /* Blanco puro para mejor contraste */
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    .card h3 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--secondary);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      max-width: 80%;
+      box-shadow: 0 5px 15px var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timeline-content.left {
+      margin-right: auto;
+      text-align: right;
+    }
+
+    .timeline-content.right {
+      margin-left: auto;
+      text-align: left;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--secondary);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .timeline-dot.left {
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .timeline-dot.right {
+      right: 50%;
+      transform: translate(50%, -50%);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      min-width: 200px;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .accordion {
+      margin: 1.5rem 0;
+    }
+
+    .accordion-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .accordion-header::after {
+      content: '+';
+      font-weight: bold;
+      transition: var(--transition);
+    }
+
+    .accordion-header.active::after {
+      content: '-';
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding: 0 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .accordion-content.show {
+      max-height: 500px;
+      padding: 1rem 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--secondary);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      margin: 0.5rem 0;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .back-btn {
+      background: var(--primary);
+      margin-top: 2rem;
+      display: block;
+      text-align: center;
+    }
+
+    .back-btn:hover {
+      background: #1a252f;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .section {
+        padding: 1.5rem;
+      }
+      .timeline::before {
+        left: 30px;
+      }
+      .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .timeline-content {
+        max-width: 100%;
+        margin-left: 60px;
+      }
+      .timeline-content.left,
+      .timeline-content.right {
+        text-align: left;
+      }
+      .timeline-dot {
+        left: 20px;
+        transform: translateY(-50%);
+      }
+      .timeline-dot.right {
+        left: 20px;
+      }
+      .stats {
+        flex-direction: column;
+      }
+      .stat-card {
+        min-width: 100%;
+      }
+    }
+
+    /* Animations for sections */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Image container for diagrams */
+    .diagram-container {
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .diagram-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .diagram-container img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Quiz section */
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .quiz-question {
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .quiz-options {
+      margin: 1rem 0;
+    }
+
+    .quiz-option {
+      display: block;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .quiz-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-feedback {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .quiz-feedback.correct {
+      background: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+    }
+
+    .quiz-feedback.incorrect {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+
+    <!-- 1. Introducción visual y motivacional -->
+    <section id="introduccion" class="section animate-in">
+      <h2>🚀 Introducción</h2>
+      <p><strong>¿Alguna vez te has preguntado cómo podría ser la gestión de inmuebles si fuera tan sencilla como reservar un hotel en línea?</strong></p>
+      <p>Imagina una plataforma donde propietarios, inquilinos y técnicos de mantenimiento trabajen en armonía, sin conflictos, con transparencia total y asistencia automatizada las 24 horas.</p>
+      <p>Este es el objetivo de nuestro proyecto: diseñar e implementar una <strong>plataforma web inteligente para la gestión integral de inmuebles urbanos</strong>, integrando geolocalización, asistencia basada en NLP y módulos de reservas, pagos y mantenimiento.</p>
+
+      <!-- Aquí puedes insertar un video o animación introductoria -->
+      <!-- Ejemplo: <video controls width="100%" style="border-radius: 10px; margin: 1rem 0;">
+        <source src="intro-video.mp4" type="video/mp4">
+        Tu navegador no soporta videos.
+      </video> -->
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">ODS impactados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Módulos principales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Meses de desarrollo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Conceptos clave -->
+    <section id="conceptos-clave" class="section animate-in">
+      <h2>📚 Conceptos Clave</h2>
+      <p>Para entender nuestra propuesta, primero debemos definir los conceptos fundamentales que la sustentan.</p>
+
+      <!-- Bloque 1: Plataforma Web Inteligente -->
+      <div class="card">
+        <h3>🔹 Plataforma Web Inteligente</h3>
+        <p>Una plataforma web inteligente es un sistema digital que utiliza tecnologías avanzadas (como IA, NLP y geolocalización) para ofrecer servicios personalizados y automatizados a sus usuarios.</p>
+        <p><span class="tooltip">¿Qué significa "inteligente"?<span class="tooltiptext">Se refiere a la capacidad de aprender, adaptarse y tomar decisiones basadas en datos, sin intervención humana constante.</span></span></p>
+      </div>
+
+      <!-- Bloque 2: Procesamiento del Lenguaje Natural (NLP) -->
+      <div class="card">
+        <h3>🔹 Procesamiento del Lenguaje Natural (NLP)</h3>
+        <p>El NLP es una rama de la inteligencia artificial que permite a las computadoras comprender, interpretar y generar lenguaje humano.</p>
+        <p>En nuestro proyecto, el NLP se utilizará para crear un chatbot que responda consultas de usuarios sobre reservas, mantenimiento y condiciones de los inmuebles.</p>
+      </div>
+
+      <!-- Bloque 3: Geolocalización -->
+      <div class="card">
+        <h3>🔹 Geolocalización</h3>
+        <p>La geolocalización es la tecnología que permite determinar la ubicación física de un dispositivo o usuario mediante coordenadas GPS o redes Wi-Fi.</p>
+        <p>En Ferinmobiliaria, se usará para mostrar mapas interactivos de inmuebles disponibles y para optimizar rutas de mantenimiento.</p>
+      </div>
+
+      <!-- Aquí puedes insertar un diagrama explicativo -->
+      <!-- Ejemplo: <div class="diagram-container">
+        <img src="diagrama-conceptos.png" alt="Diagrama de conceptos clave">
+      </div> -->
+    </section>
+
+    <!-- 3. Evolución histórica o contexto disciplinar -->
+<!-- Evolución histórica o contexto disciplinar -->
+<section id="evolucion-historica" class="section animate-in">
+  <h2>⏳ Evolución Histórica y Contexto Disciplinar</h2>
+  <p>La gestión inmobiliaria ha evolucionado junto con la tecnología, las políticas urbanas y las necesidades sociales. A continuación, una línea de tiempo de hitos clave:</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>1980s–1990s: Nacimiento del software inmobiliario</h3>
+        <p>Con la aparición de bases de datos y computadoras personales, surgen las primeras herramientas digitales para valuación y gestión de carteras. El software <em>Argus</em> se consolida como referencia en análisis de inversiones (Girya et al., 2021; Lizam, 2019).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>1990s–2000s: Democratización del acceso a datos</h3>
+        <p>Lanzamiento de Zillow (2006) y Rightmove (2000) permite a compradores e inquilinos explorar precios y ubicaciones sin intermediarios, transformando la transparencia del mercado (Lizam, 2019).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2005–2011: Auge de la economía colaborativa</h3>
+        <p>Airbnb revoluciona el alquiler corto. En 2011, <em>TIME</em> lo nombra una de las “10 ideas que cambiarán el mundo”, marcando un giro hacia el acceso sobre la propiedad (Alexandridis et al., 2020; Shaw, 2018).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2013–2015: Geolocalización en marketplaces</h3>
+        <p>Martínez et al. (2015) demuestran que la integración de la API de Google Maps y Street View en portales inmobiliarios permite a los usuarios evaluar el entorno de un inmueble sin visitarlo físicamente.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2016–2019: Regulación urbana y gentrificación</h3>
+        <p>Ciudades como Barcelona, París y Bogotá comienzan a regular alquileres cortos ante su impacto en vivienda asequible. El 35% de propietarios en Colombia reporta dificultades en mantenimiento (Cámara Colombiana de la Construcción, 2022).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2016–2019: NLP en gestión de mantenimiento</h3>
+        <p>Bouabdallaoui et al. (2020) demuestran que las órdenes de trabajo en edificios pueden clasificarse automáticamente con 78% de precisión usando NLP, sentando las bases para asistentes inteligentes.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2017: Auge global de PropTech</h3>
+        <p>Se invierten récord de <strong>$12.1 mil millones</strong> en PropTech. Empresas como VTS, LandInsight y FixFlo transforman la gestión de portafolios, mantenimiento y reservas (Shaw, 2018; Lizam, 2019).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2018–2020: Planificación situacional</h3>
+        <p>Bredikhin et al. (2020) proponen un modelo tecnológico para la gestión inmobiliaria territorial basado en la planificación situacional, que responde a “nodos de tensión” mediante eficiencia, sostenibilidad, regulación y rentabilidad.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2019: CAFM y gestión híbrida</h3>
+        <p>Girya et al. (2021) identifican que la gestión inmobiliaria en Rusia adopta sistemas CAFM (Computer-Aided Facility Management) que integran hardware y software para monitoreo remoto, seguridad y eficiencia energética.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2020: Post-pandemia y transformación digital</h3>
+        <p>La crisis sanitaria acelera la adopción de arquitecturas de microservicios, PWAs y APIs. Wang & Wang (2024) diseñan plataformas integradas de reservas, pagos y geolocalización con enfoque en usabilidad y autenticación segura.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2020–2022: Mantenimiento inteligente y DIK</h3>
+        <p>Spinola et al. (2022) destacan el uso de la jerarquía Dato-Información-Conocimiento (DIK) para transformar sensores, registros de mantenimiento y conocimiento experto en decisiones automatizadas predictivas.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2021: NLP como Servicio (NLP-PaaS)</h3>
+        <p>Pais et al. (2022) describen la consolidación de plataformas NLP en la nube (como Amazon Comprehend, Google NLP, Azure) que ofrecen análisis de sentimiento, extracción de entidades y resumen mediante APIs escalables y seguras.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2022: Búsqueda visual de propiedades</h3>
+        <p>Kottmyer et al. (2022) lanzan <em>Roomsemble</em>, una PWA que permite encontrar inmuebles subiendo una foto. Usa CBIR y redes neuronales (CNN + Triplet Loss) para recomendar propiedades por estilo estético.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2022: Gestión inteligente de inmuebles (IREM)</h3>
+        <p>Grabovyy et al. (2023) definen la IREM como un enfoque que integra las “Big Nine” tecnologías (IA, IoT, drones, RV/RA, etc.) para ofrecer información completa al usuario y automatizar la valoración mediante redes neuronales.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2022: IPMI para monitoreo de hardware</h3>
+        <p>Wung (2009) describe la Interfaz de Gestión Inteligente de Plataforma (IPMI), un estándar para monitorear variables ambientales (temperatura, voltaje) en servidores. Este modelo podría adaptarse para edificios inteligentes y sistemas de mantenimiento predictivo.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2022–2023: Marco RESTAM</h3>
+        <p>Naz et al. (2022) proponen el modelo RESTAM (Real Estate Stakeholders Technology Acceptance Model) para guiar la implementación de IA, IoT y blockchain en gestión inmobiliaria, priorizando usabilidad, seguridad y sostenibilidad.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2023: Asistentes con RAG y LLMs</h3>
+        <p>Ali et al. (2024) demuestran que los modelos de lenguaje (como GPT) combinados con recuperación aumentada (RAG) permiten generar revisiones automatizadas, asistencia 24/7 y recomendaciones personalizadas en tiempo real.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>2024: Plataformas integrales como Ferinmobiliaria</h3>
+        <p>El estado del arte exige soluciones unificadas que integren reservas, pagos, mantenimiento, geolocalización y NLP, respondiendo a la necesidad de transparencia, eficiencia y usabilidad (Wang & Wang, 2024; tu propuesta).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot left"></div>
+      <div class="timeline-content left">
+        <h3>2024: Un campo aún incipiente</h3>
+        <p>Estudios recientes confirman que la transformación digital en gestión patrimonial sigue siendo emergente, con alto potencial para innovación, especialmente en mercados como el colombiano (Cahya & Ramadhan, 2022).</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot right"></div>
+      <div class="timeline-content right">
+        <h3>Futuro: Inteligencia distribuida y soberanía de datos</h3>
+        <p>La evolución apunta a sistemas donde el conocimiento se genera localmente (edge computing), los datos son propiedad del usuario y las decisiones se toman con modelos híbridos (IA + experto humano) en entornos seguros y éticos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- 4. Fundamentos teóricos -->
+    <section id="fundamentos-teoricos" class="section animate-in">
+      <h2>🧠 Fundamentos Teóricos</h2>
+      <p>Esta sección presenta la columna vertebral teórica de nuestro proyecto, integrando citas académicas en formato APA.</p>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">🔍 Enfoque Metodológico Mixto</div>
+          <div class="accordion-content">
+            <p>El proyecto adopta un enfoque mixto (cualitativo-cuantitativo) para garantizar una comprensión integral del problema y validar la solución propuesta. Según Hernández et al. (2016), este método permite integrar datos numéricos con percepciones cualitativas, facilitando un análisis más robusto y multidimensional. La combinación de ambas metodologías fortalece la validez de los hallazgos, ya que los datos cuantitativos proporcionan generalización y precisión, mientras que los cualitativos aportan profundidad y contexto (Creswell & Creswell, 2018).</p>
+            <p>Además, Johnson y Onwuegbuzie (2004) destacan que el enfoque mixto supera las limitaciones de los métodos exclusivamente cualitativos o cuantitativos, permitiendo una triangulación de datos que enriquece la interpretación de los resultados. Esta perspectiva es respaldada por Flick (2018), quien argumenta que la integración de múltiples fuentes de evidencia incrementa la confiabilidad del estudio.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">🧪 Diseño Experimental Iterativo (Scrum)</div>
+          <div class="accordion-content">
+            <p>El proyecto se desarrollará bajo un diseño experimental iterativo, basado en la metodología ágil Scrum, estructurado en 4 fases generales que abarcan 6 meses (24 semanas). Cada fase incluye tareas semanales específicas, alineadas con los objetivos del proyecto y el enfoque mixto (cualitativo-cuantitativo).</p>
+            <p>Según Schwaber y Sutherland (2020), Scrum es un marco de trabajo que permite a los equipos entregar valor de forma incremental y adaptativa, ideal para proyectos de software con requisitos cambiantes.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">🌐 Impacto en los ODS</div>
+          <div class="accordion-content">
+            <p>El proyecto se articula con cuatro Objetivos de Desarrollo Sostenible (ODS), contribuyendo de manera integral al progreso social, económico y ambiental. En primer lugar, se alinea con el ODS 9: Industria, innovación e infraestructura mediante la implementación de tecnologías avanzadas como geolocalización, inteligencia artificial (GPT) y sistemas de gestión digital, lo que optimiza el acceso a la información y moderniza procesos clave. Asimismo, impulsa el ODS 11: Ciudades y comunidades sostenibles al facilitar la participación de los stakeholders del sector inmobiliario, promoviendo un ecosistema urbano más eficiente e inclusivo. Además, bajo el marco del ODS 12: Producción y consumo responsables, incorpora principios de economía circular en las actividades de mantenimiento, reduciendo el impacto ambiental. Por último, fortalece el ODS 4: Educación de calidad, ya que no solo fomenta el aprendizaje sobre aplicaciones de IA en la gestión inmobiliaria (mercadeo, reservas y mantenimiento), sino que también incluye la transferencia de este conocimiento a otros actores, garantizando un enfoque colaborativo y sostenible.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Relación con tu proyecto -->
+    <section id="relacion-proyecto" class="section animate-in">
+      <h2>🔗 Relación con el Proyecto Ferinmobiliaria</h2>
+      <p>Los fundamentos teóricos anteriores no son solo conceptos abstractos; son la base sobre la que construimos nuestra plataforma.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>🎯 Objetivo General</h3>
+          <p>Desarrollar una plataforma integrada para la gestión de productos inmobiliarios que permita la centralización y optimización de las operaciones entre inquilinos, propietarios y mantenimiento.</p>
+        </div>
+        <div class="card">
+          <h3>🔍 Objetivo Específico 1</h3>
+          <p>Recolectar información relevante sobre las necesidades y expectativas de los actores involucrados (propietarios, inquilinos y técnicos de mantenimiento) en la gestión de inmuebles urbanos.</p>
+        </div>
+        <div class="card">
+          <h3>⚙️ Objetivo Específico 2</h3>
+          <p>Análisis de los procesos actuales de gestión inmobiliaria, reservas, pagos, comunicación y mantenimiento, con el propósito de diseñar flujos de trabajo optimizados e integrados.</p>
+        </div>
+        <div class="card">
+          <h3>💻 Objetivo Específico 3</h3>
+          <p>Desarrollar un prototipo funcional de plataforma web y móvil que incluya módulos para la gestión de propiedades, reservas y pagos, comunicación automatizada, y mantenimiento.</p>
+        </div>
+      </div>
+
+      <!-- Aquí puedes insertar un diagrama de flujo o arquitectura -->
+      <!-- Ejemplo: <div class="diagram-container">
+        <img src="diagrama-arquitectura.png" alt="Diagrama de arquitectura de la plataforma">
+      </div> -->
+    </section>
+
+    <!-- 6. Recursos interactivos complementarios -->
+    <section id="recursos-interactivos" class="section animate-in">
+      <h2>🎮 Recursos Interactivos Complementarios</h2>
+      <p>Para reforzar tu aprendizaje, aquí tienes algunos recursos interactivos.</p>
+
+      <!-- Mini quiz -->
+      <div class="quiz-container">
+        <h3>📝 Mini Quiz: ¿Cuánto sabes sobre Ferinmobiliaria?</h3>
+        <div class="quiz-question">1. ¿Cuál es el enfoque metodológico del proyecto?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, 'correct')">A. Solo cualitativo</div>
+          <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">B. Solo cuantitativo</div>
+          <div class="quiz-option" onclick="checkAnswer(this, 'correct')">C. Mixto (cualitativo-cuantitativo)</div>
+          <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">D. Experimental puro</div>
+        </div>
+        <div class="quiz-feedback correct" id="feedback1">¡Correcto! El proyecto adopta un enfoque mixto para garantizar una comprensión integral.</div>
+        <div class="quiz-feedback incorrect" id="feedback2">Incorrecto. El proyecto adopta un enfoque mixto (cualitativo-cuantitativo).</div>
+      </div>
+
+      <!-- Glosario animado -->
+      <!-- Glosario animado -->
+<!-- Glosario animado -->
+<div class="accordion">
+  <div class="accordion-item">
+    <div class="accordion-header">📖 Glosario de Términos</div>
+    <div class="accordion-content" style="max-height: none; overflow: visible;">
+      <p><strong>Ontología de geolocalización:</strong> Modelo de conocimiento representado como un grafo etiquetado, utilizado para descubrir patrones latentes a partir de datos no estructurados y multimodales relacionados con ubicaciones geográficas.</p>
+      <p><strong>Descubrimiento de hoteles fantasmas:</strong> Proceso de identificar propiedades en plataformas como Airbnb que, aunque se presentan como habitaciones individuales, son en realidad partes de una propiedad más grande gestionada por un solo propietario, simulando múltiples alojamientos.</p>
+      <p><strong>Clasificación de órdenes de trabajo:</strong> Uso de modelos de procesamiento del lenguaje natural (NLP) para categorizar solicitudes de mantenimiento según su naturaleza (por ejemplo, electricidad, fontanería, iluminación).</p>
+      <p><strong>Sistemas CMMS (Computerized Maintenance Management Systems):</strong> Plataformas digitales diseñadas para gestionar, programar y registrar actividades de mantenimiento en edificios e instalaciones.</p>
+      <p><strong>Búsqueda visual de propiedades:</strong> Método que permite a los usuarios encontrar inmuebles subiendo una foto o describiendo estéticamente lo que buscan, utilizando técnicas de recuperación basada en contenido (CBIR).</p>
+      <p><strong>Recuperación basada en contenido de imágenes (CBIR):</strong> Técnica que compara características visuales de una imagen de consulta con un conjunto de imágenes para encontrar las más similares.</p>
+      <p><strong>Generación aumentada por recuperación (RAG):</strong> Enfoque que combina la generación de texto con la recuperación de información relevante de una base de conocimientos externa, mejorando la precisión y relevancia de las respuestas.</p>
+      <p><strong>Resumen extremo científico (SciTLDR):</strong> Tipo de resumen muy conciso (TL;DR) generado automáticamente para artículos científicos, ideal para revisiones literarias rápidas.</p>
+      <p><strong>Gestión de instalaciones (FM):</strong> Proceso integrado para mantener y mejorar el rendimiento de los edificios durante su ciclo de vida, incluyendo operaciones, mantenimiento y servicios.</p>
+      <p><strong>Mantenimiento predictivo en inmuebles:</strong> Estrategia que utiliza datos históricos y modelos de aprendizaje automático para predecir fallos en equipos o sistemas antes de que ocurran, optimizando costos y tiempos de intervención.</p>
+    </div>
+  </div>
+</div>
+
+      
+<!-- Lecturas Recomendadas (APA 7ª edición) -->
+<div class="card">
+  <h3>🔗 Lecturas Recomendadas</h3>
+  <p><a href="https://doi.org/10.3390/a13030059" target="_blank" style="color: var(--secondary);">Alexandridis, G., Voutos, Y., Mylonas, P., & Caridakis, G. (2020). A geolocation analytics-driven ontology for short-term leases: Inferring current sharing economy trends. <em>Algorithms, 13</em>(3), 59.</a></p>
+  <p><a href="https://doi.org/10.3390/buildings10090160" target="_blank" style="color: var(--secondary);">Bouabdallaoui, Y., Lafhaj, Z., Yim, P., Ducoulombier, L., & Bennadji, B. (2020). Natural language processing model for managing maintenance requests in buildings. <em>Buildings, 10</em>(9), 160.</a></p>
+  <p><a href="https://ieeexplore.ieee.org/document/9999841" target="_blank" style="color: var(--secondary);">Kottmyer, C., Zhao, K., Kostic, Z., & Jevremovic, A. (2022). Roomsemble: Progressive web application for intuitive property search. In <em>2022 IEEE International Conference on Consumer Electronics (ICCE)</em> (pp. 1–6). IEEE.</a></p>
+  <p><a href="https://arxiv.org/abs/2202.07296" target="_blank" style="color: var(--secondary);">Kottmyer, C., Zhao, K., Kostic, Z., & Jevremovic, A. (2022). <em>Roomsemble: Progressive web application for intuitive property search</em> [arXiv:2202.07296].</a></p>
+  <p><a href="#" style="color: var(--secondary);">Ali, N. F., Mosharrof, S., Mohtasim, M. M., & Krishna, T. G. (2024). Automated literature review using NLP techniques and LLM-based retrieval-augmented generation. In <em>Proceedings of the 26th International Conference on Computer and Information Technology (ICCIT)</em>.</a></p>
+  <p><a href="https://doi.org/10.5748/19CONTECSI/PSE/KMG/7113" target="_blank" style="color: var(--secondary);">Spinola, M., Bayer de Oliveira Simões, P., & Laurindo, F. J. B. (2022). Data, information and knowledge in smart maintenance processes: A literature review. In <em>19th CONTECSI – International Conference on Information Systems and Technology Management</em>.</a></p>
+  <p><a href="https://journal.binus.ac.id/index.php/sinergi/article/view/7336" target="_blank" style="color: var(--secondary);">Lizam, M. (2019). Digital technology and the real estate industry. <em>Sinergi, 9</em>(2), 42–49.</a></p>
+  <p><a href="https://ieomsociety.org/proceedings/2022/orlando/papers/IEOM1922.pdf" target="_blank" style="color: var(--secondary);">Cahya, P. S., & Ramadhan, A. (2022). Digital transformation in the property management industry: A systematic literature review. In <em>Proceedings of the 7th North American International Conference on Industrial Engineering and Operations Management</em> (pp. 1922–1932).</a></p>
+  <p><a href="https://doi.org/10.4108/eai.2-12-2022.2328037" target="_blank" style="color: var(--secondary);">Li, B. (2022). Research on the development of real estate project information management system based on Web. In <em>Proceedings of the 2022 International Conference on Information, Communication and Artificial Intelligence (ICICA)</em>. EAI.</a></p>
+  <p><a href="https://www.mdpi.com/2075-5309/10/9/160" target="_blank" style="color: var(--secondary);">Wang, S., & Wang, H. (2024). Digital transformation in real estate services: Development and implementation of the Housing Selection Platform. <em>Frontiers in Computing and Intelligent Systems, 8</em>(1), 13–18.</a></p>
+  <p><a href="http://dx.doi.org/10.18687/LACCEI2015.1.1.280" target="_blank" style="color: var(--secondary);">Martínez, L., Contreras, J., & Valdez, L. (2015). Geographic geolocation search in real estate marketplaces. In <em>13th LACCEI Annual International Conference</em>.</a></p>
+  <p><a href="https://ndv.rgsu.ru/jour/article/view/245" target="_blank" style="color: var(--secondary);">Grabovyy, P. G., Volkov, R. V., & Volgin, V. V. (2023). Intelligent real estate management. <em>Real Estate: Economics, Management, 1</em>, 16–20.</a></p>
+  <p><a href="https://doi.org/10.5937/jaes18-26306" target="_blank" style="color: var(--secondary);">Bredikhin, V. V., Bredikhina, N., & Ezerskiy, V. (2020). Modeling of property management process at territorial level. <em>Journal of Applied Engineering Science, 18</em>(2), 257–261.</a></p>
+  <p><a href="https://doi.org/10.1186/s40537-022-00603-5" target="_blank" style="color: var(--secondary);">Pais, S., Cordeiro, J., & Jamil, M. L. (2022). NLP-based platform as a service: A brief review. <em>Journal of Big Data, 9</em>, 54.</a></p>
+  <p><a href="https://slac.stanford.edu/pubs/slacpubs/10000/slac-tn-10-022.pdf" target="_blank" style="color: var(--secondary);">Wung, D. S. (2009). <em>Intelligent Platform Management Interface (IPMI)</em>. SLAC-TN-10-022, SLAC National Accelerator Laboratory.</a></p>
+<p><a href="https://doi.org/10.1051/e3sconf/202126304032" target="_blank" style="color: var(--secondary);">Girya, L., Zorenko, E., Ulianov, N., Egorov, D., & Nechepurenko, A. (2021). Organizational and technological computer-aided process of real estate management. <em>E3S Web of Conferences, 263</em>, 04032.</a></p>
+<p><a href="https://doi.org/10.1080/02723638.2018.1524653" target="_blank" style="color: var(--secondary);">Shaw, J. (2018). Platform real estate: Theory and practice of new urban real estate markets. <em>Urban Geography, 41</em>(8), 1037–1064.</a></p>
+<p><a href="https://iopscience.iop.org/article/10.1088/1742-6596/1378/3/032015" target="_blank" style="color: var(--secondary);">Oluwunmi, A. G., et al. (2019). Natural Language Processing for Smart Home Automation. <em>Journal of Physics: Conference Series, 1378</em>(3), 032015.</a></p>
+<p><a href="https://doi.org/10.3846/ijspm.2022.16923" target="_blank" style="color: var(--secondary);">Naz, F., Kumar, A., Upadhyay, A., Chokshi, H., Trinkūnas, V., & Magda, R. (2022). Property management enabled by artificial intelligence post COVID-19: An exploratory review and future propositions. <em>International Journal of Strategic Property Management, 26</em>(2), 156–171.</a></p>
+<p><a href="https://doi.org/10.1186/s40537-022-00603-5" target="_blank" style="color: var(--secondary);">Pais, S., Cordeiro, J., & Jamil, M. L. (2022). NLP-based platform as a service: A brief review. <em>Journal of Big Data, 9</em>, 54.</a></p>
+
+</div>
+    <!-- 7. Cierre reflexivo -->
+    <section id="cierre-reflexivo" class="section animate-in">
+      <h2>💡 Cierre Reflexivo</h2>
+      <p><strong>Ahora que entiendes los fundamentos teóricos detrás de Ferinmobiliaria, ¿cómo podrías aplicar estos conceptos en tu propio proyecto o en tu entorno profesional?</strong></p>
+      <p>La tecnología no es solo código; es una herramienta para resolver problemas humanos. Nuestra plataforma busca transformar la gestión inmobiliaria, pero el verdadero impacto está en las personas que la usarán: propietarios, inquilinos y técnicos de mantenimiento.</p>
+      <p>Te invitamos a compartir tus ideas, sugerencias o preguntas en los comentarios. ¡Tu opinión es valiosa para mejorar esta propuesta!</p>
+      <p>¿Quieres ver cómo funciona la plataforma? Explora la siguiente entrada del blog donde mostramos el prototipo funcional.</p>
+      <a href="#" class="btn">Explorar el Prototipo Funcional →</a>
+    </section>
+
+    <!-- Botón de regreso -->
+    <a href="../index.html" class="btn back-btn">
+      ← Volver al Blog Principal
+    </a>
+
+    <div class="footer">
+      <p>&copy; 2025 Towers Ing | autor Arnold Ferney Torres Ome | Proyecto Semillero de Investigación - Ingeniería de Software</p>
+    </div>
+  </div>
+
+  <script>
+    // Animación al hacer scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.section');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+
+      // Acordion functionality
+      const accordionHeaders = document.querySelectorAll('.accordion-header');
+      accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+          const content = header.nextElementSibling;
+          const isActive = header.classList.contains('active');
+          
+          // Close all
+          document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+          document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('show'));
+          
+          // Open current
+          if (!isActive) {
+            header.classList.add('active');
+            content.classList.add('show');
+          }
+        });
+      });
+
+      // Quiz functionality
+      function checkAnswer(option, result) {
+        // Hide all feedback
+        document.querySelectorAll('.quiz-feedback').forEach(feedback => feedback.style.display = 'none');
+        
+        // Show correct or incorrect feedback
+        if (result === 'correct') {
+          document.getElementById('feedback1').style.display = 'block';
+        } else {
+          document.getElementById('feedback2').style.display = 'block';
+        }
+        
+        // Highlight selected option
+        document.querySelectorAll('.quiz-option').forEach(opt => opt.style.backgroundColor = 'rgba(255, 255, 255, 0.05)');
+        option.style.backgroundColor = result === 'correct' ? 'rgba(46, 204, 113, 0.2)' : 'rgba(231, 76, 60, 0.2)';
+      }
+    });
+  </script>
+</body>
+</html>
