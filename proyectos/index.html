@@ -1,261 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Proyectos - Towers Ing</title>
-  <meta name="description" content="Mis desarrollos tecnológicos: formularios, dashboards, herramientas educativas y más.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Proyectos – Towers Ing</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
     }
 
     header {
-      background: #1a2a6c;
-      color: white;
+      background: linear-gradient(135deg, #161b22 0%, #1f2937 100%);
+      border-bottom: 1px solid #30363d;
+      padding: 3rem 2rem 2rem;
       text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
     }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1519389950473-47ba0777ea0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+
     header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.2rem;
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
     }
+
     header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
+      color: #8b949e;
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
+    .container {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
     }
 
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 30px;
-      margin-top: 30px;
-    }
-
-    .project-card {
-      background: white;
+    /* Proyecto destacado */
+    .destacado {
+      background: linear-gradient(135deg, #1a2332 0%, #162032 100%);
+      border: 1px solid #1f6feb;
       border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 2rem;
+      margin-bottom: 2rem;
       position: relative;
       overflow: hidden;
     }
-    .project-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    .project-card::before {
-      content: "";
+
+    .destacado::before {
+      content: '★ PROYECTO DESTACADO';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 5px;
-      height: 100%;
-      background: #3498db;
+      top: 14px;
+      right: 16px;
+      font-size: 0.7rem;
+      color: #f0c040;
+      font-weight: 700;
+      letter-spacing: 0.08em;
     }
-    .project-card h3 {
-      color: #1a2a6c;
-      margin-bottom: 10px;
-      font-size: 1.4rem;
+
+    .destacado h2 {
+      font-size: 1.6rem;
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
     }
-    .project-card .meta {
-      font-size: 0.9rem;
-      color: #e74c3c;
-      margin-bottom: 15px;
+
+    .destacado .estado {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
       font-weight: 600;
+      margin-bottom: 1rem;
     }
-    .project-card p {
-      margin-bottom: 20px;
-      color: #555;
+
+    .destacado p.desc {
+      color: #c9d1d9;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
     }
-    .tech-tags {
+
+    /* Grid de proyectos */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: #58a6ff;
+      transform: translateY(-2px);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      color: #e6edf3;
+      margin-bottom: 0.4rem;
+    }
+
+    .card .desc {
+      font-size: 0.875rem;
+      color: #8b949e;
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+
+    /* Tags de tecnologías */
+    .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .tech-tag {
-      background: #e8f4fc;
-      color: #1a2a6c;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-    .btn-details {
-      display: inline-block;
-      padding: 8px 20px;
-      background: #3498db;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: background 0.3s ease;
-    }
-    .btn-details:hover {
-      background: #2980b9;
+      gap: 6px;
+      margin-bottom: 1rem;
     }
 
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
+    .tag {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
     }
-    .back-home:hover {
-      background: #2980b9;
+
+    .destacado .tags .tag {
+      background: #162032;
+      border-color: #1f6feb;
+      color: #58a6ff;
+    }
+
+    /* Estados */
+    .estado-finalizado { background: #1a2f1a; color: #3fb950; }
+    .estado-desarrollo { background: #2a1a00; color: #d29922; }
+    .estado-prototipo  { background: #1a1a2e; color: #a371f7; }
+
+    /* Botón */
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+
+    .btn-primary {
+      background: #1f6feb;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #21262d;
+      color: #8b949e;
+      border: 1px solid #30363d;
+      cursor: default;
+    }
+
+    /* Fecha */
+    .fecha {
+      font-size: 0.75rem;
+      color: #8b949e;
+      margin-bottom: 0.5rem;
     }
 
     footer {
       text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
+      padding: 2rem;
+      color: #8b949e;
+      font-size: 0.85rem;
+      border-top: 1px solid #21262d;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .destacado::before { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-folder-open"></i> Mis Proyectos</h1>
-      <p>Desarrollos tecnológicos aplicados a la educación, ingeniería y colaboración.</p>
-    </div>
-  </header>
+<header>
+  <h1>Mis Proyectos</h1>
+  <p>Desarrollos tecnológicos aplicados a la educación, ingeniería y colaboración.</p>
+</header>
 
-  <main>
+<div class="container">
+  <!-- Proyecto destacado -->
+  <div id="destacado-container"></div>
 
-    <div class="projects-grid">
+  <!-- Grid de proyectos -->
+  <div class="grid" id="proyectos-grid"></div>
+</div>
 
-      <!-- Proyecto 1 -->
-      <div class="project-card">
-        <h3>Sistema de Identificación de Roles Colaborativos</h3>
-        <div class="meta">Finalizado: Abril 2025</div>
-        <p>Formulario interactivo que analiza el comportamiento del usuario y le asigna un rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">HTML</span>
-          <span class="tech-tag">CSS</span>
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">localStorage</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+<footer>
+  <a href="https://tower-ing.com/">← Volver al Inicio</a>
+  &nbsp;|&nbsp;
+  © 2025 Towers Ing. Todos los derechos reservados.
+</footer>
+
+<!-- Datos -->
+<script src="proyectos.js"></script>
+
+<script>
+  function getEstadoClass(estado) {
+    if (estado === 'Finalizado') return 'estado-finalizado';
+    if (estado === 'En desarrollo') return 'estado-desarrollo';
+    return 'estado-prototipo';
+  }
+
+  function renderDestacado(p) {
+    const fechaTxt = p.fecha ? `Finalizado: ${p.fecha}` : p.estado;
+    const tagsHtml = p.tecnologias.map(t => `<span class="tag">${t}</span>`).join('');
+    return `
+      <div class="destacado">
+        <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>
+        <h2>${p.titulo}</h2>
+        <p class="desc">${p.descripcion}</p>
+        <div class="tags">${tagsHtml}</div>
+        <a href="${p.link}" class="btn btn-primary">Ver proyecto →</a>
       </div>
+    `;
+  }
 
-      <!-- Proyecto 2 -->
-      <div class="project-card">
-        <h3>Dashboard de Gestión de Equipos</h3>
-        <div class="meta">Finalizado: Abril 2025</div>
-        <p>Panel de control que visualiza en tiempo real los registros de estudiantes, permite eliminarlos, actualizar grupos y ver estadísticas por rol.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">Dashboard</span>
-          <span class="tech-tag">Grupos Equilibrados</span>
-          <span class="tech-tag">localStorage</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
+  function renderCard(p) {
+    const fechaTxt = p.fecha ? `<div class="fecha">Finalizado: ${p.fecha}</div>` : `<div class="fecha">${p.estado}</div>`;
+    const tagsHtml = p.tecnologias.map(t => `<span class="tag">${t}</span>`).join('');
+    const btnHtml = p.link !== '#'
+      ? `<a href="${p.link}" class="btn btn-primary">Ver detalles →</a>`
+      : `<span class="btn btn-secondary">Ver detalles</span>`;
+
+    return `
+      <div class="card">
+        ${fechaTxt}
+        <h3>${p.titulo}</h3>
+        <p class="desc">${p.descripcion}</p>
+        <div class="tags">${tagsHtml}</div>
+        ${btnHtml}
       </div>
+    `;
+  }
 
-      <!-- Proyecto 3 -->
-      <div class="project-card">
-        <h3>Portal Educativo Towers Ing</h3>
-        <div class="meta">En desarrollo</div>
-        <p>Plataforma central que integra formularios, dashboard, blog, CV y proyectos. Diseño moderno enfocado en ingeniería y educación.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">HTML5</span>
-          <span class="tech-tag">CSS3</span>
-          <span class="tech-tag">Responsive</span>
-          <span class="tech-tag">UI/UX</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
-      </div>
+  // Renderizar
+  const destacado = proyectos.find(p => p.destacado);
+  const resto = proyectos.filter(p => !p.destacado);
 
-      <!-- Proyecto 4 -->
-      <div class="project-card">
-        <h3>Formulario Dinámico con Preguntas Contextuales</h3>
-        <div class="meta">Finalizado: Marzo 2025</div>
-        <p>Formulario adaptativo que cambia preguntas según respuestas anteriores, con lógica de puntuación avanzada y retroalimentación inmediata.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">Lógica condicional</span>
-          <span class="tech-tag">Dinámico</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
-      </div>
+  if (destacado) {
+    document.getElementById('destacado-container').innerHTML = renderDestacado(destacado);
+  }
 
-      <!-- Proyecto 5 -->
-      <div class="project-card">
-        <h3>Exportador de Datos a Excel</h3>
-        <div class="meta">Prototipo</div>
-        <p>Herramienta que permite exportar los registros del dashboard a formato Excel (CSV) para análisis externo.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">CSV</span>
-          <span class="tech-tag">Exportación</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-      <!-- Proyecto 6 -->
-      <div class="project-card">
-        <h3>Algoritmo de Formación de Grupos Equilibrados</h3>
-        <div class="meta">Finalizado: Febrero 2025</div>
-        <p>Motor de asignación que distribuye estudiantes en grupos con equilibrio de habilidades, basado en puntuaciones múltiples y preferencias secundarias.</p>
-        <div class="tech-tags">
-          <span class="tech-tag">Algoritmos</span>
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">Optimización</span>
-        </div>
-        <a href="#" class="btn-details">Ver detalles <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-    </div>
-
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
-
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
-  </footer>
+  document.getElementById('proyectos-grid').innerHTML = resto.map(renderCard).join('');
+</script>
 
 </body>
 </html>
