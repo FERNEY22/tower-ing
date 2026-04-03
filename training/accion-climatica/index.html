@@ -4,1031 +4,502 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acción Climática · Towers Ing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    /* ─── TOKENS ────────────────────────────────────────────────── */
     :root {
-      --bg:        #0d1a0f;
-      --bg2:       #111f13;
-      --bg3:       #162019;
-      --surface:   #1a2b1d;
-      --border:    #2a4030;
-      --accent:    #6dbd7a;
-      --accent2:   #c8f04e;
-      --amber:     #e8a93a;
-      --text:      #d6e8d8;
-      --muted:     #7a9a80;
-      --white:     #f0f7f1;
-      --danger:    #e05a3a;
-
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body:    'Outfit', sans-serif;
-      --font-mono:    'DM Mono', monospace;
-
-      --r: 6px;
-      --gap: clamp(1.5rem, 4vw, 3rem);
+      --navy:    #1a2a6c;
+      --navy2:   #223080;
+      --purple:  #9b59b6;
+      --purple2: #8e44ad;
+      --blue:    #3498db;
+      --blue2:   #2980b9;
+      --bg:      linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --white:   #ffffff;
+      --text:    #333333;
+      --muted:   #7f8c8d;
+      --light:   #ecf0f1;
+      --border:  #dde3ed;
+      --shadow:  0 4px 15px rgba(0,0,0,0.10);
+      --shadow2: 0 8px 25px rgba(0,0,0,0.15);
     }
 
-    /* ─── RESET & BASE ──────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
+      font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.5vw, 17px);
-      line-height: 1.7;
-      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
     }
 
-    /* ─── SCROLLBAR ─────────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-    /* ─── NAV ────────────────────────────────────────────────────── */
+    /* NAV */
     nav {
-      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      padding: .85rem 2rem;
       display: flex; align-items: center; justify-content: space-between;
-      padding: .9rem var(--gap);
-      background: rgba(13,26,15,.85);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
     }
-    .nav-logo {
-      font-family: var(--font-mono);
-      font-size: .85rem;
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: .05em;
-    }
-    .nav-logo span { color: var(--muted); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-size: .8rem;
-      color: var(--muted);
-      text-decoration: none;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--accent2); }
+    .nav-logo { color: white; text-decoration: none; font-size: .95rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; font-size: .82rem; letter-spacing: .04em; transition: color .2s; }
+    .nav-links a:hover { color: white; }
+    @media (max-width: 560px) { .nav-links { display: none; } }
 
-    /* ─── HERO ───────────────────────────────────────────────────── */
-    .hero {
-      position: relative;
-      min-height: 92vh;
-      display: grid;
-      place-items: center;
-      padding: 5rem var(--gap) 4rem;
+    /* HERO */
+    header {
+      background: var(--navy);
+      color: white;
       text-align: center;
-      overflow: hidden;
+      padding: 60px 20px 50px;
+      position: relative; overflow: hidden;
     }
-
-    /* animated mesh background */
-    .hero::before {
-      content: '';
+    header::before {
+      content: "";
       position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 20% 30%, rgba(109,189,122,.13) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 80% 70%, rgba(200,240,78,.08) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 50% at 60% 10%, rgba(232,169,58,.06) 0%, transparent 50%);
-      animation: drift 14s ease-in-out infinite alternate;
+      background: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: .15;
     }
-    @keyframes drift {
-      0%   { transform: scale(1) translateY(0); }
-      100% { transform: scale(1.06) translateY(-18px); }
-    }
-
-    /* grain overlay */
-    .hero::after {
-      content: '';
+    header::after {
+      content: "";
       position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-      background-size: 200px;
-      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(26,42,108,.4) 0%, rgba(26,42,108,.85) 100%);
     }
-
-    .hero-inner { position: relative; z-index: 1; max-width: 780px; }
-
-    .hero-label {
+    .hero-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
       display: inline-flex; align-items: center; gap: .5rem;
-      font-family: var(--font-mono);
-      font-size: .75rem;
-      color: var(--accent);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      border: 1px solid var(--border);
-      padding: .35rem .9rem;
-      border-radius: 99px;
-      margin-bottom: 1.8rem;
-      background: rgba(109,189,122,.08);
-      animation: fadeUp .8s ease both;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.9); font-size: .75rem; font-family: 'DM Mono', monospace;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .35rem 1rem; border-radius: 99px; margin-bottom: 1.5rem;
     }
-    .hero-label::before { content: '⬡'; font-size: 1em; }
-
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(3.2rem, 8vw, 6.5rem);
-      font-weight: 700;
-      line-height: 1.04;
-      color: var(--white);
-      animation: fadeUp .9s .1s ease both;
+    header h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 5rem); font-weight: 700;
+      line-height: 1.05; text-shadow: 2px 2px 8px rgba(0,0,0,.3); margin-bottom: .3rem;
     }
-    .hero-title em {
-      font-style: italic;
-      color: var(--accent2);
-      display: block;
+    header h1 em { font-style: italic; color: #a8d8f0; display: block; }
+    header p { font-size: 1.05rem; opacity: .85; max-width: 520px; margin: 1rem auto 2rem; }
+    .hero-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.2);
+      color: white; font-size: .8rem; padding: .35rem .9rem; border-radius: 99px;
     }
 
-    .hero-sub {
-      margin-top: 1.4rem;
-      font-size: 1.1rem;
-      color: var(--muted);
-      max-width: 560px;
-      margin-inline: auto;
-      animation: fadeUp 1s .2s ease both;
-    }
-
-    .hero-meta {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;
-      margin-top: 2.4rem;
-      animation: fadeUp 1s .3s ease both;
-    }
-    .meta-pill {
-      display: flex; align-items: center; gap: .45rem;
-      font-family: var(--font-mono);
-      font-size: .78rem;
-      color: var(--text);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: .4rem 1rem;
-      border-radius: 99px;
-    }
-    .meta-pill .icon { font-size: 1em; }
-
-    .hero-cta {
-      display: inline-block;
-      margin-top: 2.8rem;
-      padding: .85rem 2.2rem;
-      background: var(--accent2);
-      color: #0d1a0f;
-      font-weight: 600;
-      font-size: .92rem;
-      border-radius: var(--r);
-      text-decoration: none;
-      letter-spacing: .03em;
-      transition: transform .2s, box-shadow .2s;
-      animation: fadeUp 1s .4s ease both;
-    }
-    .hero-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(200,240,78,.25);
-    }
-
-    /* ─── SECTION BASE ───────────────────────────────────────────── */
-    section { padding: var(--gap) var(--gap); }
-    .section-inner { max-width: 900px; margin-inline: auto; }
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      margin-bottom: .6rem;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 1.4rem;
-    }
-    hr.divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 3rem 0;
-    }
-
-    /* ─── STATS BAR ───────────────────────────────────────────────── */
-    .stats-bar {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.8rem var(--gap);
-    }
+    /* STATS BAR */
+    .stats-bar { background: white; box-shadow: var(--shadow); padding: 1.6rem 2rem; }
     .stats-inner {
-      max-width: 900px; margin-inline: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
-      text-align: center;
+      max-width: 860px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem; text-align: center;
     }
-    .stat-value {
-      font-family: var(--font-display);
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: var(--accent2);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: .78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-top: .3rem;
-    }
+    .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-lbl { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-top: .2rem; }
 
-    /* ─── ABOUT ──────────────────────────────────────────────────── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-      align-items: start;
-    }
-    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+    /* LAYOUT */
+    main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    section { margin-bottom: 3rem; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); letter-spacing: .15em; text-transform: uppercase; margin-bottom: .4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 700; color: var(--navy); line-height: 1.15; margin-bottom: 1.2rem; }
+    hr.div { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
-    .about-text p { color: var(--muted); margin-bottom: 1rem; }
-    .about-text strong { color: var(--text); }
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media(max-width:640px){ .about-grid{ grid-template-columns:1fr; } }
+    .about-grid p { color: #555; margin-bottom: .9rem; }
+    .about-grid strong { color: var(--navy); }
+    .info-box {
+      background: white; border-radius: 10px; border-left: 4px solid var(--purple);
+      padding: 1rem 1.2rem; box-shadow: var(--shadow); margin-bottom: 1rem;
+      font-size: .9rem; color: #555;
+    }
+    .info-box .ib-label { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--purple); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
 
-    .highlight-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: var(--r);
-      padding: 1.2rem 1.4rem;
-      font-size: .92rem;
-      color: var(--text);
-    }
-    .highlight-box + .highlight-box { margin-top: 1rem; }
-    .highlight-box .hb-label {
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: .35rem;
-    }
-
-    /* ─── OBJECTIVES ─────────────────────────────────────────────── */
-    .obj-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
+    /* OBJECTIVES */
+    .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; }
     .obj-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 1.2rem;
-      transition: border-color .25s, transform .25s;
+      background: white; border-radius: 10px; padding: 1.2rem;
+      box-shadow: var(--shadow); border-top: 3px solid var(--purple);
+      transition: transform .25s, box-shadow .25s;
     }
-    .obj-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-    .obj-icon { font-size: 1.7rem; margin-bottom: .6rem; }
-    .obj-card h4 { font-size: .92rem; font-weight: 600; color: var(--white); margin-bottom: .3rem; }
-    .obj-card p { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+    .obj-card:hover { transform: translateY(-4px); box-shadow: var(--shadow2); }
+    .obj-icon { font-size: 1.6rem; margin-bottom: .5rem; }
+    .obj-card h4 { font-size: .92rem; font-weight: 600; color: var(--navy); margin-bottom: .3rem; }
+    .obj-card p { font-size: .8rem; color: var(--muted); line-height: 1.5; }
 
-    /* ─── TABS (CSS only) ─────────────────────────────────────────── */
-    .tabs-section { padding-top: 0; }
-    .tabs-wrapper { max-width: 900px; margin-inline: auto; }
-    .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; overflow-x: auto; }
-
-    /* hide radio */
-    .tab-nav input[type="radio"] { display: none; }
+    /* CSS TABS */
+    input[type="radio"].tab-radio { display: none; }
+    .tab-nav {
+      display: flex; gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem; overflow-x: auto;
+    }
     .tab-nav label {
-      flex-shrink: 0;
-      cursor: pointer;
-      padding: .7rem 1.4rem;
-      font-size: .82rem;
-      font-family: var(--font-mono);
-      color: var(--muted);
-      letter-spacing: .05em;
-      border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-      white-space: nowrap;
+      flex-shrink: 0; cursor: pointer;
+      padding: .65rem 1.4rem; font-size: .82rem;
+      font-family: 'DM Mono', monospace; color: var(--muted);
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: color .2s, border-color .2s; white-space: nowrap;
     }
     #tab1:checked ~ .tab-nav label[for="tab1"],
     #tab2:checked ~ .tab-nav label[for="tab2"],
     #tab3:checked ~ .tab-nav label[for="tab3"],
-    #tab4:checked ~ .tab-nav label[for="tab4"] {
-      color: var(--accent2);
-      border-bottom-color: var(--accent2);
-    }
-
+    #tab4:checked ~ .tab-nav label[for="tab4"] { color: var(--navy); border-bottom-color: var(--purple); font-weight: 500; }
     .tab-content { display: none; }
     #tab1:checked ~ .tab-panels #panel1,
     #tab2:checked ~ .tab-panels #panel2,
     #tab3:checked ~ .tab-panels #panel3,
-    #tab4:checked ~ .tab-panels #panel4 { display: block; animation: fadeUp .4s ease; }
+    #tab4:checked ~ .tab-panels #panel4 { display: block; animation: fadeUp .35s ease; }
 
-    /* ─── UNIT ACCORDION ─────────────────────────────────────────── */
+    /* ACCORDION */
     details {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      margin-bottom: .75rem;
-      overflow: hidden;
-      transition: border-color .2s;
+      background: white; border-radius: 10px;
+      border: 1px solid var(--border); margin-bottom: .75rem;
+      overflow: hidden; box-shadow: var(--shadow); transition: border-color .2s;
     }
-    details:hover { border-color: var(--accent); }
-    details[open] { border-color: var(--accent); }
-
+    details:hover, details[open] { border-color: var(--purple); }
     summary {
-      cursor: pointer;
-      list-style: none;
+      cursor: pointer; list-style: none;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem 1.3rem;
-      font-weight: 500;
-      color: var(--white);
-      user-select: none;
-      gap: 1rem;
+      padding: .95rem 1.2rem; color: var(--navy); font-weight: 500;
+      user-select: none; gap: 1rem;
     }
     summary::-webkit-details-marker { display: none; }
-    .sum-left { display: flex; align-items: center; gap: .9rem; }
-    .sum-num {
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-      background: rgba(109,189,122,.12);
-      padding: .2rem .55rem;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .sum-arrow {
-      color: var(--muted);
-      transition: transform .3s;
-      font-style: normal;
-      font-size: .85em;
-    }
+    .sum-left { display: flex; align-items: center; gap: .8rem; }
+    .sum-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); background: #f3e9f8; padding: .2rem .55rem; border-radius: 4px; white-space: nowrap; }
+    .sum-arrow { color: var(--muted); transition: transform .3s; font-size: .85em; }
     details[open] .sum-arrow { transform: rotate(180deg); }
-
-    .detail-body {
-      padding: 0 1.3rem 1.2rem;
-      border-top: 1px solid var(--border);
-    }
-    .lesson-list { list-style: none; margin-top: .9rem; display: flex; flex-direction: column; gap: .5rem; }
-    .lesson-list li {
-      display: flex; align-items: flex-start; gap: .7rem;
-      font-size: .88rem; color: var(--muted);
-    }
-    .lesson-list li::before {
-      content: '›';
-      color: var(--accent);
-      font-size: 1.1em;
-      line-height: 1.5;
-      flex-shrink: 0;
-    }
-    .lesson-list strong { color: var(--text); font-weight: 500; }
-
-    .activity-badge {
+    .detail-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--border); }
+    .lesson-list { list-style: none; margin-top: .8rem; display: flex; flex-direction: column; gap: .5rem; }
+    .lesson-list li { display: flex; align-items: flex-start; gap: .6rem; font-size: .88rem; color: #555; }
+    .lesson-list li::before { content: '›'; color: var(--purple); font-size: 1.1em; line-height: 1.5; flex-shrink: 0; }
+    .lesson-list strong { color: var(--navy); font-weight: 500; }
+    .act-badge {
       display: inline-flex; align-items: center; gap: .4rem;
-      margin-top: .9rem;
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--amber);
-      background: rgba(232,169,58,.1);
-      border: 1px solid rgba(232,169,58,.25);
-      padding: .3rem .75rem;
-      border-radius: 99px;
+      margin-top: .8rem; font-family: 'DM Mono', monospace; font-size: .7rem;
+      color: var(--blue2); background: #eaf4fc;
+      border: 1px solid #b8d9f5; padding: .28rem .7rem; border-radius: 99px;
     }
 
-    /* ─── DELIVERABLES ───────────────────────────────────────────── */
-    .deliv-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
-      margin-top: 1.5rem;
-    }
-    @media (max-width: 560px) { .deliv-grid { grid-template-columns: 1fr; } }
-
+    /* DELIVERABLES */
+    .deliv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    @media(max-width:560px){ .deliv-grid{ grid-template-columns:1fr; } }
     .deliv-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 1.5rem;
-      position: relative;
-      overflow: hidden;
+      background: white; border-radius: 10px; padding: 1.5rem;
+      box-shadow: var(--shadow); position: relative; overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
     }
-    .deliv-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    }
-    .deliv-card.dc-report::before { background: var(--accent); }
-    .deliv-card.dc-proto::before { background: var(--accent2); }
+    .deliv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow2); }
+    .deliv-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+    .deliv-card.dc-a::before { background: var(--navy); }
+    .deliv-card.dc-b::before { background: var(--purple); }
+    .deliv-card h4 { font-size: 1.05rem; font-weight: 600; color: var(--navy); margin-bottom: .5rem; }
+    .deliv-card p { font-size: .86rem; color: #555; margin-bottom: .8rem; }
+    .deliv-tag { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--purple); text-transform: uppercase; letter-spacing: .07em; }
 
-    .deliv-card h4 {
-      font-size: 1.05rem; font-weight: 600;
-      color: var(--white); margin-bottom: .5rem;
-    }
-    .deliv-card p { font-size: .86rem; color: var(--muted); margin-bottom: .8rem; }
-    .deliv-tag {
-      font-family: var(--font-mono);
-      font-size: .68rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-
-    /* ─── WEEKLY TIMELINE ─────────────────────────────────────────── */
-    .timeline { position: relative; padding-left: 2rem; }
-    .timeline::before {
-      content: '';
-      position: absolute; left: .55rem; top: .5rem; bottom: .5rem;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-    }
-    .tl-week {
-      position: relative;
-      padding: .7rem 0 .7rem 1.2rem;
-      display: flex; gap: 1rem; align-items: flex-start;
-    }
-    .tl-week::before {
-      content: '';
-      position: absolute; left: -1.45rem; top: 1.1rem;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--accent);
-    }
-    .tl-week.highlight::before { background: var(--accent); }
-    .tl-num {
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: .08em;
-      white-space: nowrap;
-      padding-top: .15rem;
-      min-width: 4rem;
-    }
-    .tl-content h5 { font-size: .9rem; color: var(--white); font-weight: 500; }
-    .tl-content p { font-size: .8rem; color: var(--muted); margin-top: .15rem; }
-
-    /* ─── PROGRESS BAR ───────────────────────────────────────────── */
-    .progress-wrap { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .9rem; }
+    /* PROGRESS */
+    .progress-wrap { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .85rem; }
     .prog-row label { font-size: .82rem; color: var(--text); display: flex; justify-content: space-between; margin-bottom: .3rem; }
-    .prog-bar {
-      height: 6px; background: var(--border); border-radius: 99px; overflow: hidden;
-    }
-    .prog-fill {
-      height: 100%; border-radius: 99px;
-      background: linear-gradient(to right, var(--accent), var(--accent2));
-      animation: grow 1.4s cubic-bezier(.4,0,.2,1) both;
-      transform-origin: left;
-    }
+    .prog-bar { height: 7px; background: var(--light); border-radius: 99px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; background: linear-gradient(to right, var(--navy), var(--purple)); animation: grow 1.5s cubic-bezier(.4,0,.2,1) both; }
     @keyframes grow { from { width: 0 !important; } }
 
-    /* ─── INSTRUCTOR ─────────────────────────────────────────────── */
-    .instructor-card {
-      display: flex; gap: 1.5rem; align-items: flex-start;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 1.8rem;
-    }
-    @media (max-width: 500px) { .instructor-card { flex-direction: column; } }
-    .inst-avatar {
-      width: 68px; height: 68px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-family: var(--font-display);
-      font-size: 1.8rem; font-weight: 700;
-      color: #0d1a0f;
-    }
-    .inst-name { font-family: var(--font-display); font-size: 1.4rem; color: var(--white); }
-    .inst-role { font-size: .82rem; color: var(--accent); font-family: var(--font-mono); margin-top: .1rem; }
-    .inst-bio { font-size: .88rem; color: var(--muted); margin-top: .7rem; }
+    /* TIMELINE */
+    .timeline { position: relative; padding-left: 1.8rem; }
+    .timeline::before { content: ''; position: absolute; left: .5rem; top: .6rem; bottom: .6rem; width: 2px; background: linear-gradient(to bottom, var(--navy), var(--purple)); }
+    .tl-week { position: relative; padding: .6rem 0 .6rem 1rem; display: flex; gap: .9rem; align-items: flex-start; }
+    .tl-week::before { content: ''; position: absolute; left: -1.32rem; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: white; border: 2px solid var(--navy); }
+    .tl-week.hl::before { background: var(--purple); border-color: var(--purple); }
+    .tl-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); white-space: nowrap; padding-top: .15rem; min-width: 3.8rem; }
+    .tl-content h5 { font-size: .9rem; color: var(--navy); font-weight: 600; }
+    .tl-content p { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
 
-    /* ─── CTA FOOTER ─────────────────────────────────────────────── */
-    .cta-footer {
-      text-align: center;
-      padding: 5rem var(--gap);
-      border-top: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-footer::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(109,189,122,.1) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .cta-footer h2 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      color: var(--white); line-height: 1.1;
-      position: relative;
-    }
-    .cta-footer p { color: var(--muted); margin-top: .8rem; margin-bottom: 2rem; position: relative; }
+    /* INSTRUCTOR */
+    .inst-card { background: white; border-radius: 12px; padding: 1.8rem; box-shadow: var(--shadow); display: flex; gap: 1.4rem; align-items: flex-start; }
+    @media(max-width:480px){ .inst-card{ flex-direction: column; } }
+    .inst-av { width: 66px; height: 66px; flex-shrink: 0; background: linear-gradient(135deg, var(--navy), var(--purple)); border-radius: 50%; display: grid; place-items: center; font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 700; color: white; }
+    .inst-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--navy); }
+    .inst-role { font-size: .8rem; color: var(--purple); font-family: 'DM Mono', monospace; margin-top: .1rem; }
+    .inst-bio { font-size: .88rem; color: #555; margin-top: .6rem; }
+
+    /* CTA */
+    .cta-section { background: var(--navy); border-radius: 14px; padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 110%, rgba(155,89,182,.35) 0%, transparent 70%); pointer-events: none; }
+    .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; line-height: 1.1; position: relative; }
+    .cta-section p { color: rgba(255,255,255,.75); margin: .8rem 0 2rem; position: relative; }
     .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
-    .btn-primary {
-      padding: .85rem 2rem;
-      background: var(--accent2);
-      color: #0d1a0f; font-weight: 600;
-      border-radius: var(--r); text-decoration: none;
-      transition: transform .2s, box-shadow .2s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200,240,78,.22); }
-    .btn-secondary {
-      padding: .85rem 2rem;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: var(--r); text-decoration: none;
-      transition: border-color .2s, color .2s;
-    }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-primary { padding: .8rem 1.8rem; background: var(--purple); color: white; font-weight: 600; border-radius: 8px; text-decoration: none; transition: background .25s, transform .2s; }
+    .btn-primary:hover { background: var(--purple2); transform: translateY(-2px); }
+    .btn-secondary { padding: .8rem 1.8rem; background: transparent; color: white; border: 1px solid rgba(255,255,255,.35); border-radius: 8px; text-decoration: none; transition: border-color .2s, background .2s; }
+    .btn-secondary:hover { border-color: white; background: rgba(255,255,255,.08); }
 
-    /* ─── FOOTER ─────────────────────────────────────────────────── */
-    footer {
-      padding: 1.2rem var(--gap);
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem;
-      font-size: .78rem; color: var(--muted);
-      font-family: var(--font-mono);
-    }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
+    footer { text-align: center; padding: 1.5rem; color: var(--muted); font-size: .85rem; }
 
-    /* ─── ANIMATIONS ─────────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── RESPONSIVE NAV ─────────────────────────────────────────── */
-    @media (max-width: 480px) {
-      .nav-links { display: none; }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
-    <a href="https://tower-ing.com" class="nav-logo">Towers<span>.ing</span></a>
+    <a href="https://tower-ing.com" class="nav-logo"><i class="fas fa-graduation-cap"></i> Towers Ing</a>
     <ul class="nav-links">
       <li><a href="#contenido">Contenido</a></li>
       <li><a href="#entregables">Entregables</a></li>
       <li><a href="#cronograma">Cronograma</a></li>
-      <li><a href="https://tower-ing.com/training/">← Capacitación</a></li>
+      <li><a href="../">← Capacitación</a></li>
     </ul>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
+  <header>
     <div class="hero-inner">
-      <div class="hero-label">Ingeniería · Sostenibilidad</div>
-      <h1 class="hero-title">
-        Acción
-        <em>Climática</em>
-      </h1>
-      <p class="hero-sub">
-        Un recorrido de ocho semanas para comprender la crisis climática desde la ingeniería,
-        diagnosticarla con datos reales y proponer soluciones concretas.
-      </p>
-      <div class="hero-meta">
-        <span class="meta-pill"><span class="icon">🕐</span> 32 horas · 8 semanas</span>
-        <span class="meta-pill"><span class="icon">📊</span> Nivel Intermedio</span>
-        <span class="meta-pill"><span class="icon">🗂️</span> 4 Unidades</span>
-        <span class="meta-pill"><span class="icon">🎯</span> Estudio de caso acumulativo</span>
+      <div class="hero-badge"><i class="fas fa-leaf"></i> Ingeniería · Sostenibilidad</div>
+      <h1>Acción<em>Climática</em></h1>
+      <p>Ocho semanas para comprender la crisis climática desde la ingeniería, diagnosticarla con datos reales y proponer soluciones concretas.</p>
+      <div class="hero-pills">
+        <span class="pill"><i class="fas fa-clock"></i> 32 horas · 8 semanas</span>
+        <span class="pill"><i class="fas fa-signal"></i> Nivel Intermedio</span>
+        <span class="pill"><i class="fas fa-layer-group"></i> 4 Unidades</span>
+        <span class="pill"><i class="fas fa-route"></i> Caso acumulativo</span>
       </div>
-      <a href="#contenido" class="hero-cta">Explorar el curso ↓</a>
     </div>
-  </section>
+  </header>
 
-  <!-- STATS BAR -->
   <div class="stats-bar">
     <div class="stats-inner">
-      <div>
-        <div class="stat-value">8</div>
-        <div class="stat-label">Semanas</div>
-      </div>
-      <div>
-        <div class="stat-value">4</div>
-        <div class="stat-label">Unidades</div>
-      </div>
-      <div>
-        <div class="stat-value">2</div>
-        <div class="stat-label">Entregables</div>
-      </div>
-      <div>
-        <div class="stat-value">32h</div>
-        <div class="stat-label">Intensidad</div>
-      </div>
+      <div><div class="stat-val">8</div><div class="stat-lbl">Semanas</div></div>
+      <div><div class="stat-val">4</div><div class="stat-lbl">Unidades</div></div>
+      <div><div class="stat-val">32h</div><div class="stat-lbl">Intensidad</div></div>
+      <div><div class="stat-val">2</div><div class="stat-lbl">Entregables</div></div>
     </div>
   </div>
 
-  <!-- ABOUT -->
-  <section>
-    <div class="section-inner">
+  <main>
+
+    <section>
       <div class="section-label">Sobre el Curso</div>
-      <h2 class="section-title">¿Por qué Acción Climática<br>en Ingeniería?</h2>
+      <h2 class="section-title">¿Por qué Acción Climática en Ingeniería?</h2>
       <div class="about-grid">
-        <div class="about-text">
-          <p>
-            El cambio climático es el mayor reto de diseño del siglo XXI.
-            Los ingenieros no pueden limitarse a observarlo: deben <strong>medirlo, modelarlo y actuar sobre él</strong>.
-          </p>
-          <p>
-            Este curso construye competencias técnicas y sistémicas a través de un
-            <strong>caso de estudio acumulativo</strong>: cada unidad profundiza el mismo territorio —
-            pasando del diagnóstico territorial a la propuesta de soluciones aplicadas con prototipo.
-          </p>
-          <p>
-            Al finalizar, el estudiante habrá producido un <strong>Informe de Diagnóstico Técnico</strong>
-            y un <strong>Prototipo Aplicado</strong>, dos entregables reales con rigor de ingeniería.
-          </p>
+        <div>
+          <p>El cambio climático es el mayor reto de diseño del siglo XXI. Los ingenieros no pueden limitarse a observarlo: deben <strong>medirlo, modelarlo y actuar sobre él</strong>.</p>
+          <p>Este curso construye competencias técnicas y sistémicas a través de un <strong>caso de estudio acumulativo</strong>: cada unidad profundiza el mismo territorio, pasando del diagnóstico a la propuesta de soluciones con prototipo real.</p>
+          <p>Al finalizar, habrás producido un <strong>Informe de Diagnóstico Técnico</strong> y un <strong>Prototipo Aplicado</strong>, dos entregables de portafolio con rigor de ingeniería.</p>
         </div>
         <div>
-          <div class="highlight-box">
-            <div class="hb-label">Metodología</div>
-            Estudio de caso acumulativo: un mismo territorio analizado con creciente profundidad semana a semana.
-          </div>
-          <div class="highlight-box">
-            <div class="hb-label">Enfoque</div>
-            Basado en datos reales: fuentes abiertas del IDEAM, IPCC, NASA Earthdata y sensores locales.
-          </div>
-          <div class="highlight-box">
-            <div class="hb-label">Resultado</div>
-            Dos entregables de portafolio: diagnóstico técnico + prototipo de solución aplicada.
-          </div>
+          <div class="info-box"><div class="ib-label">Metodología</div>Estudio de caso acumulativo: un mismo territorio analizado con creciente profundidad semana a semana.</div>
+          <div class="info-box"><div class="ib-label">Datos</div>Fuentes abiertas reales: IDEAM, IPCC, NASA Earthdata y sensores locales colombianos.</div>
+          <div class="info-box"><div class="ib-label">Resultado</div>Dos entregables de portafolio: diagnóstico técnico + prototipo de solución aplicada.</div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- OBJECTIVES -->
-  <section style="padding-top:0">
-    <div class="section-inner">
-      <hr class="divider">
+    <section>
+      <hr class="div">
       <div class="section-label">Competencias</div>
       <h2 class="section-title">Lo que desarrollarás</h2>
       <div class="obj-grid">
-        <div class="obj-card">
-          <div class="obj-icon">🌡️</div>
-          <h4>Análisis de datos climáticos</h4>
-          <p>Interpretar series temporales de temperatura, precipitación y emisiones con herramientas cuantitativas.</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">🗺️</div>
-          <h4>Diagnóstico territorial</h4>
-          <p>Caracterizar vulnerabilidades climáticas de un territorio específico con metodología de ingeniería.</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">⚡</div>
-          <h4>Soluciones de mitigación</h4>
-          <p>Diseñar estrategias técnicas de reducción de emisiones adaptadas al contexto local.</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">🛡️</div>
-          <h4>Adaptación y resiliencia</h4>
-          <p>Proponer infraestructuras y sistemas que reduzcan la vulnerabilidad ante eventos extremos.</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">📐</div>
-          <h4>Prototipado técnico</h4>
-          <p>Materializar una solución climática con criterios de viabilidad, escalabilidad y costo.</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">📣</div>
-          <h4>Comunicación científica</h4>
-          <p>Redactar y presentar informes técnicos con rigor académico y claridad para decisores.</p>
-        </div>
+        <div class="obj-card"><div class="obj-icon">🌡️</div><h4>Análisis de datos climáticos</h4><p>Interpretar series temporales de temperatura, precipitación y emisiones con herramientas cuantitativas.</p></div>
+        <div class="obj-card"><div class="obj-icon">🗺️</div><h4>Diagnóstico territorial</h4><p>Caracterizar vulnerabilidades climáticas con metodología de ingeniería y fuentes de datos reales.</p></div>
+        <div class="obj-card"><div class="obj-icon">⚡</div><h4>Mitigación de emisiones</h4><p>Diseñar estrategias técnicas de reducción adaptadas al contexto local colombiano.</p></div>
+        <div class="obj-card"><div class="obj-icon">🛡️</div><h4>Adaptación y resiliencia</h4><p>Proponer infraestructuras y sistemas que reduzcan la vulnerabilidad ante eventos extremos.</p></div>
+        <div class="obj-card"><div class="obj-icon">🔧</div><h4>Prototipado técnico</h4><p>Materializar una solución climática con criterios de viabilidad, escalabilidad y costo.</p></div>
+        <div class="obj-card"><div class="obj-icon">📄</div><h4>Comunicación científica</h4><p>Redactar y presentar informes técnicos con rigor académico y claridad para decisores.</p></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TABS + UNIT ACCORDIONS -->
-  <section id="contenido">
-    <div class="section-inner tabs-wrapper">
+    <section id="contenido">
+      <hr class="div">
       <div class="section-label">Plan de Estudios</div>
       <h2 class="section-title">Contenido del Curso</h2>
 
-      <!-- CSS-only tabs using hidden radios -->
-      <input type="radio" id="tab1" name="tabs" checked>
-      <input type="radio" id="tab2" name="tabs">
-      <input type="radio" id="tab3" name="tabs">
-      <input type="radio" id="tab4" name="tabs">
+      <input type="radio" id="tab1" name="tabs" class="tab-radio" checked>
+      <input type="radio" id="tab2" name="tabs" class="tab-radio">
+      <input type="radio" id="tab3" name="tabs" class="tab-radio">
+      <input type="radio" id="tab4" name="tabs" class="tab-radio">
 
       <div class="tab-nav">
-        <label for="tab1">Unidad 1</label>
-        <label for="tab2">Unidad 2</label>
-        <label for="tab3">Unidad 3</label>
-        <label for="tab4">Unidad 4</label>
+        <label for="tab1"><i class="fas fa-seedling"></i> Unidad 1</label>
+        <label for="tab2"><i class="fas fa-fire"></i> Unidad 2</label>
+        <label for="tab3"><i class="fas fa-shield-alt"></i> Unidad 3</label>
+        <label for="tab4"><i class="fas fa-rocket"></i> Unidad 4</label>
       </div>
 
       <div class="tab-panels">
 
-        <!-- PANEL 1 -->
         <div id="panel1" class="tab-content">
           <details open>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 1.1</span>
-                La crisis climática: evidencia científica y sistemas naturales
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 1.1</span> La crisis climática: evidencia científica y sistemas naturales</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>Fundamentos del sistema climático:</strong> atmósfera, océanos, criosfera e interacciones.</span></li>
-                <li><span><strong>Lectura de evidencia:</strong> informes IPCC, registros paleoclimáticos, indicadores actuales.</span></li>
+                <li><span><strong>Sistema climático:</strong> atmósfera, océanos, criosfera e interacciones entre subsistemas.</span></li>
+                <li><span><strong>Lectura de evidencia:</strong> informes IPCC, registros paleoclimáticos e indicadores del IDEAM.</span></li>
                 <li><span><strong>Taller:</strong> Análisis de series de temperatura e identificación de tendencias locales.</span></li>
               </ul>
             </div>
           </details>
           <details>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 1.2</span>
-                Impactos sectoriales: agua, energía, alimentación y biodiversidad
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 1.2</span> Impactos sectoriales: agua, energía, alimentación y biodiversidad</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
                 <li><span><strong>Cascada de impactos:</strong> cómo el calentamiento afecta sistemas interdependientes.</span></li>
-                <li><span><strong>Caso Colombia:</strong> variabilidad hídrica, fenómeno ENSO y seguridad alimentaria.</span></li>
-                <li><span><strong>Inicio del caso de estudio:</strong> selección del territorio y recopilación de datos base.</span></li>
+                <li><span><strong>Caso Colombia:</strong> variabilidad hídrica, fenómeno ENSO y seguridad alimentaria regional.</span></li>
+                <li><span><strong>Inicio del caso:</strong> selección del territorio y recopilación de datos base.</span></li>
               </ul>
-              <span class="activity-badge">🔬 Actividad Integradora: Diagnóstico territorial preliminar</span>
+              <span class="act-badge"><i class="fas fa-flask"></i> Actividad Integradora I: Diagnóstico territorial preliminar</span>
             </div>
           </details>
         </div>
 
-        <!-- PANEL 2 -->
         <div id="panel2" class="tab-content">
           <details open>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 2.1</span>
-                Huella de carbono: metodologías y cálculo sectorial
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 2.1</span> Huella de carbono: metodologías y cálculo sectorial</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>Alcances 1, 2 y 3:</strong> protocolos GHG e inventarios nacionales.</span></li>
-                <li><span><strong>Herramientas de cálculo:</strong> factores de emisión, equivalencias CO₂e.</span></li>
-                <li><span><strong>Taller:</strong> Estimación de huella de carbono del territorio seleccionado.</span></li>
+                <li><span><strong>Alcances 1, 2 y 3:</strong> protocolos GHG, inventarios nacionales y factores de emisión.</span></li>
+                <li><span><strong>Herramientas:</strong> equivalencias CO₂e y metodología de estimación sectorial.</span></li>
+                <li><span><strong>Taller:</strong> Estimación de huella de carbono del territorio del caso.</span></li>
               </ul>
             </div>
           </details>
           <details>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 2.2</span>
-                Energías renovables y transición energética justa
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 2.2</span> Energías renovables y transición energética justa</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>Tecnologías:</strong> solar fotovoltaica, eólica, hidráulica de pequeña escala e hidrógeno verde.</span></li>
-                <li><span><strong>Dimensionamiento básico:</strong> radiación solar local, factor de planta y costo nivelado (LCOE).</span></li>
-                <li><span><strong>Aplicación al caso:</strong> propuesta de mezcla energética para el territorio.</span></li>
+                <li><span><strong>Tecnologías:</strong> solar fotovoltaica, eólica, pequeña hidráulica e hidrógeno verde.</span></li>
+                <li><span><strong>Dimensionamiento:</strong> radiación solar local, factor de planta y costo nivelado LCOE.</span></li>
+                <li><span><strong>Aplicación:</strong> propuesta de mezcla energética para el territorio de estudio.</span></li>
               </ul>
-              <span class="activity-badge">🔬 Actividad Integradora: Inventario de emisiones y propuesta energética</span>
+              <span class="act-badge"><i class="fas fa-flask"></i> Actividad Integradora II: Inventario de emisiones y propuesta energética</span>
             </div>
           </details>
         </div>
 
-        <!-- PANEL 3 -->
         <div id="panel3" class="tab-content">
           <details open>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 3.1</span>
-                Estrategias de mitigación: reducción de emisiones en sectores clave
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 3.1</span> Estrategias de mitigación: reducción de emisiones en sectores clave</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>Sectores prioritarios:</strong> transporte, construcción, industria y residuos.</span></li>
-                <li><span><strong>NDCs colombianas:</strong> compromisos nacionales y metas sectoriales.</span></li>
+                <li><span><strong>Sectores prioritarios:</strong> transporte, construcción, industria y gestión de residuos.</span></li>
+                <li><span><strong>NDCs colombianas:</strong> compromisos nacionales, metas sectoriales y hoja de ruta al 2030.</span></li>
                 <li><span><strong>Taller:</strong> Diseño de medidas de mitigación para el sector más crítico del caso.</span></li>
               </ul>
             </div>
           </details>
           <details>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 3.2</span>
-                Adaptación climática: infraestructura resiliente y soluciones basadas en naturaleza
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 3.2</span> Adaptación climática: infraestructura resiliente y soluciones basadas en naturaleza</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>NbS (Nature-based Solutions):</strong> restauración, corredores biológicos y humedales urbanos.</span></li>
-                <li><span><strong>Infraestructura resiliente:</strong> diseño de sistemas que soporten eventos extremos.</span></li>
-                <li><span><strong>Caso de estudio:</strong> Plan de adaptación territorial con criterios técnicos y sociales.</span></li>
+                <li><span><strong>NbS:</strong> restauración, corredores biológicos y humedales urbanos.</span></li>
+                <li><span><strong>Infraestructura resiliente:</strong> diseño de sistemas para eventos climáticos extremos.</span></li>
+                <li><span><strong>Caso:</strong> Plan de adaptación territorial con criterios técnicos y sociales.</span></li>
               </ul>
-              <span class="activity-badge">🔬 Actividad Integradora: Plan de mitigación y adaptación territorial</span>
+              <span class="act-badge"><i class="fas fa-flask"></i> Actividad Integradora III: Plan de mitigación y adaptación territorial</span>
             </div>
           </details>
         </div>
 
-        <!-- PANEL 4 -->
         <div id="panel4" class="tab-content">
           <details open>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 4.1</span>
-                Diseño de soluciones aplicadas: del diagnóstico al prototipo
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 4.1</span> Diseño de soluciones aplicadas: del diagnóstico al prototipo</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
                 <li><span><strong>Ciclo de diseño climático:</strong> problema → datos → solución → prototipo → validación.</span></li>
-                <li><span><strong>Criterios de viabilidad:</strong> técnica, económica, social y ambiental.</span></li>
-                <li><span><strong>Trabajo de campo:</strong> construcción del prototipo aplicado al caso de estudio.</span></li>
+                <li><span><strong>Criterios de viabilidad:</strong> técnica, económica, social y ambiental en contexto colombiano.</span></li>
+                <li><span><strong>Trabajo:</strong> Construcción del prototipo aplicado al caso de estudio del equipo.</span></li>
               </ul>
             </div>
           </details>
           <details>
-            <summary>
-              <span class="sum-left">
-                <span class="sum-num">LECCIÓN 4.2</span>
-                Comunicación, política climática y presentación final
-              </span>
-              <em class="sum-arrow">▾</em>
-            </summary>
+            <summary><span class="sum-left"><span class="sum-num">LECCIÓN 4.2</span> Comunicación, política climática y presentación final</span><span class="sum-arrow"><i class="fas fa-chevron-down"></i></span></summary>
             <div class="detail-body">
               <ul class="lesson-list">
-                <li><span><strong>Marcos de política:</strong> Acuerdo de París, ODS 13, ENCC Colombia.</span></li>
+                <li><span><strong>Marcos de política:</strong> Acuerdo de París, ODS 13, Estrategia Nacional de Cambio Climático Colombia.</span></li>
                 <li><span><strong>Informe técnico:</strong> estructura, estándares y comunicación para decisores.</span></li>
-                <li><span><strong>Presentación final:</strong> defensa del diagnóstico técnico y prototipo ante panel evaluador.</span></li>
+                <li><span><strong>Evaluación final:</strong> defensa del diagnóstico y prototipo ante panel evaluador.</span></li>
               </ul>
-              <span class="activity-badge">🏁 Evaluación Final: Defensa del diagnóstico + prototipo aplicado</span>
+              <span class="act-badge"><i class="fas fa-flag-checkered"></i> Evaluación Final: Defensa diagnóstico + prototipo aplicado</span>
             </div>
           </details>
         </div>
 
-      </div><!-- /tab-panels -->
-    </div>
-  </section>
+      </div>
+    </section>
 
-  <!-- DELIVERABLES -->
-  <section id="entregables" style="padding-top:0">
-    <div class="section-inner">
-      <hr class="divider">
+    <section id="entregables">
+      <hr class="div">
       <div class="section-label">Entregables</div>
       <h2 class="section-title">¿Qué producirás?</h2>
       <div class="deliv-grid">
-        <div class="deliv-card dc-report">
-          <h4>📄 Informe de Diagnóstico Técnico</h4>
-          <p>
-            Documento académico que caracteriza el territorio seleccionado: vulnerabilidades climáticas,
-            inventario de emisiones, análisis de impactos sectoriales y propuesta de mitigación/adaptación.
-            Con rigor de ingeniería y base de datos real.
-          </p>
-          <div class="deliv-tag">Entrega: Semana 6 · Individual o parejas</div>
+        <div class="deliv-card dc-a">
+          <h4><i class="fas fa-file-alt"></i> Informe de Diagnóstico Técnico</h4>
+          <p>Documento académico que caracteriza el territorio: vulnerabilidades climáticas, inventario de emisiones, análisis sectorial y propuesta de mitigación/adaptación. Base de datos real, rigor de ingeniería.</p>
+          <div class="deliv-tag"><i class="fas fa-calendar-alt"></i> Entrega Semana 6 · Individual o parejas</div>
         </div>
-        <div class="deliv-card dc-proto">
-          <h4>🔧 Prototipo Aplicado</h4>
-          <p>
-            Solución tangible a un problema climático del territorio: puede ser un modelo físico,
-            simulación computacional, sistema de monitoreo o dispositivo de bajo costo.
-            Se defiende ante un panel evaluador con criterios técnicos.
-          </p>
-          <div class="deliv-tag">Entrega: Semana 8 · Equipo</div>
+        <div class="deliv-card dc-b">
+          <h4><i class="fas fa-tools"></i> Prototipo Aplicado</h4>
+          <p>Solución tangible a un problema climático del territorio: modelo físico, simulación computacional, sistema de monitoreo o dispositivo de bajo costo. Se defiende ante panel evaluador.</p>
+          <div class="deliv-tag"><i class="fas fa-calendar-alt"></i> Entrega Semana 8 · Equipo</div>
         </div>
       </div>
-
-      <!-- competence bars -->
-      <div class="progress-wrap" style="margin-top:2rem">
-        <div class="prog-row">
-          <label><span>Análisis de datos</span><span>85%</span></label>
-          <div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div>
-        </div>
-        <div class="prog-row">
-          <label><span>Diseño de soluciones</span><span>80%</span></label>
-          <div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div>
-        </div>
-        <div class="prog-row">
-          <label><span>Trabajo colaborativo</span><span>75%</span></label>
-          <div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div>
-        </div>
-        <div class="prog-row">
-          <label><span>Comunicación técnica</span><span>70%</span></label>
-          <div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div>
-        </div>
+      <div class="progress-wrap">
+        <div class="prog-row"><label><span>Análisis de datos</span><span>85%</span></label><div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div></div>
+        <div class="prog-row"><label><span>Diseño de soluciones</span><span>80%</span></label><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div></div>
+        <div class="prog-row"><label><span>Trabajo colaborativo</span><span>75%</span></label><div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div></div>
+        <div class="prog-row"><label><span>Comunicación técnica</span><span>70%</span></label><div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TIMELINE -->
-  <section id="cronograma" style="padding-top:0">
-    <div class="section-inner">
-      <hr class="divider">
+    <section id="cronograma">
+      <hr class="div">
       <div class="section-label">Cronograma</div>
-      <h2 class="section-title">8 semanas, semana a semana</h2>
+      <h2 class="section-title">Semana a semana</h2>
       <div class="timeline">
-        <div class="tl-week">
-          <span class="tl-num">SEM 01</span>
-          <div class="tl-content">
-            <h5>Fundamentos del sistema climático</h5>
-            <p>Evidencia científica, registros históricos y selección del territorio de caso.</p>
-          </div>
-        </div>
-        <div class="tl-week">
-          <span class="tl-num">SEM 02</span>
-          <div class="tl-content">
-            <h5>Impactos sectoriales y diagnóstico preliminar</h5>
-            <p>Agua, energía, alimentación. Recopilación de datos base del territorio.</p>
-          </div>
-        </div>
-        <div class="tl-week highlight">
-          <span class="tl-num">SEM 03</span>
-          <div class="tl-content">
-            <h5>⬡ Actividad Integradora I</h5>
-            <p>Entrega del diagnóstico territorial preliminar del caso de estudio.</p>
-          </div>
-        </div>
-        <div class="tl-week">
-          <span class="tl-num">SEM 04</span>
-          <div class="tl-content">
-            <h5>Huella de carbono y metodologías GHG</h5>
-            <p>Cálculo sectorial, factores de emisión y estimación para el territorio.</p>
-          </div>
-        </div>
-        <div class="tl-week">
-          <span class="tl-num">SEM 05</span>
-          <div class="tl-content">
-            <h5>Energías renovables y transición energética</h5>
-            <p>Dimensionamiento básico y propuesta de mezcla energética local.</p>
-          </div>
-        </div>
-        <div class="tl-week highlight">
-          <span class="tl-num">SEM 06</span>
-          <div class="tl-content">
-            <h5>⬡ Actividad Integradora II · Entrega diagnóstico técnico</h5>
-            <p>Inventario de emisiones, propuesta energética e informe de diagnóstico completo.</p>
-          </div>
-        </div>
-        <div class="tl-week">
-          <span class="tl-num">SEM 07</span>
-          <div class="tl-content">
-            <h5>Mitigación, adaptación y prototipado</h5>
-            <p>Diseño de soluciones aplicadas; construcción del prototipo del equipo.</p>
-          </div>
-        </div>
-        <div class="tl-week highlight">
-          <span class="tl-num">SEM 08</span>
-          <div class="tl-content">
-            <h5>🏁 Presentación final</h5>
-            <p>Defensa del prototipo aplicado y evaluación ante panel. Política climática.</p>
-          </div>
-        </div>
+        <div class="tl-week"><span class="tl-num">SEM 01</span><div class="tl-content"><h5>Fundamentos del sistema climático</h5><p>Evidencia científica, registros históricos y selección del territorio.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 02</span><div class="tl-content"><h5>Impactos sectoriales</h5><p>Agua, energía, alimentación. Recopilación de datos base del territorio.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 03</span><div class="tl-content"><h5><i class="fas fa-flask" style="color:var(--purple)"></i> Actividad Integradora I</h5><p>Entrega diagnóstico territorial preliminar.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 04</span><div class="tl-content"><h5>Huella de carbono y metodologías GHG</h5><p>Cálculo sectorial, factores de emisión y estimación para el territorio.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 05</span><div class="tl-content"><h5>Energías renovables</h5><p>Dimensionamiento básico y propuesta de mezcla energética local.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 06</span><div class="tl-content"><h5><i class="fas fa-file-alt" style="color:var(--purple)"></i> Entrega: Informe de Diagnóstico Técnico</h5><p>Inventario de emisiones, propuesta energética e informe completo.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 07</span><div class="tl-content"><h5>Mitigación, adaptación y prototipado</h5><p>Diseño y construcción del prototipo aplicado por equipo.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 08</span><div class="tl-content"><h5><i class="fas fa-flag-checkered" style="color:var(--purple)"></i> Presentación final</h5><p>Defensa del prototipo ante panel evaluador. Política climática.</p></div></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- INSTRUCTOR -->
-  <section style="padding-top:0">
-    <div class="section-inner">
-      <hr class="divider">
+    <section>
+      <hr class="div">
       <div class="section-label">Docente</div>
       <h2 class="section-title">Quién imparte el curso</h2>
-      <div class="instructor-card">
-        <div class="inst-avatar">FT</div>
+      <div class="inst-card">
+        <div class="inst-av">FT</div>
         <div>
           <div class="inst-name">Ferney Torres</div>
           <div class="inst-role">Docente Universitario · Facultad de Ingeniería</div>
-          <p class="inst-bio">
-            Ingeniero con experiencia en programas de Robótica, Inteligencia Artificial y Electrónica.
-            Desarrolla metodologías de aprendizaje basado en proyectos reales, integrando tecnología
-            y sostenibilidad. Investigador en acción climática aplicada a sistemas de ingeniería en Colombia.
-          </p>
+          <p class="inst-bio">Ingeniero con experiencia en programas de Robótica, Inteligencia Artificial y Electrónica. Desarrolla metodologías de aprendizaje basado en proyectos reales, integrando tecnología y sostenibilidad. Investigador en acción climática aplicada a sistemas de ingeniería en Colombia.</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA -->
-  <section class="cta-footer">
-    <h2>¿Listo para<br><em style="font-family:var(--font-display);font-style:italic;color:var(--accent2)">actuar sobre el clima?</em></h2>
-    <p>Únete al curso y construye soluciones reales desde la ingeniería.</p>
-    <div class="btn-group">
-      <a href="https://tower-ing.com/training/" class="btn-secondary">← Ver todos los cursos</a>
-      <a href="https://tower-ing.com" class="btn-primary">Ir al portal</a>
-    </div>
-  </section>
+    <section>
+      <div class="cta-section">
+        <h2>¿Listo para actuar sobre el clima?</h2>
+        <p>Construye soluciones reales desde la ingeniería. Únete al curso.</p>
+        <div class="btn-group">
+          <a href="../" class="btn-secondary"><i class="fas fa-arrow-left"></i> Ver todos los cursos</a>
+          <a href="https://tower-ing.com" class="btn-primary"><i class="fas fa-home"></i> Ir al portal</a>
+        </div>
+      </div>
+    </section>
 
-  <!-- FOOTER -->
+  </main>
+
   <footer>
-    <span>© 2025 Towers Ing · Todos los derechos reservados</span>
-    <a href="https://tower-ing.com">tower-ing.com</a>
+    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
   </footer>
 
 </body>
