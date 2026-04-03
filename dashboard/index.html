@@ -1,444 +1,799 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard - Towers Ing</title>
-  <meta name="description" content="Panel de control con datos en tiempo real de roles, puntajes y grupos formados.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard · tower-ing.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, remove }
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
+      authDomain:        "tower-ing.firebaseapp.com",
+      databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+      projectId:         "tower-ing",
+      storageBucket:     "tower-ing.firebasestorage.app",
+      messagingSenderId: "440636238988",
+      appId:             "1:440636238988:web:58291c1d59c98f695b1fa9"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getDatabase(app);
+
+    // ── AUTH ──
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        document.getElementById('screen-login').style.display = 'none';
+        document.getElementById('screen-app').style.display  = 'flex';
+        document.getElementById('admin-email').textContent = user.email;
+        iniciarListeners();
+      } else {
+        document.getElementById('screen-login').style.display = 'flex';
+        document.getElementById('screen-app').style.display  = 'none';
+      }
+    });
+
+    window.doLogin = async () => {
+      const email = document.getElementById('inp-email').value.trim();
+      const pass  = document.getElementById('inp-pass').value;
+      const err   = document.getElementById('login-err');
+      const btn   = document.getElementById('btn-login');
+      err.textContent = '';
+      btn.disabled = true; btn.textContent = 'Verificando…';
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch(e) {
+        err.textContent = 'Credenciales incorrectas.';
+        btn.disabled = false; btn.textContent = 'Ingresar →';
+      }
+    };
+    window.doLogout = () => signOut(auth);
+
+    // ── ESTADO GLOBAL ──
+    let DATA = { roles: {}, geo: {}, ac: {} };
+    let CHARTS = {};
+
+    // ── LISTENERS FIREBASE ──
+    function iniciarListeners() {
+      onValue(ref(db, 'estudiantes'), snap => {
+        DATA.roles = snap.val() || {};
+        if (seccionActiva === 'overview') renderOverview();
+        if (seccionActiva === 'roles')    renderRoles();
+      });
+      onValue(ref(db, 'diagnostico_geoespacial'), snap => {
+        DATA.geo = snap.val() || {};
+        if (seccionActiva === 'overview') renderOverview();
+        if (seccionActiva === 'geo')      renderGeo();
+      });
+      onValue(ref(db, 'diagnostico_ac'), snap => {
+        DATA.ac = snap.val() || {};
+        if (seccionActiva === 'overview') renderOverview();
+      });
+    }
+
+    // ── NAVEGACIÓN ──
+    let seccionActiva = 'overview';
+    window.showSection = (id) => {
+      seccionActiva = id;
+      document.querySelectorAll('.nav-item').forEach(el =>
+        el.classList.toggle('active', el.dataset.section === id));
+      document.querySelectorAll('.section').forEach(el =>
+        el.style.display = el.id === 'sec-' + id ? 'block' : 'none');
+      document.getElementById('section-title').textContent = {
+        overview: 'Resumen General',
+        roles:    'Roles Colaborativos',
+        geo:      'Diagnóstico Geoespacial',
+        ac:       'Diagnóstico Acción Climática'
+      }[id];
+      if (id === 'overview') renderOverview();
+      if (id === 'roles')    renderRoles();
+      if (id === 'geo')      renderGeo();
+    };
+
+    // ════════════════════════════════════════════
+    // OVERVIEW
+    // ════════════════════════════════════════════
+    function renderOverview() {
+      const rLen = Object.keys(DATA.roles).length;
+      const gLen = Object.keys(DATA.geo).length;
+      const aLen = Object.keys(DATA.ac).length;
+      document.getElementById('ov-roles').textContent = rLen;
+      document.getElementById('ov-geo').textContent   = gLen;
+      document.getElementById('ov-ac').textContent    = aLen;
+      document.getElementById('ov-total').textContent = rLen + gLen + aLen;
+
+      // Actividad reciente (últimos 6 registros combinados)
+      const all = [
+        ...Object.entries(DATA.roles).map(([k,v]) => ({
+          key:k, tipo:'Roles Colaborativos', color:'var(--roles)',
+          nombre: (v.nombre||'')+ ' '+(v.apellido||''),
+          detalle: v.rolNatural ? v.rolNatural.toUpperCase() : '—',
+          ts: v.fechaRegistro || 0
+        })),
+        ...Object.entries(DATA.geo).map(([k,v]) => ({
+          key:k, tipo:'Diagnóstico Geoespacial', color:'var(--geo)',
+          nombre: v._nombre||'—',
+          detalle: 'Semestre '+( v._semestre||'—'),
+          ts: v.timestamp || 0
+        }))
+      ].sort((a,b) => b.ts - a.ts).slice(0,6);
+
+      const feed = document.getElementById('ov-feed');
+      if (!all.length) { feed.innerHTML = '<p class="empty">Sin registros aún.</p>'; return; }
+      feed.innerHTML = all.map(r => `
+        <div class="feed-item">
+          <div class="feed-dot" style="background:${r.color}"></div>
+          <div class="feed-info">
+            <span class="feed-nombre">${r.nombre}</span>
+            <span class="feed-tipo">${r.tipo} · ${r.detalle}</span>
+          </div>
+          <div class="feed-time">${r.ts ? new Date(r.ts).toLocaleDateString('es-CO',{day:'2-digit',month:'short'}) : '—'}</div>
+        </div>`).join('');
+
+      // Mini chart distribución
+      crearChart('chart-overview', 'doughnut', {
+        labels:['Roles','Geoespacial','Acción Climática'],
+        datasets:[{ data:[rLen,gLen,aLen],
+          backgroundColor:['rgba(79,158,241,.8)','rgba(0,212,170,.8)','rgba(240,192,64,.8)'],
+          borderWidth:0 }]
+      }, { plugins:{ legend:{ position:'bottom', labels:{ color:'#94a3b8', font:{family:'DM Mono',size:11}, padding:16 }}}});
+    }
+
+    // ════════════════════════════════════════════
+    // ROLES COLABORATIVOS
+    // ════════════════════════════════════════════
+    const ROLES_LIST = ['coordinador','comunicador','investigador','analista de datos'];
+    const ROLES_COLORS = {
+      'coordinador':      'rgba(79,158,241,.75)',
+      'comunicador':      'rgba(167,139,250,.75)',
+      'investigador':     'rgba(52,211,153,.75)',
+      'analista de datos':'rgba(251,191,36,.75)'
+    };
+    const ROLES_SOLID = {
+      'coordinador':      '#4f9ef1',
+      'comunicador':      '#a78bfa',
+      'investigador':     '#34d399',
+      'analista de datos':'#fbbf24'
+    };
+
+    function renderRoles() {
+      const rows = Object.entries(DATA.roles).map(([k,v]) => ({key:k,...v}));
+      const total = rows.length;
+
+      // KPIs
+      document.getElementById('r-total').textContent = total;
+      ROLES_LIST.forEach(r => {
+        const safe = r.replace(/ /g,'-');
+        const count = rows.filter(e => e.rolNatural === r).length;
+        const el = document.getElementById('r-'+safe);
+        if(el) el.textContent = count;
+      });
+
+      if (!total) {
+        document.getElementById('r-tabla-body').innerHTML =
+          '<tr><td colspan="6" class="empty-td">Sin registros aún.</td></tr>';
+        return;
+      }
+
+      // Donut roles
+      const counts = ROLES_LIST.map(r => rows.filter(e => e.rolNatural === r).length);
+      crearChart('chart-roles-donut','doughnut',{
+        labels: ROLES_LIST.map(r => r.charAt(0).toUpperCase()+r.slice(1)),
+        datasets:[{ data:counts, backgroundColor:ROLES_LIST.map(r=>ROLES_COLORS[r]), borderWidth:0 }]
+      },{ plugins:{ legend:{ position:'bottom', labels:{ color:'#94a3b8', font:{family:'DM Mono',size:11}, padding:12 }}}});
+
+      // Bar puntaje promedio por rol
+      const avgPuntajes = ROLES_LIST.map(r => {
+        const set = rows.filter(e => e.puntajes && e.puntajes[r]);
+        if (!set.length) return 0;
+        return (set.reduce((s,e) => s + (e.puntajes[r]||0), 0) / set.length).toFixed(1);
+      });
+      crearChart('chart-roles-bar','bar',{
+        labels: ROLES_LIST.map(r => r.charAt(0).toUpperCase()+r.slice(1)),
+        datasets:[{ label:'Puntaje promedio', data:avgPuntajes,
+          backgroundColor: ROLES_LIST.map(r=>ROLES_COLORS[r]),
+          borderRadius:4, borderSkipped:false }]
+      },{
+        scales:{
+          y:{ beginAtZero:true, ticks:{color:'#64748b',font:{family:'DM Mono',size:11}}, grid:{color:'rgba(255,255,255,.05)'}},
+          x:{ ticks:{color:'#64748b',font:{family:'DM Mono',size:10}}, grid:{display:false}}
+        },
+        plugins:{legend:{display:false}}
+      });
+
+      // Tabla
+      const tbody = document.getElementById('r-tabla-body');
+      tbody.innerHTML = rows.sort((a,b)=>(b.fechaRegistro||0)-(a.fechaRegistro||0)).map(r => `
+        <tr>
+          <td>${r.nombre||'—'}</td>
+          <td>${r.apellido||'—'}</td>
+          <td style="font-family:var(--mono);font-size:.78rem;color:var(--muted)">${r.identificacion||'—'}</td>
+          <td><span class="rol-badge" style="background:${ROLES_SOLID[r.rolNatural]||'#555'}22;color:${ROLES_SOLID[r.rolNatural]||'#aaa'};border:1px solid ${ROLES_SOLID[r.rolNatural]||'#555'}44">${(r.rolNatural||'—').toUpperCase()}</span></td>
+          <td style="font-family:var(--mono);font-size:.75rem;color:var(--muted)">
+            ${r.fechaRegistro ? new Date(r.fechaRegistro).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '—'}
+          </td>
+          <td><button class="btn-del" onclick="eliminarEstudiante('${r.key}')">✕</button></td>
+        </tr>`).join('');
+    }
+
+    window.eliminarEstudiante = async (key) => {
+      if (!confirm('¿Eliminar este registro?')) return;
+      await remove(ref(db, 'estudiantes/' + key));
+    };
+
+    window.formarGrupos = () => {
+      const rows = Object.entries(DATA.roles).map(([k,v])=>({key:k,...v}));
+      if (rows.length < 4) { alert('Necesitas al menos 4 estudiantes registrados.'); return; }
+
+      const totalEst = rows.length;
+      const porRol   = Math.floor(totalEst / 4);
+      let sobrantes  = totalEst % 4;
+
+      rows.forEach(e => {
+        if (!e.puntajes) return;
+        const sorted = Object.entries(e.puntajes).sort((a,b)=>b[1]-a[1]);
+        e.primerRol  = sorted[0]?.[0];
+        e.segundoRol = sorted[1]?.[0];
+        e.tercerRol  = sorted[2]?.[0];
+        e.maxPuntaje = sorted[0]?.[1] || 0;
+      });
+
+      let conteo = { coordinador:0, comunicador:0, investigador:0, 'analista de datos':0 };
+      rows.forEach(e => delete e.rolAsignado);
+
+      ROLES_LIST.forEach(rol => {
+        rows.filter(e => e.rolNatural === rol)
+          .sort((a,b) => b.maxPuntaje - a.maxPuntaje)
+          .slice(0, porRol)
+          .forEach(e => { e.rolAsignado = rol; conteo[rol]++; });
+      });
+
+      rows.filter(e => !e.rolAsignado).forEach(e => {
+        for (const rol of [e.segundoRol, e.tercerRol, ...ROLES_LIST]) {
+          if (rol && conteo[rol] < porRol + (sobrantes > 0 ? 1 : 0)) {
+            e.rolAsignado = rol; conteo[rol]++;
+            if (sobrantes > 0) sobrantes--;
+            break;
+          }
+        }
+      });
+
+      const pool = {};
+      ROLES_LIST.forEach(r => pool[r] = []);
+      rows.forEach(e => { if (e.rolAsignado) pool[e.rolAsignado].push(e); });
+      const nGrupos = Math.min(...ROLES_LIST.map(r => pool[r].length));
+
+      const div = document.getElementById('r-grupos');
+      if (nGrupos === 0) { div.innerHTML = '<p class="empty">No hay suficientes estudiantes por rol para formar grupos.</p>'; return; }
+
+      div.innerHTML = Array.from({length: nGrupos}, (_, i) => `
+        <div class="grupo-card">
+          <div class="grupo-num">Grupo ${i+1}</div>
+          ${ROLES_LIST.map(rol => {
+            const est = pool[rol][i];
+            return est ? `<div class="grupo-miembro">
+              <span class="grupo-rol-dot" style="background:${ROLES_SOLID[rol]}"></span>
+              <span class="grupo-nombre">${est.nombre} ${est.apellido}</span>
+              <span class="grupo-rol-label">${rol.toUpperCase()}</span>
+            </div>` : '';
+          }).join('')}
+        </div>`).join('');
+    };
+
+    // ════════════════════════════════════════════
+    // DIAGNÓSTICO GEOESPACIAL
+    // ════════════════════════════════════════════
+    const CORRECTAS_GEO = {
+      q1:'b',q2:'V',q3:'b',q4:'F',q5:'c',q6:'V',q7:'b',q8:'V',q9:'b',q10:'V',
+      q11:'b',q12:'V',q13:'b',q14:'F',q15:'b',q16:'V',q17:'b',q18:'V',q19:'c',q20:'V',
+      q21:'b',q22:'V',q23:'b',q24:'F',q25:'b',q26:'V',q27:'b',q28:'V',q29:'a',q30:'F'
+    };
+
+    function calcScoreGeo(r) {
+      return Object.entries(CORRECTAS_GEO).filter(([q,v]) => r[q]===v).length;
+    }
+
+    function nivelGeo(s30) {
+      const p = s30/30*100;
+      if (p>=67) return { label:'Listo',           color:'#00d4aa', icon:'🟢' };
+      if (p>=40) return { label:'Repaso selectivo', color:'#f0c040', icon:'🟡' };
+      return            { label:'Repaso completo',  color:'#e74c3c', icon:'🔴' };
+    }
+
+    function renderGeo() {
+      const rows = Object.entries(DATA.geo).map(([k,v])=>({key:k,...v}));
+      const total = rows.length;
+
+      document.getElementById('g-total').textContent = total;
+      if (!total) {
+        document.getElementById('g-avg').textContent   = '—';
+        document.getElementById('g-listos').textContent = '—';
+        document.getElementById('g-repaso').textContent = '—';
+        document.getElementById('g-tabla-body').innerHTML =
+          '<tr><td colspan="6" class="empty-td">Sin registros aún.</td></tr>';
+        return;
+      }
+
+      let sumS=0, listos=0, repaso=0;
+      rows.forEach(r => {
+        const s = calcScoreGeo(r);
+        sumS += s;
+        const p = s/30*100;
+        if (p>=67) listos++; else repaso++;
+      });
+
+      document.getElementById('g-avg').textContent    = (sumS/total/30*100).toFixed(1)+'%';
+      document.getElementById('g-listos').textContent = listos;
+      document.getElementById('g-repaso').textContent = repaso;
+
+      // Donut niveles
+      const nd = [0,0,0];
+      rows.forEach(r => {
+        const p = calcScoreGeo(r)/30*100;
+        if(p>=67) nd[0]++; else if(p>=40) nd[1]++; else nd[2]++;
+      });
+      crearChart('chart-geo-donut','doughnut',{
+        labels:['Listo','Repaso selectivo','Repaso completo'],
+        datasets:[{data:nd,backgroundColor:['#00d4aa','#f0c040','#e74c3c'],borderWidth:0}]
+      },{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{family:'DM Mono',size:11},padding:12}}}});
+
+      // Bar por sección
+      const secAvg = [0,0,0];
+      rows.forEach(r => {
+        let a=0,b=0,c=0;
+        for(let i=1;i<=10;i++)  if(r['q'+i]===CORRECTAS_GEO['q'+i]) a++;
+        for(let i=11;i<=20;i++) if(r['q'+i]===CORRECTAS_GEO['q'+i]) b++;
+        for(let i=21;i<=30;i++) if(r['q'+i]===CORRECTAS_GEO['q'+i]) c++;
+        secAvg[0]+=a; secAvg[1]+=b; secAvg[2]+=c;
+      });
+      crearChart('chart-geo-bar','bar',{
+        labels:['A · SIG y Cartografía','B · Teledetección','C · Herramientas'],
+        datasets:[{label:'% aciertos',
+          data:secAvg.map(v=>(v/total/10*100).toFixed(1)),
+          backgroundColor:['rgba(0,212,170,.7)','rgba(0,153,255,.7)','rgba(240,192,64,.7)'],
+          borderRadius:4,borderSkipped:false}]
+      },{
+        scales:{
+          y:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#64748b',font:{family:'DM Mono',size:11}},grid:{color:'rgba(255,255,255,.05)'}},
+          x:{ticks:{color:'#64748b',font:{family:'DM Mono',size:10}},grid:{display:false}}
+        },
+        plugins:{legend:{display:false}}
+      });
+
+      // Tabla
+      const tbody = document.getElementById('g-tabla-body');
+      tbody.innerHTML = rows.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)).map(r => {
+        const s   = calcScoreGeo(r);
+        const niv = nivelGeo(s);
+        const lk  = (() => {
+          let sum=0,n=0;
+          for(let i=31;i<=40;i++){ const v=parseInt(r['q'+i]); if(!isNaN(v)){sum+=v;n++;} }
+          return n ? (sum/n).toFixed(1) : '—';
+        })();
+        return `<tr style="cursor:pointer" onclick="abrirModalGeo(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+          <td>${r._nombre||'—'}</td>
+          <td style="font-family:var(--mono);font-size:.76rem;color:var(--muted)">${r._correo||'—'}</td>
+          <td style="text-align:center">${r._semestre||'—'}</td>
+          <td style="text-align:center;font-family:var(--mono)">${s}/30</td>
+          <td style="text-align:center;font-family:var(--mono)">${lk}/5</td>
+          <td style="text-align:center"><span class="nivel-badge" style="background:${niv.color}22;color:${niv.color};border:1px solid ${niv.color}44">${niv.icon} ${niv.label}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    window.abrirModalGeo = (r) => {
+      const s = calcScoreGeo(r);
+      const niv = nivelGeo(s);
+      const modal = document.getElementById('modal-geo');
+      modal.querySelector('.modal-title').textContent = r._nombre || '—';
+      modal.querySelector('.modal-sub').textContent =
+        `${r._correo||''} · Sem. ${r._semestre||'—'} · Score: ${s}/30 · ${niv.icon} ${niv.label}`;
+      modal.style.display = 'flex';
+    };
+
+    window.cerrarModalGeo = () => { document.getElementById('modal-geo').style.display = 'none'; };
+
+    // ── CHART HELPER ──
+    function crearChart(id, tipo, data, opts={}) {
+      if (CHARTS[id]) CHARTS[id].destroy();
+      const ctx = document.getElementById(id);
+      if (!ctx) return;
+      CHARTS[id] = new Chart(ctx.getContext('2d'), {
+        type: tipo, data,
+        options: { responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ labels:{ color:'#94a3b8', font:{family:'DM Mono',size:11} }}},
+          ...opts }
+      });
+    }
+
+    // Enter en login
+    document.addEventListener('keydown', e => {
+      if (e.key==='Enter' && document.getElementById('screen-login').style.display!=='none')
+        window.doLogin();
+    });
+
+    // Init: mostrar overview por defecto al cargar
+    window.addEventListener('load', () => showSection('overview'));
+  </script>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0e1117;--sidebar:#13171f;--surface:#1a2033;--border:#232b3e;
+      --roles:#4f9ef1;--geo:#00d4aa;--ac:#f0c040;--danger:#e74c3c;
+      --text:#e2e8f0;--muted:#64748b;--faint:#1e2740;
+      --mono:'DM Mono',monospace;--head:'Syne',sans-serif;
     }
+    html,body{height:100%}
+    body{background:var(--bg);color:var(--text);font-family:var(--head);font-size:14px}
 
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
+    /* ── LOGIN ── */
+    #screen-login{min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:var(--bg);position:relative;}
+    #screen-login::before{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(79,158,241,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(79,158,241,.04) 1px,transparent 1px);
+      background-size:32px 32px;pointer-events:none}
+    .login-box{background:var(--surface);border:1px solid var(--border);padding:3rem 2.5rem;
+      width:100%;max-width:380px;position:relative;z-index:1}
+    .login-logo{font-family:var(--mono);font-size:.7rem;color:var(--roles);letter-spacing:.18em;
+      text-transform:uppercase;margin-bottom:1.5rem;display:block}
+    .login-box h1{font-size:1.7rem;font-weight:800;margin-bottom:.2rem}
+    .login-box p{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:2rem}
+    .fl{margin-bottom:1rem}
+    .fl label{display:block;font-family:var(--mono);font-size:.62rem;color:var(--muted);
+      letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+    .fl input{width:100%;padding:.7rem .9rem;background:var(--faint);border:1px solid var(--border);
+      color:var(--text);font-family:var(--mono);font-size:.88rem;outline:none;transition:border-color .2s}
+    .fl input:focus{border-color:var(--roles)}
+    #btn-login{width:100%;padding:.82rem;background:var(--roles);color:#fff;border:none;
+      font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;cursor:pointer;transition:all .2s}
+    #btn-login:hover:not(:disabled){background:#3a84d4}
+    #btn-login:disabled{background:var(--muted);cursor:not-allowed}
+    #login-err{font-family:var(--mono);font-size:.7rem;color:var(--danger);margin-top:.6rem;min-height:1rem}
 
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+    /* ── APP LAYOUT ── */
+    #screen-app{display:none;min-height:100vh}
+    .app-layout{display:flex;min-height:100vh}
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      margin-bottom: 30px;
-    }
+    /* ── SIDEBAR ── */
+    .sidebar{width:240px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);
+      display:flex;flex-direction:column;position:sticky;top:0;flex-shrink:0}
+    .sidebar-logo{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border)}
+    .sidebar-logo a{font-family:var(--mono);font-size:.8rem;color:var(--roles);text-decoration:none}
+    .sidebar-logo p{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:.25rem}
+    .sidebar-nav{flex:1;padding:1rem 0}
+    .nav-section-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.14em;
+      text-transform:uppercase;padding:.5rem 1.5rem;margin-top:.5rem}
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.5rem;
+      cursor:pointer;transition:all .18s;font-family:var(--mono);font-size:.78rem;color:var(--muted);
+      border-left:3px solid transparent;user-select:none}
+    .nav-item:hover{background:var(--faint);color:var(--text)}
+    .nav-item.active{background:var(--faint);color:var(--text);border-left-color:var(--roles)}
+    .nav-item.active[data-section="roles"]{border-left-color:var(--roles)}
+    .nav-item.active[data-section="geo"]  {border-left-color:var(--geo)}
+    .nav-item.active[data-section="ac"]   {border-left-color:var(--ac)}
+    .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .sidebar-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
+    .sidebar-email{font-family:var(--mono);font-size:.65rem;color:var(--muted);
+      margin-bottom:.6rem;word-break:break-all}
+    .btn-logout{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;padding:.45rem 1rem;
+      background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;
+      width:100%;transition:all .2s}
+    .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
 
-    .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .stat-card:hover {
-      transform: translateY(-5px);
-    }
-    .stat-card i {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #3498db;
-    }
-    .stat-card h3 {
-      font-size: 2.5rem;
-      color: #1a2a6c;
-      margin-bottom: 5px;
-    }
-    .stat-card p {
-      color: #7f8c8d;
-      font-weight: 500;
-    }
+    /* ── MAIN ── */
+    .main{flex:1;overflow-y:auto;min-width:0}
+    .topbar{padding:1rem 2rem;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;background:rgba(14,17,23,.9);backdrop-filter:blur(10px);z-index:40}
+    .topbar h2{font-size:1rem;font-weight:700}
+    .topbar-right{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+    .content{padding:2rem;max-width:1300px}
 
-    .section {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .section h2 {
-      color: #1a2a6c;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.5rem;
-    }
-    .section h2 i {
-      color: #3498db;
-    }
+    /* ── SECCIONES ── */
+    .section{display:none}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    th {
-      background: #f8f9fa;
-      color: #1a2a6c;
-      font-weight: 600;
-    }
-    tr:hover {
-      background: #f1f1f1;
-    }
+    /* ── KPI ROW ── */
+    .kpi-row{display:grid;gap:1px;background:var(--border);margin-bottom:1.75rem}
+    .kpi-row.cols-4{grid-template-columns:repeat(4,1fr)}
+    .kpi-row.cols-2{grid-template-columns:repeat(2,1fr)}
+    .kpi{background:var(--surface);padding:1.5rem 1.25rem}
+    .kpi-val{font-size:2.2rem;font-weight:800;line-height:1;margin-bottom:.3rem}
+    .kpi-lbl{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+    .kpi.accent-roles .kpi-val{color:var(--roles)}
+    .kpi.accent-geo   .kpi-val{color:var(--geo)}
+    .kpi.accent-ac    .kpi-val{color:var(--ac)}
+    .kpi.accent-warn  .kpi-val{color:#f0c040}
 
-    .btn-group {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .btn-refresh {
-      background: #27ae60;
-      color: white;
-    }
-    .btn-refresh:hover {
-      background: #229954;
-    }
-    .btn-update-groups {
-      background: #e67e22;
-      color: white;
-    }
-    .btn-update-groups:hover {
-      background: #d35400;
-    }
-    .btn-delete {
-      background: #e74c3c;
-      color: white;
-      font-size: 0.8rem;
-      padding: 5px 10px;
-    }
-    .btn-delete:hover {
-      background: #c0392b;
-    }
+    /* ── CHARTS ── */
+    .charts-row{display:grid;gap:1.5rem;margin-bottom:1.75rem}
+    .charts-row.cols-2{grid-template-columns:1fr 1fr}
+    .charts-row.cols-1-2{grid-template-columns:1fr 2fr}
+    .chart-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem}
+    .chart-card h3{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.14em;
+      text-transform:uppercase;margin-bottom:1.1rem}
+    .chart-box{position:relative;height:220px}
+    .chart-box.tall{height:280px}
 
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .back-home:hover {
-      background: #2980b9;
-    }
+    /* ── TABLA ── */
+    .tabla-card{background:var(--surface);border:1px solid var(--border);margin-bottom:1.75rem;overflow:hidden}
+    .tabla-head{display:flex;align-items:center;justify-content:space-between;
+      padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+    .tabla-head h3{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+    .tabla-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    th{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
+      padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+    td{font-size:.85rem;padding:.75rem 1rem;border-bottom:1px solid rgba(35,43,62,.6)}
+    tr:last-child td{border-bottom:none}
+    tbody tr:hover td{background:rgba(79,158,241,.03)}
+    .empty-td{text-align:center;color:var(--muted);font-family:var(--mono);font-size:.75rem;padding:2rem}
+    .rol-badge,.nivel-badge{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;
+      padding:.2rem .55rem;border-radius:2px;white-space:nowrap}
+    .btn-del{background:transparent;border:1px solid var(--border);color:var(--muted);
+      font-size:.7rem;padding:.25rem .5rem;cursor:pointer;transition:all .18s}
+    .btn-del:hover{border-color:var(--danger);color:var(--danger)}
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
+    /* ── OVERVIEW FEED ── */
+    .ov-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.75rem}
+    .feed-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem}
+    .feed-card h3{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem}
+    .feed-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 0;border-bottom:1px solid var(--border)}
+    .feed-item:last-child{border-bottom:none}
+    .feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .feed-info{flex:1;display:flex;flex-direction:column;gap:.15rem}
+    .feed-nombre{font-size:.85rem;font-weight:600}
+    .feed-tipo{font-family:var(--mono);font-size:.65rem;color:var(--muted)}
+    .feed-time{font-family:var(--mono);font-size:.65rem;color:var(--muted);white-space:nowrap}
+    .empty{font-family:var(--mono);font-size:.75rem;color:var(--muted);text-align:center;padding:1.5rem 0}
+
+    /* ── GRUPOS ── */
+    .grupos-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;margin-top:1.25rem}
+    .grupo-card{background:var(--faint);border:1px solid var(--border);padding:1.25rem}
+    .grupo-num{font-family:var(--mono);font-size:.65rem;color:var(--roles);letter-spacing:.14em;
+      text-transform:uppercase;margin-bottom:.85rem}
+    .grupo-miembro{display:flex;align-items:center;gap:.6rem;padding:.45rem 0;
+      border-bottom:1px solid var(--border);font-size:.85rem}
+    .grupo-miembro:last-child{border-bottom:none}
+    .grupo-rol-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .grupo-nombre{flex:1}
+    .grupo-rol-label{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+    .btn-action{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;padding:.6rem 1.4rem;
+      background:var(--roles);color:#fff;border:none;cursor:pointer;transition:all .2s}
+    .btn-action:hover{opacity:.85}
+    .btn-action.green{background:var(--geo);color:#080c10}
+
+    /* ── MODAL ── */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
+      z-index:200;align-items:center;justify-content:center;padding:2rem}
+    .modal-box{background:var(--surface);border:1px solid var(--border);
+      width:100%;max-width:460px;padding:2rem}
+    .modal-title{font-size:1.25rem;font-weight:800;margin-bottom:.25rem}
+    .modal-sub{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:1.5rem}
+
+    /* ── PLACEHOLDER ── */
+    .placeholder-card{background:var(--surface);border:1px solid var(--border);
+      padding:3rem;text-align:center}
+    .placeholder-card .ph-icon{font-size:2.5rem;margin-bottom:1rem}
+    .placeholder-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+    .placeholder-card p{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+
+    @media(max-width:900px){
+      .sidebar{display:none}
+      .charts-row.cols-2,.charts-row.cols-1-2,.ov-layout{grid-template-columns:1fr}
+      .kpi-row.cols-4{grid-template-columns:repeat(2,1fr)}
+      .content{padding:1rem}
     }
   </style>
 </head>
 <body>
 
-  <header>
+<!-- ══════ LOGIN ══════ -->
+<div id="screen-login">
+  <div class="login-box">
+    <span class="login-logo">🗺 tower-ing · Admin</span>
+    <h1>Centro de Control</h1>
+    <p>Acceso restringido al administrador</p>
+    <div class="fl"><label>Correo</label>
+      <input type="email" id="inp-email" placeholder="correo@dominio.com" autocomplete="email"/>
+    </div>
+    <div class="fl"><label>Contraseña</label>
+      <input type="password" id="inp-pass" placeholder="••••••••"/>
+    </div>
+    <button id="btn-login" onclick="doLogin()">Ingresar →</button>
+    <div id="login-err"></div>
+  </div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="screen-app">
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="/">tower-ing.com</a>
+      <p>Panel de administración</p>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Módulos</div>
+      <div class="nav-item active" data-section="overview" onclick="showSection('overview')">
+        <div class="nav-dot" style="background:#94a3b8"></div> Resumen general
+      </div>
+      <div class="nav-item" data-section="roles" onclick="showSection('roles')">
+        <div class="nav-dot" style="background:var(--roles)"></div> Roles Colaborativos
+      </div>
+      <div class="nav-item" data-section="geo" onclick="showSection('geo')">
+        <div class="nav-dot" style="background:var(--geo)"></div> Diagnóstico Geoespacial
+      </div>
+      <div class="nav-item" data-section="ac" onclick="showSection('ac')">
+        <div class="nav-dot" style="background:var(--ac)"></div> Diagnóstico Acción Climática
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-email" id="admin-email"></div>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <h2 id="section-title">Resumen General</h2>
+      <div class="topbar-right" id="topbar-date"></div>
+    </div>
+
     <div class="content">
-      <h1><i class="fas fa-chart-line"></i> Dashboard de Roles Colaborativos</h1>
-      <p>Visualización, edición y gestión de registros y grupos.</p>
-    </div>
-  </header>
 
-  <main>
-
-    <!-- Estadísticas -->
-    <div class="dashboard-grid" id="stats-container">
-      <div class="stat-card">
-        <i class="fas fa-users"></i>
-        <h3 id="total-estudiantes">0</h3>
-        <p>Total Estudiantes</p>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-user-tie"></i>
-        <h3 id="coordinadores">0</h3>
-        <p>Coordinadores</p>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-comments"></i>
-        <h3 id="comunicadores">0</h3>
-        <p>Comunicadores</p>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-search"></i>
-        <h3 id="investigadores">0</h3>
-        <p>Investigadores</p>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-chart-bar"></i>
-        <h3 id="analistas">0</h3>
-        <p>Analistas de Datos</p>
-      </div>
-    </div>
-
-    <!-- Botones -->
-    <div class="btn-group">
-      <button class="btn-refresh" id="btn-refresh">🔄 Actualizar Datos</button>
-      <button class="btn-update-groups" id="btn-update-groups">🧩 Actualizar Grupos</button>
-    </div>
-
-    <!-- Tabla de estudiantes -->
-    <section class="section">
-      <h2><i class="fas fa-list"></i> Estudiantes Registrados</h2>
-      <div id="tabla-estudiantes">
-        <p style="text-align: center; color: #7f8c8d;">No hay estudiantes registrados aún.</p>
-      </div>
-    </section>
-
-    <!-- Grupos formados -->
-    <section class="section">
-      <h2><i class="fas fa-users-cog"></i> Grupos Formados</h2>
-      <div id="grupos-resultados">
-        <p style="text-align: center; color: #7f8c8d;">No se han formado grupos aún.</p>
-      </div>
-    </section>
-
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
-
-  </main>
-
-  <script>
-    function cargarDatos() {
-      let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [];
-
-      // Si es la primera vez o no tienen ID/fecha, los agregamos
-      let cambios = false;
-      let maxId = 0;
-      estudiantes.forEach(est => {
-        if (!est.id) {
-          maxId = Math.max(maxId, ...(estudiantes.map(e => e.id || 0)));
-          est.id = ++maxId;
-          cambios = true;
-        }
-        if (!est.fechaRegistro) {
-          est.fechaRegistro = new Date().toLocaleString();
-          cambios = true;
-        }
-      });
-      if (cambios) {
-        localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
-      }
-
-      // Actualizar estadísticas
-      const total = estudiantes.length;
-      const coordinadores = estudiantes.filter(e => e.rolNatural === 'coordinador').length;
-      const comunicadores = estudiantes.filter(e => e.rolNatural === 'comunicador').length;
-      const investigadores = estudiantes.filter(e => e.rolNatural === 'investigador').length;
-      const analistas = estudiantes.filter(e => e.rolNatural === 'analista de datos').length;
-
-      document.getElementById('total-estudiantes').textContent = total;
-      document.getElementById('coordinadores').textContent = coordinadores;
-      document.getElementById('comunicadores').textContent = comunicadores;
-      document.getElementById('investigadores').textContent = investigadores;
-      document.getElementById('analistas').textContent = analistas;
-
-      // Mostrar tabla de estudiantes
-      const tablaDiv = document.getElementById('tabla-estudiantes');
-      if (total === 0) {
-        tablaDiv.innerHTML = `<p style="text-align: center; color: #7f8c8d;">No hay estudiantes registrados aún.</p>`;
-        return;
-      }
-
-      let tablaHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Identificación</th>
-              <th>Rol Natural</th>
-              <th>Fecha Registro</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      estudiantes.forEach(est => {
-        tablaHTML += `
-          <tr>
-            <td><strong>${est.id}</strong></td>
-            <td>${est.nombre}</td>
-            <td>${est.apellido}</td>
-            <td>${est.identificacion}</td>
-            <td><span style="color: #2980b9; font-weight: bold;">${est.rolNatural.toUpperCase()}</span></td>
-            <td><small>${est.fechaRegistro}</small></td>
-            <td>
-              <button class="btn-delete" onclick="eliminarEstudiante(${est.id})">🗑️ Eliminar</button>
-            </td>
-          </tr>
-        `;
-      });
-
-      tablaHTML += `</tbody></table>`;
-      tablaDiv.innerHTML = tablaHTML;
-    }
-
-    function eliminarEstudiante(id) {
-      if (!confirm(`¿Estás seguro de eliminar el registro #${id}?`)) return;
-
-      let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [];
-      estudiantes = estudiantes.filter(est => est.id !== id);
-      localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
-
-      alert(`✅ Registro #${id} eliminado.`);
-      cargarDatos();
-    }
-
-    function actualizarGrupos() {
-      let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [];
-      if (estudiantes.length < 4) {
-        alert("Necesitas al menos 4 estudiantes para formar grupos.");
-        return;
-      }
-
-      const roles = ['coordinador', 'comunicador', 'investigador', 'analista de datos'];
-      const totalEstudiantes = estudiantes.length;
-      const estudiantesPorRol = Math.floor(totalEstudiantes / 4);
-      let sobrantes = totalEstudiantes % 4;
-
-      estudiantes.forEach(est => {
-        est.maxPuntaje = est.puntajes[est.rolNatural];
-        const entradas = Object.entries(est.puntajes).sort((a, b) => b[1] - a[1]);
-        est.primerRol = entradas[0][0];
-        est.segundoRol = entradas[1][0];
-        est.tercerRol = entradas[2][0];
-      });
-
-      let asignados = [];
-      let conteoRoles = { coordinador: 0, comunicador: 0, investigador: 0, 'analista de datos': 0 };
-
-      for (let rol of roles) {
-        let candidatos = estudiantes.filter(est => est.rolNatural === rol).sort((a, b) => b.maxPuntaje - a.maxPuntaje);
-        for (let i = 0; i < estudiantesPorRol && candidatos.length > 0; i++) {
-          let est = candidatos.shift();
-          est.rolAsignado = rol;
-          asignados.push(est);
-          conteoRoles[rol]++;
-        }
-      }
-
-      let noAsignados = estudiantes.filter(est => !est.rolAsignado);
-      for (let est of noAsignados) {
-        for (let rol of [est.segundoRol, est.tercerRol, ...roles]) {
-          if (conteoRoles[rol] < estudiantesPorRol + (sobrantes > 0 ? 1 : 0)) {
-            est.rolAsignado = rol;
-            asignados.push(est);
-            conteoRoles[rol]++;
-            if (sobrantes > 0) sobrantes--;
-            break;
-          }
-        }
-      }
-
-      let pool = { coordinador: [], comunicador: [], investigador: [], 'analista de datos': [] };
-      asignados.forEach(est => pool[est.rolAsignado].push(est));
-      const numGrupos = Math.min(...Object.values(pool).map(arr => arr.length));
-      let grupos = [];
-
-      for (let i = 0; i < numGrupos; i++) {
-        grupos.push({
-          numero: i + 1,
-          integrantes: [
-            pool.coordinador[i],
-            pool.comunicador[i],
-            pool.investigador[i],
-            pool['analista de datos'][i]
-          ]
-        });
-      }
-
-      let gruposDiv = document.getElementById('grupos-resultados');
-      let gruposHTML = `<h3>Grupos actualizados el ${new Date().toLocaleString()}</h3>`;
-      grupos.forEach(grupo => {
-        gruposHTML += `
-          <div style="background: #e8f4fc; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #3498db;">
-            <h4>Grupo ${grupo.numero}</h4>
-            <ul>
-              ${grupo.integrantes.map(int => `
-                <li><strong>${int.nombre} ${int.apellido}</strong> - <span style="color: #2980b9;">${int.rolAsignado.toUpperCase()}</span> (Natural: ${int.rolNatural})</li>
-              `).join('')}
-            </ul>
+      <!-- ── OVERVIEW ── -->
+      <div class="section" id="sec-overview">
+        <div class="kpi-row cols-4">
+          <div class="kpi"><div class="kpi-val" id="ov-total">—</div><div class="kpi-lbl">Total registros</div></div>
+          <div class="kpi accent-roles"><div class="kpi-val" id="ov-roles">—</div><div class="kpi-lbl">Roles Colaborativos</div></div>
+          <div class="kpi accent-geo"><div class="kpi-val" id="ov-geo">—</div><div class="kpi-lbl">Diagnóstico Geoespacial</div></div>
+          <div class="kpi accent-ac"><div class="kpi-val" id="ov-ac">—</div><div class="kpi-lbl">Diagnóstico AC</div></div>
+        </div>
+        <div class="ov-layout">
+          <div class="chart-card">
+            <h3>Distribución por formulario</h3>
+            <div class="chart-box"><canvas id="chart-overview"></canvas></div>
           </div>
-        `;
-      });
-      gruposDiv.innerHTML = gruposHTML;
-    }
+          <div class="feed-card">
+            <h3>Actividad reciente</h3>
+            <div id="ov-feed"><p class="empty">Sin registros aún.</p></div>
+          </div>
+        </div>
+      </div>
 
-    // Cargar al inicio
-    document.addEventListener('DOMContentLoaded', cargarDatos);
+      <!-- ── ROLES COLABORATIVOS ── -->
+      <div class="section" id="sec-roles">
+        <div class="kpi-row cols-4" style="grid-template-columns:repeat(5,1fr)">
+          <div class="kpi"><div class="kpi-val" id="r-total">—</div><div class="kpi-lbl">Total estudiantes</div></div>
+          <div class="kpi" style="border-left:3px solid var(--roles)">
+            <div class="kpi-val" style="color:var(--roles)" id="r-coordinador">—</div><div class="kpi-lbl">Coordinadores</div>
+          </div>
+          <div class="kpi" style="border-left:3px solid #a78bfa">
+            <div class="kpi-val" style="color:#a78bfa" id="r-comunicador">—</div><div class="kpi-lbl">Comunicadores</div>
+          </div>
+          <div class="kpi" style="border-left:3px solid #34d399">
+            <div class="kpi-val" style="color:#34d399" id="r-investigador">—</div><div class="kpi-lbl">Investigadores</div>
+          </div>
+          <div class="kpi" style="border-left:3px solid #fbbf24">
+            <div class="kpi-val" style="color:#fbbf24" id="r-analista-de-datos">—</div><div class="kpi-lbl">Analistas</div>
+          </div>
+        </div>
 
-    // Eventos
-    document.getElementById('btn-refresh').addEventListener('click', function() {
-      cargarDatos();
-      alert('✅ Datos actualizados desde localStorage.');
-    });
+        <div class="charts-row cols-2">
+          <div class="chart-card">
+            <h3>Distribución de roles</h3>
+            <div class="chart-box"><canvas id="chart-roles-donut"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Puntaje promedio por rol</h3>
+            <div class="chart-box"><canvas id="chart-roles-bar"></canvas></div>
+          </div>
+        </div>
 
-    document.getElementById('btn-update-groups').addEventListener('click', function() {
-      actualizarGrupos();
-      alert('✅ Grupos actualizados.');
-    });
-  </script>
+        <div class="tabla-card">
+          <div class="tabla-head">
+            <h3>Estudiantes registrados</h3>
+            <button class="btn-action green" onclick="formarGrupos()">⊞ Formar grupos</button>
+          </div>
+          <div class="tabla-wrap">
+            <table>
+              <thead><tr>
+                <th>Nombre</th><th>Apellido</th><th>Identificación</th>
+                <th>Rol Natural</th><th>Fecha</th><th></th>
+              </tr></thead>
+              <tbody id="r-tabla-body"><tr><td colspan="6" class="empty-td">Cargando…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
 
+        <div class="chart-card">
+          <h3>Grupos equilibrados generados</h3>
+          <div id="r-grupos" class="grupos-wrap"><p class="empty">Presiona "Formar grupos" para calcular.</p></div>
+        </div>
+      </div>
+
+      <!-- ── DIAGNÓSTICO GEOESPACIAL ── -->
+      <div class="section" id="sec-geo">
+        <div class="kpi-row cols-4">
+          <div class="kpi"><div class="kpi-val" id="g-total">—</div><div class="kpi-lbl">Respuestas totales</div></div>
+          <div class="kpi accent-geo"><div class="kpi-val" id="g-avg">—</div><div class="kpi-lbl">Promedio A-B-C</div></div>
+          <div class="kpi" style="border-left:3px solid #00d4aa">
+            <div class="kpi-val" style="color:#00d4aa" id="g-listos">—</div><div class="kpi-lbl">🟢 Listos</div>
+          </div>
+          <div class="kpi accent-warn">
+            <div class="kpi-val" id="g-repaso">—</div><div class="kpi-lbl">🟡🔴 Con repaso</div>
+          </div>
+        </div>
+
+        <div class="charts-row cols-2">
+          <div class="chart-card">
+            <h3>Distribución de niveles</h3>
+            <div class="chart-box"><canvas id="chart-geo-donut"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Aciertos promedio por sección</h3>
+            <div class="chart-box"><canvas id="chart-geo-bar"></canvas></div>
+          </div>
+        </div>
+
+        <div class="tabla-card">
+          <div class="tabla-head">
+            <h3>Estudiantes — clic para detalle</h3>
+          </div>
+          <div class="tabla-wrap">
+            <table>
+              <thead><tr>
+                <th>Nombre</th><th>Correo</th><th style="text-align:center">Sem.</th>
+                <th style="text-align:center">Score</th><th style="text-align:center">Likert</th>
+                <th style="text-align:center">Nivel</th>
+              </tr></thead>
+              <tbody id="g-tabla-body"><tr><td colspan="6" class="empty-td">Cargando…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ACCIÓN CLIMÁTICA ── -->
+      <div class="section" id="sec-ac">
+        <div class="placeholder-card">
+          <div class="ph-icon">🌿</div>
+          <h3>Diagnóstico Acción Climática</h3>
+          <p>Cuando el formulario tenga respuestas en Firebase bajo el nodo <code>diagnostico_ac</code>, los datos aparecerán aquí automáticamente.</p>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-layout -->
+</div><!-- /screen-app -->
+
+<!-- ── MODAL GEO ── -->
+<div class="modal-overlay" id="modal-geo" onclick="if(event.target===this) cerrarModalGeo()">
+  <div class="modal-box">
+    <div class="modal-title"></div>
+    <div class="modal-sub"></div>
+    <button class="btn-action" onclick="cerrarModalGeo()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+  // Fecha en topbar
+  document.getElementById('topbar-date').textContent =
+    new Date().toLocaleDateString('es-CO',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+</script>
 </body>
 </html>
