@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Identificador de Rol Colaborativo · tower-ing.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
+      authDomain:        "tower-ing.firebaseapp.com",
+      databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+      projectId:         "tower-ing",
+      storageBucket:     "tower-ing.firebasestorage.app",
+      messagingSenderId: "440636238988",
+      appId:             "1:440636238988:web:58291c1d59c98f695b1fa9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    window._guardarRol = async (payload) => {
+      const snap = await push(ref(db, 'estudiantes'), {
+        ...payload,
+        fechaRegistro: Date.now()
+      });
+      return snap.key;
+    };
+  </script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#f4f1eb;--surface:#ffffff;--border:#d6cfc4;
+      --accent:#1a2a6c;--accent2:#3498db;--ok:#27ae60;
+      --text:#1a1a1a;--muted:#6b6b6b;--faint:#eae6de;
+      --mono:'DM Mono',monospace;--head:'Syne',sans-serif;--body:'Lora',serif;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.7}
+    body::before{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(26,42,108,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,42,108,.03) 1px,transparent 1px);
+      background-size:28px 28px;pointer-events:none;z-index:0}
+
+    nav{position:sticky;top:0;z-index:100;background:rgba(244,241,235,.92);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);padding:.9rem 2rem;
+      display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:var(--mono);font-size:.8rem;color:var(--accent);text-decoration:none}
+    .nav-step{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+    .progress-bar{width:160px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+    .progress-fill{height:100%;background:var(--accent2);width:0%;transition:width .4s ease}
+
+    .container{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:3rem 1.5rem 6rem}
+
+    /* INTRO */
+    .intro-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;
+      color:var(--accent);letter-spacing:.14em;text-transform:uppercase;padding:.3rem .75rem;
+      border:1px solid rgba(26,42,108,.3);margin-bottom:1.5rem}
+    h1{font-family:var(--head);font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.05;margin-bottom:1rem}
+    h1 em{font-style:normal;color:var(--accent2)}
+    .intro-desc{font-size:1rem;color:var(--muted);max-width:540px;margin-bottom:2rem;font-style:italic}
+    .intro-stats{display:flex;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.5rem;
+      padding:1.25rem 1.5rem;background:var(--faint);border:1px solid var(--border)}
+    .stat{display:flex;flex-direction:column;gap:.2rem}
+    .stat-n{font-family:var(--mono);font-size:1.3rem;color:var(--accent);font-weight:500}
+    .stat-l{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+
+    /* DATOS PERSONALES */
+    .personal-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);
+      padding:1.75rem 2rem;margin-bottom:1.5rem}
+    .personal-card h2{font-family:var(--head);font-size:1rem;font-weight:700;margin-bottom:1.25rem;
+      display:flex;align-items:center;gap:.6rem}
+    .fl{margin-bottom:1rem}
+    .fl label{display:block;font-family:var(--mono);font-size:.65rem;color:var(--muted);
+      letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+    .fl input{width:100%;padding:.75rem 1rem;background:var(--faint);border:1px solid var(--border);
+      font-family:var(--body);font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s}
+    .fl input:focus{border-color:var(--accent2)}
+
+    /* PREGUNTA */
+    .question-block{background:var(--surface);border:1px solid var(--border);
+      padding:1.5rem 1.75rem;margin-bottom:1rem;transition:border-color .25s}
+    .question-block.answered{border-left:3px solid var(--ok)}
+    .question-block.error{border-left:3px solid #e74c3c;border-color:#e74c3c}
+    .q-num{font-family:var(--mono);font-size:.65rem;color:var(--accent2);letter-spacing:.12em;margin-bottom:.6rem}
+    .q-text{font-size:.95rem;margin-bottom:1.1rem;line-height:1.6}
+    .opt-label{display:flex;align-items:flex-start;gap:.75rem;padding:.65rem 1rem;
+      border:1px solid var(--border);cursor:pointer;transition:all .2s;
+      background:var(--faint);font-size:.88rem;margin-bottom:.4rem}
+    .opt-label:hover{border-color:var(--accent2);background:rgba(52,152,219,.05)}
+    .opt-label input{margin-top:.25rem;accent-color:var(--accent2);flex-shrink:0}
+    .opt-label.selected{border-color:var(--accent2);background:rgba(52,152,219,.07)}
+
+    /* SUBMIT */
+    .submit-area{margin-top:2.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .btn-submit{font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;padding:.9rem 2.5rem;
+      background:var(--accent);color:#fff;border:none;cursor:pointer;font-weight:500;transition:all .2s}
+    .btn-submit:hover:not(:disabled){background:#0d1a4a;transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,42,108,.25)}
+    .btn-submit:disabled{background:var(--border);cursor:not-allowed}
+    .err-msg{font-family:var(--mono);font-size:.72rem;color:#e74c3c}
+
+    /* RESULTADO */
+    #screen-resultado{display:none;animation:fadeUp .5s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .resultado-box{background:var(--surface);border:1px solid var(--border);padding:2.5rem}
+    .res-rol{font-family:var(--head);font-size:2.5rem;font-weight:800;color:var(--accent2);margin-bottom:.5rem}
+    .res-nombre{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-bottom:1.5rem}
+    .puntajes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);margin:1.5rem 0}
+    .puntaje-item{background:var(--faint);padding:1rem 1.25rem}
+    .puntaje-item.winner{background:var(--accent);color:#fff}
+    .puntaje-label{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem}
+    .puntaje-valor{font-family:var(--mono);font-size:1.5rem;font-weight:500}
+    .ref-code{font-family:var(--mono);font-size:.8rem;color:var(--accent2);
+      background:var(--faint);padding:.4rem .8rem;display:inline-block;margin-top:.75rem}
+    .res-nota{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:1.25rem;line-height:1.6}
+    .btn-back{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;padding:.7rem 1.75rem;
+      background:transparent;border:1px solid var(--border);color:var(--text);
+      cursor:pointer;text-decoration:none;display:inline-block;margin-top:1.5rem;transition:all .2s}
+    .btn-back:hover{border-color:var(--accent2);color:var(--accent2)}
+
+    @media(max-width:600px){
+      nav{padding:.8rem 1.25rem}
+      .container{padding:2rem 1rem 5rem}
+      .question-block{padding:1.25rem}
+      .puntajes-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/forms/">← Herramientas</a>
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span class="nav-step" id="nav-step">0 / 20</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ── INTRO ── -->
+  <div id="screen-intro">
+    <div class="intro-tag">Roles Colaborativos</div>
+    <h1>¿Cuál es tu rol ideal<em> en equipo?</em></h1>
+    <p class="intro-desc">
+      20 situaciones reales. Elige la opción que más te represente. Al final descubrirás si eres Coordinador, Comunicador, Investigador o Analista de Datos.
+    </p>
+    <div class="intro-stats">
+      <div class="stat"><span class="stat-n">20</span><span class="stat-l">Preguntas</span></div>
+      <div class="stat"><span class="stat-n">~8</span><span class="stat-l">Minutos</span></div>
+      <div class="stat"><span class="stat-n">4</span><span class="stat-l">Roles posibles</span></div>
+    </div>
+
+    <div class="personal-card">
+      <h2>📋 Datos personales</h2>
+      <div class="fl"><label>Nombre</label>
+        <input type="text" id="inp-nombre" placeholder="Ej: María" autocomplete="given-name"/>
+      </div>
+      <div class="fl"><label>Apellido</label>
+        <input type="text" id="inp-apellido" placeholder="Ej: Torres" autocomplete="family-name"/>
+      </div>
+      <div class="fl"><label>Número de identificación</label>
+        <input type="text" id="inp-id" placeholder="Ej: 1234567890"/>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button class="btn-submit" onclick="iniciarFormulario()">Comenzar →</button>
+      <span class="err-msg" id="err-intro"></span>
+    </div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <div id="screen-preguntas" style="display:none"></div>
+
+  <!-- ── RESULTADO ── -->
+  <div id="screen-resultado">
+    <div class="resultado-box">
+      <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.75rem">Tu resultado</div>
+      <div class="res-rol" id="res-rol">—</div>
+      <div class="res-nombre" id="res-nombre">—</div>
+
+      <div class="puntajes-grid" id="res-puntajes"></div>
+
+      <p style="font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:1.5rem;margin-bottom:.35rem">Código de registro</p>
+      <div class="ref-code" id="res-refcode">—</div>
+
+      <p class="res-nota">
+        Guarda este código. Tu docente usará los resultados para formar grupos equilibrados con un integrante de cada rol.
+      </p>
+      <a href="/forms/" class="btn-back">← Volver a Herramientas</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── PREGUNTAS ───────────────────────────────────────
+const preguntas = [
+  { texto: "Estás en un grupo de estudio y todos están desorganizados. El examen es en 3 días. ¿Qué haces?", opciones: [
+    { texto: "Hago un cronograma de repaso, asigno temas y verifico avances diarios.", puntos: { coordinador: 3, analista: 1 } },
+    { texto: "Reúno a todos, les explico la importancia de organizarse y trato de motivarlos.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Busco los mejores recursos, resúmenes, videos y artículos para compartir.", puntos: { investigador: 3, comunicador: 1 } },
+    { texto: "Hago un cuadro comparativo de lo que sabemos vs lo que falta y priorizo por dificultad.", puntos: { analista: 3, coordinador: 1 } }
+  ]},
+  { texto: "En una reunión grupal, dos compañeros no se entienden y la discusión se pone tensa. ¿Tu reacción?", opciones: [
+    { texto: "Propongo pausar, escucho a ambos y busco un punto medio para seguir adelante.", puntos: { comunicador: 3, coordinador: 2 } },
+    { texto: "Anoto lo que cada uno dice, identifico el punto de conflicto y propongo soluciones basadas en datos.", puntos: { analista: 3, comunicador: 1 } },
+    { texto: "Prefiero investigar el tema por mi cuenta para aportar algo sólido y evitar discusiones vacías.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Tomo el control de la reunión, pongo reglas y reasigno tareas para evitar más roces.", puntos: { coordinador: 3, comunicador: 1 } }
+  ]},
+  { texto: "Te piden preparar una presentación grupal. ¿Qué parte te gustaría hacer?", opciones: [
+    { texto: "Organizar quién hace qué, los plazos y revisar que todo quede integrado.", puntos: { coordinador: 3 } },
+    { texto: "Diseñar las diapositivas, buscar imágenes y hacer que se vea atractivo y claro.", puntos: { comunicador: 3, analista: 1 } },
+    { texto: "Profundizar en el tema, buscar fuentes confiables y datos poco conocidos.", puntos: { investigador: 3 } },
+    { texto: "Hacer gráficos, tablas y resúmenes numéricos que respalden los argumentos.", puntos: { analista: 3, investigador: 1 } }
+  ]},
+  { texto: "Tienes acceso a una gran cantidad de información sobre un tema, pero está desordenada. ¿Qué haces primero?", opciones: [
+    { texto: "Clasifico la información por temas, fechas o fuentes para tener una estructura clara.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Busco lo más relevante y preparo un resumen fácil de entender para compartir.", puntos: { comunicador: 3, investigador: 1 } },
+    { texto: "Me sumerjo en los detalles, leo todo y trato de encontrar conexiones o datos ocultos.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Asigno partes del material a otras personas para procesarlo en paralelo.", puntos: { coordinador: 3, comunicador: 1 } }
+  ]},
+  { texto: "Tu grupo tiene que tomar una decisión importante, pero hay opiniones divididas. ¿Cómo actúas?", opciones: [
+    { texto: "Propongo votar, pero antes hago un cuadro con pros y contras de cada opción.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Hablo con cada uno en privado para entender sus razones y luego busco consenso.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Busco estudios, casos o datos que apoyen una de las opciones para fundamentar la decisión.", puntos: { investigador: 3, analista: 2 } },
+    { texto: "Decido yo por el bien del grupo, porque alguien tiene que tomar la rienda.", puntos: { coordinador: 3 } }
+  ]},
+  { texto: "Ves que un compañero no entiende un tema clave. ¿Qué haces?", opciones: [
+    { texto: "Le explico con mis palabras, uso ejemplos y me aseguro que capte la idea.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Le busco un video, artículo o recurso que lo explique mejor que yo.", puntos: { investigador: 3, comunicador: 1 } },
+    { texto: "Le ayudo a hacer un mapa mental o esquema para organizar la información.", puntos: { analista: 3, coordinador: 1 } },
+    { texto: "Le propongo que estudiemos juntos y repartamos temas para enseñarnos mutuamente.", puntos: { coordinador: 3, comunicador: 2 } }
+  ]},
+  { texto: "Tienes que elegir entre varias opciones para resolver un problema. ¿Cómo decides?", opciones: [
+    { texto: "Hago una lista de ventajas y desventajas de cada una y elijo la más equilibrada.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Pregunto a otros qué harían y elijo lo que tenga más consenso.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Profundizo en cada opción, busco antecedentes o casos similares antes de decidir.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Elijo la que permita avanzar más rápido y delego tareas para implementarla.", puntos: { coordinador: 3, analista: 1 } }
+  ]},
+  { texto: "En un proyecto grupal, te das cuenta de que hay un error en los datos usados. ¿Qué haces?", opciones: [
+    { texto: "Verifico el origen del error, corrijo los datos y actualizo los informes.", puntos: { analista: 3, investigador: 2 } },
+    { texto: "Reúno al grupo, explico el problema y propongo cómo corregirlo sin culpar a nadie.", puntos: { comunicador: 3, coordinador: 2 } },
+    { texto: "Busco fuentes alternativas o métodos para validar los datos nuevamente.", puntos: { investigador: 3, analista: 2 } },
+    { texto: "Reorganizo las tareas para que alguien verifique los datos y otro corrija las conclusiones.", puntos: { coordinador: 3, analista: 1 } }
+  ]},
+  { texto: "Estás en una discusión y te das cuenta de que tienes poca información. ¿Qué haces?", opciones: [
+    { texto: "Pido un tiempo para investigar mejor antes de seguir opinando.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Pregunto a otros qué saben y trato de construir una opinión con lo que me dicen.", puntos: { comunicador: 3, investigador: 1 } },
+    { texto: "Anoto lo que se ha dicho, identifico lagunas y propongo buscar datos concretos.", puntos: { analista: 3, investigador: 2 } },
+    { texto: "Propongo posponer la decisión hasta tener mejor información y asigno quién la busca.", puntos: { coordinador: 3, investigador: 2 } }
+  ]},
+  { texto: "Te invitan a unirte a un equipo para un concurso. ¿Qué te motiva más a aceptar?", opciones: [
+    { texto: "La oportunidad de liderar y asegurarme de que ganemos por buena organización.", puntos: { coordinador: 3 } },
+    { texto: "La posibilidad de conocer gente nueva y trabajar en equipo con buena química.", puntos: { comunicador: 3 } },
+    { texto: "El reto intelectual, aprender cosas nuevas y profundizar en el tema.", puntos: { investigador: 3 } },
+    { texto: "El análisis de estrategias ganadoras y optimizar nuestro desempeño con datos.", puntos: { analista: 3 } }
+  ]},
+  { texto: "Tu equipo tiene que entregar un informe, pero cada uno hizo su parte de forma diferente. ¿Qué haces?", opciones: [
+    { texto: "Unifico el estilo, formato y estructura para que todo se vea como un solo documento coherente.", puntos: { coordinador: 3, analista: 2 } },
+    { texto: "Reúno a todos, les muestro cómo integrar sus partes y animo a que colaboren en los ajustes.", puntos: { comunicador: 3, coordinador: 2 } },
+    { texto: "Busco ejemplos de informes exitosos y propongo un modelo basado en buenas prácticas.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Hago un análisis de qué partes son más fuertes/débiles y sugiero mejoras basadas en evidencia.", puntos: { analista: 3, coordinador: 1 } }
+  ]},
+  { texto: "Estás en una actividad grupal y notas que un integrante está callado y no participa. ¿Tu reacción?", opciones: [
+    { texto: "En la pausa, le pregunto en privado si está bien o si necesita algo para integrarse.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Le asigno una tarea concreta que sé que puede hacer bien, para motivar su participación.", puntos: { coordinador: 3, comunicador: 1 } },
+    { texto: "Le comparto material extra o datos interesantes del tema, por si quiere aportar desde ahí.", puntos: { investigador: 3, comunicador: 1 } },
+    { texto: "Observo su lenguaje corporal y patrones de participación para entender por qué no habla.", puntos: { analista: 3, comunicador: 1 } }
+  ]},
+  { texto: "Te piden mejorar un proceso que ya existe. ¿Por dónde empiezas?", opciones: [
+    { texto: "Hago un diagrama del proceso actual, identifico cuellos de botella y propongo cambios.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Entrevisto a quienes lo usan para entender sus frustraciones y sugerencias.", puntos: { comunicador: 3, investigador: 2 } },
+    { texto: "Busco cómo lo hacen en otros contextos o empresas y adapto lo mejor.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Armo un plan de implementación, con plazos, responsables y métricas de éxito.", puntos: { coordinador: 3, analista: 2 } }
+  ]},
+  { texto: "En un trabajo en equipo, todos quieren hacer lo mismo y nadie quiere encargarse de lo aburrido. ¿Qué haces?", opciones: [
+    { texto: "Propongo turnos o sorteo, pero con incentivos para quien haga la parte menos deseada.", puntos: { coordinador: 3, comunicador: 2 } },
+    { texto: "Me ofrezco yo a hacerlo, y trato de hacerlo divertido o más llevadero para los demás.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Analizo cuánto tiempo toma cada parte y propongo repartirlo según habilidades, no preferencias.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Busco una manera de automatizar o simplificar la parte aburrida para que sea menos pesada.", puntos: { investigador: 3, analista: 2 } }
+  ]},
+  { texto: "Tienes que presentar una idea compleja a personas que no entienden el tema. ¿Cómo lo haces?", opciones: [
+    { texto: "Uso analogías de la vida diaria y ejemplos visuales para hacerlo comprensible.", puntos: { comunicador: 3, analista: 1 } },
+    { texto: "Preparo una secuencia lógica paso a paso, con apoyos gráficos claros.", puntos: { analista: 3, comunicador: 2 } },
+    { texto: "Busco qué saben ya y construyo a partir de eso, llenando solo los vacíos necesarios.", puntos: { investigador: 3, comunicador: 1 } },
+    { texto: "Asigno a alguien del público como representante y ajusto mi explicación según sus preguntas.", puntos: { coordinador: 2, comunicador: 3 } }
+  ]},
+  { texto: "Tu grupo tiene muchos datos, pero no sabe qué hacer con ellos. ¿Qué propones?", opciones: [
+    { texto: "Clasifico los datos por tipo, fuente o relevancia y propongo qué podemos responder con ellos.", puntos: { analista: 3, coordinador: 1 } },
+    { texto: "Hago gráficos o visualizaciones para que todos entiendan patrones o hallazgos clave.", puntos: { analista: 3, comunicador: 2 } },
+    { texto: "Busco métodos o herramientas (como encuestas o software) para sacar más provecho.", puntos: { investigador: 3, analista: 2 } },
+    { texto: "Organizo una sesión para que cada uno analice un segmento y luego integramos hallazgos.", puntos: { coordinador: 3, analista: 1 } }
+  ]},
+  { texto: "Estás en un debate y te das cuenta de que tu argumento no es el mejor. ¿Qué haces?", opciones: [
+    { texto: "Cambio de postura y apoyo el mejor argumento, aunque no sea el mío.", puntos: { analista: 3, comunicador: 1 } },
+    { texto: "Reconozco públicamente que el otro argumento es mejor y felicito a quien lo propuso.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Pido tiempo para investigar más y volver con un argumento más sólido.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Propongo votar o buscar un punto medio que combine lo mejor de ambos argumentos.", puntos: { coordinador: 3, comunicador: 2 } }
+  ]},
+  { texto: "Te piden resolver un problema con poca información y poco tiempo. ¿Cómo actúas?", opciones: [
+    { texto: "Priorizo lo esencial, asigno tareas rápidas y superviso para no desviarme.", puntos: { coordinador: 3, analista: 1 } },
+    { texto: "Pido ayuda a otros, aunque sea para dividir la carga o aportar ideas rápidas.", puntos: { comunicador: 3, coordinador: 1 } },
+    { texto: "Busco atajos: tutoriales, plantillas o casos similares que me den una base rápida.", puntos: { investigador: 3, analista: 1 } },
+    { texto: "Hago supuestos razonables, los documento, y avanzo con base en ellos.", puntos: { analista: 3, coordinador: 1 } }
+  ]},
+  { texto: "Tu equipo logró un buen resultado. ¿Cómo celebras o reconoces el logro?", opciones: [
+    { texto: "Hago un resumen de lo que funcionó, para replicarlo en el futuro.", puntos: { analista: 3, coordinador: 2 } },
+    { texto: "Organizo una reunión o detalle simbólico para agradecer a cada uno según su aporte.", puntos: { comunicador: 3, coordinador: 2 } },
+    { texto: "Busco qué podríamos haber hecho aún mejor, para el próximo reto.", puntos: { investigador: 3, analista: 2 } },
+    { texto: "Documento el proceso y lo comparto con otros equipos como ejemplo.", puntos: { coordinador: 3, comunicador: 1 } }
+  ]},
+  { texto: "¿Qué tipo de tarea te hace perder la noción del tiempo?", opciones: [
+    { texto: "Organizar un evento, planificar cada detalle y ver cómo todo encaja perfecto.", puntos: { coordinador: 3 } },
+    { texto: "Explicar algo complejo de forma simple y ver la cara de entendimiento de los demás.", puntos: { comunicador: 3 } },
+    { texto: "Sumergirte en un tema nuevo, leyendo, viendo videos, conectando ideas.", puntos: { investigador: 3 } },
+    { texto: "Resolver un rompecabezas de datos, encontrar patrones o hacer una visualización clara.", puntos: { analista: 3 } }
+  ]}
+];
+
+// ─── ESTADO ──────────────────────────────────────────
+let userData = {};
+let respondidas = 0;
+
+// ─── RENDERIZAR PREGUNTAS ─────────────────────────────
+function iniciarFormulario() {
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  const apellido = document.getElementById('inp-apellido').value.trim();
+  const id = document.getElementById('inp-id').value.trim();
+  const err = document.getElementById('err-intro');
+
+  if (!nombre || !apellido || !id) {
+    err.textContent = 'Por favor completa todos los campos.';
+    return;
+  }
+  err.textContent = '';
+  userData = { nombre, apellido, identificacion: id };
+
+  const container = document.getElementById('screen-preguntas');
+  container.innerHTML = '';
+
+  preguntas.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-block';
+    div.id = 'qb-' + i;
+    div.innerHTML = `<div class="q-num">Pregunta ${i + 1} de 20</div>
+      <p class="q-text">${p.texto}</p>`;
+    p.opciones.forEach((op, j) => {
+      const label = document.createElement('label');
+      label.className = 'opt-label';
+      label.innerHTML = `<input type="radio" name="q${i}" value="${j}"> ${op.texto}`;
+      label.querySelector('input').addEventListener('change', () => {
+        document.querySelectorAll(`input[name="q${i}"]`).forEach(r => {
+          r.closest('.opt-label').classList.remove('selected');
+        });
+        label.classList.add('selected');
+        div.classList.add('answered');
+        div.classList.remove('error');
+        actualizarProgreso();
+      });
+      div.appendChild(label);
+    });
+    container.appendChild(div);
+  });
+
+  // Botón enviar
+  const btnDiv = document.createElement('div');
+  btnDiv.className = 'submit-area';
+  btnDiv.innerHTML = `<button class="btn-submit" id="btn-enviar" onclick="enviarFormulario()">Ver mi resultado →</button>
+    <span class="err-msg" id="err-form"></span>`;
+  container.appendChild(btnDiv);
+
+  document.getElementById('screen-intro').style.display = 'none';
+  container.style.display = 'block';
+}
+
+function actualizarProgreso() {
+  respondidas = preguntas.filter((_, i) =>
+    document.querySelector(`input[name="q${i}"]:checked`)
+  ).length;
+  document.getElementById('progress-fill').style.width = (respondidas / 20 * 100) + '%';
+  document.getElementById('nav-step').textContent = respondidas + ' / 20';
+}
+
+async function enviarFormulario() {
+  // Validar todas respondidas
+  let hayError = false;
+  preguntas.forEach((_, i) => {
+    const qb = document.getElementById('qb-' + i);
+    if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+      qb.classList.add('error');
+      if (!hayError) qb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      hayError = true;
+    }
+  });
+  if (hayError) {
+    document.getElementById('err-form').textContent = 'Responde todas las preguntas antes de continuar.';
+    return;
+  }
+
+  // Calcular puntajes
+  let puntajes = { coordinador: 0, comunicador: 0, investigador: 0, 'analista de datos': 0 };
+  preguntas.forEach((p, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    if (!sel) return;
+    const op = p.opciones[parseInt(sel.value)];
+    for (let rol in op.puntos) {
+      if (rol === 'analista') puntajes['analista de datos'] += op.puntos[rol];
+      else puntajes[rol] += op.puntos[rol];
+    }
+  });
+
+  const maxRol = Object.keys(puntajes).reduce((a, b) => puntajes[a] > puntajes[b] ? a : b);
+
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+
+  try {
+    const key = await window._guardarRol({
+      ...userData,
+      rolNatural: maxRol,
+      puntajes
+    });
+    mostrarResultado(maxRol, puntajes, key);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('err-form').textContent = 'Error al guardar. Verifica tu conexión.';
+    btn.disabled = false;
+    btn.textContent = 'Ver mi resultado →';
+  }
+}
+
+const DESCRIPCIONES = {
+  'coordinador':      'Eres quien organiza, planifica y asegura que el equipo avance. Tienes visión de conjunto y facilidad para delegar.',
+  'comunicador':      'Eres el puente entre las personas. Escuchas activamente, medias conflictos y transmites ideas con claridad.',
+  'investigador':     'Eres quien profundiza. Buscas fuentes confiables, analizas contexto y aportas conocimiento sólido al equipo.',
+  'analista de datos':'Eres quien convierte la información en decisiones. Identificas patrones, construyes evidencia y propones mejoras basadas en datos.'
+};
+
+function mostrarResultado(rol, puntajes, key) {
+  document.getElementById('screen-preguntas').style.display = 'none';
+  const screen = document.getElementById('screen-resultado');
+  screen.style.display = 'block';
+
+  document.getElementById('res-rol').textContent = rol.toUpperCase();
+  document.getElementById('res-nombre').textContent =
+    `${userData.nombre} ${userData.apellido} · ID ${userData.identificacion}`;
+  document.getElementById('res-refcode').textContent = key;
+
+  const grid = document.getElementById('res-puntajes');
+  grid.innerHTML = Object.entries(puntajes).map(([r, v]) => `
+    <div class="puntaje-item ${r === rol ? 'winner' : ''}">
+      <div class="puntaje-label">${r}</div>
+      <div class="puntaje-valor">${v} pts</div>
+    </div>`).join('');
+
+  const nota = document.querySelector('.res-nota');
+  nota.innerHTML = `<em>${DESCRIPCIONES[rol]}</em><br/><br/>
+    Guarda este código. Tu docente usará los resultados para formar grupos equilibrados.`;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('nav-step').textContent = '20 / 20';
+  document.getElementById('progress-fill').style.width = '100%';
+}
+</script>
+</body>
+</html>
