@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tecnologías Geoespaciales · tower-ing.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080c10;
+      --surface:   #0d1420;
+      --border:    #1a2535;
+      --accent:    #00d4aa;
+      --accent2:   #0099ff;
+      --warm:      #f0c040;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --faint:     #1e2d40;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+      --font-body: 'Lora', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(8,12,16,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .08em;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-globe {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 30% 30%, #0d3d5a, #050a10 70%);
+      border: 1px solid rgba(0,212,170,.15);
+      box-shadow:
+        0 0 80px rgba(0,212,170,.08),
+        inset 0 0 60px rgba(0,153,255,.06);
+      overflow: hidden;
+      opacity: .7;
+    }
+
+    .hero-globe::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,.06) 1px, transparent 1px);
+      background-size: 30px 30px;
+      border-radius: 50%;
+    }
+
+    .hero-globe::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 40% 20% at 35% 55%, rgba(0,153,255,.12), transparent),
+        radial-gradient(ellipse 60% 10% at 60% 40%, rgba(0,212,170,.08), transparent);
+    }
+
+    /* Meridian lines */
+    .meridians {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .meridians span {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: rgba(0,212,170,.12);
+      transform-origin: center;
+    }
+    .meridians span:nth-child(1)  { transform: translateX(-50%) rotate(0deg); }
+    .meridians span:nth-child(2)  { transform: translateX(-50%) rotate(30deg); }
+    .meridians span:nth-child(3)  { transform: translateX(-50%) rotate(60deg); }
+    .meridians span:nth-child(4)  { transform: translateX(-50%) rotate(90deg); }
+    .meridians span:nth-child(5)  { transform: translateX(-50%) rotate(120deg); }
+    .meridians span:nth-child(6)  { transform: translateX(-50%) rotate(150deg); }
+    .parallels { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; }
+    .parallels span {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(0,212,170,.1);
+    }
+    .parallels span:nth-child(1) { top: 20%; }
+    .parallels span:nth-child(2) { top: 38%; }
+    .parallels span:nth-child(3) { top: 56%; }
+    .parallels span:nth-child(4) { top: 74%; }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding: .35rem .8rem;
+      border: 1px solid rgba(0,212,170,.3);
+      border-radius: 2px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      font-style: italic;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+
+    .meta-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      font-family: var(--font-mono);
+      font-size: .95rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      letter-spacing: .1em;
+      padding: .85rem 2rem;
+      background: var(--accent);
+      color: #080c10;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all .2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: #00f0c0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,212,170,.3);
+    }
+
+    .btn-ghost {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      letter-spacing: .1em;
+      padding: .85rem 2rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
+      display: inline-block;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── SECTION COMMON ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+
+    h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-rule {
+      width: 3rem;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 2.5rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── OBJETIVOS ── */
+    .objetivos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .obj-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      position: relative;
+      transition: border-color .25s, transform .25s;
+    }
+
+    .obj-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .obj-card::before {
+      content: attr(data-n);
+      position: absolute;
+      top: 1.25rem; right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: rgba(0,212,170,.08);
+      line-height: 1;
+    }
+
+    .obj-icon {
+      font-size: 1.4rem;
+      margin-bottom: .75rem;
+    }
+
+    .obj-card h3 {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      color: var(--text);
+    }
+
+    .obj-card p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── SYLLABUS ── */
+    .syllabus-wrapper {
+      margin-top: 2rem;
+    }
+
+    .unit {
+      border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: border-color .25s;
+    }
+
+    .unit:hover { border-color: rgba(0,212,170,.35); }
+
+    .unit-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      cursor: pointer;
+      background: var(--surface);
+      user-select: none;
+      transition: background .2s;
+    }
+
+    .unit-header:hover { background: var(--faint); }
+
+    .unit-num {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: .15em;
+      white-space: nowrap;
+      min-width: 60px;
+    }
+
+    .unit-title {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .unit-weeks {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .unit-toggle {
+      font-size: 1rem;
+      color: var(--accent);
+      transition: transform .3s;
+    }
+
+    .unit.open .unit-toggle { transform: rotate(45deg); }
+
+    .unit-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+
+    .unit.open .unit-body { max-height: 500px; }
+
+    .unit-inner {
+      padding: 1.5rem 2rem 2rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .lesson {
+      background: rgba(0,212,170,.03);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+    }
+
+    .lesson-num {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--accent);
+      letter-spacing: .12em;
+      margin-bottom: .35rem;
+    }
+
+    .lesson h4 {
+      font-family: var(--font-head);
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: .4rem;
+    }
+
+    .lesson p {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .lesson-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-top: .75rem;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      padding: .2rem .5rem;
+      background: rgba(0,153,255,.08);
+      border: 1px solid rgba(0,153,255,.2);
+      color: var(--accent2);
+      letter-spacing: .06em;
+    }
+
+    .unit-activity {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: rgba(240,192,64,.03);
+      border: 1px solid rgba(240,192,64,.15);
+      border-left: 3px solid var(--warm);
+      margin-top: .25rem;
+    }
+
+    .activity-icon { font-size: 1.1rem; margin-top: .1rem; }
+
+    .unit-activity div { flex: 1; }
+
+    .unit-activity .act-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--warm);
+      letter-spacing: .12em;
+      margin-bottom: .25rem;
+    }
+
+    .unit-activity h4 {
+      font-family: var(--font-head);
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: .25rem;
+    }
+
+    .unit-activity p {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    /* ── TOOLS ── */
+    .tools-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      margin-top: 2.5rem;
+    }
+
+    .tool-item {
+      background: var(--surface);
+      padding: 1.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .5rem;
+      transition: background .2s;
+    }
+
+    .tool-item:hover { background: var(--faint); }
+
+    .tool-item .ti { font-size: 1.6rem; }
+
+    .tool-name {
+      font-family: var(--font-head);
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    .tool-desc {
+      font-family: var(--font-mono);
+      font-size: .68rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── EVALUACIÓN ── */
+    .eval-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .eval-bar-group { display: flex; flex-direction: column; gap: 1rem; }
+
+    .eval-item { }
+
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: .5rem;
+    }
+
+    .eval-name {
+      font-family: var(--font-head);
+      font-size: .95rem;
+      font-weight: 600;
+    }
+
+    .eval-pct {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--accent);
+    }
+
+    .eval-track {
+      height: 4px;
+      background: var(--faint);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .eval-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--accent);
+      width: 0;
+      transition: width 1.2s cubic-bezier(.16,1,.3,1);
+    }
+
+    .eval-fill.warm { background: var(--warm); }
+    .eval-fill.blue { background: var(--accent2); }
+
+    .eval-note {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: .35rem;
+    }
+
+    .eval-summary {
+      border: 1px solid var(--border);
+      padding: 2rem;
+      background: var(--surface);
+    }
+
+    .eval-summary h3 {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .eval-row {
+      display: flex;
+      justify-content: space-between;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+
+    .eval-row:last-child { border-bottom: none; }
+    .eval-row span:last-child {
+      font-family: var(--font-mono);
+      color: var(--accent);
+    }
+
+    /* ── INSTRUCTOR ── */
+    .instructor-card {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      margin-top: 2rem;
+      max-width: 700px;
+    }
+
+    .instructor-avatar {
+      width: 80px;
+      height: 80px;
+      min-width: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #080c10;
+    }
+
+    .instructor-info h3 {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: .25rem;
+    }
+
+    .instructor-title {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      margin-bottom: .75rem;
+    }
+
+    .instructor-bio {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .hero-globe { display: none; }
+      section { padding: 3.5rem 1.5rem; }
+      .unit-inner { grid-template-columns: 1fr; }
+      .eval-grid { grid-template-columns: 1fr; }
+      .instructor-card { flex-direction: column; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">tower-ing.com</a>
+  <ul class="nav-links">
+    <li><a href="#objetivos">Objetivos</a></li>
+    <li><a href="#syllabus">Contenido</a></li>
+    <li><a href="#herramientas">Herramientas</a></li>
+    <li><a href="#evaluacion">Evaluación</a></li>
+    <li><a href="#instructor">Instructor</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-globe" aria-hidden="true">
+    <div class="meridians">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+    <div class="parallels">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Ingeniería · Semestres 5–8</div>
+    <h1>Tecnologías<em>Geoespaciales</em></h1>
+    <p class="hero-desc">
+      Análisis espacial, teledetección y SIG aplicados a problemas reales de ingeniería, territorio y medio ambiente.
+    </p>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Créditos</span>
+        <span class="meta-value">3</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Horas / semana</span>
+        <span class="meta-value">3 + 3 ind.</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Modalidad</span>
+        <span class="meta-value">Teórico-práctica</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Prerrequisito</span>
+        <span class="meta-value">Estadística · Física II</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#syllabus" class="btn-primary">Ver contenido →</a>
+      <a href="#evaluacion" class="btn-ghost">Evaluación</a>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- OBJETIVOS -->
+<section id="objetivos">
+  <p class="section-label reveal">/ 01</p>
+  <h2 class="reveal">Objetivos de aprendizaje</h2>
+  <div class="section-rule reveal"></div>
+
+  <div class="objetivos-grid">
+    <div class="obj-card reveal" data-n="01">
+      <div class="obj-icon">🌍</div>
+      <h3>Fundamentos SIG</h3>
+      <p>Comprender los sistemas de información geográfica, proyecciones cartográficas y estructuras de datos espaciales vectoriales y raster.</p>
+    </div>
+    <div class="obj-card reveal" data-n="02">
+      <div class="obj-icon">🛰️</div>
+      <h3>Teledetección</h3>
+      <p>Adquirir competencias en interpretación y procesamiento de imágenes satelitales, índices espectrales y clasificación de cobertura.</p>
+    </div>
+    <div class="obj-card reveal" data-n="03">
+      <div class="obj-icon">🖥️</div>
+      <h3>Plataformas digitales</h3>
+      <p>Aplicar herramientas SIG de escritorio y en la nube (QGIS, Google Earth Engine) para geoprocesamiento y análisis territorial.</p>
+    </div>
+    <div class="obj-card reveal" data-n="04">
+      <div class="obj-icon">🏗️</div>
+      <h3>Aplicaciones en ingeniería</h3>
+      <p>Integrar datos geoespaciales en proyectos de gestión de riesgos, infraestructura, planificación urbana y sostenibilidad.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SYLLABUS -->
+<section id="syllabus">
+  <p class="section-label reveal">/ 02</p>
+  <h2 class="reveal">Contenido del curso</h2>
+  <div class="section-rule reveal"></div>
+  <p class="reveal" style="color:var(--muted); max-width:560px; margin-bottom:1rem;">
+    4 unidades temáticas · 2 lecciones por unidad · 1 actividad integradora por par de unidades · 4 evaluaciones parciales
+  </p>
+
+  <div class="syllabus-wrapper reveal">
+
+    <!-- UNIDAD 1 -->
+    <div class="unit open">
+      <div class="unit-header" onclick="toggleUnit(this)">
+        <span class="unit-num">UNIDAD 01</span>
+        <span class="unit-title">Fundamentos de SIG y Cartografía Digital</span>
+        <span class="unit-weeks">Semanas 1–4</span>
+        <span class="unit-toggle">+</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-inner">
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 1.1</div>
+            <h4>Sistemas de referencia y proyecciones</h4>
+            <p>Datum geodésicos, sistemas de coordenadas geográficas y proyectadas, transformaciones CRS y formatos estándar.</p>
+            <div class="lesson-tags">
+              <span class="tag">WGS84</span>
+              <span class="tag">EPSG</span>
+              <span class="tag">GeoJSON</span>
+            </div>
+          </div>
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 1.2</div>
+            <h4>Datos vectoriales y raster</h4>
+            <p>Modelos de datos espaciales, topología, geodatabases, MDT y análisis de terreno: pendientes, cuencas, visibilidad.</p>
+            <div class="lesson-tags">
+              <span class="tag">Shapefile</span>
+              <span class="tag">GeoTIFF</span>
+              <span class="tag">MDT</span>
+            </div>
+          </div>
+          <div class="unit-activity">
+            <div class="activity-icon">🗺️</div>
+            <div>
+              <div class="act-label">Actividad integradora 1 — Unidades 1 y 2</div>
+              <h4>Diagnóstico cartográfico de una cuenca hidrográfica</h4>
+              <p>Elaboración de mapa temático con análisis de pendientes y uso del suelo usando datos IGAC y SRTM.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIDAD 2 -->
+    <div class="unit">
+      <div class="unit-header" onclick="toggleUnit(this)">
+        <span class="unit-num">UNIDAD 02</span>
+        <span class="unit-title">Teledetección y Análisis de Imágenes Satelitales</span>
+        <span class="unit-weeks">Semanas 5–8</span>
+        <span class="unit-toggle">+</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-inner">
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 2.1</div>
+            <h4>Fundamentos de teledetección</h4>
+            <p>Radiación electromagnética, plataformas y sensores pasivos/activos, resolución espectral, espacial y temporal.</p>
+            <div class="lesson-tags">
+              <span class="tag">Landsat</span>
+              <span class="tag">Sentinel-2</span>
+              <span class="tag">SAR</span>
+            </div>
+          </div>
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 2.2</div>
+            <h4>Índices espectrales y clasificación</h4>
+            <p>NDVI, NDWI, NBR, composiciones de color, clasificación supervisada y no supervisada de cobertura terrestre.</p>
+            <div class="lesson-tags">
+              <span class="tag">NDVI</span>
+              <span class="tag">Máx. Verosimilitud</span>
+              <span class="tag">Random Forest</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIDAD 3 -->
+    <div class="unit">
+      <div class="unit-header" onclick="toggleUnit(this)">
+        <span class="unit-num">UNIDAD 03</span>
+        <span class="unit-title">Plataformas SIG: Escritorio y Nube</span>
+        <span class="unit-weeks">Semanas 9–12</span>
+        <span class="unit-toggle">+</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-inner">
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 3.1</div>
+            <h4>QGIS: flujos de trabajo intermedios</h4>
+            <p>Análisis de proximidad, interpolación IDW/Kriging, álgebra raster, y automatización visual de flujos con QGIS Model Designer — sin programación.</p>
+            <div class="lesson-tags">
+              <span class="tag">QGIS</span>
+              <span class="tag">Model Designer</span>
+              <span class="tag">Interpolación</span>
+            </div>
+          </div>
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 3.2</div>
+            <h4>Google Earth Engine: exploración guiada</h4>
+            <p>Interfaz visual del Code Editor de GEE: selección de colecciones, visualización de índices NDVI/NDWI y exportación de resultados. Scripts plantilla provistos por el docente.</p>
+            <div class="lesson-tags">
+              <span class="tag">Earth Engine</span>
+              <span class="tag">Code Editor</span>
+              <span class="tag">Scripts guiados</span>
+            </div>
+          </div>
+          <div class="unit-activity">
+            <div class="activity-icon">🛰️</div>
+            <div>
+              <div class="act-label">Actividad integradora 2 — Unidades 3 y 4</div>
+              <h4>Monitoreo de cambios en cobertura forestal con GEE</h4>
+              <p>Serie temporal NDVI (2015–2024), detección de deforestación y generación de informe automatizado con Python.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIDAD 4 -->
+    <div class="unit">
+      <div class="unit-header" onclick="toggleUnit(this)">
+        <span class="unit-num">UNIDAD 04</span>
+        <span class="unit-title">Aplicaciones Geoespaciales en Ingeniería</span>
+        <span class="unit-weeks">Semanas 13–16</span>
+        <span class="unit-toggle">+</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-inner">
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 4.1</div>
+            <h4>Aplicaciones en territorio e infraestructura</h4>
+            <p>Casos prácticos guiados: zonificación de amenazas por inundación, análisis de cobertura de servicios y selección de sitios para infraestructura con SIG. Énfasis en interpretación de resultados, no en configuración avanzada.</p>
+            <div class="lesson-tags">
+              <span class="tag">Zonificación</span>
+              <span class="tag">Casos guiados</span>
+              <span class="tag">Decisión espacial</span>
+            </div>
+          </div>
+          <div class="lesson">
+            <div class="lesson-num">LECCIÓN 4.2</div>
+            <h4>Proyecto integrador final estructurado</h4>
+            <p>Diagnóstico geoespacial de una zona asignada: el estudiante aplica SIG y teledetección siguiendo una guía paso a paso con entregables definidos — mapa, ficha técnica e informe corto. Sin diseño libre desde cero.</p>
+            <div class="lesson-tags">
+              <span class="tag">Guía paso a paso</span>
+              <span class="tag">Mapa temático</span>
+              <span class="tag">Informe técnico</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- HERRAMIENTAS -->
+<div class="tools-section" style="position:relative;z-index:1;">
+  <section id="herramientas" style="padding-top:4rem;padding-bottom:4rem;">
+    <p class="section-label reveal">/ 03</p>
+    <h2 class="reveal">Software y herramientas</h2>
+    <div class="section-rule reveal"></div>
+
+    <div class="tools-grid reveal">
+      <div class="tool-item">
+        <div class="ti">🗺️</div>
+        <div class="tool-name">QGIS</div>
+        <div class="tool-desc">SIG de escritorio open-source. Geoprocesamiento, simbología, modelos automáticos.</div>
+      </div>
+      <div class="tool-item">
+        <div class="ti">🌐</div>
+        <div class="tool-name">Google Earth Engine</div>
+        <div class="tool-desc">Procesamiento de imágenes satelitales en la nube. API JS y Python.</div>
+      </div>
+      <div class="tool-item">
+        <div class="ti">🐍</div>
+        <div class="tool-name">Python SIG</div>
+        <div class="tool-desc">GeoPandas, Rasterio, Folium, Shapely. Análisis y automatización geoespacial.</div>
+      </div>
+      <div class="tool-item">
+        <div class="ti">📡</div>
+        <div class="tool-name">Copernicus / USGS</div>
+        <div class="tool-desc">Repositorios abiertos de imágenes Sentinel-2, Landsat 8/9 y SRTM.</div>
+      </div>
+      <div class="tool-item">
+        <div class="ti">📊</div>
+        <div class="tool-name">ArcGIS Online</div>
+        <div class="tool-desc">Publicación de mapas web interactivos y Story Maps para comunicación de resultados.</div>
+      </div>
+      <div class="tool-item">
+        <div class="ti">📂</div>
+        <div class="tool-name">IGAC / IDEAM</div>
+        <div class="tool-desc">Datos abiertos de Colombia: cartografía base, cobertura, clima e hidrología.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider" />
+
+<!-- EVALUACIÓN -->
+<section id="evaluacion">
+  <p class="section-label reveal">/ 04</p>
+  <h2 class="reveal">Estructura de evaluación</h2>
+  <div class="section-rule reveal"></div>
+
+  <div class="eval-grid reveal">
+    <div class="eval-bar-group">
+
+      <div class="eval-item">
+        <div class="eval-header">
+          <span class="eval-name">Evaluaciones parciales (× 4)</span>
+          <span class="eval-pct">40 %</span>
+        </div>
+        <div class="eval-track"><div class="eval-fill" data-w="40"></div></div>
+        <div class="eval-note">10 % por unidad · 10 preguntas · QGIS + conceptos</div>
+      </div>
+
+      <div class="eval-item">
+        <div class="eval-header">
+          <span class="eval-name">Actividades integradoras (× 2)</span>
+          <span class="eval-pct">30 %</span>
+        </div>
+        <div class="eval-track"><div class="eval-fill warm" data-w="30"></div></div>
+        <div class="eval-note">15 % c/u · Entrega de mapa + informe técnico</div>
+      </div>
+
+      <div class="eval-item">
+        <div class="eval-header">
+          <span class="eval-name">Proyecto integrador final</span>
+          <span class="eval-pct">25 %</span>
+        </div>
+        <div class="eval-track"><div class="eval-fill blue" data-w="25"></div></div>
+        <div class="eval-note">Diagnóstico territorial · Presentación oral + documento</div>
+      </div>
+
+      <div class="eval-item">
+        <div class="eval-header">
+          <span class="eval-name">Participación y talleres</span>
+          <span class="eval-pct">5 %</span>
+        </div>
+        <div class="eval-track"><div class="eval-fill" data-w="5" style="background:#64748b"></div></div>
+        <div class="eval-note">Asistencia activa, talleres en clase</div>
+      </div>
+
+    </div>
+
+    <div class="eval-summary">
+      <h3>Resumen de notas</h3>
+      <div class="eval-row"><span>Escala de calificación</span><span>0.0 – 5.0</span></div>
+      <div class="eval-row"><span>Nota mínima aprobatoria</span><span>3.0</span></div>
+      <div class="eval-row"><span>Habilitación disponible</span><span>Sí · ≥ 2.0</span></div>
+      <div class="eval-row"><span>Evaluaciones parciales</span><span>Semanas 4, 8, 12, 16</span></div>
+      <div class="eval-row"><span>Entrega actividad 1</span><span>Semana 9</span></div>
+      <div class="eval-row"><span>Entrega actividad 2</span><span>Semana 14</span></div>
+      <div class="eval-row"><span>Sustentación final</span><span>Semana 16</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- INSTRUCTOR -->
+<section id="instructor">
+  <p class="section-label reveal">/ 05</p>
+  <h2 class="reveal">Instructor</h2>
+  <div class="section-rule reveal"></div>
+
+  <div class="instructor-card reveal">
+    <div class="instructor-avatar">FT</div>
+    <div class="instructor-info">
+      <h3>Ferney Torres</h3>
+      <div class="instructor-title">DOCENTE · FACULTAD DE INGENIERÍA</div>
+      <p class="instructor-bio">
+        Ingeniero con experiencia en desarrollo de programas técnicos de ingeniería. Docente universitario especializado en electrónica, robótica, física aplicada y tecnologías emergentes. Imparte cursos en áreas de automatización, SIG y desarrollo de software orientado a la nube.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="#">tower-ing.com</a>
+  <span class="footer-copy">© 2025 Ferney Torres · Ingeniería &amp; Tecnología</span>
+</footer>
+
+<script>
+  // ── Toggle de unidades del syllabus ──
+  function toggleUnit(header) {
+    const unit = header.closest('.unit');
+    unit.classList.toggle('open');
+  }
+
+  // ── Reveal on scroll ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── Animate eval bars on scroll ──
+  const fills = document.querySelectorAll('.eval-fill');
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.dataset.w + '%';
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  fills.forEach(f => barObserver.observe(f));
+
+  // Abrir primera unidad por defecto ya está hecho con class="unit open"
+</script>
+</body>
+</html>
