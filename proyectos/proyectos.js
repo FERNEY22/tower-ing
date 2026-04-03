@@ -14,7 +14,7 @@ const proyectos = [
     descripcion:
       "Plataforma web de alquiler de inmuebles urbanos en Bogotá con geolocalización, gestión por roles (propietario, inquilino, técnico), solicitudes de reserva y mantenimiento, notificaciones por correo y asistencia inteligente con lenguaje natural.",
     tecnologias: ["React", "Node.js", "Express", "MongoDB", "JWT", "Cloudinary", "Google Maps API", "Nodemailer"],
-    link: "proyectos/ferim/",
+    link: "/proyectos/ferim/",
     destacado: true
   },
   {
