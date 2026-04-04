@@ -397,12 +397,15 @@
   }
 
   // ══════════════════════════════
-  // GRUPOS — sin repetir roles
+  // GRUPOS — sin repetir roles + asignación manual
   // ══════════════════════════════
-  function formarGrupos() {
-    const ROLES = ['coordinador','comunicador','investigador','analista de datos'];
-    const DOT   = { coordinador:'#3498db', comunicador:'#9b59b6', investigador:'#27ae60', 'analista de datos':'#e67e22' };
+  const DOT = { coordinador:'#3498db', comunicador:'#9b59b6', investigador:'#27ae60', 'analista de datos':'#e67e22' };
+  const ROLES_LIST = ['coordinador','comunicador','investigador','analista de datos'];
 
+  // Estado de grupos (persiste mientras no se recalcula)
+  let estadoGrupos = { grupos: [], sinGrupo: [] };
+
+  function formarGrupos() {
     const estudiantes = Object.entries(DATA.roles).map(([k,v]) => ({
       key:k, nombre:v.nombre||'—', apellido:v.apellido||'—',
       rolNatural:v.rolNatural||'', puntajes:{...(v.puntajes||{})}
@@ -412,55 +415,123 @@
       alert('Se necesitan al menos 4 estudiantes para formar grupos.'); return;
     }
 
-    const pool = {};
-    ROLES.forEach(r => {
-      pool[r] = estudiantes.filter(e=>e.rolNatural===r)
-        .sort((a,b)=>(b.puntajes[r]||0)-(a.puntajes[r]||0));
+    const numGrupos = Math.floor(estudiantes.length / 4);
+    let sobrantes = estudiantes.length % 4;
+
+    // Calcular rol secundario y terciario
+    estudiantes.forEach(e => {
+      const sorted = Object.entries(e.puntajes).sort((a,b)=>b[1]-a[1]);
+      e.maxPuntaje = sorted[0]?.[1]||0;
+      e.segundoRol = sorted[1]?.[0]||'';
+      e.tercerRol  = sorted[2]?.[0]||'';
+      delete e.rolAsignado;
     });
 
-    const min = Math.min(...ROLES.map(r=>pool[r].length));
-    if (min === 0) {
-      const falta = ROLES.filter(r=>pool[r].length===0);
-      alert('No hay estudiantes con el rol: ' + falta.join(', ')); return;
-    }
+    // Fase 1: asignar por rol natural
+    let conteo = { coordinador:0, comunicador:0, investigador:0, 'analista de datos':0 };
+    ROLES_LIST.forEach(rol => {
+      estudiantes.filter(e=>e.rolNatural===rol)
+        .sort((a,b)=>b.maxPuntaje-a.maxPuntaje)
+        .slice(0, numGrupos)
+        .forEach(e=>{ e.rolAsignado=rol; conteo[rol]++; });
+    });
 
-    const grupos = Array.from({length:min}, (_,i) => ({
+    // Fase 2: asignar sobrantes por rol secundario/terciario
+    estudiantes.filter(e=>!e.rolAsignado).forEach(e=>{
+      for (const rol of [e.segundoRol, e.tercerRol, ...ROLES_LIST]) {
+        if (rol && conteo[rol] < numGrupos + (sobrantes>0?1:0)) {
+          e.rolAsignado=rol; conteo[rol]++;
+          if(sobrantes>0) sobrantes--;
+          break;
+        }
+      }
+    });
+
+    // Fase 3: armar grupos
+    const pool = {};
+    ROLES_LIST.forEach(r=>pool[r]=[]);
+    estudiantes.forEach(e=>{ if(e.rolAsignado) pool[e.rolAsignado].push(e); });
+    const nGrupos = Math.min(...ROLES_LIST.map(r=>pool[r].length));
+
+    const grupos = Array.from({length:nGrupos}, (_,i)=>({
       numero: i+1,
-      integrantes: ROLES.map(r => ({...pool[r][i], rolAsignado:r}))
+      integrantes: ROLES_LIST.map(r=>({...pool[r][i], rolAsignado:r}))
     }));
 
     const usados = new Set(grupos.flatMap(g=>g.integrantes.map(m=>m.key)));
     const sinGrupo = estudiantes.filter(e=>!usados.has(e.key));
 
-    document.getElementById('grupos-info').innerHTML =
-      `<i class="fas fa-info-circle"></i> Se formaron <strong>${grupos.length} grupo(s)</strong> con un integrante de cada rol.
-       ${sinGrupo.length ? `<strong>${sinGrupo.length} estudiante(s)</strong> sin grupo por falta de par completo.` : '✅ Todos tienen grupo.'}`;
+    estadoGrupos = { grupos, sinGrupo };
+    renderGrupos();
+  }
 
+  function renderGrupos() {
+    const { grupos, sinGrupo } = estadoGrupos;
+
+    document.getElementById('grupos-info').innerHTML =
+      `<i class="fas fa-info-circle"></i>
+       <strong>${grupos.length} grupo(s)</strong> formados con un integrante de cada rol.
+       ${sinGrupo.length
+         ? ` · <strong style="color:#c05621">${sinGrupo.length} estudiante(s) pendientes</strong> — asígnalos usando el selector de abajo.`
+         : ' · <strong style="color:#27ae60">✅ Todos los estudiantes tienen grupo.</strong>'}`;
+
+    // Renderizar grupos (con zona de drop visual)
     document.getElementById('grupos-container').innerHTML = grupos.map(g=>`
-      <div class="grupo-card">
-        <h4><i class="fas fa-users" style="color:#2980b9"></i> Grupo ${g.numero}</h4>
+      <div class="grupo-card" id="grupo-card-${g.numero}">
+        <h4><i class="fas fa-users" style="color:#2980b9"></i> Grupo ${g.numero}
+          <span style="font-size:.75rem;color:#7f8c8d;font-weight:400"> (${g.integrantes.length} integrantes)</span>
+        </h4>
         ${g.integrantes.map(m=>`
           <div class="gm">
-            <div class="gm-dot" style="background:${DOT[m.rolAsignado]}"></div>
+            <div class="gm-dot" style="background:${DOT[m.rolAsignado]||'#ccc'}"></div>
             <span class="gm-nombre">${m.nombre} ${m.apellido}</span>
-            <span class="gm-rol">${m.rolAsignado.toUpperCase()}</span>
+            <span class="gm-rol">${(m.rolAsignado||m.rolNatural||'—').toUpperCase()}</span>
           </div>`).join('')}
       </div>`).join('');
 
-    document.getElementById('sin-grupo-wrap').innerHTML = sinGrupo.length ? `
-      <div class="sin-grupo">
-        <h4><i class="fas fa-user-clock"></i> Sin grupo asignado (${sinGrupo.length})</h4>
-        ${sinGrupo.map(e=>`
-          <div class="sg-item">
-            <div class="gm-dot" style="background:${DOT[e.rolNatural]||'#ccc'}"></div>
-            <span><strong>${e.nombre} ${e.apellido}</strong> · ${(e.rolNatural||'—').toUpperCase()}</span>
-          </div>`).join('')}
-        <p style="margin-top:10px;font-size:.82rem;color:#7f8c8d">Asígnalos manualmente a un grupo existente.</p>
-      </div>` : '';
+    // Renderizar sin grupo con selector
+    if (sinGrupo.length) {
+      document.getElementById('sin-grupo-wrap').innerHTML = `
+        <div class="sin-grupo">
+          <h4><i class="fas fa-user-clock"></i> Pendientes de asignar (${sinGrupo.length})</h4>
+          ${sinGrupo.map(e=>`
+            <div class="sg-item" id="sg-${e.key}">
+              <div class="gm-dot" style="background:${DOT[e.rolNatural]||'#ccc'}"></div>
+              <span class="gm-nombre"><strong>${e.nombre} ${e.apellido}</strong>
+                <small style="color:#7f8c8d"> · ${(e.rolNatural||'—').toUpperCase()}</small>
+              </span>
+              <select onchange="asignarAGrupo('${e.key}', this.value)"
+                style="padding:5px 10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:.82rem;cursor:pointer;margin-left:10px">
+                <option value="">— Asignar a grupo —</option>
+                ${estadoGrupos.grupos.map(g=>`<option value="${g.numero}">Grupo ${g.numero}</option>`).join('')}
+              </select>
+            </div>`).join('')}
+        </div>`;
+    } else {
+      document.getElementById('sin-grupo-wrap').innerHTML = '';
+    }
 
     const sec = document.getElementById('sec-grupos');
     sec.style.display = 'block';
     sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function asignarAGrupo(estudianteKey, numGrupo) {
+    if (!numGrupo) return;
+    const num = parseInt(numGrupo);
+
+    // Buscar estudiante en sinGrupo
+    const idx = estadoGrupos.sinGrupo.findIndex(e=>e.key===estudianteKey);
+    if (idx === -1) return;
+    const est = estadoGrupos.sinGrupo.splice(idx, 1)[0];
+
+    // Añadir al grupo seleccionado
+    const grupo = estadoGrupos.grupos.find(g=>g.numero===num);
+    if (!grupo) return;
+    grupo.integrantes.push({ ...est, rolAsignado: est.rolNatural });
+
+    // Re-renderizar
+    renderGrupos();
   }
 
   // ══════════════════════════════
