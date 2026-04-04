@@ -824,37 +824,38 @@
 </footer>
 
 <!-- ════════════════════════════════════════
-     FIREBASE SDK (v10 modular via CDN)
+     FIREBASE — Realtime Database (igual que data.html / instructor.html)
 ════════════════════════════════════════ -->
 <script type="module">
-  import { initializeApp }         from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getFirestore, collection, addDoc, serverTimestamp }
-                                   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { initializeApp }                from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getDatabase, ref, push, set }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-  // ══════════════════════════════════════
-  // 🔧 REEMPLAZA CON TU CONFIGURACIÓN
-  //    console.firebase.google.com
-  //    ⚙️ Project Settings → General → Your apps
-  // ══════════════════════════════════════
   const firebaseConfig = {
-    apiKey:            "REEMPLAZA_apiKey",
-    authDomain:        "REEMPLAZA_authDomain",
-    projectId:         "REEMPLAZA_projectId",
-    storageBucket:     "REEMPLAZA_storageBucket",
-    messagingSenderId: "REEMPLAZA_messagingSenderId",
-    appId:             "REEMPLAZA_appId"
+    apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+    authDomain:        "tower-ing.firebaseapp.com",
+    databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+    projectId:         "tower-ing",
+    storageBucket:     "tower-ing.firebasestorage.app",
+    messagingSenderId: "440636238988",
+    appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
 
-  // Exponer al scope global para que el resto del script lo use
-  window.__saveResult = async function(payload) {
-    await addDoc(collection(db, 'diagnostico_climatica'), {
-      ...payload,
-      timestamp: serverTimestamp()
-    });
-  };
+    window.__saveResult = async function(payload) {
+      const nuevaRef = push(ref(db, 'diagnostico_climatica'));
+      await set(nuevaRef, {
+        ...payload,
+        fechaRegistro: new Date().toLocaleString('es-CO')
+      });
+    };
+    console.log('✅ Firebase Realtime Database conectado.');
+  } catch (e) {
+    console.warn('⚠ Firebase no pudo inicializarse:', e.message);
+    window.__saveResult = null;
+  }
 </script>
 
 <script>
@@ -1123,43 +1124,59 @@ function renderResult(sc) {
 }
 
 // ══════════════════════════════════════════════════════════
-// ENVÍO
+// ENVÍO — siempre muestra resultados, Firebase es opcional
 // ══════════════════════════════════════════════════════════
+
+// Promesa con timeout para que Firebase nunca bloquee la UI
+function withTimeout(promise, ms) {
+  const timer = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('TIMEOUT')), ms)
+  );
+  return Promise.race([promise, timer]);
+}
+
 async function submitForm() {
   if (!validateStep(4)) return;
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculando...';
 
-  const sc      = calcScore();
-  const nombre  = document.getElementById('inp-nombre').value.trim();
-  const codigo  = document.getElementById('inp-codigo').value.trim();
+  const sc     = calcScore();
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  const codigo = document.getElementById('inp-codigo').value.trim();
 
   const payload = {
     nombre, codigo,
-    respuestas: { ...answers },
-    puntajeTF:  sc.tfScore,
-    puntajeMC:  sc.mcScore,
+    respuestas:     { ...answers },
+    puntajeTF:      sc.tfScore,
+    puntajeMC:      sc.mcScore,
     promedioLikert: sc.lkAvg,
-    total:      sc.total,
-    porcentaje: sc.pct,
-    nivel:      sc.pct >= 70 ? 'Avanzado' : sc.pct >= 40 ? 'Intermedio' : 'Básico'
+    total:          sc.total,
+    porcentaje:     sc.pct,
+    nivel:          sc.pct >= 70 ? 'Avanzado' : sc.pct >= 40 ? 'Intermedio' : 'Básico'
   };
 
-  try {
-    if (typeof window.__saveResult === 'function') {
-      await window.__saveResult(payload);
-      showToast('✓ Resultado guardado correctamente');
-    } else {
-      console.warn('Firebase no configurado — resultado no guardado en la nube.');
-      showToast('Resultado calculado (Firebase pendiente de configuración)');
+  // Intenta guardar en Firebase con máximo 6 segundos de espera
+  if (typeof window.__saveResult === 'function') {
+    try {
+      await withTimeout(window.__saveResult(payload), 6000);
+      showToast('✅ Resultado guardado en la nube');
+    } catch (err) {
+      if (err.message === 'TIMEOUT') {
+        console.warn('Firebase tardó demasiado — mostrando resultados de todas formas.');
+        showToast('⚠ No se pudo guardar (timeout) — resultado calculado localmente');
+      } else {
+        console.error('Error Firestore:', err.message);
+        showToast('⚠ Error al guardar — resultado calculado localmente');
+      }
     }
-  } catch (err) {
-    console.error('Error al guardar en Firestore:', err);
-    showToast('⚠ Error al guardar — revisa la consola');
+  } else {
+    // Firebase no configurado aún — funciona igual, sin guardar
+    showToast('ℹ Resultado calculado — configura Firebase para guardarlo');
   }
 
+  // SIEMPRE avanza a resultados, independientemente de Firebase
   renderResult(sc);
   currentStep = 5;
   showStep(5);
