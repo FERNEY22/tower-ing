@@ -247,30 +247,91 @@
 
   <!-- GEOESPACIAL -->
   <div class="vista" id="vista-geo">
+
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="g-total">0</h3><p>Total respuestas</p></div>
-      <div class="kpi-card"><i class="fas fa-percentage" style="color:#3498db"></i><h3 id="g-avg">—</h3><p>Promedio A-B-C</p></div>
-      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="g-listos">0</h3><p>🟢 Listos</p></div>
-      <div class="kpi-card red"><i class="fas fa-exclamation-circle"></i><h3 id="g-repaso">0</h3><p>🔴 Con repaso</p></div>
+      <div class="kpi-card"><i class="fas fa-percentage" style="color:#3498db"></i><h3 id="g-avg">—</h3><p>Promedio general</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="g-listos">0</h3><p>🟢 Listo ≥67%</p></div>
+      <div class="kpi-card orange"><i class="fas fa-minus-circle"></i><h3 id="g-selectivo">0</h3><p>🟡 Repaso selectivo</p></div>
+      <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="g-repaso">0</h3><p>🔴 Repaso completo</p></div>
     </div>
+
+    <!-- Fila 1: niveles + histograma -->
     <div class="charts-row">
       <div class="seccion">
         <h2><i class="fas fa-chart-pie"></i> Distribución de niveles</h2>
         <div class="chart-wrap"><canvas id="chart-g-niv"></canvas></div>
       </div>
       <div class="seccion">
-        <h2><i class="fas fa-chart-bar"></i> Aciertos por sección</h2>
-        <div class="chart-wrap"><canvas id="chart-g-sec"></canvas></div>
+        <h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2>
+        <div class="chart-wrap"><canvas id="chart-g-hist"></canvas></div>
       </div>
     </div>
+
+    <!-- Fila 2: rendimiento por subsección temática -->
     <div class="seccion">
-      <h2><i class="fas fa-list"></i> Estudiantes registrados</h2>
+      <h2><i class="fas fa-layer-group"></i> Rendimiento por subsección</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
+        Porcentaje de aciertos promedio por bloque temático. Barras rojas indican las áreas de mayor deficiencia grupal.
+      </p>
+      <div class="chart-wrap" style="height:260px"><canvas id="chart-g-areas"></canvas></div>
+    </div>
+
+    <!-- Fila 3: acierto por pregunta Sección A -->
+    <div class="seccion">
+      <h2><i class="fas fa-globe"></i> Acierto por pregunta — Sección A · SIG y Cartografía (P1–P10)</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
+        Barras rojas = menos del 50% respondió correctamente → concepto a reforzar.
+        <span style="background:#eaf4fc;padding:2px 8px;border-radius:4px;font-size:.78rem;color:#2980b9">SM = Selección múltiple</span>
+        <span style="background:#fdf3f2;padding:2px 8px;border-radius:4px;font-size:.78rem;color:#e74c3c;margin-left:4px">VF = Verdadero/Falso</span>
+      </p>
+      <div class="chart-wrap" style="height:300px"><canvas id="chart-g-secA"></canvas></div>
+    </div>
+
+    <!-- Fila 4: acierto por pregunta Sección B -->
+    <div class="seccion">
+      <h2><i class="fas fa-satellite"></i> Acierto por pregunta — Sección B · Teledetección (P11–P20)</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
+        Barras rojas = menos del 50% acertó → tema para refuerzo en clase.
+      </p>
+      <div class="chart-wrap" style="height:300px"><canvas id="chart-g-secB"></canvas></div>
+    </div>
+
+    <!-- Fila 5: acierto por pregunta Sección C -->
+    <div class="seccion">
+      <h2><i class="fas fa-tools"></i> Acierto por pregunta — Sección C · Herramientas (P21–P30)</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
+        Barras rojas = menos del 50% acertó → tema para refuerzo en clase.
+      </p>
+      <div class="chart-wrap" style="height:300px"><canvas id="chart-g-secC"></canvas></div>
+    </div>
+
+    <!-- Fila 6: Likert -->
+    <div class="seccion">
+      <h2><i class="fas fa-sliders-h"></i> Actitud y disposición — Escala Likert (P31–P40)</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
+        Promedio grupal por afirmación (1 = muy en desacuerdo · 5 = muy de acuerdo).
+      </p>
+      <div class="chart-wrap" style="height:320px"><canvas id="chart-g-lk"></canvas></div>
+    </div>
+
+    <!-- Tabla individual -->
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Detalle por estudiante</h2>
       <div style="overflow-x:auto">
         <table>
           <thead><tr>
-            <th>Nombre</th><th>Correo</th><th style="text-align:center">Sem.</th>
-            <th style="text-align:center">Score</th><th style="text-align:center">Likert</th>
-            <th style="text-align:center">Nivel</th><th>Fecha</th>
+            <th>Nombre</th><th>Correo</th>
+            <th style="text-align:center">Sem.</th>
+            <th style="text-align:center">Sec. A /10</th>
+            <th style="text-align:center">Sec. B /10</th>
+            <th style="text-align:center">Sec. C /10</th>
+            <th style="text-align:center">Total /30</th>
+            <th style="text-align:center">%</th>
+            <th style="text-align:center">Likert /5</th>
+            <th style="text-align:center">Nivel</th>
+            <th>Fecha</th>
           </tr></thead>
           <tbody id="g-tabla"></tbody>
         </table>
@@ -613,7 +674,7 @@
   }
 
   // ══════════════════════════════
-  // GEOESPACIAL
+  // GEOESPACIAL — dashboard completo
   // ══════════════════════════════
   const CORRECTAS = {
     q1:'b',q2:'V',q3:'b',q4:'F',q5:'c',q6:'V',q7:'b',q8:'V',q9:'b',q10:'V',
@@ -621,63 +682,214 @@
     q21:'b',q22:'V',q23:'b',q24:'F',q25:'b',q26:'V',q27:'b',q28:'V',q29:'a',q30:'F'
   };
 
+  // Tipo de cada pregunta: SM = selección múltiple, VF = verdadero/falso
+  const G_TIPO = (i) => (CORRECTAS['q'+i]==='V'||CORRECTAS['q'+i]==='F') ? 'VF' : 'SM';
+
+  // Etiquetas por sección
+  const G_SEC_A = Array.from({length:10},(_,i)=>`P${i+1} (${G_TIPO(i+1)})`);
+  const G_SEC_B = Array.from({length:10},(_,i)=>`P${i+11} (${G_TIPO(i+11)})`);
+  const G_SEC_C = Array.from({length:10},(_,i)=>`P${i+21} (${G_TIPO(i+21)})`);
+
+  const G_LK_LABELS = [
+    'P31 Interés tecnologías geo','P32 Experiencia con SIG','P33 Manejo software geo',
+    'P34 Trabajo con imágenes sat.','P35 Análisis espacial','P36 Bases cartografía',
+    'P37 Experiencia teledetección','P38 Trabajo interdisciplinario',
+    'P39 Conoce política territorial','P40 Disposición a proyectos geo'
+  ];
+
+  // Subsecciones temáticas (6 bloques de 5 preguntas cada uno)
+  const G_AREAS = [
+    { nombre:'SIG Fundamentos (A·P1–P5)',       qs:[1,2,3,4,5],     max:5 },
+    { nombre:'SIG Avanzado (A·P6–P10)',          qs:[6,7,8,9,10],    max:5 },
+    { nombre:'Teledet. Básica (B·P11–P15)',      qs:[11,12,13,14,15],max:5 },
+    { nombre:'Teledet. Avanzada (B·P16–P20)',    qs:[16,17,18,19,20],max:5 },
+    { nombre:'Herramientas Básicas (C·P21–P25)', qs:[21,22,23,24,25],max:5 },
+    { nombre:'Herramientas Avanzadas (C·P26–P30)',qs:[26,27,28,29,30],max:5 },
+  ];
+
   function renderGeo() {
-    const rows = Object.entries(DATA.geo).map(([k,v])=>({key:k,...v}));
+    const rows  = Object.entries(DATA.geo).map(([k,v])=>({key:k,...v}));
     const total = rows.length;
+
     document.getElementById('g-total').textContent = total;
     document.getElementById('badge-count').textContent = total + ' registros';
+
     if (!total) {
-      document.getElementById('g-avg').textContent = '—';
-      document.getElementById('g-listos').textContent = '0';
-      document.getElementById('g-repaso').textContent = '0';
-      document.getElementById('g-tabla').innerHTML = '<tr><td colspan="7" class="empty-td">Sin respuestas aún.</td></tr>';
+      ['g-avg','g-listos','g-selectivo','g-repaso'].forEach(id=>{
+        document.getElementById(id).textContent='—';
+      });
+      document.getElementById('g-tabla').innerHTML =
+        '<tr><td colspan="11" class="empty-td">Sin respuestas aún.</td></tr>';
       return;
     }
-    let sumS=0, listos=0, repaso=0, nd=[0,0,0], sec=[0,0,0];
-    rows.forEach(r=>{
-      let s=0,a=0,b=0,c=0;
-      for(let i=1;i<=30;i++)  if(r['q'+i]===CORRECTAS['q'+i]) s++;
-      for(let i=1;i<=10;i++)  if(r['q'+i]===CORRECTAS['q'+i]) a++;
-      for(let i=11;i<=20;i++) if(r['q'+i]===CORRECTAS['q'+i]) b++;
-      for(let i=21;i<=30;i++) if(r['q'+i]===CORRECTAS['q'+i]) c++;
-      sumS+=s; sec[0]+=a; sec[1]+=b; sec[2]+=c;
-      const p=s/30*100;
-      if(p>=67){listos++;nd[0]++;} else if(p>=40){repaso++;nd[1]++;} else{repaso++;nd[2]++;}
-    });
-    document.getElementById('g-avg').textContent    = (sumS/total/30*100).toFixed(1)+'%';
-    document.getElementById('g-listos').textContent = listos;
-    document.getElementById('g-repaso').textContent = repaso;
 
+    // ── Acumuladores ──────────────────────────────
+    let sumS=0, listos=0, selectivo=0, repaso=0;
+    const histBins   = [0,0,0,0,0];       // 0-19%,20-39%,40-59%,60-79%,80-100%
+    const qAciertos  = Array(30).fill(0); // índice 0 = P1
+    const lkSumas    = Array(10).fill(0); // índice 0 = P31
+    const secA       = Array(10).fill(0);
+    const secB       = Array(10).fill(0);
+    const secC       = Array(10).fill(0);
+
+    rows.forEach(r => {
+      let s=0,a=0,b=0,c=0;
+      for(let i=1;i<=30;i++) {
+        if(r['q'+i]===CORRECTAS['q'+i]){
+          s++; qAciertos[i-1]++;
+          if(i<=10)  { a++; secA[i-1]++;  }
+          if(i>=11&&i<=20) { b++; secB[i-11]++; }
+          if(i>=21)  { c++; secC[i-21]++; }
+        }
+      }
+      sumS += s;
+      const p = s/30*100;
+      const bin = Math.min(Math.floor(p/20),4);
+      histBins[bin]++;
+      if(p>=67) listos++; else if(p>=40) selectivo++; else repaso++;
+
+      for(let i=31;i<=40;i++){
+        const v=parseFloat(r['q'+i]);
+        if(!isNaN(v)) lkSumas[i-31]+=v;
+      }
+    });
+
+    // ── KPIs ──────────────────────────────────────
+    document.getElementById('g-avg').textContent       = (sumS/total/30*100).toFixed(1)+'%';
+    document.getElementById('g-listos').textContent    = listos;
+    document.getElementById('g-selectivo').textContent = selectivo;
+    document.getElementById('g-repaso').textContent    = repaso;
+
+    // ── Niveles ───────────────────────────────────
     crearChart('chart-g-niv','doughnut',{
       labels:['🟢 Listo','🟡 Repaso selectivo','🔴 Repaso completo'],
-      datasets:[{data:nd,backgroundColor:['#27ae60','#f39c12','#e74c3c'],borderWidth:2,borderColor:'white'}]
+      datasets:[{data:[listos,selectivo,repaso],
+        backgroundColor:['#27ae60','#e67e22','#e74c3c'],borderWidth:2,borderColor:'white'}]
     },{plugins:{legend:{position:'bottom',labels:{padding:14}}}});
 
-    crearChart('chart-g-sec','bar',{
-      labels:['A · SIG y Cart.','B · Teledetección','C · Herramientas'],
-      datasets:[{label:'% aciertos',data:sec.map(v=>(v/total/10*100).toFixed(1)),
-        backgroundColor:['rgba(52,152,219,.8)','rgba(39,174,96,.8)','rgba(230,126,34,.8)'],
+    // ── Histograma ────────────────────────────────
+    crearChart('chart-g-hist','bar',{
+      labels:['0–19%','20–39%','40–59%','60–79%','80–100%'],
+      datasets:[{label:'Estudiantes',data:histBins,
+        backgroundColor:['#e74c3c','#e74c3c','#e67e22','#3498db','#27ae60'],
         borderRadius:6,borderSkipped:false}]
-    },{scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}},
+    },{scales:{y:{beginAtZero:true,ticks:{stepSize:1},grid:{color:'#f0f0f0'}},
+               x:{grid:{display:false}}},
        plugins:{legend:{display:false}}});
 
-    document.getElementById('g-tabla').innerHTML = rows.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)).map(r=>{
-      let s=0; for(let i=1;i<=30;i++) if(r['q'+i]===CORRECTAS['q'+i]) s++;
-      const p=s/30*100;
-      let lkSum=0,lkN=0; for(let i=31;i<=40;i++){const v=parseInt(r['q'+i]);if(!isNaN(v)){lkSum+=v;lkN++;}}
-      const lk=lkN?(lkSum/lkN).toFixed(1):'—';
-      const [lab,cls]=p>=67?['🟢 Listo','b-listo']:p>=40?['🟡 Selectivo','b-sel']:['🔴 Completo','b-comp'];
-      const fecha=r.timestamp?new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}):'—';
-      return `<tr>
-        <td><strong>${r._nombre||'—'}</strong></td>
-        <td style="font-size:.82rem;color:#7f8c8d">${r._correo||'—'}</td>
-        <td style="text-align:center">${r._semestre||'—'}</td>
-        <td style="text-align:center;font-weight:600">${s}/30 <span style="color:#aaa;font-size:.8rem">(${p.toFixed(0)}%)</span></td>
-        <td style="text-align:center">${lk}/5</td>
-        <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
-        <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
-      </tr>`;
-    }).join('');
+    // ── Áreas temáticas ───────────────────────────
+    const areasData = G_AREAS.map(area=>{
+      let suma=0;
+      rows.forEach(r=>area.qs.forEach(q=>{
+        if(r['q'+q]===CORRECTAS['q'+q]) suma++;
+      }));
+      return total>0?(suma/(total*area.max)*100).toFixed(1):0;
+    });
+    const areasColors = areasData.map(v=>
+      parseFloat(v)>=70?'rgba(39,174,96,.8)':parseFloat(v)>=50?'rgba(230,126,34,.8)':'rgba(231,76,60,.8)'
+    );
+    crearChart('chart-g-areas','bar',{
+      labels:G_AREAS.map(a=>a.nombre),
+      datasets:[{label:'% aciertos',data:areasData,backgroundColor:areasColors,borderRadius:6,borderSkipped:false}]
+    },{indexAxis:'y',
+       scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},
+               y:{grid:{display:false},ticks:{font:{size:11}}}},
+       plugins:{legend:{display:false},
+                tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.x+'% aciertos'}}}});
+
+    // Helper: colores por acierto
+    const colQ = (n) => n/total*100>=50?'rgba(52,152,219,.8)':'rgba(231,76,60,.8)';
+
+    // ── Sección A por pregunta ─────────────────────
+    crearChart('chart-g-secA','bar',{
+      labels:G_SEC_A,
+      datasets:[{label:'% aciertos',data:secA.map(n=>(n/total*100).toFixed(1)),
+        backgroundColor:secA.map(colQ),borderRadius:4,borderSkipped:false}]
+    },{indexAxis:'y',
+       scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},
+               y:{grid:{display:false},ticks:{font:{size:11}}}},
+       plugins:{legend:{display:false},
+                tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% (${secA[ctx.dataIndex]}/${total})`}}}});
+
+    // ── Sección B por pregunta ─────────────────────
+    crearChart('chart-g-secB','bar',{
+      labels:G_SEC_B,
+      datasets:[{label:'% aciertos',data:secB.map(n=>(n/total*100).toFixed(1)),
+        backgroundColor:secB.map(colQ),borderRadius:4,borderSkipped:false}]
+    },{indexAxis:'y',
+       scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},
+               y:{grid:{display:false},ticks:{font:{size:11}}}},
+       plugins:{legend:{display:false},
+                tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% (${secB[ctx.dataIndex]}/${total})`}}}});
+
+    // ── Sección C por pregunta ─────────────────────
+    crearChart('chart-g-secC','bar',{
+      labels:G_SEC_C,
+      datasets:[{label:'% aciertos',data:secC.map(n=>(n/total*100).toFixed(1)),
+        backgroundColor:secC.map(colQ),borderRadius:4,borderSkipped:false}]
+    },{indexAxis:'y',
+       scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},
+               y:{grid:{display:false},ticks:{font:{size:11}}}},
+       plugins:{legend:{display:false},
+                tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% (${secC[ctx.dataIndex]}/${total})`}}}});
+
+    // ── Likert por pregunta ────────────────────────
+    const lkAvgs = lkSumas.map(s=>(s/total).toFixed(2));
+    const lkCols = lkAvgs.map(v=>{
+      const n=parseFloat(v);
+      return n>=4?'rgba(39,174,96,.8)':n>=3?'rgba(52,152,219,.8)':'rgba(231,76,60,.8)';
+    });
+    crearChart('chart-g-lk','bar',{
+      labels:G_LK_LABELS,
+      datasets:[{label:'Promedio',data:lkAvgs,backgroundColor:lkCols,borderRadius:4,borderSkipped:false}]
+    },{indexAxis:'y',
+       scales:{x:{min:0,max:5,ticks:{stepSize:1},grid:{color:'#f0f0f0'}},
+               y:{grid:{display:false},ticks:{font:{size:11}}}},
+       plugins:{legend:{display:false},
+                tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x} / 5`}}}});
+
+    // ── Tabla individual ───────────────────────────
+    document.getElementById('g-tabla').innerHTML = rows
+      .sort((a,b)=>{
+        let sa=0,sb=0;
+        for(let i=1;i<=30;i++){
+          if(a['q'+i]===CORRECTAS['q'+i]) sa++;
+          if(b['q'+i]===CORRECTAS['q'+i]) sb++;
+        }
+        return sb-sa;
+      })
+      .map(r=>{
+        let sa=0,sB=0,sC=0;
+        for(let i=1;i<=10;i++)  if(r['q'+i]===CORRECTAS['q'+i]) sa++;
+        for(let i=11;i<=20;i++) if(r['q'+i]===CORRECTAS['q'+i]) sB++;
+        for(let i=21;i<=30;i++) if(r['q'+i]===CORRECTAS['q'+i]) sC++;
+        const s=sa+sB+sC;
+        const p=s/30*100;
+        let lkSum=0,lkN=0;
+        for(let i=31;i<=40;i++){const v=parseFloat(r['q'+i]);if(!isNaN(v)){lkSum+=v;lkN++;}}
+        const lk=lkN?(lkSum/lkN).toFixed(1):'—';
+        const [lab,cls]=p>=67?['🟢 Listo','b-listo']:p>=40?['🟡 Selectivo','b-sel']:['🔴 Completo','b-comp'];
+        const barC=p>=67?'#27ae60':p>=40?'#e67e22':'#e74c3c';
+        const fecha=r.timestamp?new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}):'—';
+        return `<tr>
+          <td><strong>${r._nombre||'—'}</strong></td>
+          <td style="font-size:.82rem;color:#7f8c8d">${r._correo||'—'}</td>
+          <td style="text-align:center">${r._semestre||'—'}</td>
+          <td style="text-align:center">${sa}/10</td>
+          <td style="text-align:center">${sB}/10</td>
+          <td style="text-align:center">${sC}/10</td>
+          <td style="text-align:center;font-weight:700">${s}/30</td>
+          <td style="min-width:100px">
+            <div style="background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden">
+              <div style="width:${p.toFixed(0)}%;height:100%;background:${barC};border-radius:4px"></div>
+            </div>
+            <small style="color:#666">${p.toFixed(0)}%</small>
+          </td>
+          <td style="text-align:center">${lk}/5</td>
+          <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
+          <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
+        </tr>`;
+      }).join('');
   }
 
   // ══════════════════════════════
