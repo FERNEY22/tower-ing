@@ -6,6 +6,9 @@
   <title>Dashboard - Towers Ing</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- Firebase compat (mismo SDK que funcionaba en instructor.html) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -13,39 +16,6 @@
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       color: #333; min-height: 100vh;
     }
-
-    /* LOGIN */
-    #screen-login {
-      min-height: 100vh; display: flex;
-      align-items: center; justify-content: center;
-    }
-    .login-card {
-      background: white; border-radius: 12px; padding: 40px 35px;
-      width: 100%; max-width: 400px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.12);
-      border-top: 5px solid #1a2a6c;
-    }
-    .login-card h1 { color: #1a2a6c; font-size: 1.6rem; margin-bottom: 6px; text-align: center; }
-    .login-card p  { color: #7f8c8d; font-size: .9rem; text-align: center; margin-bottom: 25px; }
-    .lf { margin-bottom: 16px; }
-    .lf label { display: block; font-weight: 600; font-size: .85rem; color: #555; margin-bottom: 5px; }
-    .lf input {
-      width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px;
-      font-size: .95rem; font-family: inherit; transition: border-color .2s;
-    }
-    .lf input:focus { outline: none; border-color: #3498db; }
-    #btn-login {
-      width: 100%; padding: 12px; background: #1a2a6c; color: white;
-      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: background .3s;
-    }
-    #btn-login:hover:not(:disabled) { background: #2c3e8c; }
-    #btn-login:disabled { background: #95a5a6; cursor: not-allowed; }
-    #login-err { color: #e74c3c; font-size: .85rem; text-align: center; margin-top: 10px; }
-
-    /* APP */
-    #screen-app { display: none; }
-
     header {
       background: #1a2a6c; color: white; padding: 0 30px;
       display: flex; align-items: center; justify-content: space-between;
@@ -54,67 +24,57 @@
     .header-left { padding: 18px 0; }
     .header-left h1 { font-size: 1.4rem; }
     .header-left span { font-size: .82rem; opacity: .7; }
-    .header-right { display: flex; align-items: center; gap: 15px; }
-    #admin-email { font-size: .82rem; opacity: .75; }
-    .btn-logout {
-      padding: 7px 16px; background: rgba(255,255,255,.15); color: white;
-      border: 1px solid rgba(255,255,255,.3); border-radius: 6px;
-      cursor: pointer; font-size: .82rem; font-family: inherit; transition: all .2s;
-    }
-    .btn-logout:hover { background: rgba(255,255,255,.25); }
 
-    /* SELECTOR DE FORMULARIO */
     .selector-bar {
       background: white; border-bottom: 2px solid #e0e0e0;
-      padding: 18px 30px;
-      display: flex; align-items: center; gap: 15px; flex-wrap: wrap;
+      padding: 18px 30px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;
     }
-    .selector-bar label {
-      font-weight: 700; color: #1a2a6c; font-size: .9rem; white-space: nowrap;
-    }
+    .selector-bar label { font-weight: 700; color: #1a2a6c; font-size: .9rem; }
     .selector-bar select {
       padding: 9px 16px; border: 2px solid #1a2a6c; border-radius: 8px;
       font-size: .95rem; font-family: inherit; color: #1a2a6c; font-weight: 600;
-      background: white; cursor: pointer; outline: none;
-      min-width: 280px;
+      background: white; cursor: pointer; outline: none; min-width: 300px;
     }
-    .selector-bar select:focus { border-color: #3498db; }
     .badge-count {
       background: #e8f0fe; color: #1a2a6c; border-radius: 20px;
-      padding: 4px 14px; font-size: .82rem; font-weight: 700;
+      padding: 4px 14px; font-size: .82rem; font-weight: 700; display: none;
     }
 
     main { max-width: 1280px; margin: 0 auto; padding: 28px 25px 50px; }
 
-    /* VISTA */
     .vista { display: none; }
     .vista.activa { display: block; }
 
+    /* INICIO */
+    .inicio-card {
+      background: white; border-radius: 12px; padding: 60px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.08); text-align: center;
+    }
+    .inicio-card i { font-size: 3rem; color: #3498db; margin-bottom: 16px; display: block; }
+    .inicio-card h2 { color: #1a2a6c; margin-bottom: 10px; font-size: 1.4rem; }
+    .inicio-card p  { color: #7f8c8d; max-width: 400px; margin: 0 auto; }
+
     /* KPI */
     .kpi-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 18px; margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 18px; margin-bottom: 22px;
     }
     .kpi-card {
       background: white; border-radius: 12px; padding: 22px 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,.08); text-align: center;
-      position: relative; overflow: hidden;
-      transition: transform .2s, box-shadow .2s;
+      position: relative; overflow: hidden; transition: transform .2s;
     }
-    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,.12); }
-    .kpi-card::before {
-      content: ""; position: absolute; top: 0; left: 0;
-      width: 100%; height: 4px; background: #3498db;
-    }
+    .kpi-card:hover { transform: translateY(-3px); }
+    .kpi-card::before { content:""; position:absolute; top:0; left:0; width:100%; height:4px; background:#3498db; }
     .kpi-card.green::before  { background: #27ae60; }
     .kpi-card.red::before    { background: #e74c3c; }
-    .kpi-card.orange::before { background: #e67e22; }
     .kpi-card.purple::before { background: #9b59b6; }
+    .kpi-card.orange::before { background: #e67e22; }
     .kpi-card i   { font-size: 2rem; color: #3498db; margin-bottom: 10px; }
     .kpi-card.green i  { color: #27ae60; }
     .kpi-card.red i    { color: #e74c3c; }
-    .kpi-card.orange i { color: #e67e22; }
     .kpi-card.purple i { color: #9b59b6; }
+    .kpi-card.orange i { color: #e67e22; }
     .kpi-card h3  { font-size: 2.2rem; color: #1a2a6c; margin-bottom: 4px; line-height: 1; }
     .kpi-card p   { color: #7f8c8d; font-size: .85rem; font-weight: 500; }
 
@@ -128,44 +88,41 @@
       display: flex; align-items: center; gap: 8px;
     }
     .seccion h2 i { color: #3498db; }
+    .seccion-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
+    }
+    .seccion-head h2 { margin-bottom: 0; }
 
-    /* CHARTS */
     .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 22px; }
     .chart-wrap { position: relative; height: 240px; }
 
-    /* TABLA */
-    .tabla-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .tabla-head h2 { margin-bottom: 0; }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid #eee; }
     th { background: #f8f9fa; color: #1a2a6c; font-weight: 600; font-size: .85rem; }
     tr:hover td { background: #f1f5ff; }
     tr:last-child td { border-bottom: none; }
-    .empty-msg { text-align: center; color: #7f8c8d; padding: 30px; font-style: italic; }
+    .empty-td { text-align: center; color: #7f8c8d; padding: 30px; font-style: italic; }
 
     .rol-badge {
       display: inline-block; padding: 3px 10px; border-radius: 12px;
       font-size: .75rem; font-weight: 700;
     }
-    .badge-coord  { background: #dbeafe; color: #1e40af; }
-    .badge-comun  { background: #ede9fe; color: #5b21b6; }
-    .badge-invest { background: #d1fae5; color: #065f46; }
-    .badge-anal   { background: #fef3c7; color: #92400e; }
-    .badge-listo  { background: #d1fae5; color: #065f46; }
-    .badge-sel    { background: #fef3c7; color: #92400e; }
-    .badge-comp   { background: #fee2e2; color: #991b1b; }
+    .b-coord  { background: #dbeafe; color: #1e40af; }
+    .b-comun  { background: #ede9fe; color: #5b21b6; }
+    .b-invest { background: #d1fae5; color: #065f46; }
+    .b-anal   { background: #fef3c7; color: #92400e; }
+    .b-listo  { background: #d1fae5; color: #065f46; }
+    .b-sel    { background: #fef3c7; color: #92400e; }
+    .b-comp   { background: #fee2e2; color: #991b1b; }
 
     .btn {
       padding: 9px 20px; border: none; border-radius: 6px;
       font-family: inherit; font-size: .88rem; font-weight: 600;
       cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 6px;
     }
-    .btn-green  { background: #27ae60; color: white; }
+    .btn-green { background: #27ae60; color: white; }
     .btn-green:hover { background: #229954; }
-    .btn-red    { background: #fee2e2; color: #e74c3c; border: 1px solid #fca5a5; }
+    .btn-red { background: #fee2e2; color: #e74c3c; border: 1px solid #fca5a5; }
     .btn-red:hover { background: #e74c3c; color: white; }
 
     /* GRUPOS */
@@ -174,233 +131,169 @@
       padding: 12px 18px; margin-bottom: 18px; font-size: .88rem; color: #2c5282;
     }
     .grupos-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 16px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px;
     }
     .grupo-card {
-      background: #eef3ff; border-radius: 10px; padding: 18px;
-      border-left: 4px solid #3498db;
+      background: #eef3ff; border-radius: 10px; padding: 18px; border-left: 4px solid #3498db;
     }
     .grupo-card h4 { color: #1a2a6c; margin-bottom: 12px; font-size: 1rem; }
     .gm {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 0; border-bottom: 1px solid rgba(52,152,219,.15);
-      font-size: .88rem;
+      display: flex; align-items: center; gap: 8px; padding: 7px 0;
+      border-bottom: 1px solid rgba(52,152,219,.15); font-size: .88rem;
     }
     .gm:last-child { border-bottom: none; }
-    .gm-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .gm-dot    { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .gm-nombre { flex: 1; font-weight: 600; }
     .gm-rol    { font-size: .75rem; color: #2980b9; font-weight: 700; }
 
-    .sin-grupo-list {
-      margin-top: 18px; background: #fff8f0;
-      border: 1px solid #fbd38d; border-radius: 8px; padding: 16px;
+    .sin-grupo {
+      margin-top: 18px; background: #fff8f0; border: 1px solid #fbd38d;
+      border-radius: 8px; padding: 16px;
     }
-    .sin-grupo-list h4 { color: #c05621; margin-bottom: 10px; font-size: .92rem; }
+    .sin-grupo h4 { color: #c05621; margin-bottom: 10px; font-size: .92rem; }
     .sg-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 5px 0; font-size: .88rem; border-bottom: 1px solid #fbd38d;
+      display: flex; align-items: center; gap: 8px; padding: 5px 0;
+      font-size: .88rem; border-bottom: 1px solid #fbd38d;
     }
     .sg-item:last-child { border-bottom: none; }
-
-    /* PLACEHOLDER */
-    .placeholder {
-      text-align: center; padding: 60px 20px;
-    }
-    .placeholder i { font-size: 3rem; color: #27ae60; margin-bottom: 14px; display: block; }
-    .placeholder h3 { color: #1a2a6c; margin-bottom: 8px; }
-    .placeholder p  { color: #7f8c8d; font-size: .9rem; }
 
     footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: .85rem; }
 
     @media (max-width: 860px) {
       .charts-row { grid-template-columns: 1fr; }
-      header { padding: 0 15px; }
-      main { padding: 18px 12px 40px; }
-      .selector-bar { padding: 14px 15px; }
+      header, .selector-bar { padding-left: 15px; padding-right: 15px; }
+      main { padding: 16px 12px 40px; }
     }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="screen-login">
-  <div class="login-card">
-    <h1><i class="fas fa-chart-line" style="color:#1a2a6c"></i> Dashboard</h1>
-    <p>Panel de administración · Towers Ing<br><small>Acceso restringido</small></p>
-    <div class="lf">
-      <label>Correo de administrador</label>
-      <input type="email" id="inp-email" placeholder="correo@dominio.com" autocomplete="email"/>
-    </div>
-    <div class="lf">
-      <label>Contraseña</label>
-      <input type="password" id="inp-pass" placeholder="••••••••"/>
-    </div>
-    <button id="btn-login" onclick="doLogin()">
-      <i class="fas fa-sign-in-alt"></i> Ingresar
-    </button>
-    <div id="login-err"></div>
+<header>
+  <div class="header-left">
+    <h1><i class="fas fa-chart-line"></i> Dashboard · Towers Ing</h1>
+    <span>Panel de administración</span>
   </div>
+</header>
+
+<div class="selector-bar">
+  <label><i class="fas fa-filter"></i> Ver datos de:</label>
+  <select id="selector" onchange="cambiarVista()">
+    <option value="">— Selecciona un formulario —</option>
+    <option value="roles">Identificador de Rol Colaborativo</option>
+    <option value="geo">Diagnóstico · Tecnologías Geoespaciales</option>
+    <option value="ac">Diagnóstico · Acción Climática</option>
+  </select>
+  <span class="badge-count" id="badge-count"></span>
 </div>
 
-<!-- APP -->
-<div id="screen-app">
+<main>
 
-  <header>
-    <div class="header-left">
-      <h1><i class="fas fa-chart-line"></i> Dashboard · Towers Ing</h1>
-      <span>Panel de administración</span>
+  <!-- INICIO -->
+  <div class="vista activa" id="vista-inicio">
+    <div class="inicio-card">
+      <i class="fas fa-hand-pointer"></i>
+      <h2>Selecciona un formulario</h2>
+      <p>Usa el selector de arriba para elegir qué datos quieres ver. Cada formulario es independiente.</p>
     </div>
-    <div class="header-right">
-      <span id="admin-email"></span>
-      <button class="btn-logout" onclick="doLogout()">
-        <i class="fas fa-sign-out-alt"></i> Salir
-      </button>
-    </div>
-  </header>
-
-  <!-- SELECTOR -->
-  <div class="selector-bar">
-    <label><i class="fas fa-filter"></i> Ver datos de:</label>
-    <select id="selector-form" onchange="cambiarVista()">
-      <option value="">— Selecciona un formulario —</option>
-      <option value="roles">Identificador de Rol Colaborativo</option>
-      <option value="geo">Diagnóstico de Entrada · Tecnologías Geoespaciales</option>
-      <option value="ac">Diagnóstico de Entrada · Acción Climática</option>
-    </select>
-    <span class="badge-count" id="badge-count" style="display:none"></span>
   </div>
 
-  <main>
+  <!-- ROLES COLABORATIVOS -->
+  <div class="vista" id="vista-roles">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-users"></i><h3 id="r-total">0</h3><p>Total estudiantes</p></div>
+      <div class="kpi-card"><i class="fas fa-user-tie" style="color:#3498db"></i><h3 id="r-coord" style="color:#1e40af">0</h3><p>Coordinadores</p></div>
+      <div class="kpi-card purple"><i class="fas fa-comments"></i><h3 id="r-comun">0</h3><p>Comunicadores</p></div>
+      <div class="kpi-card green"><i class="fas fa-search"></i><h3 id="r-invest">0</h3><p>Investigadores</p></div>
+      <div class="kpi-card orange"><i class="fas fa-chart-bar"></i><h3 id="r-anal">0</h3><p>Analistas de Datos</p></div>
+    </div>
 
-    <!-- BIENVENIDA -->
-    <div class="vista activa" id="vista-inicio">
-      <div class="seccion" style="text-align:center; padding: 60px 30px;">
-        <i class="fas fa-hand-pointer" style="font-size:3rem;color:#3498db;margin-bottom:16px;display:block"></i>
-        <h2 style="justify-content:center;margin-bottom:10px;font-size:1.4rem">Selecciona un formulario</h2>
-        <p style="color:#7f8c8d;max-width:420px;margin:0 auto">
-          Usa el selector de arriba para elegir qué datos quieres analizar. Cada formulario tiene su propia información independiente.
-        </p>
+    <div class="charts-row">
+      <div class="seccion">
+        <h2><i class="fas fa-chart-pie"></i> Distribución de roles</h2>
+        <div class="chart-wrap"><canvas id="chart-r-dist"></canvas></div>
+      </div>
+      <div class="seccion">
+        <h2><i class="fas fa-chart-bar"></i> Puntaje promedio por rol</h2>
+        <div class="chart-wrap"><canvas id="chart-r-avg"></canvas></div>
       </div>
     </div>
 
-    <!-- VISTA: ROLES COLABORATIVOS -->
-    <div class="vista" id="vista-roles">
-      <div class="kpi-grid">
-        <div class="kpi-card"><i class="fas fa-users"></i><h3 id="r-total">0</h3><p>Total estudiantes</p></div>
-        <div class="kpi-card"><i class="fas fa-user-tie" style="color:#3498db"></i><h3 id="r-coord" style="color:#1e40af">0</h3><p>Coordinadores</p></div>
-        <div class="kpi-card purple"><i class="fas fa-comments"></i><h3 id="r-comun">0</h3><p>Comunicadores</p></div>
-        <div class="kpi-card green"><i class="fas fa-search"></i><h3 id="r-invest">0</h3><p>Investigadores</p></div>
-        <div class="kpi-card orange"><i class="fas fa-chart-bar"></i><h3 id="r-anal">0</h3><p>Analistas de Datos</p></div>
-      </div>
-
-      <div class="charts-row">
-        <div class="seccion">
-          <h2><i class="fas fa-chart-pie"></i> Distribución de roles</h2>
-          <div class="chart-wrap"><canvas id="chart-r-dist"></canvas></div>
-        </div>
-        <div class="seccion">
-          <h2><i class="fas fa-chart-bar"></i> Puntaje promedio por rol</h2>
-          <div class="chart-wrap"><canvas id="chart-r-avg"></canvas></div>
-        </div>
-      </div>
-
-      <!-- TABLA ESTUDIANTES -->
-      <div class="seccion">
-        <div class="tabla-head">
-          <h2><i class="fas fa-list"></i> Estudiantes registrados</h2>
-          <button class="btn btn-green" onclick="formarGrupos()">
-            <i class="fas fa-object-group"></i> Formar grupos equilibrados
-          </button>
-        </div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th><th>Apellido</th><th>Identificación</th>
-                <th>Rol Natural</th><th>Coordinador</th><th>Comunicador</th>
-                <th>Investigador</th><th>Analista</th><th>Fecha</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="r-tabla"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- GRUPOS -->
-      <div class="seccion" id="sec-grupos" style="display:none">
-        <h2><i class="fas fa-users"></i> Grupos equilibrados formados</h2>
-        <div class="grupos-info" id="grupos-info"></div>
-        <div class="grupos-grid" id="grupos-container"></div>
-        <div id="sin-grupo-wrap"></div>
-      </div>
-    </div>
-
-    <!-- VISTA: GEOESPACIAL -->
-    <div class="vista" id="vista-geo">
-      <div class="kpi-grid">
-        <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="g-total">0</h3><p>Respuestas totales</p></div>
-        <div class="kpi-card"><i class="fas fa-percentage" style="color:#3498db"></i><h3 id="g-avg">—</h3><p>Promedio A-B-C</p></div>
-        <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="g-listos">0</h3><p>🟢 Listos para entrar</p></div>
-        <div class="kpi-card red"><i class="fas fa-exclamation-circle"></i><h3 id="g-repaso">0</h3><p>🔴 Necesitan repaso</p></div>
-      </div>
-
-      <div class="charts-row">
-        <div class="seccion">
-          <h2><i class="fas fa-chart-pie"></i> Distribución de niveles</h2>
-          <div class="chart-wrap"><canvas id="chart-g-niv"></canvas></div>
-        </div>
-        <div class="seccion">
-          <h2><i class="fas fa-chart-bar"></i> Aciertos promedio por sección</h2>
-          <div class="chart-wrap"><canvas id="chart-g-sec"></canvas></div>
-        </div>
-      </div>
-
-      <div class="seccion">
+    <div class="seccion">
+      <div class="seccion-head">
         <h2><i class="fas fa-list"></i> Estudiantes registrados</h2>
-        <div style="overflow-x:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th><th>Correo</th>
-                <th style="text-align:center">Sem.</th>
-                <th style="text-align:center">Score A-B-C</th>
-                <th style="text-align:center">Likert</th>
-                <th style="text-align:center">Nivel</th>
-                <th>Fecha</th>
-              </tr>
-            </thead>
-            <tbody id="g-tabla"></tbody>
-          </table>
-        </div>
+        <button class="btn btn-green" onclick="formarGrupos()">
+          <i class="fas fa-object-group"></i> Formar grupos equilibrados
+        </button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Nombre</th><th>Apellido</th><th>Identificación</th>
+            <th>Rol Natural</th><th>Coord.</th><th>Comun.</th><th>Invest.</th><th>Analista</th>
+            <th>Fecha</th><th></th>
+          </tr></thead>
+          <tbody id="r-tabla"></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- VISTA: ACCIÓN CLIMÁTICA -->
-    <div class="vista" id="vista-ac">
+    <div class="seccion" id="sec-grupos" style="display:none">
+      <h2><i class="fas fa-users"></i> Grupos equilibrados formados</h2>
+      <div class="grupos-info" id="grupos-info"></div>
+      <div class="grupos-grid" id="grupos-container"></div>
+      <div id="sin-grupo-wrap"></div>
+    </div>
+  </div>
+
+  <!-- GEOESPACIAL -->
+  <div class="vista" id="vista-geo">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="g-total">0</h3><p>Total respuestas</p></div>
+      <div class="kpi-card"><i class="fas fa-percentage" style="color:#3498db"></i><h3 id="g-avg">—</h3><p>Promedio A-B-C</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="g-listos">0</h3><p>🟢 Listos</p></div>
+      <div class="kpi-card red"><i class="fas fa-exclamation-circle"></i><h3 id="g-repaso">0</h3><p>🔴 Con repaso</p></div>
+    </div>
+    <div class="charts-row">
       <div class="seccion">
-        <div class="placeholder">
-          <i class="fas fa-leaf"></i>
-          <h3>Diagnóstico · Acción Climática</h3>
-          <p>Cuando haya respuestas en Firebase bajo el nodo <code>diagnostico_ac</code>, aparecerán aquí automáticamente.</p>
-        </div>
+        <h2><i class="fas fa-chart-pie"></i> Distribución de niveles</h2>
+        <div class="chart-wrap"><canvas id="chart-g-niv"></canvas></div>
+      </div>
+      <div class="seccion">
+        <h2><i class="fas fa-chart-bar"></i> Aciertos por sección</h2>
+        <div class="chart-wrap"><canvas id="chart-g-sec"></canvas></div>
       </div>
     </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Estudiantes registrados</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Nombre</th><th>Correo</th><th style="text-align:center">Sem.</th>
+            <th style="text-align:center">Score</th><th style="text-align:center">Likert</th>
+            <th style="text-align:center">Nivel</th><th>Fecha</th>
+          </tr></thead>
+          <tbody id="g-tabla"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-  </main>
+  <!-- ACCIÓN CLIMÁTICA -->
+  <div class="vista" id="vista-ac">
+    <div class="seccion" style="text-align:center;padding:60px 30px">
+      <i class="fas fa-leaf" style="font-size:3rem;color:#27ae60;margin-bottom:14px;display:block"></i>
+      <h2 style="justify-content:center;margin-bottom:8px">Diagnóstico · Acción Climática</h2>
+      <p style="color:#7f8c8d">Cuando haya respuestas en Firebase bajo el nodo <code>diagnostico_ac</code>, aparecerán aquí.</p>
+    </div>
+  </div>
 
-  <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
-</div>
+</main>
 
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getDatabase, ref, onValue, remove }
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+<footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
 
-  const app = initializeApp({
+<script>
+  // Firebase compat — mismo que usaba instructor.html
+  firebase.initializeApp({
     apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
     authDomain:        "tower-ing.firebaseapp.com",
     databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
@@ -409,264 +302,170 @@
     messagingSenderId: "440636238988",
     appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
   });
-  const auth = getAuth(app);
-  const db   = getDatabase(app);
+  const db = firebase.database();
 
-  // ── AUTH ──
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      document.getElementById('screen-login').style.display = 'none';
-      document.getElementById('screen-app').style.display   = 'block';
-      document.getElementById('admin-email').textContent    = user.email;
-      iniciarListeners();
-    } else {
-      document.getElementById('screen-login').style.display = 'flex';
-      document.getElementById('screen-app').style.display   = 'none';
-    }
-  });
-
-  window.doLogin = async () => {
-    const email = document.getElementById('inp-email').value.trim();
-    const pass  = document.getElementById('inp-pass').value;
-    const err   = document.getElementById('login-err');
-    const btn   = document.getElementById('btn-login');
-    err.textContent = '';
-    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando…';
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch(e) {
-      err.textContent = 'Credenciales incorrectas.';
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Ingresar';
-    }
-  };
-  window.doLogout = () => signOut(auth);
-
-  // ── DATOS ──
   let DATA = { roles: {}, geo: {} };
   let CHARTS = {};
-
-  function iniciarListeners() {
-    onValue(ref(db, 'estudiantes'), snap => {
-      DATA.roles = snap.val() || {};
-      if (vistaActiva === 'roles') renderRoles();
-    });
-    onValue(ref(db, 'diagnostico_geoespacial'), snap => {
-      DATA.geo = snap.val() || {};
-      if (vistaActiva === 'geo') renderGeo();
-    });
-  }
-
-  // ── NAVEGACIÓN ──
   let vistaActiva = '';
-  window.cambiarVista = () => {
-    const sel = document.getElementById('selector-form').value;
-    vistaActiva = sel;
 
+  // Escuchar datos en tiempo real
+  db.ref('estudiantes').on('value', snap => {
+    DATA.roles = snap.val() || {};
+    if (vistaActiva === 'roles') renderRoles();
+  });
+  db.ref('diagnostico_geoespacial').on('value', snap => {
+    DATA.geo = snap.val() || {};
+    if (vistaActiva === 'geo') renderGeo();
+  });
+
+  // Cambiar vista
+  function cambiarVista() {
+    const sel = document.getElementById('selector').value;
+    vistaActiva = sel;
     document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
     document.getElementById('vista-' + (sel || 'inicio')).classList.add('activa');
-
     const badge = document.getElementById('badge-count');
     if (!sel) { badge.style.display = 'none'; return; }
+    badge.style.display = 'inline-block';
+    if (sel === 'roles') { renderRoles(); badge.textContent = Object.keys(DATA.roles).length + ' registros'; }
+    if (sel === 'geo')   { renderGeo();   badge.textContent = Object.keys(DATA.geo).length + ' registros'; }
+    if (sel === 'ac')    { badge.textContent = '0 registros'; }
+  }
 
-    if (sel === 'roles') {
-      renderRoles();
-      badge.textContent = Object.keys(DATA.roles).length + ' registros';
-      badge.style.display = 'inline-block';
-    }
-    if (sel === 'geo') {
-      renderGeo();
-      badge.textContent = Object.keys(DATA.geo).length + ' registros';
-      badge.style.display = 'inline-block';
-    }
-    if (sel === 'ac') {
-      badge.textContent = '0 registros';
-      badge.style.display = 'inline-block';
-    }
-  };
-
-  // ══════════════════════════════════════════
+  // ══════════════════════════════
   // ROLES COLABORATIVOS
-  // ══════════════════════════════════════════
-  const ROL_COLORS = {
-    'coordinador':       '#3498db',
-    'comunicador':       '#9b59b6',
-    'investigador':      '#27ae60',
-    'analista de datos': '#e67e22'
-  };
-  const ROL_BADGE = {
-    'coordinador':       'badge-coord',
-    'comunicador':       'badge-comun',
-    'investigador':      'badge-invest',
-    'analista de datos': 'badge-anal'
-  };
+  // ══════════════════════════════
+  const ROL_COLORS = { coordinador:'#3498db', comunicador:'#9b59b6', investigador:'#27ae60', 'analista de datos':'#e67e22' };
+  const ROL_BADGE  = { coordinador:'b-coord', comunicador:'b-comun', investigador:'b-invest', 'analista de datos':'b-anal' };
 
   function renderRoles() {
-    const rows = Object.entries(DATA.roles).map(([k,v]) => ({ key:k, ...v }));
-    const total = rows.length;
+    const rows  = Object.entries(DATA.roles).map(([k,v]) => ({ key:k,...v }));
     const ROLES = ['coordinador','comunicador','investigador','analista de datos'];
     const counts = ROLES.map(r => rows.filter(e => e.rolNatural === r).length);
 
-    document.getElementById('r-total').textContent = total;
-    document.getElementById('r-coord').textContent = counts[0];
-    document.getElementById('r-comun').textContent = counts[1];
-    document.getElementById('r-invest').textContent= counts[2];
-    document.getElementById('r-anal').textContent  = counts[3];
-    document.getElementById('badge-count').textContent = total + ' registros';
+    document.getElementById('r-total').textContent  = rows.length;
+    document.getElementById('r-coord').textContent  = counts[0];
+    document.getElementById('r-comun').textContent  = counts[1];
+    document.getElementById('r-invest').textContent = counts[2];
+    document.getElementById('r-anal').textContent   = counts[3];
+    document.getElementById('badge-count').textContent = rows.length + ' registros';
 
-    // Donut distribución
-    crearChart('chart-r-dist', 'doughnut', {
-      labels: ['Coordinador','Comunicador','Investigador','Analista de Datos'],
-      datasets: [{ data: counts, backgroundColor: Object.values(ROL_COLORS), borderWidth: 2, borderColor: 'white' }]
-    }, { plugins: { legend: { position: 'bottom', labels: { padding: 14 }}}});
+    crearChart('chart-r-dist','doughnut',{
+      labels:['Coordinador','Comunicador','Investigador','Analista de Datos'],
+      datasets:[{ data:counts, backgroundColor:Object.values(ROL_COLORS), borderWidth:2, borderColor:'white' }]
+    },{ plugins:{ legend:{ position:'bottom', labels:{ padding:14 }}}});
 
-    // Bar puntaje promedio
     const avgs = ROLES.map(r => {
       const set = rows.filter(e => e.puntajes?.[r]);
-      return set.length ? (set.reduce((s,e) => s + (e.puntajes[r]||0), 0) / set.length).toFixed(1) : 0;
+      return set.length ? (set.reduce((s,e) => s+(e.puntajes[r]||0),0)/set.length).toFixed(1) : 0;
     });
-    crearChart('chart-r-avg', 'bar', {
-      labels: ['Coordinador','Comunicador','Investigador','Analista'],
-      datasets: [{ label: 'Puntaje promedio', data: avgs,
-        backgroundColor: Object.values(ROL_COLORS).map(c => c + 'bb'),
-        borderRadius: 6, borderSkipped: false }]
-    }, { scales: {
-      y: { beginAtZero: true, grid: { color: '#f0f0f0' }},
-      x: { grid: { display: false }}
-    }, plugins: { legend: { display: false }}});
+    crearChart('chart-r-avg','bar',{
+      labels:['Coordinador','Comunicador','Investigador','Analista'],
+      datasets:[{ label:'Puntaje promedio', data:avgs,
+        backgroundColor:Object.values(ROL_COLORS).map(c=>c+'bb'),
+        borderRadius:6, borderSkipped:false }]
+    },{ scales:{ y:{ beginAtZero:true, grid:{ color:'#f0f0f0' }}, x:{ grid:{ display:false }}},
+        plugins:{ legend:{ display:false }}});
 
-    // Tabla
     const tbody = document.getElementById('r-tabla');
-    if (!total) {
-      tbody.innerHTML = '<tr><td colspan="10" class="empty-msg">No hay estudiantes registrados aún.</td></tr>';
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="10" class="empty-td">No hay estudiantes registrados aún.</td></tr>';
       return;
     }
-    tbody.innerHTML = rows
-      .sort((a,b) => (b.fechaRegistro||0) - (a.fechaRegistro||0))
-      .map(r => {
-        const p = r.puntajes || {};
-        const fecha = r.fechaRegistro
-          ? new Date(r.fechaRegistro).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
-          : '—';
-        return `<tr>
-          <td><strong>${r.nombre||'—'}</strong></td>
-          <td>${r.apellido||'—'}</td>
-          <td style="font-family:monospace;font-size:.82rem">${r.identificacion||'—'}</td>
-          <td><span class="rol-badge ${ROL_BADGE[r.rolNatural]||''}">${(r.rolNatural||'—').toUpperCase()}</span></td>
-          <td style="text-align:center">${p.coordinador||0}</td>
-          <td style="text-align:center">${p.comunicador||0}</td>
-          <td style="text-align:center">${p.investigador||0}</td>
-          <td style="text-align:center">${p['analista de datos']||0}</td>
-          <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
-          <td><button class="btn btn-red" onclick="eliminarEstudiante('${r.key}')">
-            <i class="fas fa-trash"></i>
-          </button></td>
-        </tr>`;
-      }).join('');
+    tbody.innerHTML = rows.sort((a,b)=>(b.fechaRegistro||0)-(a.fechaRegistro||0)).map(r => {
+      const p = r.puntajes || {};
+      const fecha = r.fechaRegistro
+        ? new Date(r.fechaRegistro).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+      return `<tr>
+        <td><strong>${r.nombre||'—'}</strong></td>
+        <td>${r.apellido||'—'}</td>
+        <td style="font-family:monospace;font-size:.82rem">${r.identificacion||'—'}</td>
+        <td><span class="rol-badge ${ROL_BADGE[r.rolNatural]||''}">${(r.rolNatural||'—').toUpperCase()}</span></td>
+        <td style="text-align:center">${p.coordinador||0}</td>
+        <td style="text-align:center">${p.comunicador||0}</td>
+        <td style="text-align:center">${p.investigador||0}</td>
+        <td style="text-align:center">${p['analista de datos']||0}</td>
+        <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
+        <td><button class="btn btn-red" onclick="eliminar('${r.key}')"><i class="fas fa-trash"></i></button></td>
+      </tr>`;
+    }).join('');
   }
 
-  window.eliminarEstudiante = async (key) => {
+  function eliminar(key) {
     if (!confirm('¿Eliminar este registro permanentemente?')) return;
-    await remove(ref(db, 'estudiantes/' + key));
-  };
+    db.ref('estudiantes/' + key).remove();
+  }
 
-  // ══════════════════════════════════════════
-  // FORMACIÓN DE GRUPOS — sin repetir roles
-  // ══════════════════════════════════════════
-  window.formarGrupos = () => {
+  // ══════════════════════════════
+  // GRUPOS — sin repetir roles
+  // ══════════════════════════════
+  function formarGrupos() {
     const ROLES = ['coordinador','comunicador','investigador','analista de datos'];
-    const DOT_COLORS = {
-      'coordinador':'#3498db','comunicador':'#9b59b6',
-      'investigador':'#27ae60','analista de datos':'#e67e22'
-    };
+    const DOT   = { coordinador:'#3498db', comunicador:'#9b59b6', investigador:'#27ae60', 'analista de datos':'#e67e22' };
 
-    // Copia profunda para no tocar los datos originales
     const estudiantes = Object.entries(DATA.roles).map(([k,v]) => ({
-      key: k,
-      nombre: v.nombre || '—',
-      apellido: v.apellido || '—',
-      rolNatural: v.rolNatural || '',
-      puntajes: { ...(v.puntajes || {}) }
+      key:k, nombre:v.nombre||'—', apellido:v.apellido||'—',
+      rolNatural:v.rolNatural||'', puntajes:{...(v.puntajes||{})}
     }));
 
     if (estudiantes.length < 4) {
-      alert('Se necesitan al menos 4 estudiantes (uno por rol) para formar grupos.');
-      return;
+      alert('Se necesitan al menos 4 estudiantes para formar grupos.'); return;
     }
 
-    // Separar por rol natural
     const pool = {};
     ROLES.forEach(r => {
-      pool[r] = estudiantes
-        .filter(e => e.rolNatural === r)
-        .sort((a,b) => (b.puntajes[r]||0) - (a.puntajes[r]||0));
+      pool[r] = estudiantes.filter(e=>e.rolNatural===r)
+        .sort((a,b)=>(b.puntajes[r]||0)-(a.puntajes[r]||0));
     });
 
-    // Cuántos grupos COMPLETOS se pueden formar
-    const minPorRol = Math.min(...ROLES.map(r => pool[r].length));
-
-    if (minPorRol === 0) {
-      const sinRol = ROLES.filter(r => pool[r].length === 0);
-      alert(`No hay estudiantes con el rol: ${sinRol.join(', ')}. No se pueden formar grupos completos.`);
-      return;
+    const min = Math.min(...ROLES.map(r=>pool[r].length));
+    if (min === 0) {
+      const falta = ROLES.filter(r=>pool[r].length===0);
+      alert('No hay estudiantes con el rol: ' + falta.join(', ')); return;
     }
 
-    // Armar grupos: tomar uno de cada rol
-    const grupos = [];
-    for (let i = 0; i < minPorRol; i++) {
-      grupos.push({
-        numero: i + 1,
-        integrantes: ROLES.map(r => ({ ...pool[r][i], rolAsignado: r }))
-      });
-    }
+    const grupos = Array.from({length:min}, (_,i) => ({
+      numero: i+1,
+      integrantes: ROLES.map(r => ({...pool[r][i], rolAsignado:r}))
+    }));
 
-    // Estudiantes que no quedaron en ningún grupo
-    const usados = new Set(grupos.flatMap(g => g.integrantes.map(m => m.key)));
-    const sinGrupo = estudiantes.filter(e => !usados.has(e.key));
+    const usados = new Set(grupos.flatMap(g=>g.integrantes.map(m=>m.key)));
+    const sinGrupo = estudiantes.filter(e=>!usados.has(e.key));
 
-    // Renderizar
-    const sec = document.getElementById('sec-grupos');
-    const info = document.getElementById('grupos-info');
-    const cont = document.getElementById('grupos-container');
-    const sgWrap = document.getElementById('sin-grupo-wrap');
+    document.getElementById('grupos-info').innerHTML =
+      `<i class="fas fa-info-circle"></i> Se formaron <strong>${grupos.length} grupo(s)</strong> con un integrante de cada rol.
+       ${sinGrupo.length ? `<strong>${sinGrupo.length} estudiante(s)</strong> sin grupo por falta de par completo.` : '✅ Todos tienen grupo.'}`;
 
-    info.innerHTML = `
-      <i class="fas fa-info-circle"></i>
-      Se formaron <strong>${grupos.length} grupo(s)</strong> completos con un integrante de cada rol.
-      ${sinGrupo.length ? `<strong>${sinGrupo.length} estudiante(s)</strong> quedan pendientes de asignación.` : '✅ Todos los estudiantes tienen grupo.'}
-    `;
-
-    cont.innerHTML = grupos.map(g => `
+    document.getElementById('grupos-container').innerHTML = grupos.map(g=>`
       <div class="grupo-card">
         <h4><i class="fas fa-users" style="color:#2980b9"></i> Grupo ${g.numero}</h4>
-        ${g.integrantes.map(m => `
+        ${g.integrantes.map(m=>`
           <div class="gm">
-            <div class="gm-dot" style="background:${DOT_COLORS[m.rolAsignado]}"></div>
+            <div class="gm-dot" style="background:${DOT[m.rolAsignado]}"></div>
             <span class="gm-nombre">${m.nombre} ${m.apellido}</span>
             <span class="gm-rol">${m.rolAsignado.toUpperCase()}</span>
           </div>`).join('')}
       </div>`).join('');
 
-    sgWrap.innerHTML = sinGrupo.length ? `
-      <div class="sin-grupo-list">
+    document.getElementById('sin-grupo-wrap').innerHTML = sinGrupo.length ? `
+      <div class="sin-grupo">
         <h4><i class="fas fa-user-clock"></i> Sin grupo asignado (${sinGrupo.length})</h4>
-        ${sinGrupo.map(e => `
+        ${sinGrupo.map(e=>`
           <div class="sg-item">
-            <div class="gm-dot" style="background:${DOT_COLORS[e.rolNatural]||'#ccc'}"></div>
+            <div class="gm-dot" style="background:${DOT[e.rolNatural]||'#ccc'}"></div>
             <span><strong>${e.nombre} ${e.apellido}</strong> · ${(e.rolNatural||'—').toUpperCase()}</span>
           </div>`).join('')}
-        <p style="margin-top:10px;font-size:.82rem;color:#7f8c8d">
-          Estos estudiantes no tienen par completo. Puedes asignarlos manualmente a un grupo existente.
-        </p>
+        <p style="margin-top:10px;font-size:.82rem;color:#7f8c8d">Asígnalos manualmente a un grupo existente.</p>
       </div>` : '';
 
+    const sec = document.getElementById('sec-grupos');
     sec.style.display = 'block';
-    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+    sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
 
-  // ══════════════════════════════════════════
-  // DIAGNÓSTICO GEOESPACIAL
-  // ══════════════════════════════════════════
+  // ══════════════════════════════
+  // GEOESPACIAL
+  // ══════════════════════════════
   const CORRECTAS = {
     q1:'b',q2:'V',q3:'b',q4:'F',q5:'c',q6:'V',q7:'b',q8:'V',q9:'b',q10:'V',
     q11:'b',q12:'V',q13:'b',q14:'F',q15:'b',q16:'V',q17:'b',q18:'V',q19:'c',q20:'V',
@@ -674,36 +473,28 @@
   };
 
   function renderGeo() {
-    const rows = Object.entries(DATA.geo).map(([k,v]) => ({ key:k, ...v }));
+    const rows = Object.entries(DATA.geo).map(([k,v])=>({key:k,...v}));
     const total = rows.length;
     document.getElementById('g-total').textContent = total;
     document.getElementById('badge-count').textContent = total + ' registros';
-
     if (!total) {
-      document.getElementById('g-avg').textContent    = '—';
+      document.getElementById('g-avg').textContent = '—';
       document.getElementById('g-listos').textContent = '0';
       document.getElementById('g-repaso').textContent = '0';
-      document.getElementById('g-tabla').innerHTML    =
-        '<tr><td colspan="7" class="empty-msg">Sin respuestas aún.</td></tr>';
+      document.getElementById('g-tabla').innerHTML = '<tr><td colspan="7" class="empty-td">Sin respuestas aún.</td></tr>';
       return;
     }
-
-    let sumS = 0, listos = 0, repaso = 0, nd = [0,0,0];
-    const secSums = [0,0,0];
-
-    rows.forEach(r => {
-      let s=0, a=0, b=0, c=0;
-      for (let i=1;i<=30;i++)  if (r['q'+i]===CORRECTAS['q'+i]) s++;
-      for (let i=1;i<=10;i++)  if (r['q'+i]===CORRECTAS['q'+i]) a++;
-      for (let i=11;i<=20;i++) if (r['q'+i]===CORRECTAS['q'+i]) b++;
-      for (let i=21;i<=30;i++) if (r['q'+i]===CORRECTAS['q'+i]) c++;
-      sumS += s; secSums[0] += a; secSums[1] += b; secSums[2] += c;
-      const p = s/30*100;
-      if (p>=67) { listos++; nd[0]++; }
-      else if (p>=40) { repaso++; nd[1]++; }
-      else { repaso++; nd[2]++; }
+    let sumS=0, listos=0, repaso=0, nd=[0,0,0], sec=[0,0,0];
+    rows.forEach(r=>{
+      let s=0,a=0,b=0,c=0;
+      for(let i=1;i<=30;i++)  if(r['q'+i]===CORRECTAS['q'+i]) s++;
+      for(let i=1;i<=10;i++)  if(r['q'+i]===CORRECTAS['q'+i]) a++;
+      for(let i=11;i<=20;i++) if(r['q'+i]===CORRECTAS['q'+i]) b++;
+      for(let i=21;i<=30;i++) if(r['q'+i]===CORRECTAS['q'+i]) c++;
+      sumS+=s; sec[0]+=a; sec[1]+=b; sec[2]+=c;
+      const p=s/30*100;
+      if(p>=67){listos++;nd[0]++;} else if(p>=40){repaso++;nd[1]++;} else{repaso++;nd[2]++;}
     });
-
     document.getElementById('g-avg').textContent    = (sumS/total/30*100).toFixed(1)+'%';
     document.getElementById('g-listos').textContent = listos;
     document.getElementById('g-repaso').textContent = repaso;
@@ -714,58 +505,41 @@
     },{plugins:{legend:{position:'bottom',labels:{padding:14}}}});
 
     crearChart('chart-g-sec','bar',{
-      labels:['A · SIG y Cartografía','B · Teledetección','C · Herramientas'],
-      datasets:[{label:'% de aciertos',
-        data: secSums.map(v => (v/total/10*100).toFixed(1)),
+      labels:['A · SIG y Cart.','B · Teledetección','C · Herramientas'],
+      datasets:[{label:'% aciertos',data:sec.map(v=>(v/total/10*100).toFixed(1)),
         backgroundColor:['rgba(52,152,219,.8)','rgba(39,174,96,.8)','rgba(230,126,34,.8)'],
         borderRadius:6,borderSkipped:false}]
-    },{scales:{
-      y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},
-      x:{grid:{display:false}}
-    },plugins:{legend:{display:false}}});
+    },{scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}},
+       plugins:{legend:{display:false}}});
 
-    document.getElementById('g-tabla').innerHTML = rows
-      .sort((a,b) => (b.timestamp||0) - (a.timestamp||0))
-      .map(r => {
-        let s=0;
-        for (let i=1;i<=30;i++) if (r['q'+i]===CORRECTAS['q'+i]) s++;
-        const p = s/30*100;
-        let lkSum=0, lkN=0;
-        for (let i=31;i<=40;i++) { const v=parseInt(r['q'+i]); if(!isNaN(v)){lkSum+=v;lkN++;} }
-        const lk = lkN ? (lkSum/lkN).toFixed(1) : '—';
-        const [lab, cls] = p>=67 ? ['🟢 Listo','badge-listo'] : p>=40 ? ['🟡 Selectivo','badge-sel'] : ['🔴 Completo','badge-comp'];
-        const fecha = r.timestamp
-          ? new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
-          : '—';
-        return `<tr>
-          <td><strong>${r._nombre||'—'}</strong></td>
-          <td style="font-size:.82rem;color:#7f8c8d">${r._correo||'—'}</td>
-          <td style="text-align:center">${r._semestre||'—'}</td>
-          <td style="text-align:center;font-weight:600">${s}/30 <span style="color:#aaa;font-size:.8rem">(${p.toFixed(0)}%)</span></td>
-          <td style="text-align:center">${lk}/5</td>
-          <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
-          <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
-        </tr>`;
-      }).join('');
+    document.getElementById('g-tabla').innerHTML = rows.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)).map(r=>{
+      let s=0; for(let i=1;i<=30;i++) if(r['q'+i]===CORRECTAS['q'+i]) s++;
+      const p=s/30*100;
+      let lkSum=0,lkN=0; for(let i=31;i<=40;i++){const v=parseInt(r['q'+i]);if(!isNaN(v)){lkSum+=v;lkN++;}}
+      const lk=lkN?(lkSum/lkN).toFixed(1):'—';
+      const [lab,cls]=p>=67?['🟢 Listo','b-listo']:p>=40?['🟡 Selectivo','b-sel']:['🔴 Completo','b-comp'];
+      const fecha=r.timestamp?new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}):'—';
+      return `<tr>
+        <td><strong>${r._nombre||'—'}</strong></td>
+        <td style="font-size:.82rem;color:#7f8c8d">${r._correo||'—'}</td>
+        <td style="text-align:center">${r._semestre||'—'}</td>
+        <td style="text-align:center;font-weight:600">${s}/30 <span style="color:#aaa;font-size:.8rem">(${p.toFixed(0)}%)</span></td>
+        <td style="text-align:center">${lk}/5</td>
+        <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
+        <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
+      </tr>`;
+    }).join('');
   }
 
-  // ── CHART HELPER ──
-  function crearChart(id, tipo, data, opts={}) {
+  function crearChart(id,tipo,data,opts={}) {
     if (CHARTS[id]) { CHARTS[id].destroy(); delete CHARTS[id]; }
     const ctx = document.getElementById(id);
     if (!ctx) return;
-    CHARTS[id] = new Chart(ctx.getContext('2d'), {
-      type: tipo, data,
-      options: { responsive: true, maintainAspectRatio: false, ...opts }
+    CHARTS[id] = new Chart(ctx.getContext('2d'),{
+      type:tipo, data,
+      options:{ responsive:true, maintainAspectRatio:false, ...opts }
     });
   }
-
-  // Enter en login
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('screen-login').style.display !== 'none')
-      window.doLogin();
-  });
 </script>
-
 </body>
 </html>
