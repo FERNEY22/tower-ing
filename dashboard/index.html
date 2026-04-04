@@ -280,10 +280,40 @@
 
   <!-- ACCIÓN CLIMÁTICA -->
   <div class="vista" id="vista-ac">
-    <div class="seccion" style="text-align:center;padding:60px 30px">
-      <i class="fas fa-leaf" style="font-size:3rem;color:#27ae60;margin-bottom:14px;display:block"></i>
-      <h2 style="justify-content:center;margin-bottom:8px">Diagnóstico · Acción Climática</h2>
-      <p style="color:#7f8c8d">Cuando haya respuestas en Firebase bajo el nodo <code>diagnostico_ac</code>, aparecerán aquí.</p>
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="ac-total">0</h3><p>Total respuestas</p></div>
+      <div class="kpi-card"><i class="fas fa-percentage" style="color:#3498db"></i><h3 id="ac-avg">—</h3><p>Promedio general</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="ac-avanzado">0</h3><p>🟢 Nivel Avanzado</p></div>
+      <div class="kpi-card orange"><i class="fas fa-exclamation-circle"></i><h3 id="ac-intermedio">0</h3><p>🟡 Nivel Intermedio</p></div>
+      <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="ac-basico">0</h3><p>🔴 Nivel Básico</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion">
+        <h2><i class="fas fa-chart-pie"></i> Distribución de niveles</h2>
+        <div class="chart-wrap"><canvas id="chart-ac-niv"></canvas></div>
+      </div>
+      <div class="seccion">
+        <h2><i class="fas fa-chart-bar"></i> Puntaje por sección</h2>
+        <div class="chart-wrap"><canvas id="chart-ac-sec"></canvas></div>
+      </div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Estudiantes registrados</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Nombre</th>
+            <th style="text-align:center">Código</th>
+            <th style="text-align:center">V/F (10)</th>
+            <th style="text-align:center">Selección (20)</th>
+            <th style="text-align:center">Likert /5</th>
+            <th style="text-align:center">Total (30)</th>
+            <th style="text-align:center">Nivel</th>
+            <th>Fecha</th>
+          </tr></thead>
+          <tbody id="ac-tabla"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -304,7 +334,7 @@
   });
   const db = firebase.database();
 
-  let DATA = { roles: {}, geo: {} };
+  let DATA = { roles: {}, geo: {}, ac: {} };
   let CHARTS = {};
   let vistaActiva = '';
 
@@ -316,6 +346,10 @@
   db.ref('diagnostico_geoespacial').on('value', snap => {
     DATA.geo = snap.val() || {};
     if (vistaActiva === 'geo') renderGeo();
+  });
+  db.ref('diagnostico_climatica').on('value', snap => {
+    DATA.ac = snap.val() || {};
+    if (vistaActiva === 'ac') renderAC();
   });
 
   // Cambiar vista
@@ -329,7 +363,7 @@
     badge.style.display = 'inline-block';
     if (sel === 'roles') { renderRoles(); badge.textContent = Object.keys(DATA.roles).length + ' registros'; }
     if (sel === 'geo')   { renderGeo();   badge.textContent = Object.keys(DATA.geo).length + ' registros'; }
-    if (sel === 'ac')    { badge.textContent = '0 registros'; }
+    if (sel === 'ac')    { renderAC();    badge.textContent = Object.keys(DATA.ac).length + ' registros'; }
   }
 
   // ══════════════════════════════
@@ -600,6 +634,92 @@
         <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
       </tr>`;
     }).join('');
+  }
+
+  // ══════════════════════════════
+  // ACCIÓN CLIMÁTICA
+  // ══════════════════════════════
+  function renderAC() {
+    const rows = Object.entries(DATA.ac).map(([k,v]) => ({ key:k, ...v }));
+    const total = rows.length;
+
+    document.getElementById('ac-total').textContent = total;
+    document.getElementById('badge-count').textContent = total + ' registros';
+
+    if (!total) {
+      document.getElementById('ac-avg').textContent      = '—';
+      document.getElementById('ac-avanzado').textContent = '0';
+      document.getElementById('ac-intermedio').textContent = '0';
+      document.getElementById('ac-basico').textContent   = '0';
+      document.getElementById('ac-tabla').innerHTML =
+        '<tr><td colspan="8" class="empty-td">Sin respuestas aún.</td></tr>';
+      return;
+    }
+
+    let sumPct = 0, avanzado = 0, intermedio = 0, basico = 0;
+    let sumTF = 0, sumMC = 0, sumLK = 0;
+
+    rows.forEach(r => {
+      const pct = parseFloat(r.porcentaje) || 0;
+      sumPct += pct;
+      sumTF  += parseFloat(r.puntajeTF)  || 0;
+      sumMC  += parseFloat(r.puntajeMC)  || 0;
+      sumLK  += parseFloat(r.promedioLikert) || 0;
+      if (r.nivel === 'Avanzado')    avanzado++;
+      else if (r.nivel === 'Intermedio') intermedio++;
+      else basico++;
+    });
+
+    document.getElementById('ac-avg').textContent        = (sumPct / total).toFixed(1) + '%';
+    document.getElementById('ac-avanzado').textContent   = avanzado;
+    document.getElementById('ac-intermedio').textContent = intermedio;
+    document.getElementById('ac-basico').textContent     = basico;
+
+    // Gráfica niveles
+    crearChart('chart-ac-niv', 'doughnut', {
+      labels: ['🟢 Avanzado', '🟡 Intermedio', '🔴 Básico'],
+      datasets: [{ data: [avanzado, intermedio, basico],
+        backgroundColor: ['#27ae60', '#e67e22', '#e74c3c'],
+        borderWidth: 2, borderColor: 'white' }]
+    }, { plugins: { legend: { position: 'bottom', labels: { padding: 14 }}}});
+
+    // Gráfica secciones
+    crearChart('chart-ac-sec', 'bar', {
+      labels: ['V/F (máx 10)', 'Selección (máx 20)', 'Actitud (máx 5)'],
+      datasets: [{ label: 'Promedio', data: [
+        (sumTF / total).toFixed(1),
+        (sumMC / total).toFixed(1),
+        (sumLK / total).toFixed(1)
+      ], backgroundColor: [
+        'rgba(52,152,219,.8)', 'rgba(155,89,182,.8)', 'rgba(39,174,96,.8)'
+      ], borderRadius: 6, borderSkipped: false }]
+    }, { scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' }},
+        x: { grid: { display: false }}},
+       plugins: { legend: { display: false }}});
+
+    // Tabla
+    const NIV_BADGE = {
+      Avanzado:   ['🟢 Avanzado',   'b-listo'],
+      Intermedio: ['🟡 Intermedio', 'b-sel'],
+      Básico:     ['🔴 Básico',     'b-comp']
+    };
+    document.getElementById('ac-tabla').innerHTML = rows
+      .sort((a,b) => (b.fechaRegistro||'') > (a.fechaRegistro||'') ? 1 : -1)
+      .map(r => {
+        const [lab, cls] = NIV_BADGE[r.nivel] || ['—', ''];
+        return `<tr>
+          <td><strong>${r.nombre || '—'}</strong></td>
+          <td style="text-align:center;font-family:monospace;font-size:.82rem">${r.codigo || '—'}</td>
+          <td style="text-align:center">${r.puntajeTF ?? '—'}</td>
+          <td style="text-align:center">${r.puntajeMC ?? '—'}</td>
+          <td style="text-align:center">${r.promedioLikert ?? '—'}</td>
+          <td style="text-align:center;font-weight:600">${r.total ?? '—'}/30
+            <span style="color:#aaa;font-size:.8rem">(${r.porcentaje ?? '—'}%)</span></td>
+          <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
+          <td style="font-size:.8rem;color:#7f8c8d">${r.fechaRegistro || '—'}</td>
+        </tr>`;
+      }).join('');
   }
 
   function crearChart(id,tipo,data,opts={}) {
