@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matemáticas Básicas · Towers Ing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy:    #1a2a6c;
+      --navy2:   #223080;
+      --purple:  #9b59b6;
+      --purple2: #8e44ad;
+      --blue:    #3498db;
+      --blue2:   #2980b9;
+      --bg:      linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --white:   #ffffff;
+      --text:    #333333;
+      --muted:   #7f8c8d;
+      --light:   #ecf0f1;
+      --border:  #dde3ed;
+      --shadow:  0 4px 15px rgba(0,0,0,0.10);
+      --shadow2: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      padding: .85rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    }
+    .nav-logo { color: white; text-decoration: none; font-size: .95rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; font-size: .82rem; letter-spacing: .04em; transition: color .2s; }
+    .nav-links a:hover { color: white; }
+    @media (max-width: 560px) { .nav-links { display: none; } }
+
+    /* HERO */
+    header {
+      background: var(--navy);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 50px;
+      position: relative; overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1950&q=80') no-repeat center;
+      background-size: cover;
+      opacity: .15;
+    }
+    header::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(26,42,108,.4) 0%, rgba(26,42,108,.85) 100%);
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.9); font-size: .75rem; font-family: 'DM Mono', monospace;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .35rem 1rem; border-radius: 99px; margin-bottom: 1.5rem;
+    }
+    header h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 5rem); font-weight: 700;
+      line-height: 1.05; text-shadow: 2px 2px 8px rgba(0,0,0,.3); margin-bottom: .3rem;
+    }
+    header h1 em { font-style: italic; color: #a8d8f0; display: block; }
+    header p { font-size: 1.05rem; opacity: .85; max-width: 520px; margin: 1rem auto 2rem; }
+    .hero-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.2);
+      color: white; font-size: .8rem; padding: .35rem .9rem; border-radius: 99px;
+    }
+
+    /* STATS BAR */
+    .stats-bar { background: white; box-shadow: var(--shadow); padding: 1.6rem 2rem; }
+    .stats-inner {
+      max-width: 860px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem; text-align: center;
+    }
+    .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-lbl { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-top: .2rem; }
+
+    /* LAYOUT */
+    main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    section { margin-bottom: 3rem; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); letter-spacing: .15em; text-transform: uppercase; margin-bottom: .4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 700; color: var(--navy); line-height: 1.15; margin-bottom: 1.2rem; }
+    hr.div { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media(max-width:640px){ .about-grid{ grid-template-columns:1fr; } }
+    .about-grid p { color: #555; margin-bottom: .9rem; }
+    .about-grid strong { color: var(--navy); }
+    .info-box {
+      background: white; border-radius: 10px; border-left: 4px solid var(--purple);
+      padding: 1rem 1.2rem; box-shadow: var(--shadow); margin-bottom: 1rem;
+      font-size: .9rem; color: #555;
+    }
+    .info-box .ib-label { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--purple); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
+
+    /* OBJECTIVES */
+    .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; }
+    .obj-card {
+      background: white; border-radius: 10px; padding: 1.2rem;
+      box-shadow: var(--shadow); border-top: 3px solid var(--purple);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .obj-card:hover { transform: translateY(-4px); box-shadow: var(--shadow2); }
+    .obj-icon { font-size: 1.6rem; margin-bottom: .5rem; }
+    .obj-card h4 { font-size: .92rem; font-weight: 600; color: var(--navy); margin-bottom: .3rem; }
+    .obj-card p { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+    /* CSS TABS */
+    input[type="radio"].tab-radio { display: none; }
+    .tab-nav {
+      display: flex; gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem; overflow-x: auto;
+    }
+    .tab-nav label {
+      flex-shrink: 0; cursor: pointer;
+      padding: .65rem 1.4rem; font-size: .82rem;
+      font-family: 'DM Mono', monospace; color: var(--muted);
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: color .2s, border-color .2s; white-space: nowrap;
+    }
+    #tab1:checked ~ .tab-nav label[for="tab1"],
+    #tab2:checked ~ .tab-nav label[for="tab2"],
+    #tab3:checked ~ .tab-nav label[for="tab3"],
+    #tab4:checked ~ .tab-nav label[for="tab4"] { color: var(--navy); border-bottom-color: var(--purple); font-weight: 500; }
+    .tab-content { display: none; }
+    #tab1:checked ~ .tab-panels #panel1,
+    #tab2:checked ~ .tab-panels #panel2,
+    #tab3:checked ~ .tab-panels #panel3,
+    #tab4:checked ~ .tab-panels #panel4 { display: block; animation: fadeUp .35s ease; }
+
+    /* ACCORDION */
+    details {
+      background: white; border-radius: 10px;
+      border: 1px solid var(--border); margin-bottom: .75rem;
+      overflow: hidden; box-shadow: var(--shadow); transition: border-color .2s;
+    }
+    details:hover, details[open] { border-color: var(--purple); }
+    summary {
+      cursor: pointer; list-style: none;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .95rem 1.2rem; color: var(--navy); font-weight: 500;
+      user-select: none; gap: 1rem;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .sum-left { display: flex; align-items: center; gap: .8rem; }
+    .sum-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); background: #f3e9f8; padding: .2rem .55rem; border-radius: 4px; white-space: nowrap; }
+    .sum-arrow { color: var(--muted); transition: transform .3s; font-size: .85em; }
+    details[open] .sum-arrow { transform: rotate(180deg); }
+    .detail-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--border); }
+    .lesson-list { list-style: none; margin-top: .8rem; display: flex; flex-direction: column; gap: .5rem; }
+    .lesson-list li { display: flex; align-items: flex-start; gap: .6rem; font-size: .88rem; color: #555; }
+    .lesson-list li::before { content: '›'; color: var(--purple); font-size: 1.1em; line-height: 1.5; flex-shrink: 0; }
+    .lesson-list strong { color: var(--navy); font-weight: 500; }
+    .act-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: .8rem; font-family: 'DM Mono', monospace; font-size: .7rem;
+      color: var(--blue2); background: #eaf4fc;
+      border: 1px solid #b8d9f5; padding: .28rem .7rem; border-radius: 99px;
+    }
+
+    /* DELIVERABLES */
+    .deliv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    @media(max-width:560px){ .deliv-grid{ grid-template-columns:1fr; } }
+    .deliv-card {
+      background: white; border-radius: 10px; padding: 1.5rem;
+      box-shadow: var(--shadow); position: relative; overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .deliv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow2); }
+    .deliv-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+    .deliv-card.dc-a::before { background: var(--navy); }
+    .deliv-card.dc-b::before { background: var(--purple); }
+    .deliv-card h4 { font-size: 1.05rem; font-weight: 600; color: var(--navy); margin-bottom: .5rem; }
+    .deliv-card p { font-size: .86rem; color: #555; margin-bottom: .8rem; }
+    .deliv-tag { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--purple); text-transform: uppercase; letter-spacing: .07em; }
+
+    /* PROGRESS */
+    .progress-wrap { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .85rem; }
+    .prog-row label { font-size: .82rem; color: var(--text); display: flex; justify-content: space-between; margin-bottom: .3rem; }
+    .prog-bar { height: 7px; background: var(--light); border-radius: 99px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; background: linear-gradient(to right, var(--navy), var(--purple)); animation: grow 1.5s cubic-bezier(.4,0,.2,1) both; }
+    @keyframes grow { from { width: 0 !important; } }
+
+    /* TIMELINE */
+    .timeline { position: relative; padding-left: 1.8rem; }
+    .timeline::before { content: ''; position: absolute; left: .5rem; top: .6rem; bottom: .6rem; width: 2px; background: linear-gradient(to bottom, var(--navy), var(--purple)); }
+    .tl-week { position: relative; padding: .6rem 0 .6rem 1rem; display: flex; gap: .9rem; align-items: flex-start; }
+    .tl-week::before { content: ''; position: absolute; left: -1.32rem; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: white; border: 2px solid var(--navy); }
+    .tl-week.hl::before { background: var(--purple); border-color: var(--purple); }
+    .tl-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--purple); white-space: nowrap; padding-top: .15rem; min-width: 3.8rem; }
+    .tl-content h5 { font-size: .9rem; color: var(--navy); font-weight: 600; }
+    .tl-content p { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
+
+    /* INSTRUCTOR */
+    .inst-card { background: white; border-radius: 12px; padding: 1.8rem; box-shadow: var(--shadow); display: flex; gap: 1.4rem; align-items: flex-start; }
+    @media(max-width:480px){ .inst-card{ flex-direction: column; } }
+    .inst-av { width: 66px; height: 66px; flex-shrink: 0; background: linear-gradient(135deg, var(--navy), var(--purple)); border-radius: 50%; display: grid; place-items: center; font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 700; color: white; }
+    .inst-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--navy); }
+    .inst-role { font-size: .8rem; color: var(--purple); font-family: 'DM Mono', monospace; margin-top: .1rem; }
+    .inst-bio { font-size: .88rem; color: #555; margin-top: .6rem; }
+
+    /* CTA */
+    .cta-section { background: var(--navy); border-radius: 14px; padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 110%, rgba(155,89,182,.35) 0%, transparent 70%); pointer-events: none; }
+    .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; line-height: 1.1; position: relative; }
+    .cta-section p { color: rgba(255,255,255,.75); margin: .8rem 0 2rem; position: relative; }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+    .btn-primary { padding: .8rem 1.8rem; background: var(--purple); color: white; font-weight: 600; border-radius: 8px; text-decoration: none; transition: background .25s, transform .2s; }
+    .btn-primary:hover { background: var(--purple2); transform: translateY(-2px); }
+    .btn-secondary { padding: .8rem 1.8rem; background: transparent; color: white; border: 1px solid rgba(255,255,255,.35); border-radius: 8px; text-decoration: none; transition: border-color .2s, background .2s; }
+    .btn-secondary:hover { border-color: white; background: rgba(255,255,255,.08); }
+
+    footer { text-align: center; padding: 1.5rem; color: var(--muted); font-size: .85rem; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="https://tower-ing.com" class="nav-logo"><i class="fas fa-graduation-cap"></i> Towers Ing</a>
+    <ul class="nav-links">
+      <li><a href="#contenido">Contenido</a></li>
+      <li><a href="#competencias">Competencias</a></li>
+      <li><a href="#cronograma">Cronograma</a></li>
+      <li><a href="../">← Capacitación</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <div class="hero-inner">
+      <div class="hero-badge"><i class="fas fa-square-root-alt"></i> Ingeniería · Fundamentos</div>
+      <h1>Matemáticas<em>Básicas</em></h1>
+      <p>Dominio sólido de aritmética, álgebra, geometría y trigonometría como base rigurosa para cualquier programa de ingeniería.</p>
+      <div class="hero-pills">
+        <span class="pill"><i class="fas fa-clock"></i> 64 horas · 16 semanas</span>
+        <span class="pill"><i class="fas fa-signal"></i> Nivel Básico</span>
+        <span class="pill"><i class="fas fa-layer-group"></i> 4 Módulos</span>
+        <span class="pill"><i class="fas fa-pencil-ruler"></i> Resolución de problemas</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div><div class="stat-val">16</div><div class="stat-lbl">Semanas</div></div>
+      <div><div class="stat-val">4</div><div class="stat-lbl">Módulos</div></div>
+      <div><div class="stat-val">64h</div><div class="stat-lbl">Intensidad</div></div>
+      <div><div class="stat-val">4</div><div class="stat-lbl">Evaluaciones</div></div>
+    </div>
+  </div>
+
+  <main>
+
+    <section>
+      <div class="section-label">Sobre el Curso</div>
+      <h2 class="section-title">¿Por qué matemáticas en ingeniería?</h2>
+      <div class="about-grid">
+        <div>
+          <p>Las matemáticas son el lenguaje universal de la ingeniería. Sin un dominio sólido de sus fundamentos, el estudiante no puede avanzar con seguridad hacia el cálculo, la física o las estructuras.</p>
+          <p>Este curso construye competencia desde los cimientos: cada módulo profundiza un área del conocimiento matemático con <strong>ejemplos extraídos de contextos reales de ingeniería</strong>, reforzando tanto la comprensión conceptual como la habilidad procedimental.</p>
+          <p>Al finalizar, el estudiante estará preparado para cursar <strong>Cálculo Diferencial, Álgebra Lineal y Física General</strong> con la base técnica que esos cursos exigen.</p>
+        </div>
+        <div>
+          <div class="info-box"><div class="ib-label">Metodología</div>Clases magistrales + talleres de resolución de problemas con retroalimentación inmediata. Cada sesión alterna teoría y práctica.</div>
+          <div class="info-box"><div class="ib-label">Prerrequisitos</div>Sin prerrequisitos formales. Ideal para estudiantes de primer semestre o quienes necesiten nivelar fundamentos matemáticos.</div>
+          <div class="info-box"><div class="ib-label">Resultado</div>Cuatro evaluaciones de módulo y una prueba integradora final con problemas aplicados a ingeniería.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="competencias">
+      <hr class="div">
+      <div class="section-label">Competencias</div>
+      <h2 class="section-title">Lo que desarrollarás</h2>
+      <div class="obj-grid">
+        <div class="obj-card"><div class="obj-icon">➕</div><h4>Operaciones numéricas</h4><p>Operar con seguridad sobre enteros, fracciones, decimales, potencias y raíces en distintos contextos.</p></div>
+        <div class="obj-card"><div class="obj-icon">📐</div><h4>Pensamiento algebraico</h4><p>Formular, simplificar y resolver ecuaciones, inecuaciones y sistemas con rigor y eficiencia.</p></div>
+        <div class="obj-card"><div class="obj-icon">📏</div><h4>Razonamiento geométrico</h4><p>Calcular áreas, perímetros y volúmenes, e interpretar figuras en el plano cartesiano.</p></div>
+        <div class="obj-card"><div class="obj-icon">🔺</div><h4>Trigonometría aplicada</h4><p>Resolver triángulos y utilizar funciones trigonométricas en problemas de ingeniería y física.</p></div>
+        <div class="obj-card"><div class="obj-icon">🧮</div><h4>Modelado matemático</h4><p>Traducir situaciones reales al lenguaje matemático y seleccionar la estrategia de solución adecuada.</p></div>
+        <div class="obj-card"><div class="obj-icon">✅</div><h4>Verificación y precisión</h4><p>Desarrollar el hábito de revisar procesos y validar resultados con criterio analítico.</p></div>
+      </div>
+    </section>
+
+    <section id="contenido">
+      <hr class="div">
+      <div class="section-label">Plan de Estudios</div>
+      <h2 class="section-title">Contenido del Curso</h2>
+
+      <input type="radio" id="tab1" name="tabs" class="tab-radio" checked>
+      <input type="radio" id="tab2" name="tabs" class="tab-radio">
+      <input type="radio" id="tab3" name="tabs" class="tab-radio">
+      <input type="radio" id="tab4" name="tabs" class="tab-radio">
+
+      <div class="tab-nav">
+        <label for="tab1"><i class="fas fa-plus-circle"></i> Aritmética</label>
+        <label for="tab2"><i class="fas fa-superscript"></i> Álgebra</label>
+        <label for="tab3"><i class="fas fa-draw-polygon"></i> Geometría</label>
+        <label for="tab4"><i class="fas fa-wave-square"></i> Trigonometría</label>
+      </div>
+
+      <div class="tab-panels">
+
+        <!-- MÓDULO 1: ARITMÉTICA -->
+        <div id="panel1" class="tab-content">
+          <details open>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 1.1</span> Números y operaciones fundamentales</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Conjuntos numéricos:</strong> naturales, enteros, racionales e irracionales — propiedades y representación en la recta real.</span></li>
+                <li><span><strong>Operaciones:</strong> adición, sustracción, multiplicación y división con enteros; jerarquía de operaciones y uso de paréntesis.</span></li>
+                <li><span><strong>Taller:</strong> resolución de expresiones aritméticas con jerarquía y verificación de resultados.</span></li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 1.2</span> Fracciones, decimales, proporciones y porcentajes</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Fracciones:</strong> operaciones, simplificación, mínimo común múltiplo y máximo común divisor.</span></li>
+                <li><span><strong>Proporciones y porcentajes:</strong> regla de tres simple y compuesta, variación porcentual, eficiencia y rendimiento.</span></li>
+                <li><span><strong>Aplicación:</strong> cálculo de eficiencia energética y mezclas en contextos de ingeniería.</span></li>
+              </ul>
+              <span class="act-badge"><i class="fas fa-pencil-alt"></i> Evaluación Módulo 1: Taller de Aritmética</span>
+            </div>
+          </details>
+        </div>
+
+        <!-- MÓDULO 2: ÁLGEBRA -->
+        <div id="panel2" class="tab-content">
+          <details open>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 2.1</span> Expresiones algebraicas y ecuaciones lineales</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Expresiones algebraicas:</strong> monomios, polinomios, factorización y operaciones con expresiones racionales.</span></li>
+                <li><span><strong>Ecuaciones lineales:</strong> resolución, interpretación geométrica y verificación de soluciones.</span></li>
+                <li><span><strong>Taller:</strong> modelado de situaciones de ingeniería mediante ecuaciones de primer grado.</span></li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 2.2</span> Sistemas de ecuaciones, inecuaciones y funciones</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Sistemas 2×2 y 3×3:</strong> métodos de sustitución, eliminación e interpretación gráfica.</span></li>
+                <li><span><strong>Inecuaciones:</strong> resolución y representación en la recta e intervalos de solución.</span></li>
+                <li><span><strong>Funciones:</strong> concepto, dominio, rango, función lineal, cuadrática y sus gráficas.</span></li>
+              </ul>
+              <span class="act-badge"><i class="fas fa-pencil-alt"></i> Evaluación Módulo 2: Taller de Álgebra</span>
+            </div>
+          </details>
+        </div>
+
+        <!-- MÓDULO 3: GEOMETRÍA -->
+        <div id="panel3" class="tab-content">
+          <details open>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 3.1</span> Geometría plana: figuras, áreas y perímetros</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Polígonos regulares e irregulares:</strong> triángulos, cuadriláteros, círculo — propiedades, perímetros y áreas.</span></li>
+                <li><span><strong>Teorema de Pitágoras:</strong> demostración geométrica, casos especiales y aplicaciones a estructuras.</span></li>
+                <li><span><strong>Taller:</strong> cálculo de áreas y perímetros en planos de construcción simplificados.</span></li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 3.2</span> Geometría analítica: plano cartesiano y vectores</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Plano cartesiano:</strong> distancia entre puntos, punto medio, pendiente de una recta y ecuación de la recta.</span></li>
+                <li><span><strong>Vectores en 2D:</strong> representación, magnitud, dirección y operaciones vectoriales básicas.</span></li>
+                <li><span><strong>Aplicación:</strong> análisis de fuerzas coplanares en problemas de estática elemental.</span></li>
+              </ul>
+              <span class="act-badge"><i class="fas fa-pencil-alt"></i> Evaluación Módulo 3: Taller de Geometría</span>
+            </div>
+          </details>
+        </div>
+
+        <!-- MÓDULO 4: TRIGONOMETRÍA -->
+        <div id="panel4" class="tab-content">
+          <details open>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 4.1</span> Funciones trigonométricas y la circunferencia unitaria</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Ángulos:</strong> sistema sexagesimal y radial, conversiones y representación en la circunferencia unitaria.</span></li>
+                <li><span><strong>Funciones trigonométricas:</strong> seno, coseno, tangente y sus recíprocas — definición, valores notables y gráficas.</span></li>
+                <li><span><strong>Taller:</strong> lectura e interpretación de señales periódicas (voltaje AC, movimiento oscilatorio).</span></li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="sum-left"><span class="sum-num">LECCIÓN 4.2</span> Identidades trigonométricas y resolución de triángulos</span>
+              <span class="sum-arrow"><i class="fas fa-chevron-down"></i></span>
+            </summary>
+            <div class="detail-body">
+              <ul class="lesson-list">
+                <li><span><strong>Identidades fundamentales:</strong> Pitágoras trigonométrico, suma y diferencia de ángulos, ángulo doble.</span></li>
+                <li><span><strong>Ley de senos y cosenos:</strong> resolución de triángulos oblicuángulos con aplicaciones a topografía y estructuras.</span></li>
+                <li><span><strong>Proyecto final:</strong> resolución de un problema real de ingeniería que integra los cuatro módulos del curso.</span></li>
+              </ul>
+              <span class="act-badge"><i class="fas fa-flag-checkered"></i> Evaluación Módulo 4 + Prueba Final Integradora</span>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="entregables">
+      <hr class="div">
+      <div class="section-label">Evaluación</div>
+      <h2 class="section-title">¿Cómo se evalúa?</h2>
+      <div class="deliv-grid">
+        <div class="deliv-card dc-a">
+          <h4><i class="fas fa-pencil-alt"></i> Talleres de Módulo</h4>
+          <p>Cuatro talleres escritos, uno al finalizar cada módulo. Incluyen problemas de resolución paso a paso y un ejercicio aplicado a ingeniería. Ponderan el proceso, no solo el resultado final.</p>
+          <div class="deliv-tag"><i class="fas fa-calendar-alt"></i> Semanas 4 · 8 · 12 · 16 — Individual</div>
+        </div>
+        <div class="deliv-card dc-b">
+          <h4><i class="fas fa-trophy"></i> Prueba Final Integradora</h4>
+          <p>Evaluación de cierre que articula los cuatro módulos en un único problema de ingeniería. Mide la capacidad de seleccionar y combinar herramientas matemáticas ante una situación nueva.</p>
+          <div class="deliv-tag"><i class="fas fa-calendar-alt"></i> Semana 16 · Individual</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="prog-row"><label><span>Aritmética y proporcionalidad</span><span>90%</span></label><div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div></div>
+        <div class="prog-row"><label><span>Álgebra y funciones</span><span>85%</span></label><div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div></div>
+        <div class="prog-row"><label><span>Geometría analítica</span><span>80%</span></label><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div></div>
+        <div class="prog-row"><label><span>Trigonometría aplicada</span><span>75%</span></label><div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div></div>
+      </div>
+    </section>
+
+    <section id="cronograma">
+      <hr class="div">
+      <div class="section-label">Cronograma</div>
+      <h2 class="section-title">Semana a semana</h2>
+      <div class="timeline">
+        <div class="tl-week"><span class="tl-num">SEM 01</span><div class="tl-content"><h5>Conjuntos numéricos y operaciones básicas</h5><p>Enteros, jerarquía de operaciones y propiedades aritméticas fundamentales.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 02</span><div class="tl-content"><h5>Fracciones, decimales y proporciones</h5><p>Operaciones con fracciones, conversiones, regla de tres y porcentajes.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 03</span><div class="tl-content"><h5>Potencias, raíces y notación científica</h5><p>Leyes de exponentes, radicales y aplicaciones en magnitudes físicas.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 04</span><div class="tl-content"><h5><i class="fas fa-pencil-alt" style="color:var(--purple)"></i> Evaluación Módulo 1: Aritmética</h5><p>Taller escrito con problemas de cálculo numérico y contexto de ingeniería.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 05</span><div class="tl-content"><h5>Expresiones algebraicas y factorización</h5><p>Monomios, polinomios, productos notables y técnicas de factorización.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 06</span><div class="tl-content"><h5>Ecuaciones lineales e inecuaciones</h5><p>Resolución, interpretación geométrica y modelado de situaciones reales.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 07</span><div class="tl-content"><h5>Sistemas de ecuaciones y funciones</h5><p>Sustitución, eliminación, función lineal y cuadrática con sus gráficas.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 08</span><div class="tl-content"><h5><i class="fas fa-pencil-alt" style="color:var(--purple)"></i> Evaluación Módulo 2: Álgebra</h5><p>Taller con sistemas de ecuaciones y modelado algebraico aplicado.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 09</span><div class="tl-content"><h5>Geometría plana: figuras y áreas</h5><p>Polígonos, círculo, perímetros, áreas y Teorema de Pitágoras.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 10</span><div class="tl-content"><h5>Sólidos geométricos y volúmenes</h5><p>Prismas, cilindros, conos y esferas — cálculo de volumen y área superficial.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 11</span><div class="tl-content"><h5>Geometría analítica y vectores</h5><p>Plano cartesiano, ecuación de la recta, distancias y vectores en 2D.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 12</span><div class="tl-content"><h5><i class="fas fa-pencil-alt" style="color:var(--purple)"></i> Evaluación Módulo 3: Geometría</h5><p>Taller con cálculo de áreas, perímetros y análisis vectorial básico.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 13</span><div class="tl-content"><h5>Ángulos y funciones trigonométricas</h5><p>Sistema sexagesimal y radial, circunferencia unitaria y valores notables.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 14</span><div class="tl-content"><h5>Identidades y gráficas trigonométricas</h5><p>Identidades fundamentales, suma de ángulos y representación de señales periódicas.</p></div></div>
+        <div class="tl-week"><span class="tl-num">SEM 15</span><div class="tl-content"><h5>Ley de senos, cosenos y resolución de triángulos</h5><p>Triángulos oblicuángulos y aplicaciones a topografía y análisis de fuerzas.</p></div></div>
+        <div class="tl-week hl"><span class="tl-num">SEM 16</span><div class="tl-content"><h5><i class="fas fa-flag-checkered" style="color:var(--purple)"></i> Evaluación Módulo 4 + Prueba Final Integradora</h5><p>Taller de trigonometría y prueba final con problema de ingeniería integrador.</p></div></div>
+      </div>
+    </section>
+
+    <section>
+      <hr class="div">
+      <div class="section-label">Docente</div>
+      <h2 class="section-title">Quién imparte el curso</h2>
+      <div class="inst-card">
+        <div class="inst-av">FT</div>
+        <div>
+          <div class="inst-name">Ferney Torres</div>
+          <div class="inst-role">Docente Universitario · Facultad de Ingeniería</div>
+          <p class="inst-bio">Ingeniero con experiencia en programas de Robótica, Inteligencia Artificial y Electrónica. Desarrolla metodologías de aprendizaje basado en problemas reales, con énfasis en la conexión entre el razonamiento matemático y las aplicaciones de ingeniería. Ha impartido cursos de matemáticas y ciencias exactas en programas de ingeniería en Colombia.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="cta-section">
+        <h2>¿Listo para dominar<br>las matemáticas?</h2>
+        <p>Construye la base que todo ingeniero necesita. Empieza desde el principio y llega lejos.</p>
+        <div class="btn-group">
+          <a href="../" class="btn-secondary"><i class="fas fa-arrow-left"></i> Ver todos los cursos</a>
+          <a href="https://tower-ing.com" class="btn-primary"><i class="fas fa-home"></i> Ir al portal</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
