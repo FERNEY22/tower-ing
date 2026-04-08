@@ -1,5 +1,0 @@
-/dashboard/*
-  Basic-Auth: admin:yuna26
-
-/proyectos/*
-  Basic-Auth: admin:yuna26 visitante:3092
