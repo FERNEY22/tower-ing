@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrónica — Lab 03 · BJT Control Motor DC</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f12;--panel:#13161b;--panel2:#181c23;--border:#2a2f3a;--accent:#f5a623;--accent2:#e8581c;--blue:#3b9eff;--green:#2ecc71;--red:#e74c3c;--text:#c8d0dc;--muted:#5a6275;--mono:'Share Tech Mono',monospace;--display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;overflow-x:hidden}
+.top-header{background:var(--panel);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:12px}
+.lab-tag{background:var(--accent2);color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:4px 10px;border-radius:2px;white-space:nowrap}
+.lab-tag::before{content:'▶ '}
+.btn-print{background:transparent;border:1.5px solid var(--accent);color:var(--accent);font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:1px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .2s;border-radius:3px}
+.btn-print:hover{background:var(--accent);color:#000}
+.hero{padding:24px 24px 0;max-width:1100px;margin:0 auto}
+.hero h1{font-family:var(--display);font-weight:800;font-size:42px;line-height:1;color:#fff;letter-spacing:-0.5px}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:.5px}
+.hero-meta{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-item{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.meta-item strong{color:var(--text)}
+.sf-wrap{max-width:1100px;margin:18px auto 0;padding:0 24px}
+.sf-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:14px 18px}
+.sf-field label{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.sf-field input{width:100%;background:#0d0f12;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;border-radius:3px;outline:none;transition:border-color .2s}
+.sf-field input:focus{border-color:var(--accent)}
+.tabs-wrap{max-width:1100px;margin:18px auto 0;padding:0 24px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.tab-btn{background:var(--panel);border:1px solid var(--border);color:var(--muted);font-family:var(--display);font-weight:700;padding:12px 6px 9px;cursor:pointer;border-radius:4px;transition:all .2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
+.tab-btn .fn{font-size:22px;line-height:1;color:var(--text)}
+.tab-btn .fl{font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn.active{background:var(--accent2);border-color:var(--accent);color:#fff}
+.tab-btn.active .fn{color:#fff}
+.tab-btn.done::after{content:'✓';position:absolute;top:5px;right:7px;font-size:10px;color:var(--green)}
+.prog-wrap{max-width:1100px;margin:10px auto 0;padding:0 24px}
+.prog-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+.prog-top span{color:var(--accent)}
+.prog-track{height:3px;background:var(--border);border-radius:2px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .5s;width:0%}
+.cw{max-width:1100px;margin:18px auto 40px;padding:0 24px}
+.pp{display:none}
+.pp.active{display:block;animation:fi .25s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.st{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:18px 0 14px;display:flex;align-items:center;gap:10px}
+.st::after{content:'';flex:1;height:1px;background:var(--border)}
+.tb{background:#0d1017;border-left:3px solid var(--blue);padding:14px 18px;margin-bottom:14px;border-radius:0 4px 4px 0}
+.tb h4{font-family:var(--display);font-weight:700;font-size:13px;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.tb p{font-size:13.5px;color:var(--text);line-height:1.7}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:18px}
+.cc{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:14px;text-align:center;transition:border-color .2s}
+.cc:hover{border-color:var(--accent)}
+.cc svg{display:block;margin:0 auto 9px}
+.cc h4{font-family:var(--display);font-weight:700;font-size:13px;color:#fff;margin-bottom:4px}
+.cc p{font-size:11.5px;color:var(--muted);line-height:1.5}
+.ctag{display:block;margin-top:5px;font-family:var(--mono);font-size:10px;color:var(--accent);background:#0d0f12;border:1px solid var(--border);border-radius:2px;padding:2px 5px}
+.ab{padding:11px 15px;border-radius:4px;font-size:13px;margin:12px 0;display:flex;gap:9px;align-items:flex-start}
+.ab.warn{background:#1a1400;border:1px solid var(--accent);color:#ddc88a}
+.ab.red{background:#1a0d0d;border:1px solid var(--red);color:#e08080}
+.ab.grn{background:#0d1a0d;border:1px solid var(--green);color:#80d890}
+.ab-ic{font-size:15px;flex-shrink:0}
+.ms-list{display:flex;flex-direction:column;gap:12px}
+.ms{display:flex;gap:12px;align-items:flex-start;background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:14px;opacity:0;transform:translateX(-8px);transition:all .4s ease}
+.ms.vis{opacity:1;transform:none}
+.sn{min-width:30px;height:30px;background:var(--accent);color:#000;font-family:var(--display);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.sb h4{font-family:var(--display);font-weight:700;font-size:13px;color:#fff;margin-bottom:5px}
+.sb p{font-size:12.5px;color:var(--text);margin-bottom:3px}
+.fm{font-family:var(--mono);font-size:13px;color:var(--accent);background:#0d1017;border:1px solid var(--border);padding:7px 12px;border-radius:3px;margin:6px 0;display:inline-block}
+.rb{background:#0d1a0d;border:2px solid var(--green);padding:9px 16px;border-radius:4px;margin-top:9px;font-family:var(--mono);font-size:14px;color:var(--green);text-align:center}
+.wb{background:#1a0d0d;border:1px solid var(--red);padding:7px 12px;border-radius:4px;margin-top:7px;font-size:12px;color:#e08080}
+.cw2{background:#07090c;border:1px solid var(--border);border-radius:5px;padding:18px;margin:14px 0;display:flex;justify-content:center;min-height:240px}
+.bbs{display:flex;flex-direction:column;gap:12px}
+.bbs-item{display:flex;gap:12px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:13px}
+.bbs-n{min-width:32px;height:32px;border:2px solid var(--accent);color:var(--accent);font-family:var(--display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.bbs-item h4{font-family:var(--display);font-weight:700;font-size:13px;color:#fff;margin-bottom:3px}
+.bbs-item p{font-size:12px;color:var(--muted);line-height:1.5}
+.wt{display:inline-block;padding:2px 6px;border-radius:2px;font-family:var(--mono);font-size:10px;margin:2px 2px 0 0}
+.wr{background:#3d1010;border:1px solid var(--red);color:#ff8080}
+.wk{background:#1a1a1a;border:1px solid #555;color:#aaa}
+.wg{background:#0d2a0d;border:1px solid var(--green);color:#6edc8c}
+.wy{background:#2a2200;border:1px solid #f5c518;color:#f5c518}
+.wo{background:#2a1200;border:1px solid var(--accent);color:var(--accent)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.tc{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:13px}
+.tc h4{font-family:var(--display);font-weight:700;font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.tc ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.tc li{font-size:12px;color:var(--text);padding-left:11px;position:relative}
+.tc li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:10px}
+.cl{display:flex;flex-direction:column;gap:7px;margin:14px 0}
+.ci{display:flex;gap:11px;align-items:flex-start;padding:9px 13px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:border-color .2s}
+.ci:hover{border-color:var(--accent)}
+.ci.ck{border-color:var(--green);background:#0d1a0d}
+.cb{width:17px;height:17px;min-width:17px;border:2px solid var(--muted);border-radius:3px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px}
+.ci.ck .cb{background:var(--green);border-color:var(--green)}
+.ci.ck .cb::after{content:'✓';font-size:11px;color:#000;font-weight:700}
+.ci label{font-size:13px;cursor:pointer;color:var(--text);line-height:1.5}
+.ci.ck label{color:var(--muted);text-decoration:line-through}
+.dtw{overflow-x:auto;margin:12px 0}
+table.dt{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+table.dt th{background:var(--accent);color:#000;font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:9px 12px;text-align:center;border:1px solid var(--accent)}
+table.dt td{padding:9px 12px;border:1px solid var(--border);text-align:center;background:var(--panel2)}
+table.dt td.vc{background:#1a1400;color:var(--accent);font-weight:700;font-size:14px}
+table.dt td.pr{color:var(--green);font-size:11px;line-height:1.4}
+table.dt td input{background:transparent;border:none;border-bottom:1px dashed var(--muted);color:var(--text);font-family:var(--mono);font-size:12px;width:76px;text-align:center;outline:none;transition:border-color .2s}
+table.dt td input:focus{border-bottom-color:var(--accent);color:var(--accent)}
+.nav-n{display:flex;justify-content:flex-end;margin-top:24px}
+.btn-n{background:var(--accent);color:#000;font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.5px;padding:12px 26px;border:none;border-radius:4px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-n:hover{background:#fff}
+footer{background:var(--panel);border-top:1px solid var(--border);padding:12px 24px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:48px}
+@media print{.top-header,.tabs-wrap,.prog-wrap,.nav-n{display:none}.pp{display:block!important}}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <span class="lab-tag">ELECTRÓNICA — BJT TRANSISTORES</span>
+  <div style="flex:1"></div>
+  <button class="btn-print" onclick="window.print()">⬇ Imprimir / PDF</button>
+</div>
+
+<div class="hero">
+  <h1>Lab No. 3 — <span>Control de Potencia</span></h1>
+  <p class="hero-sub">BJT NPN · Motor DC · Saturación · Flyback · TIP31C / 2N2222 · 1N4007</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span>⏱</span><strong>60–90 min</strong></div>
+    <div class="meta-item"><span>⚡</span><strong>12 VDC · 150 mA</strong></div>
+    <div class="meta-item"><span>🔧</span><strong>1 Transistor · 1 Diodo · Motor DC · Breadboard</strong></div>
+    <div class="meta-item"><span>📏</span><strong>Multímetro DC</strong></div>
+  </div>
+</div>
+
+<div class="sf-wrap">
+  <div class="sf-grid">
+    <div class="sf-field"><label>Nombre Estudiante</label><input type="text" placeholder="Apellidos, Nombre"></div>
+    <div class="sf-field"><label>Fecha</label><input type="date" id="fi"></div>
+    <div class="sf-field"><label>Grupo</label><input type="text" placeholder="Ej: 2A"></div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" id="t1" onclick="goTab(1)"><span class="fn">F1</span><span class="fl">Componentes</span></button>
+    <button class="tab-btn" id="t2" onclick="goTab(2)"><span class="fn">F2</span><span class="fl">Cálculo R<sub>B</sub></span></button>
+    <button class="tab-btn" id="t3" onclick="goTab(3)"><span class="fn">F3</span><span class="fl">Montaje</span></button>
+    <button class="tab-btn" id="t4" onclick="goTab(4)"><span class="fn">F4</span><span class="fl">Pruebas</span></button>
+    <button class="tab-btn" id="t5" onclick="goTab(5)"><span class="fn">F5</span><span class="fl">Datos</span></button>
+  </div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-top"><span id="pl">0 de 22 pasos completados</span><span id="pp">0%</span></div>
+  <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+</div>
+
+<div class="cw">
+
+<!-- F1 -->
+<div class="pp active" id="p1">
+  <div class="ab red"><span class="ab-ic">⚠</span><span><strong>SEGURIDAD PRIMERO</strong> — Fuente eléctrica <strong>APAGADA</strong> durante todo el montaje. Solo activar cuando el docente revise el circuito completo.</span></div>
+
+  <div class="st">Identificación de componentes</div>
+  <div class="cg">
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <circle cx="34" cy="37" r="24" fill="#1a1e28" stroke="#3b9eff" stroke-width="2"/>
+        <line x1="2" y1="37" x2="19" y2="37" stroke="#f5a623" stroke-width="2.5"/>
+        <line x1="19" y1="19" x2="19" y2="55" stroke="#3b9eff" stroke-width="3"/>
+        <line x1="19" y1="26" x2="54" y2="13" stroke="#2ecc71" stroke-width="2.5"/>
+        <line x1="19" y1="48" x2="54" y2="61" stroke="#888" stroke-width="2.5"/>
+        <polygon points="44,58 54,61 48,53" fill="#888"/>
+        <text x="56" y="12" font-family="monospace" font-size="9" fill="#2ecc71">C</text>
+        <text x="0" y="41" font-family="monospace" font-size="9" fill="#f5a623">B</text>
+        <text x="56" y="64" font-family="monospace" font-size="9" fill="#888">E</text>
+      </svg>
+      <h4>BJT NPN</h4>
+      <p>Interruptor de potencia — pequeña I<sub>B</sub> controla gran I<sub>C</sub></p>
+      <span class="ctag">TIP31C · β = 50</span>
+    </div>
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <line x1="2" y1="37" x2="16" y2="37" stroke="#f5a623" stroke-width="2.5"/>
+        <rect x="16" y="29" width="36" height="16" rx="4" fill="#1a1e28" stroke="#f5a623" stroke-width="2"/>
+        <line x1="24" y1="29" x2="24" y2="45" stroke="#c0392b" stroke-width="2"/>
+        <line x1="30" y1="29" x2="30" y2="45" stroke="#f39c12" stroke-width="2"/>
+        <line x1="36" y1="29" x2="36" y2="45" stroke="#c0392b" stroke-width="2"/>
+        <line x1="42" y1="29" x2="42" y2="45" stroke="#f5a623" stroke-width="1.5"/>
+        <line x1="52" y1="37" x2="66" y2="37" stroke="#f5a623" stroke-width="2.5"/>
+        <text x="34" y="60" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">R_B</text>
+      </svg>
+      <h4>Resistencia Base</h4>
+      <p>Limita I<sub>B</sub> para saturación correcta con FS = 3</p>
+      <span class="ctag">1.2 kΩ comercial</span>
+    </div>
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <circle cx="34" cy="37" r="24" fill="#1a1e28" stroke="#e67e22" stroke-width="2"/>
+        <circle cx="34" cy="37" r="13" fill="#0d0f12" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="34" y="41" text-anchor="middle" font-family="monospace" font-size="12" fill="#e67e22" font-weight="bold">M</text>
+        <line x1="2" y1="31" x2="10" y2="31" stroke="#aaa" stroke-width="2.5"/>
+        <line x1="2" y1="43" x2="10" y2="43" stroke="#aaa" stroke-width="2.5"/>
+        <line x1="58" y1="37" x2="68" y2="37" stroke="#888" stroke-width="3"/>
+      </svg>
+      <h4>Motor DC</h4>
+      <p>Carga inductiva — requiere protección flyback</p>
+      <span class="ctag">12V · 150 mA</span>
+    </div>
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <line x1="2" y1="37" x2="22" y2="37" stroke="#e74c3c" stroke-width="2.5"/>
+        <polygon points="22,26 22,48 46,37" fill="#1a1e28" stroke="#e74c3c" stroke-width="2"/>
+        <line x1="46" y1="26" x2="46" y2="48" stroke="#e74c3c" stroke-width="3"/>
+        <line x1="46" y1="37" x2="66" y2="37" stroke="#e74c3c" stroke-width="2.5"/>
+        <text x="25" y="62" font-family="monospace" font-size="8" fill="#888">A</text>
+        <text x="47" y="62" font-family="monospace" font-size="8" fill="#888">K</text>
+      </svg>
+      <h4>Diodo Flyback</h4>
+      <p>Protege contra FEM inversa del motor al apagar</p>
+      <span class="ctag">1N4007 · antiparalelo</span>
+    </div>
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <line x1="2" y1="42" x2="20" y2="42" stroke="#3b9eff" stroke-width="2.5"/>
+        <circle cx="20" cy="42" r="3" fill="#3b9eff"/>
+        <circle cx="48" cy="42" r="3" fill="#3b9eff"/>
+        <line x1="20" y1="42" x2="48" y2="26" stroke="#3b9eff" stroke-width="2" stroke-dasharray="4 2"/>
+        <line x1="48" y1="42" x2="66" y2="42" stroke="#3b9eff" stroke-width="2.5"/>
+        <text x="34" y="60" text-anchor="middle" font-family="monospace" font-size="8" fill="#888">12V ctrl</text>
+      </svg>
+      <h4>Interruptor SW1</h4>
+      <p>Señal de control — 12V al cerrar → satura BJT</p>
+      <span class="ctag">mecánico</span>
+    </div>
+    <div class="cc">
+      <svg width="68" height="75" viewBox="0 0 68 75">
+        <line x1="2" y1="37" x2="22" y2="37" stroke="#f5a623" stroke-width="2.5"/>
+        <polygon points="22,26 22,48 44,37" fill="#1a1e28" stroke="#f5a623" stroke-width="2"/>
+        <line x1="44" y1="26" x2="44" y2="48" stroke="#f5a623" stroke-width="2.5"/>
+        <line x1="44" y1="37" x2="66" y2="37" stroke="#f5a623" stroke-width="2.5"/>
+        <line x1="48" y1="25" x2="55" y2="17" stroke="#ffe066" stroke-width="1.5"/>
+        <line x1="53" y1="30" x2="61" y2="23" stroke="#ffe066" stroke-width="1.5"/>
+      </svg>
+      <h4>LED Indicador</h4>
+      <p>Estado visual ON — R_LED 220Ω–1kΩ requerida</p>
+      <span class="ctag">cualquier color</span>
+    </div>
+  </div>
+
+  <div class="st">Principio de operación</div>
+  <div class="tb" style="border-color:var(--accent)">
+    <h4 style="color:var(--accent)">BJT como interruptor — saturación</h4>
+    <p>En saturación el transistor actúa como <strong style="color:#fff">interruptor cerrado</strong>: V<sub>CE(sat)</sub> ≈ 0.2V y la tensión cae sobre el motor. Condición: <strong style="color:var(--accent)">I<sub>B</sub> ≥ I<sub>C</sub> / β</strong>. El <strong style="color:#fff">Factor de Saturación FS = 3</strong> garantiza saturación con variaciones de β y temperatura.</p>
+  </div>
+  <div class="tb">
+    <h4>¿Por qué el diodo flyback?</h4>
+    <p>El motor es carga <strong style="color:#fff">inductiva</strong>. Al abrir el interruptor, la bobina genera un pico de tensión inversa que puede superar 100V y destruir el transistor. El diodo <strong style="color:#fff">1N4007</strong> en antiparalelo ofrece un camino seguro de descarga.</p>
+  </div>
+
+  <div class="cl" id="cl1">
+    <div class="ci" onclick="tc(this,1)"><div class="cb"></div><label>Identifico el BJT NPN y sus terminales: Base (B), Colector (C), Emisor (E)</label></div>
+    <div class="ci" onclick="tc(this,1)"><div class="cb"></div><label>Comprendo que el transistor opera como interruptor en región de saturación</label></div>
+    <div class="ci" onclick="tc(this,1)"><div class="cb"></div><label>Entiendo la función del diodo flyback con cargas inductivas</label></div>
+    <div class="ci" onclick="tc(this,1)"><div class="cb"></div><label>Tengo todos los componentes sobre la mesa antes de iniciar</label></div>
+  </div>
+  <div class="nav-n"><button class="btn-n" onclick="goTab(2)">Ir a Fase 2 — Cálculo R<sub>B</sub> →</button></div>
+</div>
+
+<!-- F2 -->
+<div class="pp" id="p2">
+  <div class="tb">
+    <h4>Datos del enunciado</h4>
+    <p><strong style="color:#fff">V<sub>CC</sub></strong> = 12V &nbsp;·&nbsp; <strong style="color:#fff">I<sub>C</sub></strong> = 150 mA &nbsp;·&nbsp; <strong style="color:#fff">β</strong> = 50 &nbsp;·&nbsp; <strong style="color:#fff">V<sub>BEs</sub></strong> = 0.7V &nbsp;·&nbsp; <strong style="color:#fff">V<sub>in</sub></strong> = 12V &nbsp;·&nbsp; <strong style="color:#fff">FS</strong> = 3</p>
+  </div>
+
+  <div class="st">Desarrollo matemático paso a paso</div>
+  <div class="ms-list">
+    <div class="ms" id="ms1"><div class="sn">1</div><div class="sb"><h4>Corriente de colector</h4><p>Corriente que debe conmutar el transistor:</p><div class="fm">I<sub>C</sub> = I<sub>motor</sub> = 150 mA</div></div></div>
+    <div class="ms" id="ms2"><div class="sn">2</div><div class="sb"><h4>Corriente mínima de base</h4><div class="fm">I<sub>B(min)</sub> = I<sub>C</sub> / β = 150 mA / 50 = <strong>3 mA</strong></div><p style="font-size:11.5px;color:var(--muted)">Saturación marginal — se aplica factor de seguridad.</p></div></div>
+    <div class="ms" id="ms3"><div class="sn">3</div><div class="sb"><h4>R<sub>B</sub> sin factor de saturación (referencia)</h4><div class="fm">R<sub>B</sub> = (12 − 0.7) / 0.003 = <strong>3766.6 Ω</strong></div><div class="wb">⚠ Sin FS — el transistor apenas alcanza saturación. Riesgo de calentamiento.</div></div></div>
+    <div class="ms" id="ms4"><div class="sn">4</div><div class="sb"><h4>Aplicar FS = 3</h4><div class="fm">I<sub>B(fs)</sub> = 3 × 3 mA = <strong>9 mA</strong></div><p style="font-size:11.5px;color:var(--muted)">Garantiza saturación profunda con variaciones de β y temperatura.</p></div></div>
+    <div class="ms" id="ms5"><div class="sn">5</div><div class="sb"><h4>R<sub>B</sub> de diseño — valor final</h4><div class="fm">R<sub>B</sub> = (12 − 0.7) / 0.009 = <strong>1255.5 Ω</strong></div><div class="rb">✓ R<sub>B</sub> ≈ 1.24 kΩ &nbsp;→&nbsp; Comercial: <strong>1.2 kΩ</strong> o 1.5 kΩ</div></div></div>
+    <div class="ms" id="ms6"><div class="sn">6</div><div class="sb"><h4>Resistencia equivalente del motor</h4><div class="fm">R<sub>motor</sub> = 12V / 0.15A = <strong>80 Ω</strong></div><p style="font-size:11.5px;color:var(--muted)">En simulación aparece como R1 ≈ 80.6 Ω (modelo simplificado del motor).</p></div></div>
+  </div>
+
+  <div class="st" style="margin-top:22px">Esquemático del circuito</div>
+  <div class="cw2">
+    <svg viewBox="0 0 560 310" width="100%" style="max-width:540px">
+      <line x1="75" y1="35" x2="390" y2="35" stroke="#e74c3c" stroke-width="2"/><text x="396" y="39" font-family="monospace" font-size="10" fill="#e74c3c">+12V</text>
+      <line x1="75" y1="285" x2="390" y2="285" stroke="#555" stroke-width="2"/><text x="396" y="289" font-family="monospace" font-size="10" fill="#888">GND</text>
+      <line x1="220" y1="285" x2="220" y2="295" stroke="#555" stroke-width="2"/><line x1="210" y1="295" x2="230" y2="295" stroke="#555" stroke-width="2"/><line x1="213" y1="301" x2="227" y2="301" stroke="#555" stroke-width="1.5"/><line x1="216" y1="307" x2="224" y2="307" stroke="#555" stroke-width="1"/>
+      <!-- Motor -->
+      <circle cx="290" cy="142" r="28" fill="#13161b" stroke="#e67e22" stroke-width="2"/>
+      <text x="290" y="147" text-anchor="middle" font-family="monospace" font-size="12" fill="#e67e22" font-weight="bold">M</text>
+      <line x1="290" y1="35" x2="290" y2="114" stroke="#e74c3c" stroke-width="2"/>
+      <line x1="290" y1="170" x2="290" y2="208" stroke="#2ecc71" stroke-width="2"/>
+      <!-- Diode flyback -->
+      <polygon points="326,128 326,156 350,142" fill="#13161b" stroke="#e74c3c" stroke-width="1.8"/>
+      <line x1="350" y1="128" x2="350" y2="156" stroke="#e74c3c" stroke-width="2.5"/>
+      <line x1="326" y1="35" x2="326" y2="128" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="3 2" opacity=".6"/>
+      <line x1="326" y1="156" x2="326" y2="285" stroke="#555" stroke-width="1.5" stroke-dasharray="3 2" opacity=".6"/>
+      <text x="356" y="145" font-family="monospace" font-size="9" fill="#e74c3c">1N4007</text>
+      <!-- BJT -->
+      <circle cx="220" cy="225" r="25" fill="#13161b" stroke="#3b9eff" stroke-width="2"/>
+      <line x1="210" y1="207" x2="210" y2="243" stroke="#3b9eff" stroke-width="3"/>
+      <line x1="210" y1="215" x2="225" y2="208" stroke="#2ecc71" stroke-width="2"/><line x1="225" y1="208" x2="290" y2="208" stroke="#2ecc71" stroke-width="2"/>
+      <line x1="210" y1="235" x2="225" y2="242" stroke="#888" stroke-width="2"/><line x1="225" y1="242" x2="225" y2="285" stroke="#888" stroke-width="2"/>
+      <polygon points="220,238 225,242 220,230" fill="#888"/>
+      <text x="200" y="296" font-family="monospace" font-size="9" fill="#3b9eff">TIP31C</text>
+      <text x="236" y="240" font-family="monospace" font-size="8" fill="#888">E</text>
+      <text x="236" y="210" font-family="monospace" font-size="8" fill="#2ecc71">C</text>
+      <!-- RB -->
+      <rect x="134" y="216" width="44" height="16" rx="3" fill="#1a1e28" stroke="#f5a623" stroke-width="2"/>
+      <text x="156" y="228" text-anchor="middle" font-family="monospace" font-size="9" fill="#f5a623">R_B 1.2k</text>
+      <line x1="178" y1="224" x2="210" y2="224" stroke="#f5a623" stroke-width="2"/>
+      <!-- Switch -->
+      <circle cx="88" cy="224" r="3.5" fill="#3b9eff"/>
+      <circle cx="88" cy="172" r="3.5" fill="#3b9eff"/>
+      <line x1="88" y1="224" x2="88" y2="186" stroke="#3b9eff" stroke-width="2"/>
+      <line x1="88" y1="186" x2="104" y2="174" stroke="#3b9eff" stroke-width="2" stroke-dasharray="3 2"/>
+      <line x1="88" y1="172" x2="88" y2="35" stroke="#e74c3c" stroke-width="1.5"/>
+      <line x1="88" y1="224" x2="134" y2="224" stroke="#f5a623" stroke-width="2"/>
+      <text x="46" y="178" font-family="monospace" font-size="9" fill="#3b9eff">SW1</text>
+      <text x="40" y="190" font-family="monospace" font-size="8" fill="#888">12V ctrl</text>
+      <text x="182" y="214" font-family="monospace" font-size="8" fill="#f5a623">B</text>
+    </svg>
+  </div>
+
+  <div class="ab warn"><span class="ab-ic">⚡</span><span>El diodo <strong>1N4007</strong> en <strong>antiparalelo</strong> al motor: <strong>Cátodo (banda)</strong> → +12V, <strong>Ánodo</strong> → Colector. Al apagar el transistor, la energía de la bobina se descarga por el diodo.</span></div>
+
+  <div class="cl" id="cl2">
+    <div class="ci" onclick="tc(this,2)"><div class="cb"></div><label>Calculé I<sub>B(min)</sub> = I<sub>C</sub> / β = 3 mA</label></div>
+    <div class="ci" onclick="tc(this,2)"><div class="cb"></div><label>Apliqué FS = 3 → I<sub>B(fs)</sub> = 9 mA</label></div>
+    <div class="ci" onclick="tc(this,2)"><div class="cb"></div><label>Obtuve R<sub>B</sub> = 1255 Ω → selecciono 1.2 kΩ comercial</label></div>
+    <div class="ci" onclick="tc(this,2)"><div class="cb"></div><label>Entiendo la diferencia entre R<sub>B</sub> sin FS (3.76 kΩ) y con FS (1.24 kΩ)</label></div>
+  </div>
+  <div class="nav-n"><button class="btn-n" onclick="goTab(3)">Ir a Fase 3 — Montaje →</button></div>
+</div>
+
+<!-- F3 -->
+<div class="pp" id="p3">
+  <div class="ab red"><span class="ab-ic">⚠</span><span>Fuente <strong>APAGADA</strong> durante todo el montaje. Verificar polaridades del diodo y transistor antes de energizar. El docente debe revisar el circuito completo.</span></div>
+
+  <div class="st">Vista del breadboard</div>
+  <div class="cw2" style="min-height:230px">
+    <svg viewBox="0 0 660 230" width="100%" style="max-width:640px">
+      <rect x="8" y="14" width="644" height="202" rx="7" fill="#1a1e28" stroke="#2a2f3a" stroke-width="2"/>
+      <rect x="14" y="20" width="632" height="17" rx="3" fill="#0d0f12" stroke="#333" stroke-width="1"/>
+      <rect x="20" y="25" width="622" height="5" rx="2" fill="#c0392b" opacity="0.4"/>
+      <rect x="14" y="190" width="632" height="17" rx="3" fill="#0d0f12" stroke="#333" stroke-width="1"/>
+      <rect x="20" y="195" width="622" height="5" rx="2" fill="#1a4a8a" opacity="0.45"/>
+      <defs><pattern id="h" x="0" y="0" width="10" height="10.5" patternUnits="userSpaceOnUse"><circle cx="5" cy="5.25" r="2.2" fill="#0a0c10" stroke="#252a35" stroke-width="0.7"/></pattern></defs>
+      <rect x="22" y="43" width="618" height="52" fill="url(#h)" rx="2"/>
+      <rect x="22" y="128" width="618" height="52" fill="url(#h)" rx="2"/>
+      <rect x="14" y="98" width="644" height="28" fill="#1a1e28"/>
+      <text x="330" y="115" text-anchor="middle" font-family="monospace" font-size="8" fill="#333">— — — — — — — — — — — — — — — — —</text>
+      <!-- Q1 transistor -->
+      <rect x="214" y="120" width="20" height="56" rx="5" fill="#1a2535" stroke="#3b9eff" stroke-width="2"/>
+      <text x="224" y="152" text-anchor="middle" font-family="monospace" font-size="8" fill="#3b9eff">Q1</text>
+      <circle cx="216" cy="138" r="3" fill="#2ecc71"/>
+      <circle cx="224" cy="124" r="3" fill="#f5a623"/>
+      <circle cx="232" cy="138" r="3" fill="#888"/>
+      <!-- RB -->
+      <rect x="158" y="137" width="46" height="12" rx="3" fill="#1a1e28" stroke="#f5a623" stroke-width="1.8"/>
+      <line x1="167" y1="137" x2="167" y2="149" stroke="#8B0000" stroke-width="1.8"/>
+      <line x1="173" y1="137" x2="173" y2="149" stroke="#f39c12" stroke-width="1.8"/>
+      <line x1="179" y1="137" x2="179" y2="149" stroke="#8B0000" stroke-width="1.8"/>
+      <line x1="185" y1="137" x2="185" y2="149" stroke="#f5a623" stroke-width="1.5"/>
+      <text x="181" y="161" text-anchor="middle" font-family="monospace" font-size="8" fill="#f5a623">1.2kΩ</text>
+      <!-- Motor -->
+      <circle cx="360" cy="98" r="24" fill="#13161b" stroke="#e67e22" stroke-width="2"/>
+      <text x="360" y="103" text-anchor="middle" font-family="monospace" font-size="11" fill="#e67e22" font-weight="bold">M</text>
+      <!-- Diode -->
+      <line x1="414" y1="76" x2="414" y2="120" stroke="#e74c3c" stroke-width="1.5"/>
+      <polygon points="404,90 404,106 424,98" fill="#13161b" stroke="#e74c3c" stroke-width="1.5"/>
+      <line x1="424" y1="90" x2="424" y2="106" stroke="#e74c3c" stroke-width="2.5"/>
+      <text x="430" y="101" font-family="monospace" font-size="8" fill="#e74c3c">1N4007</text>
+      <!-- LED -->
+      <polygon points="476,84 476,100 492,92" fill="#1a1e28" stroke="#f5a623" stroke-width="1.5"/>
+      <line x1="492" y1="84" x2="492" y2="100" stroke="#f5a623" stroke-width="2"/>
+      <line x1="496" y1="84" x2="501" y2="78" stroke="#ffe066" stroke-width="1"/>
+      <line x1="499" y1="88" x2="505" y2="83" stroke="#ffe066" stroke-width="1"/>
+      <!-- Wires -->
+      <line x1="20" y1="27" x2="336" y2="27" stroke="#e74c3c" stroke-width="2.5"/>
+      <line x1="336" y1="27" x2="336" y2="74" stroke="#e74c3c" stroke-width="2"/>
+      <line x1="216" y1="138" x2="216" y2="27" stroke="#2ecc71" stroke-width="1.5" stroke-dasharray="3 2" opacity=".5"/>
+      <line x1="204" y1="143" x2="216" y2="143" stroke="#f5a623" stroke-width="2"/>
+      <line x1="62" y1="143" x2="158" y2="143" stroke="#3b9eff" stroke-width="2"/>
+      <line x1="232" y1="176" x2="232" y2="196" stroke="#888" stroke-width="2"/>
+      <line x1="232" y1="196" x2="20" y2="196" stroke="#888" stroke-width="2"/>
+      <!-- Switch -->
+      <circle cx="44" cy="143" r="3.5" fill="#3b9eff"/>
+      <circle cx="44" cy="114" r="3.5" fill="#3b9eff"/>
+      <line x1="44" y1="143" x2="44" y2="126" stroke="#3b9eff" stroke-width="2"/>
+      <line x1="44" y1="126" x2="56" y2="116" stroke="#3b9eff" stroke-width="2" stroke-dasharray="3 2"/>
+      <line x1="44" y1="114" x2="44" y2="27" stroke="#e74c3c" stroke-width="1.5"/>
+      <text x="22" y="122" font-family="monospace" font-size="8" fill="#3b9eff">SW1</text>
+    </svg>
+  </div>
+
+  <div class="st">Procedimiento de montaje</div>
+  <div class="bbs">
+    <div class="bbs-item"><div class="bbs-n">1</div><div><h4>Insertar transistor Q1</h4><p>Colocar TIP31C (o 2N2222) cruzando la división central. Identificar B, C, E según datasheet.</p><span class="wt wg">Colector → arriba</span><span class="wt wk">Emisor → GND</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">2</div><div><h4>Conectar el motor DC</h4><p>Un terminal del motor al rail +12V. El otro terminal al Colector del transistor.</p><span class="wt wr">Motor(+) → +12V</span><span class="wt wo">Motor(−) → Colector Q1</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">3</div><div><h4>Diodo flyback D1 — antiparalelo al motor</h4><p><strong style="color:var(--red)">Cátodo (banda)</strong> al terminal del motor conectado a +12V. <strong style="color:var(--green)">Ánodo</strong> al terminal del Colector. El diodo queda invertido respecto a la polaridad normal.</p><span class="wt wr">Cátodo (banda) → +12V</span><span class="wt wo">Ánodo → Colector</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">4</div><div><h4>Conectar R<sub>B</sub> 1.2 kΩ a la base</h4><p>Insertar resistencia entre nodo del interruptor y la Base del transistor. Limita I<sub>B</sub> ≈ 9 mA.</p><span class="wt wy">Un extremo → SW1</span><span class="wt wo">Otro extremo → Base Q1</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">5</div><div><h4>Conectar interruptor SW1</h4><p>Un terminal del SW al rail +12V. El otro terminal a R<sub>B</sub>. Al cerrar: 12V → R<sub>B</sub> → Base → satura el transistor.</p><span class="wt wr">SW1(a) → +12V</span><span class="wt wy">SW1(b) → R_B</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">6</div><div><h4>LED indicador con R_LED</h4><p>LED con 220Ω–1kΩ en paralelo al motor o en el ramal de base como indicador visual del estado ON.</p><span class="wt wo">LED(+) → nodo motor</span><span class="wt wk">LED(−) → GND vía R_LED</span></div></div>
+    <div class="bbs-item"><div class="bbs-n">7</div><div><h4>Revisión antes de energizar</h4><p>Verificar orientación del diodo 1N4007. Confirmar Emisor → GND. Llamar al docente para revisión.</p><span class="wt wg">✓ Orientación D1</span><span class="wt wg">✓ E → GND</span><span class="wt wg">✓ Docente verifica</span></div></div>
+  </div>
+
+  <div class="cl" id="cl3">
+    <div class="ci" onclick="tc(this,3)"><div class="cb"></div><label>Transistor insertado correctamente identificando B, C, E</label></div>
+    <div class="ci" onclick="tc(this,3)"><div class="cb"></div><label>Motor conectado entre +12V y el Colector</label></div>
+    <div class="ci" onclick="tc(this,3)"><div class="cb"></div><label>Diodo 1N4007 en antiparalelo al motor — Cátodo (banda) hacia +12V</label></div>
+    <div class="ci" onclick="tc(this,3)"><div class="cb"></div><label>R<sub>B</sub> 1.2 kΩ entre interruptor y Base del transistor</label></div>
+    <div class="ci" onclick="tc(this,3)"><div class="cb"></div><label>Emisor conectado a GND — revisado por docente</label></div>
+  </div>
+  <div class="nav-n"><button class="btn-n" onclick="goTab(4)">Ir a Fase 4 — Pruebas →</button></div>
+</div>
+
+<!-- F4 -->
+<div class="pp" id="p4">
+  <div class="st">Secuencia de encendido</div>
+  <div class="tg">
+    <div class="tc" style="border-color:var(--muted)"><h4>SW Abierto — OFF</h4><ul><li>I<sub>B</sub> = 0 → transistor en corte</li><li>I<sub>C</sub> ≈ 0 — motor detenido</li><li>V<sub>CE</sub> ≈ V<sub>CC</sub> = 12V</li><li>LED indicador apagado</li><li>Sin rotación del eje</li></ul></div>
+    <div class="tc" style="border-color:var(--green)"><h4 style="color:var(--green)">SW Cerrado — ON</h4><ul><li>I<sub>B</sub> ≈ 9 mA → transistor saturado</li><li>I<sub>C</sub> ≈ 150 mA — motor gira</li><li>V<sub>CE(sat)</sub> ≈ 0.2V</li><li>LED indicador encendido</li><li>Rotación visible del eje</li></ul></div>
+  </div>
+
+  <div class="st">Mediciones con multímetro</div>
+  <div class="tg">
+    <div class="tc" style="border-color:var(--accent)"><h4 style="color:var(--accent)">Voltajes DC a medir</h4><ul><li>V<sub>CE</sub>: C–E → <strong style="color:var(--green)">≈ 0.2V</strong> ON (saturado)</li><li>V<sub>BE</sub>: B–E → <strong style="color:var(--green)">≈ 0.7V</strong> ON</li><li>V<sub>motor</sub>: terminales → ≈ 11.8V ON</li><li>V<sub>RB</sub>: en resistencia → ≈ 11.3V ON</li></ul></div>
+    <div class="tc" style="border-color:#e67e22"><h4 style="color:#e67e22">Corrientes a medir</h4><ul><li>I<sub>B</sub>: en serie con R<sub>B</sub> → ≈ 9 mA</li><li>I<sub>C</sub>: en serie con motor → ≈ 150 mA</li><li>I<sub>total</sub>: de la fuente → ≈ 159 mA</li><li>Verificar I<sub>C</sub>/I<sub>B</sub> ≤ β = 50</li></ul></div>
+  </div>
+
+  <div class="tb" style="border-color:var(--green);margin-top:14px">
+    <h4 style="color:var(--green)">¿Cómo confirmar saturación?</h4>
+    <p>Medir V<sub>CE</sub> en modo voltaje DC. Si <strong style="color:#fff">V<sub>CE</sub> &lt; 0.5V</strong> (idealmente ≈ 0.2V) → saturado ✓. Si V<sub>CE</sub> está entre 1V–8V → no satura, reducir R<sub>B</sub>. Si V<sub>CE</sub> ≈ 12V con SW cerrado → revisar conexiones de base.</p>
+  </div>
+  <div class="ab red"><span class="ab-ic">🔴</span><span><strong>Si el transistor se calienta excesivamente en ON:</strong> No está saturando. Un BJT en zona activa disipa P = V<sub>CE</sub> × I<sub>C</sub>. Reducir R<sub>B</sub> para aumentar I<sub>B</sub>.</span></div>
+
+  <div class="cl" id="cl4">
+    <div class="ci" onclick="tc(this,4)"><div class="cb"></div><label>SW abierto: motor detenido, V<sub>CE</sub> ≈ 12V verificado</label></div>
+    <div class="ci" onclick="tc(this,4)"><div class="cb"></div><label>SW cerrado: motor gira, V<sub>CE</sub> ≈ 0.2V verificado (saturación)</label></div>
+    <div class="ci" onclick="tc(this,4)"><div class="cb"></div><label>V<sub>BE</sub> ≈ 0.7V medido con SW cerrado</label></div>
+    <div class="ci" onclick="tc(this,4)"><div class="cb"></div><label>El transistor no se calienta excesivamente en estado ON</label></div>
+    <div class="ci" onclick="tc(this,4)"><div class="cb"></div><label>Al abrir el SW bruscamente el circuito no falla (diodo flyback opera)</label></div>
+  </div>
+  <div class="nav-n"><button class="btn-n" onclick="goTab(5)">Ir a Fase 5 — Toma de Datos →</button></div>
+</div>
+
+<!-- F5 -->
+<div class="pp" id="p5">
+  <div class="tb" style="border-color:#e67e22">
+    <h4 style="color:#e67e22">Procedimiento</h4>
+    <p>Para cada V<sub>CC</sub>, calcular R<sub>B</sub> teórica con FS = 3, seleccionar valor comercial, medir I<sub>B</sub> real con multímetro en serie. Estimar RPM con tacómetro o comparación visual. Registrar observaciones.</p>
+  </div>
+
+  <div class="st">Tabla de resultados experimentales</div>
+  <div class="dtw">
+    <table class="dt">
+      <thead><tr><th>FA (V<sub>CC</sub>)</th><th>R<sub>B</sub> Teórica (FS=3)</th><th>R<sub>B</sub> Usada (Ω)</th><th>I<sub>B</sub> Medida (mA)</th><th>RPM</th><th>Notas</th></tr></thead>
+      <tbody>
+        <tr><td class="vc">9 V</td><td class="pr">≈ 773 Ω<br><span style="font-size:10px;color:var(--muted)">(9−0.7)/0.009</span></td><td><input placeholder="ej: 820"/></td><td><input placeholder="ej: 10.1"/></td><td><input placeholder="ej: 3200"/></td><td><input placeholder="observación" style="width:90px"/></td></tr>
+        <tr><td class="vc">12 V</td><td class="pr">≈ 1255 Ω<br><span style="font-size:10px;color:var(--muted)">(12−0.7)/0.009</span></td><td><input placeholder="ej: 1200"/></td><td><input placeholder="ej: 9.4"/></td><td><input placeholder="ej: 4500"/></td><td><input placeholder="observación" style="width:90px"/></td></tr>
+        <tr><td class="vc">18 V</td><td class="pr">≈ 1922 Ω<br><span style="font-size:10px;color:var(--muted)">(18−0.7)/0.009</span></td><td><input placeholder="ej: 1800"/></td><td><input placeholder="ej: 9.0"/></td><td><input placeholder="ej: 6000"/></td><td><input placeholder="observación" style="width:90px"/></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ab warn" style="margin-top:12px"><span class="ab-ic">📋</span><span>R<sub>B</sub> teórica cambia con V<sub>CC</sub> porque V<sub>in</sub> − V<sub>BEs</sub> varía. I<sub>C</sub> ≈ 150 mA siempre que el transistor sature. Las RPM aumentan con V<sub>CC</sub> hasta el límite nominal del motor.</span></div>
+
+  <div class="st" style="margin-top:20px">Preguntas de análisis</div>
+  <div class="tb" style="border-color:var(--muted)">
+    <h4 style="color:var(--text)">Responder en el informe</h4>
+    <p>
+      <strong style="color:var(--accent)">1.</strong> ¿Cómo varía I<sub>B</sub> al aumentar V<sub>CC</sub> si se mantiene la misma R<sub>B</sub>?<br>
+      <strong style="color:var(--accent)">2.</strong> ¿Por qué el motor podría no girar a 9V con R<sub>B</sub> diseñada para 12V?<br>
+      <strong style="color:var(--accent)">3.</strong> ¿Qué ocurre con el transistor si se supera el voltaje nominal del motor?<br>
+      <strong style="color:var(--accent)">4.</strong> ¿Por qué el diodo flyback es crítico al conmutar el interruptor frecuentemente?
+    </p>
+  </div>
+
+  <div class="cl" id="cl5">
+    <div class="ci" onclick="tc(this,5)"><div class="cb"></div><label>Completé fila V<sub>CC</sub> = 9V con R<sub>B</sub>, I<sub>B</sub> y RPM</label></div>
+    <div class="ci" onclick="tc(this,5)"><div class="cb"></div><label>Completé fila V<sub>CC</sub> = 12V con R<sub>B</sub>, I<sub>B</sub> y RPM</label></div>
+    <div class="ci" onclick="tc(this,5)"><div class="cb"></div><label>Completé fila V<sub>CC</sub> = 18V con R<sub>B</sub>, I<sub>B</sub> y RPM</label></div>
+    <div class="ci" onclick="tc(this,5)"><div class="cb"></div><label>Respondí al menos 2 preguntas de análisis en el informe</label></div>
+  </div>
+  <div class="ab grn" style="margin-top:14px"><span class="ab-ic">✅</span><span><strong>Práctica completada.</strong> Entregar tabla de datos, mediciones y respuestas de análisis al docente. Imprimir o guardar esta guía como soporte del informe.</span></div>
+</div>
+
+</div><!-- cw -->
+<footer>ELECTRÓNICA · LAB-03 · BJT NPN — CONTROL DE POTENCIA MOTOR DC · TIP31C / 2N2222 · 1N4007 FLYBACK</footer>
+
+<script>
+document.getElementById('fi').valueAsDate = new Date();
+let cur=1;
+const totals={1:4,2:4,3:5,4:5,5:4};
+const counts={1:0,2:0,3:0,4:0,5:0};
+const TOTAL=Object.values(totals).reduce((a,b)=>a+b,0);
+
+function goTab(n){
+  document.getElementById('p'+cur).classList.remove('active');
+  document.getElementById('t'+cur).classList.remove('active');
+  cur=n;
+  document.getElementById('p'+n).classList.add('active');
+  document.getElementById('t'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===2)setTimeout(animateMath,80);
+}
+function tc(el,ph){
+  el.classList.toggle('ck');
+  counts[ph]=document.querySelectorAll('#cl'+ph+' .ci.ck').length;
+  const done=Object.values(counts).reduce((a,b)=>a+b,0);
+  const pct=Math.round(done/TOTAL*100);
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('pp').textContent=pct+'%';
+  document.getElementById('pl').textContent=done+' de '+TOTAL+' pasos completados';
+  const tb=document.getElementById('t'+ph);
+  if(counts[ph]===totals[ph])tb.classList.add('done');
+  else tb.classList.remove('done');
+}
+function animateMath(){document.querySelectorAll('.ms').forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),i*110));}
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')}),{threshold:0.1});
+document.querySelectorAll('.ms').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
