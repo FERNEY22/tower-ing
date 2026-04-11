@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encuesta YUNCAR · Mantenimiento Industrial · Towers Ing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --navy:    #1a2a6c;
+      --purple:  #9b59b6;
+      --purple2: #8e44ad;
+      --blue:    #3498db;
+      --green:   #27ae60;
+      --red:     #e74c3c;
+      --amber:   #e67e22;
+      --bg:      linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --white:   #ffffff;
+      --text:    #333;
+      --muted:   #7f8c8d;
+      --border:  #dde3ed;
+      --light:   #ecf0f1;
+      --shadow:  0 4px 15px rgba(0,0,0,.10);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      padding: .85rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    }
+    .nav-logo { color: white; text-decoration: none; font-size: .95rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+    .nav-back  { color: rgba(255,255,255,.75); text-decoration: none; font-size: .82rem; transition: color .2s; }
+    .nav-back:hover { color: white; }
+
+    /* HERO STRIP */
+    .hero-strip {
+      background: var(--navy); color: white; text-align: center;
+      padding: 2.5rem 1rem 2rem; position: relative; overflow: hidden;
+    }
+    .hero-strip::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(52,152,219,.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-strip h1 { font-size: clamp(1.4rem,4vw,2rem); font-weight: 700; position: relative; }
+    .hero-strip p  { font-size: .92rem; opacity: .8; margin-top: .4rem; position: relative; }
+
+    /* PROGRESS */
+    .progress-outer { background: var(--navy); padding: 0 2rem 1.2rem; }
+    .progress-info  { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; color: rgba(255,255,255,.7); margin-bottom: .4rem; }
+    .progress-track { height: 6px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; }
+    .progress-fill  { height: 100%; border-radius: 99px; background: linear-gradient(to right, var(--blue), var(--purple)); transition: width .4s ease; }
+
+    /* CARD */
+    .card-wrap { max-width: 780px; margin: 2rem auto 3rem; padding: 0 1.2rem; }
+    .card      { background: white; border-radius: 14px; padding: 2rem 2.2rem; box-shadow: var(--shadow); }
+
+    /* SECTION HEADER */
+    .sec-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #eaf4fc; color: var(--blue);
+      font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: .3rem .85rem; border-radius: 99px; margin-bottom: 1rem;
+    }
+    .sec-title { font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: .3rem; }
+    .sec-desc  { font-size: .88rem; color: var(--muted); margin-bottom: 1.8rem; }
+
+    /* QUESTION BLOCK */
+    .q-block {
+      background: #f8f9fc; border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem; transition: border-color .2s;
+    }
+    .q-block.answered  { border-color: #b8d9f5; background: #eaf4fc; }
+    .q-block.has-error { border-color: var(--red); background: #fdf3f2; }
+    .q-num      { font-size: .7rem; font-weight: 700; color: var(--blue); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
+    .q-text     { font-size: .95rem; color: var(--navy); font-weight: 500; margin-bottom: .9rem; line-height: 1.5; }
+    .q-required { color: var(--red); margin-left: .2rem; }
+
+    /* RADIO OPTIONS (categóricas A1–A4, F1, F2) */
+    .ro-options { display: flex; flex-direction: column; gap: .5rem; }
+    .ro-option {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .6rem .9rem; border-radius: 8px;
+      border: 2px solid var(--border); cursor: pointer;
+      font-size: .88rem; color: var(--text);
+      transition: all .2s; user-select: none;
+    }
+    .ro-option:hover { border-color: var(--blue); background: #eaf4fc; }
+    .ro-option input  { display: none; }
+    .ro-option.selected { border-color: var(--navy); background: #eef2fb; color: var(--navy); font-weight: 500; }
+    .ro-dot {
+      min-width: 20px; height: 20px; border-radius: 50%;
+      background: var(--light); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all .2s; position: relative;
+    }
+    .ro-option.selected .ro-dot { background: var(--navy); border-color: var(--navy); }
+    .ro-option.selected .ro-dot::after {
+      content: ''; display: block; width: 8px; height: 8px;
+      border-radius: 50%; background: white;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+
+    /* LIKERT */
+    .likert-wrap  { overflow-x: auto; }
+    .likert-scale { display: flex; gap: .4rem; justify-content: space-between; min-width: 300px; }
+    .likert-labels { display: flex; justify-content: space-between; font-size: .68rem; color: var(--muted); margin-top: .4rem; padding: 0 .2rem; min-width: 300px; }
+    .lk-opt { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .3rem; cursor: pointer; user-select: none; }
+    .lk-opt input { display: none; }
+    .lk-circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .82rem; font-weight: 700; color: var(--muted);
+      transition: all .2s; background: var(--light);
+    }
+    .lk-opt:hover .lk-circle { border-color: var(--blue); color: var(--blue); background: #eaf4fc; }
+    .lk-opt.selected .lk-circle { background: var(--blue); border-color: var(--blue); color: white; }
+
+    /* TEXTAREA */
+    .field { margin-bottom: 1.2rem; }
+    .field > label { display: block; font-size: .88rem; font-weight: 600; color: var(--navy); margin-bottom: .5rem; }
+    .field textarea {
+      width: 100%; padding: .7rem 1rem;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: .92rem; color: var(--text);
+      resize: vertical; min-height: 90px;
+      transition: border-color .2s, box-shadow .2s; outline: none;
+    }
+    .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(52,152,219,.15); }
+
+    /* BUTTONS */
+    .btn-row { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.8rem; flex-wrap: wrap; }
+    .btn-prev {
+      padding: .75rem 1.8rem; background: transparent; color: var(--navy);
+      border: 2px solid var(--border); border-radius: 8px;
+      font-size: .92rem; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .btn-prev:hover { border-color: var(--navy); background: var(--light); }
+    .btn-next {
+      padding: .75rem 2rem; background: var(--blue); color: white;
+      border: none; border-radius: 8px; font-size: .92rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .2s;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .btn-next:hover { background: #2980b9; transform: translateY(-1px); }
+    .btn-submit {
+      padding: .8rem 2.2rem; background: var(--green); color: white;
+      border: none; border-radius: 8px; font-size: .95rem; font-weight: 700;
+      cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: .6rem;
+    }
+    .btn-submit:hover  { background: #219a52; transform: translateY(-1px); }
+    .btn-submit:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+
+    /* VALIDATION */
+    .val-msg { display: none; padding: .65rem 1rem; background: #fdf3f2; border: 1px solid #f5c6c1; border-radius: 8px; color: var(--red); font-size: .83rem; margin-top: .8rem; align-items: center; gap: .5rem; }
+    .val-msg.show { display: flex; }
+
+    /* SUCCESS */
+    .success-hero { text-align: center; padding: 2rem 0; }
+    .success-icon  { font-size: 4rem; margin-bottom: .5rem; }
+    .success-title { font-size: 1.8rem; font-weight: 800; color: var(--green); margin-bottom: .4rem; }
+    .success-sub   { font-size: .95rem; color: var(--muted); }
+    .success-id    { display: inline-block; margin: 1.2rem auto .5rem; background: #eaf4fc; border: 1px solid #b8d9f5; border-radius: 8px; padding: .5rem 1.2rem; font-size: .82rem; color: var(--navy); font-weight: 600; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 1rem; margin: 1.8rem 0; }
+    .info-box  { background: #f8f9fc; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+    .info-val  { font-size: 1.6rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .info-lbl  { font-size: .72rem; color: var(--muted); margin-top: .3rem; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* SPINNER */
+    .spinner-inline { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* TOAST */
+    #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(60px); background: #333; color: white; padding: .7rem 1.5rem; border-radius: 8px; font-size: .85rem; z-index: 999; opacity: 0; transition: transform .3s, opacity .3s; pointer-events: none; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    footer { text-align: center; padding: 1.5rem; color: var(--muted); font-size: .82rem; }
+
+    @media (max-width: 520px) {
+      .card { padding: 1.4rem 1.2rem; }
+      .lk-circle { width: 32px; height: 32px; font-size: .75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="https://tower-ing.com" class="nav-logo"><i class="fas fa-wrench"></i> Towers Ing</a>
+  <a href="../" class="nav-back"><i class="fas fa-arrow-left"></i> Formularios</a>
+</nav>
+
+<div class="hero-strip">
+  <h1><i class="fas fa-industry"></i> Encuesta YUNCAR &middot; Mantenimiento Industrial</h1>
+  <p>Diagnóstico sectorial &mdash; Bogotá D.C. &nbsp;·&nbsp; Escala Likert 1&ndash;5 &nbsp;·&nbsp; ~10 minutos</p>
+</div>
+
+<div class="progress-outer">
+  <div class="progress-info">
+    <span id="prog-label">Paso 1 de 6 &middot; Identificación</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card-wrap">
+<div class="card" id="main-card">
+
+<!-- ═══════════════════════════════════════════════
+     PASO 0 — BIENVENIDA E IDENTIFICACIÓN (A1–A4)
+═══════════════════════════════════════════════ -->
+<div id="step-0" class="step">
+  <span class="sec-badge"><i class="fas fa-user-tie"></i> Identificación</span>
+  <h2 class="sec-title">Bienvenido/a a la encuesta YUNCAR</h2>
+  <p class="sec-desc">
+    Esta encuesta tiene fines académicos e investigativos en el marco de una práctica en emprendimiento
+    (Fundación Universitaria Iberoamericana). Sus respuestas son <strong>anónimas y confidenciales</strong>.
+    No existen respuestas correctas o incorrectas — responda según su experiencia real.
+  </p>
+
+  <div class="q-block" id="qb-A1">
+    <div class="q-num">A1 <span class="q-required">*</span></div>
+    <div class="q-text">¿Cuál es su cargo actual?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('A1','Jefe de Mantenimiento',this)"><input type="radio" name="A1"><span class="ro-dot"></span>Jefe de Mantenimiento</label>
+      <label class="ro-option" onclick="selectRO('A1','Gerente de Planta',this)"><input type="radio" name="A1"><span class="ro-dot"></span>Gerente de Planta</label>
+      <label class="ro-option" onclick="selectRO('A1','Coordinador de Mantenimiento',this)"><input type="radio" name="A1"><span class="ro-dot"></span>Coordinador de Mantenimiento</label>
+      <label class="ro-option" onclick="selectRO('A1','Director de Operaciones',this)"><input type="radio" name="A1"><span class="ro-dot"></span>Director de Operaciones</label>
+      <label class="ro-option" onclick="selectRO('A1','Otro',this)"><input type="radio" name="A1"><span class="ro-dot"></span>Otro</label>
+    </div>
+  </div>
+
+  <div class="q-block" id="qb-A2">
+    <div class="q-num">A2 <span class="q-required">*</span></div>
+    <div class="q-text">¿En qué sector industrial se desempeña su empresa?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('A2','Alimentos y Bebidas',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Alimentos y Bebidas</label>
+      <label class="ro-option" onclick="selectRO('A2','Manufactura Metalmecánica',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Manufactura Metalmecánica</label>
+      <label class="ro-option" onclick="selectRO('A2','Textil / Confecciones',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Textil / Confecciones</label>
+      <label class="ro-option" onclick="selectRO('A2','Química / Farmacéutica',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Química / Farmacéutica</label>
+      <label class="ro-option" onclick="selectRO('A2','Energía / Utilities',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Energía / Utilities</label>
+      <label class="ro-option" onclick="selectRO('A2','Logística / Transporte',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Logística / Transporte</label>
+      <label class="ro-option" onclick="selectRO('A2','Construcción / Infraestructura',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Construcción / Infraestructura</label>
+      <label class="ro-option" onclick="selectRO('A2','Otro',this)"><input type="radio" name="A2"><span class="ro-dot"></span>Otro</label>
+    </div>
+  </div>
+
+  <div class="q-block" id="qb-A3">
+    <div class="q-num">A3 <span class="q-required">*</span></div>
+    <div class="q-text">¿Cuántos empleados tiene su empresa?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('A3','Microempresa (<10)',this)"><input type="radio" name="A3"><span class="ro-dot"></span>Microempresa (menos de 10 empleados)</label>
+      <label class="ro-option" onclick="selectRO('A3','Pequeña (10-50)',this)"><input type="radio" name="A3"><span class="ro-dot"></span>Pequeña (10–50 empleados)</label>
+      <label class="ro-option" onclick="selectRO('A3','Mediana (51-200)',this)"><input type="radio" name="A3"><span class="ro-dot"></span>Mediana (51–200 empleados)</label>
+      <label class="ro-option" onclick="selectRO('A3','Grande (>200)',this)"><input type="radio" name="A3"><span class="ro-dot"></span>Grande (más de 200 empleados)</label>
+    </div>
+  </div>
+
+  <div class="q-block" id="qb-A4">
+    <div class="q-num">A4 <span class="q-required">*</span></div>
+    <div class="q-text">¿Cuántos años lleva en su cargo actual?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('A4','Menos de 1 año',this)"><input type="radio" name="A4"><span class="ro-dot"></span>Menos de 1 año</label>
+      <label class="ro-option" onclick="selectRO('A4','1-3 años',this)"><input type="radio" name="A4"><span class="ro-dot"></span>1–3 años</label>
+      <label class="ro-option" onclick="selectRO('A4','4-7 años',this)"><input type="radio" name="A4"><span class="ro-dot"></span>4–7 años</label>
+      <label class="ro-option" onclick="selectRO('A4','8-15 años',this)"><input type="radio" name="A4"><span class="ro-dot"></span>8–15 años</label>
+      <label class="ro-option" onclick="selectRO('A4','Más de 15 años',this)"><input type="radio" name="A4"><span class="ro-dot"></span>Más de 15 años</label>
+    </div>
+  </div>
+
+  <div class="val-msg" id="val-0"><i class="fas fa-exclamation-triangle"></i> Por favor responda todas las preguntas antes de continuar.</div>
+  <div class="btn-row">
+    <button class="btn-next" onclick="goNext()">Comenzar encuesta <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div><!-- /step-0 -->
+
+<!-- ═══════════════════════════════════════════════
+     PASO 1 — SECCIÓN B (10 ítems Likert)
+═══════════════════════════════════════════════ -->
+<div id="step-1" class="step" style="display:none">
+  <span class="sec-badge"><i class="fas fa-cogs"></i> Sección B &middot; Paso 2 de 6</span>
+  <h2 class="sec-title">Gestión del mantenimiento industrial</h2>
+  <p class="sec-desc">Indique su nivel de acuerdo con cada afirmación.<br>
+    <strong>1 = Totalmente en desacuerdo &nbsp;&middot;&nbsp; 5 = Totalmente de acuerdo</strong></p>
+  <div id="lk-B"></div>
+  <div class="val-msg" id="val-1"><i class="fas fa-exclamation-triangle"></i> Por favor responda todas las preguntas antes de continuar.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 2 — SECCIÓN C (8 ítems Likert)
+═══════════════════════════════════════════════ -->
+<div id="step-2" class="step" style="display:none">
+  <span class="sec-badge"><i class="fas fa-handshake"></i> Sección C &middot; Paso 3 de 6</span>
+  <h2 class="sec-title">Servicios externos de mantenimiento</h2>
+  <p class="sec-desc">Valore las siguientes afirmaciones sobre la contratación de proveedores externos.<br>
+    <strong>1 = Totalmente en desacuerdo &nbsp;&middot;&nbsp; 5 = Totalmente de acuerdo</strong></p>
+  <div id="lk-C"></div>
+  <div class="val-msg" id="val-2"><i class="fas fa-exclamation-triangle"></i> Por favor responda todas las preguntas antes de continuar.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 3 — SECCIÓN D (7 ítems Likert)
+═══════════════════════════════════════════════ -->
+<div id="step-3" class="step" style="display:none">
+  <span class="sec-badge"><i class="fas fa-chart-line"></i> Sección D &middot; Paso 4 de 6</span>
+  <h2 class="sec-title">Necesidades de consultoría</h2>
+  <p class="sec-desc">Exprese su nivel de acuerdo sobre consultoría especializada en mantenimiento.<br>
+    <strong>1 = Totalmente en desacuerdo &nbsp;&middot;&nbsp; 5 = Totalmente de acuerdo</strong></p>
+  <div id="lk-D"></div>
+  <div class="val-msg" id="val-3"><i class="fas fa-exclamation-triangle"></i> Por favor responda todas las preguntas antes de continuar.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 4 — SECCIÓN E (6 ítems Likert)
+═══════════════════════════════════════════════ -->
+<div id="step-4" class="step" style="display:none">
+  <span class="sec-badge"><i class="fas fa-laptop-code"></i> Sección E &middot; Paso 5 de 6</span>
+  <h2 class="sec-title">Digitalización e innovación</h2>
+  <p class="sec-desc">Indique su nivel de acuerdo respecto a la adopción tecnológica en mantenimiento.<br>
+    <strong>1 = Totalmente en desacuerdo &nbsp;&middot;&nbsp; 5 = Totalmente de acuerdo</strong></p>
+  <div id="lk-E"></div>
+  <div class="val-msg" id="val-4"><i class="fas fa-exclamation-triangle"></i> Por favor responda todas las preguntas antes de continuar.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 5 — SECCIÓN F · DISPOSICIÓN COMERCIAL
+═══════════════════════════════════════════════ -->
+<div id="step-5" class="step" style="display:none">
+  <span class="sec-badge"><i class="fas fa-dollar-sign"></i> Sección F &middot; Paso 6 de 6</span>
+  <h2 class="sec-title">Disposición comercial</h2>
+  <p class="sec-desc">Responda sobre su disposición hacia servicios integrados de mantenimiento y consultoría.</p>
+
+  <div class="q-block" id="qb-F1">
+    <div class="q-num">F1 <span class="q-required">*</span></div>
+    <div class="q-text">¿Estaría su empresa dispuesta a contratar un servicio mensual integrado de mantenimiento preventivo + consultoría?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('F1','Sí, definitivamente',this)"><input type="radio" name="F1"><span class="ro-dot"></span>Sí, definitivamente</label>
+      <label class="ro-option" onclick="selectRO('F1','Probablemente sí',this)"><input type="radio" name="F1"><span class="ro-dot"></span>Probablemente sí</label>
+      <label class="ro-option" onclick="selectRO('F1','No lo sé aún',this)"><input type="radio" name="F1"><span class="ro-dot"></span>No lo sé aún</label>
+      <label class="ro-option" onclick="selectRO('F1','Probablemente no',this)"><input type="radio" name="F1"><span class="ro-dot"></span>Probablemente no</label>
+      <label class="ro-option" onclick="selectRO('F1','No',this)"><input type="radio" name="F1"><span class="ro-dot"></span>No</label>
+    </div>
+  </div>
+
+  <div class="q-block" id="qb-F2">
+    <div class="q-num">F2 <span class="q-required">*</span></div>
+    <div class="q-text">¿Cuál sería el rango de inversión mensual aceptable para su empresa en servicios de mantenimiento externo?</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('F2','Menos de $1M COP',this)"><input type="radio" name="F2"><span class="ro-dot"></span>Menos de $1.000.000 COP</label>
+      <label class="ro-option" onclick="selectRO('F2','$1M-$3M COP',this)"><input type="radio" name="F2"><span class="ro-dot"></span>$1.000.001 – $3.000.000 COP</label>
+      <label class="ro-option" onclick="selectRO('F2','$3M-$6M COP',this)"><input type="radio" name="F2"><span class="ro-dot"></span>$3.000.001 – $6.000.000 COP</label>
+      <label class="ro-option" onclick="selectRO('F2','$6M-$10M COP',this)"><input type="radio" name="F2"><span class="ro-dot"></span>$6.000.001 – $10.000.000 COP</label>
+      <label class="ro-option" onclick="selectRO('F2','Más de $10M COP',this)"><input type="radio" name="F2"><span class="ro-dot"></span>Más de $10.000.000 COP</label>
+    </div>
+  </div>
+
+  <!-- F3 y F4 — Likert -->
+  <div id="lk-F"></div>
+
+  <!-- F5 — Abierta opcional -->
+  <div class="field" style="margin-top:1.2rem">
+    <label><i class="fas fa-comment-dots"></i> F5. Comentarios adicionales o necesidades específicas <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+    <textarea id="inp-f5" placeholder="Comparta necesidades específicas, observaciones o sugerencias sobre mantenimiento industrial en su empresa…"></textarea>
+  </div>
+
+  <div class="val-msg" id="val-5"><i class="fas fa-exclamation-triangle"></i> Por favor responda las preguntas obligatorias antes de enviar.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">
+      <i class="fas fa-paper-plane"></i> Enviar encuesta
+    </button>
+  </div>
+</div><!-- /step-5 -->
+
+<!-- ═══════════════════════════════════════════════
+     PASO 6 — CONFIRMACIÓN
+═══════════════════════════════════════════════ -->
+<div id="step-6" class="step" style="display:none">
+  <div class="success-hero">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">Respuesta registrada</div>
+    <p class="success-sub">
+      Sus respuestas han sido guardadas de forma segura.<br>
+      Contribuyen al diagnóstico del sector de mantenimiento industrial en Bogotá.
+    </p>
+    <div class="success-id" id="success-id">Guardando...</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-box"><div class="info-val">6</div><div class="info-lbl">Secciones completadas</div></div>
+    <div class="info-box"><div class="info-val">35</div><div class="info-lbl">Ítems respondidos</div></div>
+    <div class="info-box"><div class="info-val">50</div><div class="info-lbl">Meta de respuestas</div></div>
+  </div>
+
+  <p style="font-size:.88rem;color:var(--muted);text-align:center;margin-bottom:1.5rem">
+    Investigación académica — Práctica en Emprendimiento &middot; Fundación Universitaria Iberoamericana &middot; Proyecto YUNCAR.
+  </p>
+
+  <div class="btn-row" style="justify-content:center;">
+    <a href="https://tower-ing.com" style="padding:.8rem 2rem;background:var(--navy);color:white;border-radius:8px;text-decoration:none;font-weight:600;">
+      <i class="fas fa-home"></i> Ir a tower-ing.com
+    </a>
+    <a href="../" style="padding:.8rem 1.6rem;background:transparent;color:var(--navy);border:2px solid var(--border);border-radius:8px;text-decoration:none;font-weight:600;">
+      <i class="fas fa-list"></i> Formularios
+    </a>
+  </div>
+</div><!-- /step-6 -->
+
+</div><!-- /card -->
+</div><!-- /card-wrap -->
+
+<div id="toast"></div>
+
+<footer>
+  <p>&copy; 2025 Towers Ing &middot; YUNCAR &middot; Práctica en Emprendimiento &middot; Fundación Universitaria Iberoamericana</p>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     FIREBASE — Realtime Database (mismo patrón del portal)
+════════════════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }               from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+    authDomain:        "tower-ing.firebaseapp.com",
+    databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+    projectId:         "tower-ing",
+    storageBucket:     "tower-ing.firebasestorage.app",
+    messagingSenderId: "440636238988",
+    appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    window.__saveEncuesta = async function(payload) {
+      const nuevaRef = push(ref(db, 'encuesta_yuncar'));
+      await set(nuevaRef, { ...payload, fechaRegistro: new Date().toLocaleString('es-CO') });
+      return nuevaRef.key;
+    };
+    console.log('Firebase OK — nodo: encuesta_yuncar');
+  } catch (e) {
+    console.warn('Firebase error:', e.message);
+    window.__saveEncuesta = null;
+  }
+</script>
+
+<!-- ════════════════════════════════════════════════════════
+     LÓGICA PRINCIPAL
+════════════════════════════════════════════════════════ -->
+<script>
+// ── Ítems Likert por sección ──────────────────────────────────────────────────
+const SECCIONES = {
+  B: [
+    { id:'B1',  text:'Nuestra empresa cuenta con un plan documentado de mantenimiento preventivo.' },
+    { id:'B2',  text:'Los equipos críticos de producción reciben mantenimiento dentro de los intervalos programados.' },
+    { id:'B3',  text:'Se registra sistemáticamente el historial de fallas y reparaciones de cada equipo.' },
+    { id:'B4',  text:'Usamos indicadores (KPIs) formales para medir la efectividad del mantenimiento (MTBF, MTTR, OEE).' },
+    { id:'B5',  text:'El presupuesto asignado al mantenimiento es suficiente para cubrir las necesidades reales.' },
+    { id:'B6',  text:'El personal de mantenimiento recibe capacitación técnica continua.' },
+    { id:'B7',  text:'El tiempo de respuesta ante fallas no programadas satisface las exigencias operacionales.' },
+    { id:'B8',  text:'Las paradas no planificadas generan pérdidas económicas significativas para la empresa.' },
+    { id:'B9',  text:'Contamos con repuestos críticos en inventario para minimizar tiempos de parada.' },
+    { id:'B10', text:'La gerencia considera el mantenimiento como un factor estratégico para la competitividad.' },
+  ],
+  C: [
+    { id:'C1', text:'Nuestra empresa contrata regularmente servicios externos de mantenimiento especializado.' },
+    { id:'C2', text:'Los proveedores externos de mantenimiento disponibles en Bogotá satisfacen nuestras necesidades técnicas.' },
+    { id:'C3', text:'La oferta de proveedores especializados para nuestro sector es suficiente.' },
+    { id:'C4', text:'Los costos de los servicios externos de mantenimiento son razonables frente al valor que entregan.' },
+    { id:'C5', text:'Hemos tenido dificultad para encontrar proveedores confiables de mantenimiento especializado.' },
+    { id:'C6', text:'La calidad de los trabajos realizados por proveedores externos cumple nuestros estándares.' },
+    { id:'C7', text:'Los proveedores externos respetan los tiempos acordados de entrega y ejecución.' },
+    { id:'C8', text:'Preferiríamos contar con un proveedor de mantenimiento de largo plazo antes que contratar de forma ocasional.' },
+  ],
+  D: [
+    { id:'D1', text:'Nuestra empresa requeriría apoyo externo para diseñar o mejorar su plan de mantenimiento.' },
+    { id:'D2', text:'Estaríamos dispuestos a contratar una consultoría para optimizar nuestros costos de mantenimiento.' },
+    { id:'D3', text:'Una consultoría externa podría ayudarnos a reducir las paradas no programadas.' },
+    { id:'D4', text:'Nos interesaría implementar una metodología de mantenimiento centrado en confiabilidad (RCM) con apoyo externo.' },
+    { id:'D5', text:'Consideraríamos contratar un diagnóstico técnico de nuestros equipos principales.' },
+    { id:'D6', text:'Existen brechas en el conocimiento técnico interno que justificarían contratar consultoría.' },
+    { id:'D7', text:'Una consultoría de mantenimiento con enfoque en productividad sería valiosa para nuestra organización.' },
+  ],
+  E: [
+    { id:'E1', text:'Usamos actualmente un software de gestión de mantenimiento (CMMS/GMAO).' },
+    { id:'E2', text:'Estaríamos dispuestos a adoptar una plataforma digital para programar y controlar el mantenimiento.' },
+    { id:'E3', text:'El uso de sensores e IoT para monitoreo de equipos es relevante para nuestra empresa.' },
+    { id:'E4', text:'La generación de reportes automáticos de mantenimiento mejoraría nuestra toma de decisiones.' },
+    { id:'E5', text:'Estaríamos dispuestos a invertir en soluciones tecnológicas de mantenimiento si demuestran retorno.' },
+    { id:'E6', text:'Nuestra empresa considera la digitalización del mantenimiento como prioridad estratégica.' },
+  ],
+  F: [
+    { id:'F3', text:'Un servicio que combine mantenimiento preventivo + diagnóstico técnico + consultoría sería diferenciador en el mercado.' },
+    { id:'F4', text:'Recomendaríamos a otras empresas un proveedor de mantenimiento que demuestre resultados medibles.' },
+  ],
+};
+
+// ── Estado ────────────────────────────────────────────────────────────────────
+let currentStep = 0;
+const TOTAL_STEPS = 7;
+const answers = {};
+
+// ── Render Likert ─────────────────────────────────────────────────────────────
+function buildLikert(sec) {
+  const container = document.getElementById('lk-' + sec);
+  if (!container) return;
+  SECCIONES[sec].forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    div.id = 'qb-' + q.id;
+    div.innerHTML =
+      '<div class="q-num">' + q.id + ' <span class="q-required">*</span></div>' +
+      '<div class="q-text">' + q.text + '</div>' +
+      '<div class="likert-wrap"><div class="likert-scale">' +
+        [1,2,3,4,5].map(v =>
+          '<label class="lk-opt" id="lk-' + q.id + '-' + v + '" onclick="selectLK(\'' + q.id + '\',' + v + ')">' +
+            '<input type="radio" name="' + q.id + '" value="' + v + '">' +
+            '<div class="lk-circle">' + v + '</div>' +
+          '</label>'
+        ).join('') +
+      '</div>' +
+      '<div class="likert-labels"><span>Totalmente en desacuerdo</span><span>Totalmente de acuerdo</span></div>' +
+      '</div>';
+    container.appendChild(div);
+  });
+}
+['B','C','D','E','F'].forEach(buildLikert);
+
+// ── Selectores ────────────────────────────────────────────────────────────────
+function selectRO(field, val, el) {
+  answers[field] = val;
+  el.closest('.ro-options').querySelectorAll('.ro-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  var block = document.getElementById('qb-' + field);
+  if (block) { block.classList.add('answered'); block.classList.remove('has-error'); }
+}
+
+function selectLK(qId, val) {
+  answers[qId] = val;
+  for (var v = 1; v <= 5; v++) {
+    var el = document.getElementById('lk-' + qId + '-' + v);
+    if (el) el.classList.remove('selected');
+  }
+  var sel = document.getElementById('lk-' + qId + '-' + val);
+  if (sel) sel.classList.add('selected');
+  var block = document.getElementById('qb-' + qId);
+  if (block) { block.classList.add('answered'); block.classList.remove('has-error'); }
+}
+
+// ── Navegación ────────────────────────────────────────────────────────────────
+var PROG_LABELS = [
+  'Paso 1 de 6 · Identificación',
+  'Paso 2 de 6 · Gestión del mantenimiento',
+  'Paso 3 de 6 · Servicios externos',
+  'Paso 4 de 6 · Necesidades de consultoría',
+  'Paso 5 de 6 · Digitalización',
+  'Paso 6 de 6 · Disposición comercial',
+  '✓ Respuesta registrada',
+];
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(function(s) { s.style.display = 'none'; });
+  document.getElementById('step-' + n).style.display = 'block';
+  var pct = Math.round((n / (TOTAL_STEPS - 1)) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = PROG_LABELS[n] || '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goNext() { if (!validateStep(currentStep)) return; currentStep++; showStep(currentStep); }
+function goPrev() { if (currentStep <= 0) return; currentStep--; showStep(currentStep); }
+
+// ── Validación ────────────────────────────────────────────────────────────────
+function validateStep(step) {
+  if (step === 0) return validateIDs();
+  if (step === 1) return validateLikert('B', 'val-1');
+  if (step === 2) return validateLikert('C', 'val-2');
+  if (step === 3) return validateLikert('D', 'val-3');
+  if (step === 4) return validateLikert('E', 'val-4');
+  if (step === 5) return validateF();
+  return true;
+}
+
+function validateIDs() {
+  var ok = true;
+  ['A1','A2','A3','A4'].forEach(function(c) {
+    var block = document.getElementById('qb-' + c);
+    if (!answers[c]) { block.classList.add('has-error'); ok = false; }
+  });
+  document.getElementById('val-0').classList.toggle('show', !ok);
+  if (!ok) scrollToFirstError();
+  return ok;
+}
+
+function validateLikert(sec, valId) {
+  var ok = true;
+  SECCIONES[sec].forEach(function(q) {
+    if (!answers[q.id]) { document.getElementById('qb-' + q.id).classList.add('has-error'); ok = false; }
+  });
+  document.getElementById(valId).classList.toggle('show', !ok);
+  if (!ok) scrollToFirstError();
+  return ok;
+}
+
+function validateF() {
+  var ok = true;
+  ['F1','F2'].forEach(function(f) {
+    if (!answers[f]) { document.getElementById('qb-' + f).classList.add('has-error'); ok = false; }
+  });
+  SECCIONES.F.forEach(function(q) {
+    if (!answers[q.id]) { document.getElementById('qb-' + q.id).classList.add('has-error'); ok = false; }
+  });
+  document.getElementById('val-5').classList.toggle('show', !ok);
+  if (!ok) scrollToFirstError();
+  return ok;
+}
+
+function scrollToFirstError() {
+  var first = document.querySelector('.has-error');
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ── Timeout helper ────────────────────────────────────────────────────────────
+function withTimeout(promise, ms) {
+  var timer = new Promise(function(_, reject) {
+    setTimeout(function() { reject(new Error('TIMEOUT')); }, ms);
+  });
+  return Promise.race([promise, timer]);
+}
+
+// ── Envío ─────────────────────────────────────────────────────────────────────
+async function submitForm() {
+  if (!validateStep(5)) return;
+
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span> Guardando...';
+
+  var payload = {
+    seccion_A: { cargo: answers.A1, sector: answers.A2, tamano: answers.A3, antiguedad: answers.A4 },
+    seccion_B: {},
+    seccion_C: {},
+    seccion_D: {},
+    seccion_E: {},
+    seccion_F: { F1: answers.F1, F2: answers.F2, F3: answers.F3, F4: answers.F4, F5: document.getElementById('inp-f5').value.trim() || null }
+  };
+  SECCIONES.B.forEach(function(q) { payload.seccion_B[q.id] = answers[q.id]; });
+  SECCIONES.C.forEach(function(q) { payload.seccion_C[q.id] = answers[q.id]; });
+  SECCIONES.D.forEach(function(q) { payload.seccion_D[q.id] = answers[q.id]; });
+  SECCIONES.E.forEach(function(q) { payload.seccion_E[q.id] = answers[q.id]; });
+
+  var refKey = null;
+  if (typeof window.__saveEncuesta === 'function') {
+    try {
+      refKey = await withTimeout(window.__saveEncuesta(payload), 6000);
+      showToast('✅ Respuesta guardada en la nube');
+    } catch (err) {
+      showToast(err.message === 'TIMEOUT'
+        ? '⚠ Timeout de red — respuesta calculada localmente'
+        : '⚠ Error al guardar: ' + err.message);
+    }
+  } else {
+    showToast('ℹ Firebase no conectado — configura la base de datos');
+  }
+
+  var idEl = document.getElementById('success-id');
+  idEl.textContent = refKey
+    ? 'ID de registro: ' + refKey.slice(0, 10).toUpperCase()
+    : 'Respuesta procesada localmente';
+
+  currentStep = 6;
+  showStep(6);
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+showStep(0);
+</script>
+
+</body>
+</html>

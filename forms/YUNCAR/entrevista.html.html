@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrevista YUNCAR · Mantenimiento Industrial · Towers Ing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --navy:    #1a2a6c;
+      --purple:  #9b59b6;
+      --purple2: #8e44ad;
+      --blue:    #3498db;
+      --green:   #27ae60;
+      --red:     #e74c3c;
+      --amber:   #e67e22;
+      --bg:      linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --white:   #ffffff;
+      --text:    #333;
+      --muted:   #7f8c8d;
+      --border:  #dde3ed;
+      --light:   #ecf0f1;
+      --shadow:  0 4px 15px rgba(0,0,0,.10);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy); padding: .85rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    }
+    .nav-logo { color: white; text-decoration: none; font-size: .95rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+    .nav-back  { color: rgba(255,255,255,.75); text-decoration: none; font-size: .82rem; transition: color .2s; }
+    .nav-back:hover { color: white; }
+
+    /* HERO */
+    .hero-strip {
+      background: var(--navy); color: white; text-align: center;
+      padding: 2.5rem 1rem 2rem; position: relative; overflow: hidden;
+    }
+    .hero-strip::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(155,89,182,.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-strip h1 { font-size: clamp(1.4rem,4vw,2rem); font-weight: 700; position: relative; }
+    .hero-strip p  { font-size: .92rem; opacity: .8; margin-top: .4rem; position: relative; }
+
+    /* PROGRESS */
+    .progress-outer { background: var(--navy); padding: 0 2rem 1.2rem; }
+    .progress-info  { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; color: rgba(255,255,255,.7); margin-bottom: .4rem; }
+    .progress-track { height: 6px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; }
+    .progress-fill  { height: 100%; border-radius: 99px; background: linear-gradient(to right, var(--purple), var(--blue)); transition: width .4s ease; }
+
+    /* CARD */
+    .card-wrap { max-width: 780px; margin: 2rem auto 3rem; padding: 0 1.2rem; }
+    .card      { background: white; border-radius: 14px; padding: 2rem 2.2rem; box-shadow: var(--shadow); }
+
+    /* SECTION HEADER */
+    .sec-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #f0ecf8; color: var(--purple);
+      font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: .3rem .85rem; border-radius: 99px; margin-bottom: 1rem;
+    }
+    .sec-title { font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: .3rem; }
+    .sec-desc  { font-size: .88rem; color: var(--muted); margin-bottom: 1.8rem; }
+
+    /* GUÍA BADGE — aparece en pasos 1-4 */
+    .guia-tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .25rem .75rem; border-radius: 6px;
+      font-size: .75rem; font-weight: 700; letter-spacing: .05em;
+      margin-bottom: 1.2rem;
+    }
+    .guia-tag.A { background: #eaf4fc; color: var(--blue);   border: 1px solid #b8d9f5; }
+    .guia-tag.B { background: #f0ecf8; color: var(--purple); border: 1px solid #d7c9ef; }
+    .guia-tag.C { background: #fef9ec; color: var(--amber);  border: 1px solid #fce5b8; }
+
+    /* FORM FIELDS */
+    .field { margin-bottom: 1.2rem; }
+    .field > label { display: block; font-size: .88rem; font-weight: 600; color: var(--navy); margin-bottom: .4rem; }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field select {
+      width: 100%; padding: .65rem 1rem;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: .92rem; color: var(--text);
+      transition: border-color .2s, box-shadow .2s; outline: none;
+      background: white;
+    }
+    .field input:focus,
+    .field select:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(155,89,182,.12); }
+    .field input.invalid,
+    .field select.invalid { border-color: var(--red); }
+    .field-error { display: none; font-size: .78rem; color: var(--red); margin-top: .3rem; }
+    .field.has-error input,
+    .field.has-error select { border-color: var(--red); }
+    .field.has-error .field-error { display: block; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+    /* RADIO OPTIONS */
+    .ro-options { display: flex; flex-direction: column; gap: .5rem; }
+    .ro-options.inline { flex-direction: row; flex-wrap: wrap; gap: .5rem; }
+    .ro-option {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .6rem .9rem; border-radius: 8px;
+      border: 2px solid var(--border); cursor: pointer;
+      font-size: .88rem; color: var(--text);
+      transition: all .2s; user-select: none;
+    }
+    .ro-option:hover { border-color: var(--purple); background: #f3e9f8; }
+    .ro-option input { display: none; }
+    .ro-option.selected { border-color: var(--navy); background: #eef2fb; color: var(--navy); font-weight: 500; }
+    .ro-dot {
+      min-width: 20px; height: 20px; border-radius: 50%;
+      background: var(--light); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all .2s; position: relative;
+    }
+    .ro-option.selected .ro-dot { background: var(--navy); border-color: var(--navy); }
+    .ro-option.selected .ro-dot::after {
+      content: ''; display: block; width: 8px; height: 8px;
+      border-radius: 50%; background: white;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+
+    /* QUESTION BLOCK */
+    .q-block {
+      background: #f8f9fc; border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem; transition: border-color .2s;
+    }
+    .q-block.answered  { border-color: #c9aff0; background: #f7f0fe; }
+    .q-block.has-error { border-color: var(--red); background: #fdf3f2; }
+    .q-num  { font-size: .7rem; font-weight: 700; color: var(--purple); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
+    .q-text { font-size: .95rem; color: var(--navy); font-weight: 500; margin-bottom: .6rem; line-height: 1.5; }
+    .q-probe {
+      font-size: .82rem; color: var(--muted); font-style: italic;
+      border-left: 3px solid var(--border); padding-left: .7rem;
+      margin-bottom: .75rem; line-height: 1.4;
+    }
+    .q-probe::before { content: '↳ '; }
+    .q-required { color: var(--red); margin-left: .2rem; }
+
+    /* TEXTAREA */
+    .q-block textarea {
+      width: 100%; padding: .65rem .9rem;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: .88rem; color: var(--text);
+      resize: vertical; min-height: 100px;
+      transition: border-color .2s, box-shadow .2s; outline: none;
+      background: white;
+    }
+    .q-block textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(155,89,182,.12); }
+    .q-block.answered textarea { background: white; }
+
+    /* CONSENTIMIENTO BOX */
+    .consent-box {
+      background: #f8f9fc; border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;
+    }
+    .consent-box p { font-size: .85rem; color: var(--text); line-height: 1.6; margin-bottom: .8rem; }
+    .consent-check { display: flex; align-items: flex-start; gap: .6rem; cursor: pointer; }
+    .consent-check input[type="checkbox"] { margin-top: 3px; accent-color: var(--purple); width: 16px; height: 16px; flex-shrink: 0; }
+    .consent-check span { font-size: .85rem; color: var(--navy); font-weight: 500; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
+
+    /* BUTTONS */
+    .btn-row { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.8rem; flex-wrap: wrap; }
+    .btn-prev {
+      padding: .75rem 1.8rem; background: transparent; color: var(--navy);
+      border: 2px solid var(--border); border-radius: 8px;
+      font-size: .92rem; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .btn-prev:hover { border-color: var(--navy); background: var(--light); }
+    .btn-next {
+      padding: .75rem 2rem; background: var(--purple); color: white;
+      border: none; border-radius: 8px; font-size: .92rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .2s;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .btn-next:hover { background: var(--purple2); transform: translateY(-1px); }
+    .btn-submit {
+      padding: .8rem 2.2rem; background: var(--green); color: white;
+      border: none; border-radius: 8px; font-size: .95rem; font-weight: 700;
+      cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: .6rem;
+    }
+    .btn-submit:hover  { background: #219a52; transform: translateY(-1px); }
+    .btn-submit:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+
+    /* VALIDATION */
+    .val-msg { display: none; padding: .65rem 1rem; background: #fdf3f2; border: 1px solid #f5c6c1; border-radius: 8px; color: var(--red); font-size: .83rem; margin-top: .8rem; align-items: center; gap: .5rem; }
+    .val-msg.show { display: flex; }
+
+    /* SUCCESS */
+    .success-hero { text-align: center; padding: 2rem 0; }
+    .success-icon  { font-size: 4rem; margin-bottom: .5rem; }
+    .success-title { font-size: 1.8rem; font-weight: 800; color: var(--green); margin-bottom: .4rem; }
+    .success-sub   { font-size: .95rem; color: var(--muted); }
+    .success-id    { display: inline-block; margin: 1.2rem auto .5rem; background: #f0ecf8; border: 1px solid #d7c9ef; border-radius: 8px; padding: .5rem 1.2rem; font-size: .82rem; color: var(--navy); font-weight: 600; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 1rem; margin: 1.8rem 0; }
+    .info-box  { background: #f8f9fc; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+    .info-val  { font-size: 1.6rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .info-lbl  { font-size: .72rem; color: var(--muted); margin-top: .3rem; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* SPINNER */
+    .spinner-inline { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* TOAST */
+    #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(60px); background: #333; color: white; padding: .7rem 1.5rem; border-radius: 8px; font-size: .85rem; z-index: 999; opacity: 0; transition: transform .3s, opacity .3s; pointer-events: none; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    footer { text-align: center; padding: 1.5rem; color: var(--muted); font-size: .82rem; }
+
+    @media (max-width: 520px) { .card { padding: 1.4rem 1.2rem; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="https://tower-ing.com" class="nav-logo"><i class="fas fa-wrench"></i> Towers Ing</a>
+  <a href="../" class="nav-back"><i class="fas fa-arrow-left"></i> Formularios</a>
+</nav>
+
+<div class="hero-strip">
+  <h1><i class="fas fa-comments"></i> Entrevista YUNCAR &middot; Mantenimiento Industrial</h1>
+  <p>Registro de entrevista semiestructurada &mdash; Bogotá D.C. &nbsp;&middot;&nbsp; n = 10 actores clave</p>
+</div>
+
+<div class="progress-outer">
+  <div class="progress-info">
+    <span id="prog-label">Paso 1 de 5 &middot; Ficha de registro</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card-wrap">
+<div class="card" id="main-card">
+
+<!-- ═══════════════════════════════════════════════
+     PASO 0 — FICHA DE REGISTRO
+═══════════════════════════════════════════════ -->
+<div id="step-0" class="step">
+  <span class="sec-badge"><i class="fas fa-clipboard-list"></i> Ficha de registro</span>
+  <h2 class="sec-title">Datos del entrevistado</h2>
+  <p class="sec-desc">
+    Complete la información antes de iniciar el registro de respuestas.
+    El perfil seleccionado determina la guía de preguntas que se aplicará.
+  </p>
+
+  <div class="field-row">
+    <div class="field" id="f-codigo">
+      <label><i class="fas fa-hashtag"></i> Código de entrevista <span style="color:var(--red)">*</span></label>
+      <input type="text" id="inp-codigo" placeholder="Ej. E-001" maxlength="10" />
+      <span class="field-error">Ingrese el código de entrevista (ej. E-001).</span>
+    </div>
+    <div class="field" id="f-fecha">
+      <label><i class="fas fa-calendar-alt"></i> Fecha de realización <span style="color:var(--red)">*</span></label>
+      <input type="date" id="inp-fecha" />
+      <span class="field-error">Seleccione la fecha de la entrevista.</span>
+    </div>
+  </div>
+
+  <!-- Perfil -->
+  <div class="q-block" id="qb-perfil">
+    <div class="q-num">Perfil del entrevistado <span class="q-required">*</span></div>
+    <div class="q-text">Seleccione el perfil — esto determina la Guía A, B o C que se aplicará.</div>
+    <div class="ro-options">
+      <label class="ro-option" onclick="selectRO('perfil','A',this)">
+        <input type="radio" name="perfil"><span class="ro-dot"></span>
+        <div><strong>Guía A &mdash; Directivo empresarial</strong><br><small style="color:var(--muted)">Gerente general, director de operaciones, gerente de planta o similar con decisión de compra.</small></div>
+      </label>
+      <label class="ro-option" onclick="selectRO('perfil','B',this)">
+        <input type="radio" name="perfil"><span class="ro-dot"></span>
+        <div><strong>Guía B &mdash; Prestador de mantenimiento independiente</strong><br><small style="color:var(--muted)">Técnico o ingeniero que presta servicios de mantenimiento como persona natural o microempresa.</small></div>
+      </label>
+      <label class="ro-option" onclick="selectRO('perfil','C',this)">
+        <input type="radio" name="perfil"><span class="ro-dot"></span>
+        <div><strong>Guía C &mdash; Consultor independiente</strong><br><small style="color:var(--muted)">Profesional con experiencia en consultoría de procesos industriales, gestión de activos o confiabilidad.</small></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Modalidad -->
+  <div class="q-block" id="qb-modalidad">
+    <div class="q-num">Modalidad <span class="q-required">*</span></div>
+    <div class="q-text">¿Cómo se realizó la entrevista?</div>
+    <div class="ro-options inline">
+      <label class="ro-option" onclick="selectRO('modalidad','Presencial',this)"><input type="radio" name="modalidad"><span class="ro-dot"></span>Presencial</label>
+      <label class="ro-option" onclick="selectRO('modalidad','Videollamada',this)"><input type="radio" name="modalidad"><span class="ro-dot"></span>Videollamada</label>
+      <label class="ro-option" onclick="selectRO('modalidad','Telefónica',this)"><input type="radio" name="modalidad"><span class="ro-dot"></span>Telefónica</label>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="field-row">
+    <div class="field" id="f-nombre">
+      <label><i class="fas fa-user"></i> Nombre del entrevistado <span style="color:var(--red)">*</span></label>
+      <input type="text" id="inp-nombre" placeholder="Nombre completo" />
+      <span class="field-error">Ingrese el nombre del entrevistado.</span>
+    </div>
+    <div class="field" id="f-cargo">
+      <label><i class="fas fa-briefcase"></i> Cargo / Empresa <span style="color:var(--red)">*</span></label>
+      <input type="text" id="inp-cargo" placeholder="Ej. Gerente de Planta / Acerías Paz del Río" />
+      <span class="field-error">Ingrese el cargo y empresa.</span>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field" id="f-experiencia">
+      <label><i class="fas fa-clock"></i> Años de experiencia <span style="color:var(--red)">*</span></label>
+      <select id="inp-experiencia">
+        <option value="">Seleccione...</option>
+        <option>Menos de 2 años</option>
+        <option>2–5 años</option>
+        <option>6–10 años</option>
+        <option>11–20 años</option>
+        <option>Más de 20 años</option>
+      </select>
+      <span class="field-error">Seleccione los años de experiencia.</span>
+    </div>
+    <div class="field" id="f-hora">
+      <label><i class="fas fa-stopwatch"></i> Duración estimada (minutos)</label>
+      <select id="inp-duracion">
+        <option value="">Seleccione...</option>
+        <option>Menos de 30</option>
+        <option>30–45</option>
+        <option>46–60</option>
+        <option>Más de 60</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Grabación -->
+  <div class="q-block" id="qb-grabacion">
+    <div class="q-num">Grabación autorizada <span class="q-required">*</span></div>
+    <div class="q-text">¿El entrevistado autorizó la grabación de audio de esta entrevista?</div>
+    <div class="ro-options inline">
+      <label class="ro-option" onclick="selectRO('grabacion','Sí',this)"><input type="radio" name="grabacion"><span class="ro-dot"></span>Sí, autorizada</label>
+      <label class="ro-option" onclick="selectRO('grabacion','No',this)"><input type="radio" name="grabacion"><span class="ro-dot"></span>No autorizada</label>
+    </div>
+  </div>
+
+  <!-- Consentimiento -->
+  <div class="consent-box">
+    <p><i class="fas fa-shield-alt" style="color:var(--purple)"></i> <strong>Consentimiento informado</strong><br>
+    Al continuar, confirma que el entrevistado fue informado sobre el propósito académico de esta investigación, que sus respuestas serán tratadas de forma confidencial, y que participó voluntariamente en esta entrevista.</p>
+    <label class="consent-check" id="consent-label">
+      <input type="checkbox" id="chk-consent" onchange="checkConsent()" />
+      <span>Confirmo que se obtuvo el consentimiento informado del entrevistado.</span>
+    </label>
+  </div>
+
+  <div class="val-msg" id="val-0"><i class="fas fa-exclamation-triangle"></i> Complete todos los campos obligatorios y confirme el consentimiento informado.</div>
+  <div class="btn-row">
+    <button class="btn-next" onclick="goNext()">Iniciar registro <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div><!-- /step-0 -->
+
+<!-- ═══════════════════════════════════════════════
+     PASO 1 — BLOQUE 1 (P1–P2)
+═══════════════════════════════════════════════ -->
+<div id="step-1" class="step" style="display:none">
+  <div id="guia-tag-1" class="guia-tag"></div>
+  <span class="sec-badge"><i class="fas fa-search"></i> Bloque 1 &middot; Paso 2 de 5</span>
+  <h2 class="sec-title" id="bloque1-titulo"></h2>
+  <p class="sec-desc">Registre las respuestas del entrevistado. Las preguntas de sondeo (&#8618;) son orientadoras.</p>
+  <div id="preguntas-bloque1"></div>
+  <div class="val-msg" id="val-1"><i class="fas fa-exclamation-triangle"></i> Por favor registre la respuesta de todas las preguntas obligatorias.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 2 — BLOQUE 2 (P3–P5)
+═══════════════════════════════════════════════ -->
+<div id="step-2" class="step" style="display:none">
+  <div id="guia-tag-2" class="guia-tag"></div>
+  <span class="sec-badge"><i class="fas fa-exclamation-circle"></i> Bloque 2 &middot; Paso 3 de 5</span>
+  <h2 class="sec-title" id="bloque2-titulo"></h2>
+  <p class="sec-desc">Registre las respuestas del entrevistado. Las preguntas de sondeo (&#8618;) son orientadoras.</p>
+  <div id="preguntas-bloque2"></div>
+  <div class="val-msg" id="val-2"><i class="fas fa-exclamation-triangle"></i> Por favor registre la respuesta de todas las preguntas obligatorias.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 3 — BLOQUE 3 (P6–P8)
+═══════════════════════════════════════════════ -->
+<div id="step-3" class="step" style="display:none">
+  <div id="guia-tag-3" class="guia-tag"></div>
+  <span class="sec-badge"><i class="fas fa-handshake"></i> Bloque 3 &middot; Paso 4 de 5</span>
+  <h2 class="sec-title" id="bloque3-titulo"></h2>
+  <p class="sec-desc">Registre las respuestas del entrevistado. Las preguntas de sondeo (&#8618;) son orientadoras.</p>
+  <div id="preguntas-bloque3"></div>
+  <div class="val-msg" id="val-3"><i class="fas fa-exclamation-triangle"></i> Por favor registre la respuesta de todas las preguntas obligatorias.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-next" onclick="goNext()">Siguiente <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PASO 4 — BLOQUE 4 (P9–P10) + OBSERVACIONES
+═══════════════════════════════════════════════ -->
+<div id="step-4" class="step" style="display:none">
+  <div id="guia-tag-4" class="guia-tag"></div>
+  <span class="sec-badge"><i class="fas fa-flag-checkered"></i> Bloque 4 &middot; Paso 5 de 5</span>
+  <h2 class="sec-title">Cierre</h2>
+  <p class="sec-desc">Preguntas finales y observaciones del entrevistador.</p>
+  <div id="preguntas-bloque4"></div>
+
+  <hr class="divider" />
+
+  <div class="field">
+    <label><i class="fas fa-sticky-note"></i> Observaciones del entrevistador <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+    <textarea id="inp-observaciones" placeholder="Contexto adicional, lenguaje no verbal, condiciones de la entrevista, aspectos relevantes no capturados en las respuestas…" style="width:100%;padding:.65rem .9rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.88rem;color:var(--text);resize:vertical;min-height:90px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+  </div>
+
+  <div class="val-msg" id="val-4"><i class="fas fa-exclamation-triangle"></i> Por favor registre la respuesta de todas las preguntas obligatorias.</div>
+  <div class="btn-row">
+    <button class="btn-prev" onclick="goPrev()"><i class="fas fa-arrow-left"></i> Anterior</button>
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">
+      <i class="fas fa-save"></i> Guardar entrevista
+    </button>
+  </div>
+</div><!-- /step-4 -->
+
+<!-- ═══════════════════════════════════════════════
+     PASO 5 — CONFIRMACIÓN
+═══════════════════════════════════════════════ -->
+<div id="step-5" class="step" style="display:none">
+  <div class="success-hero">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">Entrevista registrada</div>
+    <p class="success-sub">
+      El registro ha sido guardado en la base de datos.<br>
+      Código: <strong id="success-codigo">—</strong> &nbsp;&middot;&nbsp; Guía: <strong id="success-guia">—</strong>
+    </p>
+    <div class="success-id" id="success-id">Guardando...</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-box"><div class="info-val">10</div><div class="info-lbl">Preguntas registradas</div></div>
+    <div class="info-box"><div class="info-val" id="success-perfil-icon">—</div><div class="info-lbl">Perfil entrevistado</div></div>
+    <div class="info-box"><div class="info-val">10</div><div class="info-lbl">Meta de entrevistas</div></div>
+  </div>
+
+  <p style="font-size:.88rem;color:var(--muted);text-align:center;margin-bottom:1.5rem">
+    Investigación académica &mdash; Práctica en Emprendimiento &middot; Fundación Universitaria Iberoamericana &middot; Proyecto YUNCAR.
+  </p>
+
+  <div class="btn-row" style="justify-content:center;">
+    <button onclick="resetForm()" style="padding:.8rem 2rem;background:var(--purple);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.92rem;">
+      <i class="fas fa-plus"></i> Registrar otra entrevista
+    </button>
+    <a href="https://tower-ing.com" style="padding:.8rem 1.6rem;background:transparent;color:var(--navy);border:2px solid var(--border);border-radius:8px;text-decoration:none;font-weight:600;">
+      <i class="fas fa-home"></i> Ir a tower-ing.com
+    </a>
+  </div>
+</div><!-- /step-5 -->
+
+</div><!-- /card -->
+</div><!-- /card-wrap -->
+
+<div id="toast"></div>
+
+<footer>
+  <p>&copy; 2025 Towers Ing &middot; YUNCAR &middot; Entrevistas Semiestructuradas &middot; Fundación Universitaria Iberoamericana</p>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     FIREBASE — Realtime Database
+════════════════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }               from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+    authDomain:        "tower-ing.firebaseapp.com",
+    databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+    projectId:         "tower-ing",
+    storageBucket:     "tower-ing.firebasestorage.app",
+    messagingSenderId: "440636238988",
+    appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+    window.__saveEntrevista = async function(payload) {
+      const r = push(ref(db, 'entrevistas_yuncar'));
+      await set(r, { ...payload, fechaRegistro: new Date().toLocaleString('es-CO') });
+      return r.key;
+    };
+    console.log('Firebase OK — nodo: entrevistas_yuncar');
+  } catch(e) {
+    console.warn('Firebase error:', e.message);
+    window.__saveEntrevista = null;
+  }
+</script>
+
+<!-- ════════════════════════════════════════════════════════
+     LÓGICA PRINCIPAL
+════════════════════════════════════════════════════════ -->
+<script>
+// ══════════════════════════════════════════════════════════
+// DEFINICIÓN DE GUÍAS
+// ══════════════════════════════════════════════════════════
+var GUIAS = {
+
+  A: {
+    label: 'Guía A — Directivos empresariales',
+    color: 'A',
+    bloques: [
+      {
+        titulo: 'Bloque 1 — Caracterización organizacional',
+        preguntas: [
+          { id:'A_P1', num:'P1', texto:'¿Podría describirme brevemente la estructura del área de mantenimiento en su empresa? ¿Cuántas personas la conforman y cómo está organizada?' },
+          { id:'A_P2', num:'P2', texto:'¿Cuál es el enfoque actual del mantenimiento en su empresa: correctivo, preventivo, predictivo o una combinación?', sondeo:'¿Hay una razón estratégica detrás de esa elección?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 2 — Problemáticas y necesidades',
+        preguntas: [
+          { id:'A_P3', num:'P3', texto:'¿Cuáles son los principales desafíos que enfrenta su área de mantenimiento en este momento?' },
+          { id:'A_P4', num:'P4', texto:'¿Con qué frecuencia ocurren paradas no programadas y cuál es el impacto estimado para la operación?', sondeo:'¿Tienen un mecanismo para cuantificar ese impacto?' },
+          { id:'A_P5', num:'P5', texto:'¿Han recurrido a proveedores externos de mantenimiento? ¿Qué los ha llevado a hacerlo y cuál ha sido la experiencia?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 3 — Apertura a consultoría y servicios integrados',
+        preguntas: [
+          { id:'A_P6', num:'P6', texto:'Si una empresa les ofreciera un diagnóstico técnico de su sistema de mantenimiento y un plan de mejora, ¿lo considerarían una propuesta de valor real?', sondeo:'¿Qué debería incluir para ser creíble?' },
+          { id:'A_P7', num:'P7', texto:'¿Qué factores son determinantes para usted al momento de seleccionar un proveedor de mantenimiento o consultoría?' },
+          { id:'A_P8', num:'P8', texto:'¿Cuál sería su disposición a pagar por un servicio mensual que combine mantenimiento preventivo + consultoría de mejora continua?', sondeo:'¿Cuál sería el esquema de contratación preferido?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 4 — Cierre',
+        preguntas: [
+          { id:'A_P9',  num:'P9',  texto:'¿Hay algo que el mercado de servicios de mantenimiento en Bogotá no esté ofreciendo actualmente y que su empresa necesite?' },
+          { id:'A_P10', num:'P10', texto:'¿Tiene algún comentario adicional que quiera compartir sobre el tema?' },
+        ]
+      }
+    ]
+  },
+
+  B: {
+    label: 'Guía B — Prestadores de mantenimiento independiente',
+    color: 'B',
+    bloques: [
+      {
+        titulo: 'Bloque 1 — Perfil del negocio',
+        preguntas: [
+          { id:'B_P1', num:'P1', texto:'¿Cómo describiría los servicios de mantenimiento que presta actualmente? ¿En qué sectores tiene mayor presencia?' },
+          { id:'B_P2', num:'P2', texto:'¿Cuántos clientes tiene actualmente y cómo los consigue? ¿Cuál es su canal principal de adquisición?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 2 — Competencia y mercado',
+        preguntas: [
+          { id:'B_P3', num:'P3', texto:'¿Cómo percibe la competencia en el mercado de mantenimiento independiente en Bogotá? ¿Qué lo diferencia de otros prestadores?' },
+          { id:'B_P4', num:'P4', texto:'¿Cuáles son las principales barreras que ha enfrentado para crecer o formalizar su negocio?' },
+          { id:'B_P5', num:'P5', texto:'¿Qué tipo de mantenimiento demandan más sus clientes y en qué áreas percibe mayor déficit de oferta especializada?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 3 — Colaboración e integración',
+        preguntas: [
+          { id:'B_P6', num:'P6', texto:'¿Estaría abierto a trabajar bajo una plataforma o empresa integradora que le asigne clientes a cambio de cumplir estándares de calidad?', sondeo:'¿Qué condiciones necesitaría para aceptar ese esquema?' },
+          { id:'B_P7', num:'P7', texto:'¿Ha considerado formalizarse o asociarse con otros prestadores para ganar contratos más grandes? ¿Qué lo ha frenado?' },
+          { id:'B_P8', num:'P8', texto:'¿Cómo cree que la tecnología (apps, CMMS, reportes digitales) podría mejorar su operación o hacerlo más competitivo?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 4 — Cierre',
+        preguntas: [
+          { id:'B_P9',  num:'P9',  texto:'¿Qué le gustaría que existiera en el ecosistema de mantenimiento en Bogotá que actualmente no existe?' },
+          { id:'B_P10', num:'P10', texto:'¿Algún comentario adicional que quiera compartir?' },
+        ]
+      }
+    ]
+  },
+
+  C: {
+    label: 'Guía C — Consultores independientes',
+    color: 'C',
+    bloques: [
+      {
+        titulo: 'Bloque 1 — Experiencia y enfoque',
+        preguntas: [
+          { id:'C_P1', num:'P1', texto:'¿Cuál es su área de especialización dentro de la consultoría industrial y qué tipo de proyectos ha liderado en los últimos años?' },
+          { id:'C_P2', num:'P2', texto:'¿Cuál es el perfil típico de las empresas que contratan sus servicios de consultoría en mantenimiento?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 2 — Diagnóstico del mercado',
+        preguntas: [
+          { id:'C_P3', num:'P3', texto:'En su experiencia, ¿cuáles son las principales brechas de gestión que observa en los departamentos de mantenimiento de las empresas bogotanas?' },
+          { id:'C_P4', num:'P4', texto:'¿Considera que las medianas empresas industriales en Bogotá tienen cultura de inversión en consultoría de mantenimiento? ¿Por qué?' },
+          { id:'C_P5', num:'P5', texto:'¿Cuáles son las metodologías de mantenimiento con mayor demanda actualmente? (RCM, TPM, lean maintenance, predictivo, etc.)' },
+        ]
+      },
+      {
+        titulo: 'Bloque 3 — Modelo de negocio y viabilidad',
+        preguntas: [
+          { id:'C_P6', num:'P6', texto:'¿Cómo estructura sus propuestas de consultoría en términos de alcance, duración y esquema de pago?', sondeo:'¿Qué modelos de pago han funcionado mejor en su experiencia?' },
+          { id:'C_P7', num:'P7', texto:'¿Cree que existe viabilidad comercial para una empresa que integre servicios de mantenimiento industrial con consultoría de mejora continua en el mercado bogotano?', sondeo:'¿Qué condiciones lo harían viable o inviable?' },
+          { id:'C_P8', num:'P8', texto:'¿Qué recomendaría a un emprendedor que quiera crear una empresa de este tipo para diferenciarse en el mercado?' },
+        ]
+      },
+      {
+        titulo: 'Bloque 4 — Cierre',
+        preguntas: [
+          { id:'C_P9',  num:'P9',  texto:'¿Hacia dónde ve evolucionando la consultoría e industria del mantenimiento en Colombia en los próximos 5 años?' },
+          { id:'C_P10', num:'P10', texto:'¿Algún aspecto adicional que considere relevante compartir?' },
+        ]
+      }
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════
+var currentStep = 0;
+var TOTAL_STEPS = 6;
+var answers = {};
+var guiaActual = null;
+var bloquesConstruidos = false;
+
+// ══════════════════════════════════════════════════════════
+// SELECTORES
+// ══════════════════════════════════════════════════════════
+function selectRO(field, val, el) {
+  answers[field] = val;
+  el.closest('.ro-options').querySelectorAll('.ro-option').forEach(function(o) { o.classList.remove('selected'); });
+  el.classList.add('selected');
+  var block = document.getElementById('qb-' + field);
+  if (block) { block.classList.add('answered'); block.classList.remove('has-error'); }
+}
+
+function checkConsent() {
+  // solo visual — se valida en validateStep(0)
+}
+
+// ══════════════════════════════════════════════════════════
+// BUILD PREGUNTAS POR GUÍA
+// ══════════════════════════════════════════════════════════
+function buildPreguntas(guia) {
+  if (bloquesConstruidos && guiaActual === guia) return;
+
+  guiaActual = guia;
+  bloquesConstruidos = true;
+  var g = GUIAS[guia];
+
+  // limpiar respuestas de pasos anteriores de guías
+  ['A','B','C'].forEach(function(gx) {
+    if (gx !== guia) {
+      GUIAS[gx].bloques.forEach(function(b) {
+        b.preguntas.forEach(function(p) { delete answers[p.id]; });
+      });
+    }
+  });
+
+  // Render guia tags
+  ['1','2','3','4'].forEach(function(n) {
+    var el = document.getElementById('guia-tag-' + n);
+    if (el) { el.className = 'guia-tag ' + guia; el.innerHTML = '<i class="fas fa-tag"></i> ' + g.label; }
+  });
+
+  // Render títulos de bloque
+  document.getElementById('bloque1-titulo').textContent = g.bloques[0].titulo;
+  document.getElementById('bloque2-titulo').textContent = g.bloques[1].titulo;
+  document.getElementById('bloque3-titulo').textContent = g.bloques[2].titulo;
+
+  // Render preguntas por bloque
+  renderBloque('preguntas-bloque1', g.bloques[0].preguntas);
+  renderBloque('preguntas-bloque2', g.bloques[1].preguntas);
+  renderBloque('preguntas-bloque3', g.bloques[2].preguntas);
+  renderBloque('preguntas-bloque4', g.bloques[3].preguntas);
+}
+
+function renderBloque(containerId, preguntas) {
+  var container = document.getElementById(containerId);
+  container.innerHTML = '';
+  preguntas.forEach(function(p) {
+    var div = document.createElement('div');
+    div.className = 'q-block';
+    div.id = 'qb-' + p.id;
+
+    var html = '<div class="q-num">' + p.num + ' <span class="q-required">*</span></div>' +
+               '<div class="q-text">' + p.texto + '</div>';
+    if (p.sondeo) {
+      html += '<div class="q-probe">' + p.sondeo + '</div>';
+    }
+    html += '<textarea id="ta-' + p.id + '" placeholder="Registre la respuesta del entrevistado…" ' +
+            'oninput="markAnswered(\'' + p.id + '\')" ' +
+            'onfocus="this.parentElement.style.borderColor=\'var(--purple)\'" ' +
+            'onblur="this.parentElement.style.borderColor=answers[\'' + p.id + '\'] ? \'#c9aff0\' : \'var(--border)\'"></textarea>';
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+function markAnswered(id) {
+  var ta = document.getElementById('ta-' + id);
+  var block = document.getElementById('qb-' + id);
+  if (!block || !ta) return;
+  var val = ta.value.trim();
+  answers[id] = val || null;
+  block.classList.toggle('answered', val.length > 0);
+  if (val.length > 0) block.classList.remove('has-error');
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════════════════════
+var PROG_LABELS = [
+  'Paso 1 de 5 · Ficha de registro',
+  'Paso 2 de 5 · Bloque 1',
+  'Paso 3 de 5 · Bloque 2',
+  'Paso 4 de 5 · Bloque 3',
+  'Paso 5 de 5 · Bloque 4 — Cierre',
+  '✓ Entrevista registrada',
+];
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(function(s) { s.style.display = 'none'; });
+  document.getElementById('step-' + n).style.display = 'block';
+  var pct = Math.round((n / (TOTAL_STEPS - 1)) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = PROG_LABELS[n] || '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goNext() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep === 0 && answers['perfil']) {
+    buildPreguntas(answers['perfil']);
+  }
+  currentStep++;
+  showStep(currentStep);
+}
+
+function goPrev() {
+  if (currentStep <= 0) return;
+  currentStep--;
+  showStep(currentStep);
+}
+
+// ══════════════════════════════════════════════════════════
+// VALIDACIÓN
+// ══════════════════════════════════════════════════════════
+function validateStep(step) {
+  if (step === 0) return validateFicha();
+  if (step === 1) return validateBloque(GUIAS[guiaActual].bloques[0].preguntas, 'val-1');
+  if (step === 2) return validateBloque(GUIAS[guiaActual].bloques[1].preguntas, 'val-2');
+  if (step === 3) return validateBloque(GUIAS[guiaActual].bloques[2].preguntas, 'val-3');
+  if (step === 4) return validateBloque(GUIAS[guiaActual].bloques[3].preguntas, 'val-4');
+  return true;
+}
+
+function validateFicha() {
+  var ok = true;
+
+  // Campos de texto
+  var campos = [
+    { id:'f-codigo',      inp:'inp-codigo' },
+    { id:'f-fecha',       inp:'inp-fecha' },
+    { id:'f-nombre',      inp:'inp-nombre' },
+    { id:'f-cargo',       inp:'inp-cargo' },
+    { id:'f-experiencia', inp:'inp-experiencia' },
+  ];
+  campos.forEach(function(c) {
+    var field = document.getElementById(c.id);
+    var val   = document.getElementById(c.inp).value.trim();
+    field.classList.toggle('has-error', !val);
+    if (!val) ok = false;
+  });
+
+  // Radios
+  ['perfil','modalidad','grabacion'].forEach(function(f) {
+    var block = document.getElementById('qb-' + f);
+    if (!answers[f]) { block.classList.add('has-error'); ok = false; }
+  });
+
+  // Consentimiento
+  if (!document.getElementById('chk-consent').checked) {
+    ok = false;
+  }
+
+  document.getElementById('val-0').classList.toggle('show', !ok);
+  if (!ok) scrollToFirstError();
+  return ok;
+}
+
+function validateBloque(preguntas, valId) {
+  var ok = true;
+  preguntas.forEach(function(p) {
+    var ta = document.getElementById('ta-' + p.id);
+    var block = document.getElementById('qb-' + p.id);
+    if (!ta || !ta.value.trim()) {
+      if (block) block.classList.add('has-error');
+      ok = false;
+    }
+  });
+  document.getElementById(valId).classList.toggle('show', !ok);
+  if (!ok) scrollToFirstError();
+  return ok;
+}
+
+function scrollToFirstError() {
+  var first = document.querySelector('.has-error');
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ══════════════════════════════════════════════════════════
+// TIMEOUT
+// ══════════════════════════════════════════════════════════
+function withTimeout(promise, ms) {
+  var timer = new Promise(function(_, reject) {
+    setTimeout(function() { reject(new Error('TIMEOUT')); }, ms);
+  });
+  return Promise.race([promise, timer]);
+}
+
+// ══════════════════════════════════════════════════════════
+// ENVÍO
+// ══════════════════════════════════════════════════════════
+async function submitForm() {
+  if (!validateStep(4)) return;
+
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span> Guardando...';
+
+  var g = GUIAS[guiaActual];
+
+  // Recolectar respuestas de texto
+  var respuestas = {};
+  g.bloques.forEach(function(bloque) {
+    bloque.preguntas.forEach(function(p) {
+      var ta = document.getElementById('ta-' + p.id);
+      respuestas[p.id] = ta ? ta.value.trim() : '';
+    });
+  });
+
+  var payload = {
+    ficha: {
+      codigo:      document.getElementById('inp-codigo').value.trim(),
+      guia:        guiaActual,
+      perfil:      g.label,
+      fecha:       document.getElementById('inp-fecha').value,
+      modalidad:   answers['modalidad'],
+      nombre:      document.getElementById('inp-nombre').value.trim(),
+      cargo:       document.getElementById('inp-cargo').value.trim(),
+      experiencia: document.getElementById('inp-experiencia').value,
+      duracion:    document.getElementById('inp-duracion').value,
+      grabacion:   answers['grabacion'],
+    },
+    respuestas:     respuestas,
+    observaciones:  document.getElementById('inp-observaciones').value.trim() || null,
+  };
+
+  var refKey = null;
+  if (typeof window.__saveEntrevista === 'function') {
+    try {
+      refKey = await withTimeout(window.__saveEntrevista(payload), 6000);
+      showToast('✅ Entrevista guardada en la nube');
+    } catch(err) {
+      showToast(err.message === 'TIMEOUT'
+        ? '⚠ Timeout de red — respuesta procesada localmente'
+        : '⚠ Error al guardar: ' + err.message);
+    }
+  } else {
+    showToast('ℹ Firebase no conectado');
+  }
+
+  // Pantalla de éxito
+  document.getElementById('success-codigo').textContent = payload.ficha.codigo;
+  document.getElementById('success-guia').textContent   = g.label;
+  document.getElementById('success-perfil-icon').textContent = guiaActual;
+  document.getElementById('success-id').textContent = refKey
+    ? 'ID de registro: ' + refKey.slice(0,10).toUpperCase()
+    : 'Procesado localmente';
+
+  currentStep = 5;
+  showStep(5);
+}
+
+// ══════════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════════
+function resetForm() {
+  answers = {};
+  guiaActual = null;
+  bloquesConstruidos = false;
+  currentStep = 0;
+
+  // Limpiar campos de texto
+  ['inp-codigo','inp-fecha','inp-nombre','inp-cargo'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('inp-experiencia').value = '';
+  document.getElementById('inp-duracion').value = '';
+  document.getElementById('inp-observaciones').value = '';
+  document.getElementById('chk-consent').checked = false;
+
+  // Limpiar radios visuales
+  document.querySelectorAll('.ro-option.selected').forEach(function(o) { o.classList.remove('selected'); });
+  document.querySelectorAll('.q-block.answered').forEach(function(b) { b.classList.remove('answered'); });
+  document.querySelectorAll('.has-error').forEach(function(b) { b.classList.remove('has-error'); });
+  document.querySelectorAll('.val-msg.show').forEach(function(m) { m.classList.remove('show'); });
+
+  // Limpiar contenedores de preguntas
+  ['preguntas-bloque1','preguntas-bloque2','preguntas-bloque3','preguntas-bloque4'].forEach(function(id) {
+    document.getElementById(id).innerHTML = '';
+  });
+
+  document.getElementById('btn-submit').disabled = false;
+  document.getElementById('btn-submit').innerHTML = '<i class="fas fa-save"></i> Guardar entrevista';
+
+  showStep(0);
+}
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+showStep(0);
+</script>
+
+</body>
+</html>
