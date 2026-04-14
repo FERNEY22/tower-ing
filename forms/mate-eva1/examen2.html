@@ -320,6 +320,7 @@ html, body {
 
 <script>
 // ── FIREBASE ─────────────────────────────────────────────────────────────────
+// Reemplaza los valores con tu configuración real de Firebase Console
 const firebaseConfig = {
   apiKey:            "TU_API_KEY",
   authDomain:        "TU_AUTH_DOMAIN",
@@ -329,9 +330,14 @@ const firebaseConfig = {
   messagingSenderId: "TU_MESSAGING_SENDER_ID",
   appId:             "TU_APP_ID"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+let db = null;
 const FORM_KEY = 'evaluaciones/matematicasBasicas';
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+} catch(e) {
+  console.warn('Firebase no inicializado — el formulario funciona pero no guardará datos.', e.message);
+}
 
 // ── KATEX ─────────────────────────────────────────────────────────────────────
 function rk(el) {
@@ -589,13 +595,17 @@ function finishEval() {
   document.getElementById('res-msg').textContent =
     msgs.find(([m]) => score >= m)?.[1] ?? msgs[3][1];
 
-  db.ref(FORM_KEY).push({
-    nombre, documento, puntaje: score, sobre: 10,
-    timestamp: new Date().toISOString(),
-    respuestas, detalles
-  })
-  .then(() => document.getElementById('status-msg').textContent = '✔ Resultado guardado correctamente.')
-  .catch(e  => document.getElementById('status-msg').textContent = '⚠ Error al guardar: ' + e.message);
+  if (db) {
+    db.ref(FORM_KEY).push({
+      nombre, documento, puntaje: score, sobre: 10,
+      timestamp: new Date().toISOString(),
+      respuestas, detalles
+    })
+    .then(() => document.getElementById('status-msg').textContent = '✔ Resultado guardado correctamente.')
+    .catch(e  => document.getElementById('status-msg').textContent = '⚠ Error al guardar: ' + e.message);
+  } else {
+    document.getElementById('status-msg').textContent = '⚠ Configura el firebaseConfig para guardar resultados.';
+  }
 }
 
 // ── NORMALIZAR fill ────────────────────────────────────────────────────────────
