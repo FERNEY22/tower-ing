@@ -183,6 +183,8 @@
     <option value="geo">Diagnóstico · Tecnologías Geoespaciales</option>
     <option value="ac">Diagnóstico · Acción Climática</option>
     <option value="mate">Evaluación Express · Matemáticas Básicas</option>
+    <option value="yuncarEnc">YUNCAR · Encuesta Mantenimiento Industrial</option>
+    <option value="yuncarEnt">YUNCAR · Entrevistas Actores Clave</option>
 
   </select>
   <span class="badge-count" id="badge-count"></span>
@@ -424,7 +426,8 @@
     </div>
   </div>
 
-<!-- EVALUACIÓN EXPRESS · MATEMÁTICAS BÁSICAS -->
+
+  <!-- EVALUACIÓN EXPRESS · MATEMÁTICAS BÁSICAS -->
   <div class="vista" id="vista-mate">
     <div class="kpi-grid">
       <div class="kpi-card"><i class="fas fa-users"></i><h3 id="m-total">0</h3><p>Total estudiantes</p></div>
@@ -434,19 +437,12 @@
       <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="m-riesgo">0</h3><p>🔴 En riesgo ≤ 3</p></div>
     </div>
     <div class="charts-row">
-      <div class="seccion">
-        <h2><i class="fas fa-chart-pie"></i> Distribución de desempeño</h2>
-        <div class="chart-wrap"><canvas id="chart-m-dist"></canvas></div>
-      </div>
-      <div class="seccion">
-        <h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2>
-        <div class="chart-wrap"><canvas id="chart-m-hist"></canvas></div>
-      </div>
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución de desempeño</h2><div class="chart-wrap"><canvas id="chart-m-dist"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2><div class="chart-wrap"><canvas id="chart-m-hist"></canvas></div></div>
     </div>
     <div class="seccion">
       <h2><i class="fas fa-layer-group"></i> % de acierto por pregunta</h2>
-      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">
-        Barras rojas = menos del 50% respondió correctamente → tema a reforzar.
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Barras rojas = menos del 50% respondió correctamente → tema a reforzar.
         <span style="background:#dbeafe;padding:2px 8px;border-radius:4px;font-size:.78rem;color:#1e40af">SM = Selección múltiple</span>
         <span style="background:#fef3c7;padding:2px 8px;border-radius:4px;font-size:.78rem;color:#92400e;margin-left:4px">RA = Respuesta abierta</span>
       </p>
@@ -454,21 +450,54 @@
     </div>
     <div class="seccion">
       <h2><i class="fas fa-list"></i> Detalle por estudiante</h2>
-      <div style="overflow-x:auto">
-        <table>
-          <thead><tr>
-            <th>Nombre</th>
-            <th style="text-align:center">Documento</th>
-            <th style="text-align:center">Puntaje / 10</th>
-            <th style="text-align:center">%</th>
-            <th style="text-align:center">Nivel</th>
-            <th>Fecha</th>
-          </tr></thead>
-          <tbody id="m-tabla"></tbody>
-        </table>
-      </div>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Nombre</th><th style="text-align:center">Documento</th><th style="text-align:center">Puntaje / 10</th><th style="text-align:center">%</th><th style="text-align:center">Nivel</th><th>Fecha</th></tr></thead>
+        <tbody id="m-tabla"></tbody>
+      </table></div>
     </div>
-  </div>  
+  </div>
+
+  <!-- YUNCAR · ENCUESTA -->
+  <div class="vista" id="vista-yuncarEnc">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-industry"></i><h3 id="ye-total">0</h3><p>Total respuestas</p></div>
+      <div class="kpi-card"><i class="fas fa-chart-line" style="color:#3498db"></i><h3 id="ye-avg" style="font-size:1.4rem">—</h3><p>Promedio Likert global / 5</p></div>
+      <div class="kpi-card green"><i class="fas fa-building"></i><h3 id="ye-sector" style="font-size:1rem">—</h3><p>Sector más frecuente</p></div>
+      <div class="kpi-card orange"><i class="fas fa-users-cog"></i><h3 id="ye-tamano" style="font-size:1rem">—</h3><p>Tamaño más frecuente</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución por sector</h2><div class="chart-wrap"><canvas id="chart-ye-sector"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Promedio Likert por sección</h2><div class="chart-wrap"><canvas id="chart-ye-secciones"></canvas></div></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Detalle por respuesta</h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Cargo</th><th>Sector</th><th>Tamaño</th><th style="text-align:center">Prom. Likert</th><th>Fecha</th></tr></thead>
+        <tbody id="ye-tabla"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- YUNCAR · ENTREVISTAS -->
+  <div class="vista" id="vista-yuncarEnt">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-comments"></i><h3 id="yt-total">0</h3><p>Total entrevistas</p></div>
+      <div class="kpi-card"><i class="fas fa-user-tie" style="color:#3498db"></i><h3 id="yt-guiaA">0</h3><p>Guía A · Directivo</p></div>
+      <div class="kpi-card purple"><i class="fas fa-tools"></i><h3 id="yt-guiaB">0</h3><p>Guía B · Prestador</p></div>
+      <div class="kpi-card orange"><i class="fas fa-briefcase"></i><h3 id="yt-guiaC">0</h3><p>Guía C · Consultor</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución por guía</h2><div class="chart-wrap"><canvas id="chart-yt-guias"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-video"></i> Modalidad de entrevista</h2><div class="chart-wrap"><canvas id="chart-yt-modal"></canvas></div></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Registro de entrevistas</h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Código</th><th>Nombre</th><th>Cargo</th><th style="text-align:center">Guía</th><th style="text-align:center">Modalidad</th><th>Fecha</th></tr></thead>
+        <tbody id="yt-tabla"></tbody>
+      </table></div>
+    </div>
+  </div>
 
 </main>
 
@@ -487,7 +516,7 @@
   });
   const db = firebase.database();
 
-  let DATA = { roles: {}, geo: {}, ac: {}, mate: {} };
+  let DATA = { roles: {}, geo: {}, ac: {}, mate: {}, yuncarEnc: {}, yuncarEnt: {} };
   let CHARTS = {};
   let vistaActiva = '';
 
@@ -508,6 +537,14 @@
     DATA.mate = snap.val() || {};
     if (vistaActiva === 'mate') renderMate();
   });
+  db.ref('encuesta_yuncar').on('value', snap => {
+    DATA.yuncarEnc = snap.val() || {};
+    if (vistaActiva === 'yuncarEnc') renderYuncarEnc();
+  });
+  db.ref('entrevistas_yuncar').on('value', snap => {
+    DATA.yuncarEnt = snap.val() || {};
+    if (vistaActiva === 'yuncarEnt') renderYuncarEnt();
+  });
 
   // Cambiar vista
   function cambiarVista() {
@@ -522,6 +559,8 @@
     if (sel === 'geo')   { renderGeo();   badge.textContent = Object.keys(DATA.geo).length + ' registros'; }
     if (sel === 'ac')    { renderAC();    badge.textContent = Object.keys(DATA.ac).length + ' registros'; }
     if (sel === 'mate')  { renderMate();  badge.textContent = Object.keys(DATA.mate).length + ' registros'; }
+    if (sel === 'yuncarEnc') { renderYuncarEnc(); badge.textContent = Object.keys(DATA.yuncarEnc).length + ' registros'; }
+    if (sel === 'yuncarEnt') { renderYuncarEnt(); badge.textContent = Object.keys(DATA.yuncarEnt).length + ' registros'; }
   }
 
   // ══════════════════════════════
@@ -1161,111 +1200,68 @@
       }).join('');
   }
 
-  // ══════════════════════════════════════════════
-  // EVALUACIÓN EXPRESS · MATEMÁTICAS BÁSICAS
-  // ══════════════════════════════════════════════
-  const MATE_LABELS = [
-    'P01 · Productos notables (SM)',
-    'P02 · Diferencia de cuadrados (RA)',
-    'P03 · Trinomios (SM)',
-    'P04 · Fracc. algebraicas (RA)',
-    'P05 · Suma de fracciones (SM)',
-    'P06 · Ec. fraccionaria (RA)',
-    'P07 · Ec. cuadrática — fact. (SM)',
-    'P08 · Fórmula cuadrática (RA)',
-    'P09 · Radicales (SM)',
-    'P10 · Ec. con radical (RA)'
-  ];
 
+  // ══════ MATEMÁTICAS BÁSICAS ══════
+  const MATE_LABELS=['P01 · Productos notables (SM)','P02 · Diferencia de cuadrados (RA)','P03 · Trinomios (SM)','P04 · Fracc. algebraicas (RA)','P05 · Suma de fracciones (SM)','P06 · Ec. fraccionaria (RA)','P07 · Ec. cuadrática — fact. (SM)','P08 · Fórmula cuadrática (RA)','P09 · Radicales (SM)','P10 · Ec. con radical (RA)'];
   function renderMate() {
-    const rows  = Object.values(DATA.mate);
-    const total = rows.length;
-    document.getElementById('m-total').textContent = total;
-    document.getElementById('badge-count').textContent = total + ' registros';
+    const rows=Object.values(DATA.mate),total=rows.length;
+    document.getElementById('m-total').textContent=total;
+    document.getElementById('badge-count').textContent=total+' registros';
+    if(!total){['m-avg','m-aprob','m-proceso','m-riesgo'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('m-tabla').innerHTML='<tr><td colspan="6" class="empty-td">Sin respuestas aún.</td></tr>';return;}
+    let sumP=0,aprob=0,proceso=0,riesgo=0;
+    const histBins=[0,0,0,0,0,0],aciertosQ=Array(10).fill(0);
+    const QS=['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+    rows.forEach(r=>{const p=r.puntaje??0;sumP+=p;if(p>=6)aprob++;else if(p>=4)proceso++;else riesgo++;histBins[Math.min(Math.floor(p/2),5)]++;const det=r.detalles||{};QS.forEach((q,i)=>{if(det[q]?.correcto)aciertosQ[i]++;});});
+    document.getElementById('m-avg').textContent=(sumP/total).toFixed(2)+' / 10';
+    document.getElementById('m-aprob').textContent=aprob;
+    document.getElementById('m-proceso').textContent=proceso;
+    document.getElementById('m-riesgo').textContent=riesgo;
+    crearChart('chart-m-dist','doughnut',{labels:['✅ Aprobado ≥6','🟡 En proceso 4–5','🔴 En riesgo ≤3'],datasets:[{data:[aprob,proceso,riesgo],backgroundColor:['#27ae60','#e67e22','#e74c3c'],borderWidth:2,borderColor:'white'}]},{plugins:{legend:{position:'bottom',labels:{padding:14}}}});
+    crearChart('chart-m-hist','bar',{labels:['0–1','2–3','4–5','6–7','8–9','10'],datasets:[{label:'Estudiantes',data:histBins,backgroundColor:['#e74c3c','#e74c3c','#e67e22','#3498db','#27ae60','#1a2a6c'],borderRadius:6,borderSkipped:false}]},{scales:{y:{beginAtZero:true,ticks:{stepSize:1},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}});
+    const pctQ=aciertosQ.map(n=>(n/total*100).toFixed(1)),colsQ=pctQ.map(v=>parseFloat(v)>=50?'rgba(52,152,219,.8)':'rgba(231,76,60,.8)');
+    crearChart('chart-m-pregs','bar',{labels:MATE_LABELS,datasets:[{label:'% aciertos',data:pctQ,backgroundColor:colsQ,borderRadius:4,borderSkipped:false}]},{indexAxis:'y',scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0f0f0'}},y:{grid:{display:false},ticks:{font:{size:11}}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% (${aciertosQ[ctx.dataIndex]}/${total})`}}}});
+    const NIV=p=>p>=6?['✅ Aprobado','b-listo']:p>=4?['🟡 En proceso','b-sel']:['🔴 En riesgo','b-comp'];
+    document.getElementById('m-tabla').innerHTML=rows.sort((a,b)=>(b.puntaje||0)-(a.puntaje||0)).map(r=>{const p=r.puntaje??0,pct=(p/10*100).toFixed(0),barC=p>=6?'#27ae60':p>=4?'#e67e22':'#e74c3c';const[lab,cls]=NIV(p);const fecha=r.timestamp?new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}):'—';return`<tr><td><strong>${r.nombre||'—'}</strong></td><td style="text-align:center;font-family:monospace;font-size:.82rem">${r.documento||'—'}</td><td style="text-align:center;font-weight:700">${p} / 10</td><td style="min-width:110px"><div style="background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${barC};border-radius:4px"></div></div><small style="color:#666">${pct}%</small></td><td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td><td style="font-size:.8rem;color:#7f8c8d">${fecha}</td></tr>`;}).join('');
+  }
 
-    if (!total) {
-      ['m-avg','m-aprob','m-proceso','m-riesgo'].forEach(id => {
-        document.getElementById(id).textContent = '—';
-      });
-      document.getElementById('m-tabla').innerHTML =
-        '<tr><td colspan="6" class="empty-td">Sin respuestas aún.</td></tr>';
-      return;
-    }
+  // ══════ YUNCAR · ENCUESTA ══════
+  function renderYuncarEnc() {
+    const rows=Object.values(DATA.yuncarEnc),total=rows.length;
+    document.getElementById('ye-total').textContent=total;
+    document.getElementById('badge-count').textContent=total+' registros';
+    if(!total){document.getElementById('ye-tabla').innerHTML='<tr><td colspan="5" class="empty-td">Sin respuestas aún.</td></tr>';return;}
+    const SECS=['seccion_B','seccion_C','seccion_D','seccion_E'];
+    const secAvgs=SECS.map(sec=>{let sum=0,cnt=0;rows.forEach(r=>Object.values(r[sec]||{}).forEach(v=>{const n=parseFloat(v);if(!isNaN(n)){sum+=n;cnt++;}}));return cnt?(sum/cnt).toFixed(2):0;});
+    document.getElementById('ye-avg').textContent=(secAvgs.reduce((a,b)=>a+parseFloat(b),0)/secAvgs.length).toFixed(2);
+    const freq=arr=>arr.reduce((m,v)=>(m[v]=(m[v]||0)+1,m),{});
+    const moda=obj=>Object.entries(obj).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+    const sectores=freq(rows.map(r=>r.seccion_A?.sector||'N/D'));
+    const tamanos=freq(rows.map(r=>r.seccion_A?.tamano||'N/D'));
+    document.getElementById('ye-sector').textContent=moda(sectores);
+    document.getElementById('ye-tamano').textContent=moda(tamanos);
+    const pal=['#3498db','#27ae60','#e67e22','#9b59b6','#e74c3c','#1a2a6c','#1abc9c'];
+    const sLab=Object.keys(sectores),sData=Object.values(sectores);
+    crearChart('chart-ye-sector','doughnut',{labels:sLab,datasets:[{data:sData,backgroundColor:pal.slice(0,sLab.length),borderWidth:2,borderColor:'white'}]},{plugins:{legend:{position:'bottom',labels:{padding:12,font:{size:11}}}}});
+    crearChart('chart-ye-secciones','bar',{labels:['B · Gestión interna','C · Servicios externos','D · Necesidades','E · Digitalización'],datasets:[{label:'Promedio Likert',data:secAvgs,backgroundColor:['#3498db','#27ae60','#e67e22','#9b59b6'],borderRadius:6,borderSkipped:false}]},{scales:{y:{min:0,max:5,ticks:{stepSize:1},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}});
+    document.getElementById('ye-tabla').innerHTML=rows.map(r=>{const vals=SECS.flatMap(s=>Object.values(r[s]||{}).map(v=>parseFloat(v))).filter(v=>!isNaN(v));const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'—';return`<tr><td>${r.seccion_A?.cargo||'—'}</td><td>${r.seccion_A?.sector||'—'}</td><td>${r.seccion_A?.tamano||'—'}</td><td style="text-align:center;font-weight:700">${avg}</td><td style="font-size:.8rem;color:#7f8c8d">${r.fechaRegistro||'—'}</td></tr>`;}).join('');
+  }
 
-    let sumP = 0, aprob = 0, proceso = 0, riesgo = 0;
-    const histBins  = [0,0,0,0,0,0];
-    const aciertosQ = Array(10).fill(0);
-    const QS = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
-
-    rows.forEach(r => {
-      const p = r.puntaje ?? 0;
-      sumP += p;
-      if (p >= 6)      aprob++;
-      else if (p >= 4) proceso++;
-      else             riesgo++;
-      histBins[Math.min(Math.floor(p / 2), 5)]++;
-      const det = r.detalles || {};
-      QS.forEach((q, i) => { if (det[q]?.correcto) aciertosQ[i]++; });
-    });
-
-    document.getElementById('m-avg').textContent     = (sumP / total).toFixed(2) + ' / 10';
-    document.getElementById('m-aprob').textContent   = aprob;
-    document.getElementById('m-proceso').textContent = proceso;
-    document.getElementById('m-riesgo').textContent  = riesgo;
-
-    crearChart('chart-m-dist','doughnut',{
-      labels:['✅ Aprobado ≥6','🟡 En proceso 4–5','🔴 En riesgo ≤3'],
-      datasets:[{ data:[aprob,proceso,riesgo],
-        backgroundColor:['#27ae60','#e67e22','#e74c3c'],
-        borderWidth:2, borderColor:'white' }]
-    },{ plugins:{ legend:{ position:'bottom', labels:{ padding:14 }}}});
-
-    crearChart('chart-m-hist','bar',{
-      labels:['0–1','2–3','4–5','6–7','8–9','10'],
-      datasets:[{ label:'Estudiantes', data: histBins,
-        backgroundColor:['#e74c3c','#e74c3c','#e67e22','#3498db','#27ae60','#1a2a6c'],
-        borderRadius:6, borderSkipped:false }]
-    },{ scales:{ y:{ beginAtZero:true, ticks:{ stepSize:1 }, grid:{ color:'#f0f0f0' }},
-                 x:{ grid:{ display:false }}},
-        plugins:{ legend:{ display:false }}});
-
-    const pctQ  = aciertosQ.map(n => (n / total * 100).toFixed(1));
-    const colsQ = pctQ.map(v => parseFloat(v) >= 50 ? 'rgba(52,152,219,.8)' : 'rgba(231,76,60,.8)');
-    crearChart('chart-m-pregs','bar',{
-      labels: MATE_LABELS,
-      datasets:[{ label:'% aciertos', data: pctQ,
-        backgroundColor: colsQ, borderRadius:4, borderSkipped:false }]
-    },{ indexAxis:'y',
-        scales:{ x:{ min:0, max:100, ticks:{ callback: v => v+'%' }, grid:{ color:'#f0f0f0' }},
-                 y:{ grid:{ display:false }, ticks:{ font:{ size:11 }}}},
-        plugins:{ legend:{ display:false },
-                  tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x}% (${aciertosQ[ctx.dataIndex]}/${total})` }}}});
-
-    const NIV = p => p >= 6 ? ['✅ Aprobado','b-listo'] : p >= 4 ? ['🟡 En proceso','b-sel'] : ['🔴 En riesgo','b-comp'];
-    document.getElementById('m-tabla').innerHTML = rows
-      .sort((a,b) => (b.puntaje||0) - (a.puntaje||0))
-      .map(r => {
-        const p   = r.puntaje ?? 0;
-        const pct = (p / 10 * 100).toFixed(0);
-        const barC= p>=6?'#27ae60':p>=4?'#e67e22':'#e74c3c';
-        const [lab,cls] = NIV(p);
-        const fecha = r.timestamp
-          ? new Date(r.timestamp).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
-          : '—';
-        return `<tr>
-          <td><strong>${r.nombre||'—'}</strong></td>
-          <td style="text-align:center;font-family:monospace;font-size:.82rem">${r.documento||'—'}</td>
-          <td style="text-align:center;font-weight:700">${p} / 10</td>
-          <td style="min-width:110px">
-            <div style="background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden">
-              <div style="width:${pct}%;height:100%;background:${barC};border-radius:4px"></div>
-            </div>
-            <small style="color:#666">${pct}%</small>
-          </td>
-          <td style="text-align:center"><span class="rol-badge ${cls}">${lab}</span></td>
-          <td style="font-size:.8rem;color:#7f8c8d">${fecha}</td>
-        </tr>`;
-      }).join('');
+  // ══════ YUNCAR · ENTREVISTAS ══════
+  function renderYuncarEnt() {
+    const rows=Object.values(DATA.yuncarEnt),total=rows.length;
+    document.getElementById('yt-total').textContent=total;
+    document.getElementById('badge-count').textContent=total+' registros';
+    if(!total){document.getElementById('yt-tabla').innerHTML='<tr><td colspan="6" class="empty-td">Sin entrevistas registradas aún.</td></tr>';return;}
+    const guiaA=rows.filter(r=>r.ficha?.guia==='A').length,guiaB=rows.filter(r=>r.ficha?.guia==='B').length,guiaC=rows.filter(r=>r.ficha?.guia==='C').length;
+    document.getElementById('yt-guiaA').textContent=guiaA;
+    document.getElementById('yt-guiaB').textContent=guiaB;
+    document.getElementById('yt-guiaC').textContent=guiaC;
+    crearChart('chart-yt-guias','doughnut',{labels:['Guía A · Directivo','Guía B · Prestador','Guía C · Consultor'],datasets:[{data:[guiaA,guiaB,guiaC],backgroundColor:['#3498db','#9b59b6','#e67e22'],borderWidth:2,borderColor:'white'}]},{plugins:{legend:{position:'bottom',labels:{padding:14}}}});
+    const freq=arr=>arr.reduce((m,v)=>(m[v]=(m[v]||0)+1,m),{});
+    const modales=freq(rows.map(r=>r.ficha?.modalidad||'N/D'));
+    crearChart('chart-yt-modal','bar',{labels:Object.keys(modales),datasets:[{label:'Entrevistas',data:Object.values(modales),backgroundColor:['#1a2a6c','#3498db','#27ae60'],borderRadius:6,borderSkipped:false}]},{scales:{y:{beginAtZero:true,ticks:{stepSize:1},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}});
+    const BG={A:'b-coord',B:'b-comun',C:'b-invest'};
+    document.getElementById('yt-tabla').innerHTML=rows.sort((a,b)=>(b.ficha?.fecha||'').localeCompare(a.ficha?.fecha||'')).map(r=>{const f=r.ficha||{};return`<tr><td style="font-family:monospace;font-size:.82rem">${f.codigo||'—'}</td><td><strong>${f.nombre||'—'}</strong></td><td>${f.cargo||'—'}</td><td style="text-align:center"><span class="rol-badge ${BG[f.guia]||''}">${f.guia?'Guía '+f.guia:'—'}</span></td><td style="text-align:center">${f.modalidad||'—'}</td><td style="font-size:.8rem;color:#7f8c8d">${f.fecha||'—'}</td></tr>`;}).join('');
   }
 
   function crearChart(id,tipo,data,opts={}) {
