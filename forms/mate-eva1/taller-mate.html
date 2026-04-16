@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller · Matemáticas Básicas 4.3 & 4.5</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<style>
+:root {
+  --navy:    #1a2a6c;
+  --blue:    #3498db;
+  --ok:      #27ae60;
+  --err:     #e74c3c;
+  --warn:    #e67e22;
+  --bg:      #eef2f7;
+  --surface: #ffffff;
+  --border:  #cdd7e6;
+  --text:    #2c3e50;
+  --muted:   #6b7fa8;
+  --shadow:  0 4px 20px rgba(26,42,108,.14);
+  --radius:  10px;
+  --font-h:  'Trebuchet MS','Arial Black',Arial,sans-serif;
+  --font-b:  system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-b);
+  background: var(--bg);
+  background-image: linear-gradient(135deg,#dce8f5 0%,#eef2f7 55%,#f2eef8 100%);
+  color: var(--text);
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100vh - 2rem);
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 2rem 2.2rem 1.8rem;
+  animation: fadeIn .3s ease;
+  overflow-y: auto;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ─── SCREEN 0: Portada ─── */
+.cover-tag {
+  font-size: .7rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--blue); margin-bottom: .5rem;
+}
+.cover-title {
+  font-family: var(--font-h); font-size: 1.5rem; color: var(--navy);
+  line-height: 1.25; margin-bottom: .4rem;
+}
+.cover-sub {
+  font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.6rem;
+}
+.field-group { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.6rem; }
+.field label {
+  display: block; font-size: .74rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--navy); margin-bottom: .4rem;
+}
+.field input {
+  width: 100%; padding: .65rem .9rem;
+  border: 1px solid var(--border); border-radius: 5px;
+  font-family: var(--font-b); font-size: .95rem;
+  color: var(--text); background: #f7f9fc; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.field input:focus {
+  border-color: var(--blue); background: #fff;
+  box-shadow: 0 0 0 3px rgba(52,152,219,.15);
+}
+
+/* ─── PROGRESS BAR ─── */
+.q-progress {
+  display: flex; align-items: center; gap: .8rem;
+  margin-bottom: 1.2rem;
+}
+.q-progress-track {
+  flex: 1; height: 5px; background: #d0daea;
+  border-radius: 3px; overflow: hidden;
+}
+.q-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), var(--blue));
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.q-progress-label {
+  font-size: .72rem; font-weight: 600; color: var(--muted);
+  white-space: nowrap; min-width: 4.5rem; text-align: right;
+}
+
+/* ─── QUESTION HEADER ─── */
+.q-meta {
+  display: flex; align-items: center; gap: .55rem; margin-bottom: .9rem;
+  flex-wrap: wrap;
+}
+.q-num-badge {
+  font-family: var(--font-h); font-size: .78rem; font-weight: 700;
+  color: #fff; background: var(--navy);
+  padding: .25rem .6rem; border-radius: 20px;
+}
+.q-topic-label {
+  font-size: .7rem; font-weight: 600; color: var(--muted); flex: 1;
+  min-width: 0;
+}
+.q-type-badge, .q-diff-badge {
+  font-size: .6rem; font-weight: 700; padding: .18rem .5rem;
+  border-radius: 20px; text-transform: uppercase; letter-spacing: .06em;
+  white-space: nowrap;
+}
+.q-type-badge.mc   { background: #dbeafe; color: #1e40af; }
+.q-type-badge.fill { background: #fef3c7; color: #92400e; }
+.q-diff-badge.f { background: #dcfce7; color: #166534; }
+.q-diff-badge.m { background: #ffedd5; color: #9a3412; }
+.q-diff-badge.d { background: #fee2e2; color: #991b1b; }
+
+/* ─── STEM ─── */
+.q-stem {
+  font-size: .95rem; line-height: 1.8; color: var(--text); margin-bottom: 1rem;
+}
+.eq-block {
+  margin: .6rem 0; padding: .55rem 1.1rem;
+  background: #f0f5fb; border-left: 3px solid var(--blue);
+  border-radius: 0 4px 4px 0; text-align: center; overflow-x: auto;
+}
+
+/* ─── OPTIONS ─── */
+.options { display: flex; flex-direction: column; gap: .4rem; }
+.opt-label {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .6rem .95rem; border: 1px solid var(--border);
+  border-radius: 5px; cursor: pointer; background: #fafcff;
+  transition: background .15s, border-color .15s;
+}
+.opt-label:hover { background: #eef4fb; border-color: var(--blue); }
+.opt-label input[type=radio] { display: none; }
+.opt-label.selected { background: #dbeafe; border-color: var(--blue); }
+.opt-letter {
+  font-family: var(--font-h); font-size: .78rem; font-weight: 700;
+  color: var(--navy); min-width: 1.4rem;
+}
+.opt-text { font-size: .9rem; color: var(--text); }
+
+/* ─── FILL ─── */
+.fill-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.fill-input {
+  padding: .6rem .9rem; border: 1px solid var(--border); border-radius: 5px;
+  font-family: var(--font-b); font-size: .95rem; color: var(--text);
+  background: #f7f9fc; outline: none; min-width: 200px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.fill-input:focus {
+  border-color: var(--blue); background: #fff;
+  box-shadow: 0 0 0 3px rgba(52,152,219,.12);
+}
+.fill-hint { font-size: .75rem; color: var(--muted); font-style: italic; }
+
+/* ─── FEEDBACK ─── */
+.q-feedback {
+  display: none; margin-top: .9rem; padding: .75rem 1rem;
+  border-radius: 5px; font-size: .83rem; line-height: 1.7;
+}
+.q-feedback.show { display: block; }
+.q-feedback.ok  { background: #dcfce7; border: 1px solid #86efac; color: #166534; }
+.q-feedback.bad { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+.fb-title { font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ─── BOTONES ─── */
+.btn-row {
+  display: flex; gap: .8rem; margin-top: 1.2rem;
+}
+.btn {
+  flex: 1; padding: .8rem;
+  border: none; border-radius: 6px;
+  font-family: var(--font-h); font-size: .92rem; font-weight: 700;
+  letter-spacing: .03em; cursor: pointer;
+  transition: opacity .2s, transform .1s;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: #fff; box-shadow: 0 4px 12px rgba(26,42,108,.22);
+}
+.btn-primary:hover { opacity: .92; }
+.btn-primary:disabled { opacity: .35; cursor: not-allowed; }
+.btn-warn {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  color: #fff; box-shadow: 0 4px 12px rgba(192,57,43,.22);
+}
+.btn-warn:hover { opacity: .9; }
+
+/* ─── PANTALLA RESULTADO ─── */
+.result-icon { font-size: 3rem; margin-bottom: .4rem; text-align: center; }
+.result-score {
+  font-family: var(--font-h); font-size: 3.6rem; font-weight: 700;
+  color: var(--navy); text-align: center; line-height: 1;
+}
+.result-sub {
+  font-size: .78rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); text-align: center; margin-top: .3rem;
+}
+.result-bar-wrap {
+  margin: 1.1rem 0 .8rem; height: 8px;
+  background: #d0daea; border-radius: 4px; overflow: hidden;
+}
+.result-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--navy), var(--blue));
+  width: 0%; transition: width 1s ease;
+}
+.result-breakdown {
+  display: flex; justify-content: center; gap: 2rem; margin-bottom: .8rem;
+  flex-wrap: wrap;
+}
+.bd-item { font-size: .72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; text-align: center; }
+.bd-item span { display: block; font-family: var(--font-h); font-size: 1.7rem; font-weight: 700; }
+.bd-item.ok  span { color: var(--ok); }
+.bd-item.bad span { color: var(--err); }
+.bd-item.f   span { color: var(--ok); }
+.bd-item.m   span { color: var(--warn); }
+.bd-item.d   span { color: var(--err); }
+.result-msg {
+  font-size: .85rem; color: var(--text); text-align: center;
+  padding: .7rem 1rem; background: #f0f5fb; border-radius: 5px; line-height: 1.6;
+}
+#status-msg {
+  font-size: .76rem; color: var(--muted); text-align: center;
+  min-height: 1rem; margin-top: .5rem; font-weight: 600;
+}
+
+/* ─── ALERTA sin respuesta ─── */
+.alert-empty {
+  display: none; margin-top: .7rem;
+  padding: .55rem .85rem; border-radius: 5px;
+  background: #fef3c7; border: 1px solid #f59e0b;
+  color: #92400e; font-size: .8rem; font-weight: 600;
+}
+.alert-empty.show { display: block; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #b0bfda; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════ PANTALLA 0: Portada ══════ -->
+  <div class="screen active" id="screen-0">
+    <div class="cover-tag">Matemáticas Básicas · Unidad 4</div>
+    <h1 class="cover-title">Taller Integral<br>Factorización, Fracciones y Radicales</h1>
+    <p class="cover-sub">
+      50 preguntas · 10 temas · Tres niveles de dificultad<br>
+      Cada pregunta muestra el procedimiento o fórmula al responder.<br>
+      Debes responder cada pregunta antes de avanzar a la siguiente.
+    </p>
+    <div class="field-group">
+      <div class="field">
+        <label for="inp-nombre">Nombre completo</label>
+        <input type="text" id="inp-nombre" placeholder="Nombres y apellidos" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="inp-doc">Número de documento (cédula o TI)</label>
+        <input type="text" id="inp-doc" placeholder="Ej: 1020304050" autocomplete="off" inputmode="numeric">
+      </div>
+    </div>
+    <div class="alert-empty" id="alert-cover">Completa los dos campos para continuar.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startEval()">Comenzar taller →</button>
+    </div>
+  </div>
+
+  <!-- ══════ PANTALLA DE PREGUNTAS ══════ -->
+  <div class="screen" id="screen-q">
+    <div class="q-progress">
+      <div class="q-progress-track">
+        <div class="q-progress-fill" id="q-prog-fill"></div>
+      </div>
+      <div class="q-progress-label" id="q-prog-label">1 / 50</div>
+    </div>
+    <div id="q-meta" class="q-meta"></div>
+    <div id="q-stem" class="q-stem"></div>
+    <div id="q-input"></div>
+    <div class="alert-empty" id="alert-q">Selecciona o escribe una respuesta para continuar.</div>
+    <div class="q-feedback" id="q-feedback"></div>
+    <div class="btn-row" id="q-btn-row">
+      <button class="btn btn-primary" id="btn-confirm" onclick="confirmAnswer()">Confirmar respuesta</button>
+    </div>
+  </div>
+
+  <!-- ══════ PANTALLA RESULTADO ══════ -->
+  <div class="screen" id="screen-result">
+    <div class="result-icon" id="res-icon"></div>
+    <div class="result-score" id="res-score">—</div>
+    <div class="result-sub">Puntaje sobre 50</div>
+    <div class="result-bar-wrap"><div class="result-bar-fill" id="res-bar"></div></div>
+    <div class="result-breakdown">
+      <div class="bd-item ok"><span id="res-ok">—</span>Correctas</div>
+      <div class="bd-item bad"><span id="res-bad">—</span>Incorrectas</div>
+    </div>
+    <div class="result-breakdown">
+      <div class="bd-item f"><span id="res-f">—</span>Fáciles</div>
+      <div class="bd-item m"><span id="res-m">—</span>Medias</div>
+      <div class="bd-item d"><span id="res-d">—</span>Difíciles</div>
+    </div>
+    <p class="result-msg" id="res-msg"></p>
+    <div id="status-msg"></div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ── FIREBASE ─────────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+};
+let db = null;
+const FORM_KEY = 'evaluaciones/tallerMatematicas';
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+} catch(e) {
+  console.warn('Firebase no inicializado — el formulario funciona pero no guardará datos.', e.message);
+}
+
+// ── KATEX ─────────────────────────────────────────────────────────────────────
+function rk(el) {
+  if (!window.renderMathInElement) return;
+  renderMathInElement(el, {
+    delimiters:[
+      {left:'\\[',right:'\\]',display:true},
+      {left:'\\(',right:'\\)',display:false}
+    ],
+    throwOnError:false
+  });
+}
+window.addEventListener('load', () => rk(document.body));
+
+// ── DATOS DE PREGUNTAS (50) ──────────────────────────────────────────────────
+// topicId: t01..t10 | diff: f (fácil) | m (media) | d (difícil)
+const QUESTIONS = [
+  // ══════════════ T1 · PRODUCTOS NOTABLES ══════════════
+  {
+    id:'q1', type:'mc', topicId:'t01', diff:'f', topic:'T1 · Productos notables',
+    stem:'Desarrolla el cuadrado del binomio:<div class="eq-block">\\[(x+5)^2\\]</div>',
+    options:['\\(x^2+25\\)','\\(x^2+10x+25\\)','\\(x^2+5x+25\\)','\\(2x^2+10x+25\\)'],
+    answer:'b',
+    proc:'Fórmula: \\((a+b)^2=a^2+2ab+b^2\\). Con \\(a=x,\\,b=5\\):\\[x^2+2(x)(5)+5^2=x^2+10x+25\\]'
+  },
+  {
+    id:'q2', type:'fill', topicId:'t01', diff:'f', topic:'T1 · Productos notables',
+    stem:'Desarrolla el producto notable (suma por diferencia):<div class="eq-block">\\[(x+3)(x-3)\\]</div>',
+    placeholder:'Ej: x^2-9', hint:'Forma \\(a^2-b^2\\)',
+    answer:'x^2-9|x2-9',
+    proc:'Suma por diferencia: \\((a+b)(a-b)=a^2-b^2\\). Con \\(a=x,\\,b=3\\):\\[(x+3)(x-3)=x^2-9\\]'
+  },
+  {
+    id:'q3', type:'mc', topicId:'t01', diff:'m', topic:'T1 · Productos notables',
+    stem:'Desarrolla el cuadrado del binomio con coeficiente:<div class="eq-block">\\[(3x-4)^2\\]</div>',
+    options:['\\(9x^2-16\\)','\\(9x^2-24x+16\\)','\\(9x^2-12x+16\\)','\\(6x^2-24x+16\\)'],
+    answer:'b',
+    proc:'Fórmula: \\((a-b)^2=a^2-2ab+b^2\\). Con \\(a=3x,\\,b=4\\):\\[(3x)^2-2(3x)(4)+4^2=9x^2-24x+16\\]'
+  },
+  {
+    id:'q4', type:'fill', topicId:'t01', diff:'m', topic:'T1 · Productos notables',
+    stem:'Desarrolla el cubo del binomio:<div class="eq-block">\\[(x+2)^3\\]</div>',
+    placeholder:'Ej: x^3+...', hint:'Forma \\(a^3+3a^2b+3ab^2+b^3\\)',
+    answer:'x^3+6x^2+12x+8',
+    proc:'Fórmula: \\((a+b)^3=a^3+3a^2b+3ab^2+b^3\\). Con \\(a=x,\\,b=2\\):\\[x^3+3x^2(2)+3x(4)+8=x^3+6x^2+12x+8\\]'
+  },
+  {
+    id:'q5', type:'mc', topicId:'t01', diff:'d', topic:'T1 · Productos notables',
+    stem:'Desarrolla y simplifica:<div class="eq-block">\\[(2x+3y)^2-(2x-3y)^2\\]</div>',
+    options:['\\(0\\)','\\(24xy\\)','\\(12xy\\)','\\(8xy\\)'],
+    answer:'b',
+    proc:'Aplica \\(A^2-B^2=(A+B)(A-B)\\) con \\(A=2x+3y,\\,B=2x-3y\\):\\[(A+B)(A-B)=(4x)(6y)=24xy\\]'
+  },
+
+  // ══════════════ T2 · DIFERENCIA DE CUADRADOS ══════════════
+  {
+    id:'q6', type:'fill', topicId:'t02', diff:'f', topic:'T2 · Diferencia de cuadrados',
+    stem:'Factoriza la diferencia de cuadrados:<div class="eq-block">\\[x^2-9\\]</div>',
+    placeholder:'Ej: (x+a)(x-a)', hint:'',
+    answer:'(x+3)(x-3)|(x-3)(x+3)',
+    proc:'Fórmula: \\(a^2-b^2=(a+b)(a-b)\\). Con \\(a=x,\\,b=3\\):\\[x^2-9=(x+3)(x-3)\\]'
+  },
+  {
+    id:'q7', type:'mc', topicId:'t02', diff:'f', topic:'T2 · Diferencia de cuadrados',
+    stem:'Factoriza completamente:<div class="eq-block">\\[4x^2-25\\]</div>',
+    options:['\\((2x+5)(2x-5)\\)','\\((4x+5)(x-5)\\)','\\((2x-5)^2\\)','\\((4x-25)(x+1)\\)'],
+    answer:'a',
+    proc:'Identifica \\(4x^2=(2x)^2\\) y \\(25=5^2\\). Luego \\(a^2-b^2=(a+b)(a-b)\\):\\[4x^2-25=(2x+5)(2x-5)\\]'
+  },
+  {
+    id:'q8', type:'fill', topicId:'t02', diff:'m', topic:'T2 · Diferencia de cuadrados',
+    stem:'Factoriza completamente (saca factor común primero):<div class="eq-block">\\[3x^2-27\\]</div>',
+    placeholder:'Forma factorizada', hint:'',
+    answer:'3(x+3)(x-3)|3(x-3)(x+3)',
+    proc:'Factor común \\(3\\):\\[3x^2-27=3(x^2-9)=3(x+3)(x-3)\\]'
+  },
+  {
+    id:'q9', type:'mc', topicId:'t02', diff:'m', topic:'T2 · Diferencia de cuadrados',
+    stem:'Factoriza:<div class="eq-block">\\[9x^2-16y^2\\]</div>',
+    options:['\\((9x+16y)(x-y)\\)','\\((3x+4y)(3x-4y)\\)','\\((3x-4y)^2\\)','\\((9x-16y)(x+y)\\)'],
+    answer:'b',
+    proc:'\\(9x^2=(3x)^2,\\,16y^2=(4y)^2\\). Diferencia de cuadrados:\\[9x^2-16y^2=(3x+4y)(3x-4y)\\]'
+  },
+  {
+    id:'q10', type:'fill', topicId:'t02', diff:'d', topic:'T2 · Diferencia de cuadrados',
+    stem:'Factoriza completamente (diferencia de cuadrados anidada):<div class="eq-block">\\[x^4-81\\]</div>',
+    placeholder:'Forma totalmente factorizada', hint:'',
+    answer:'(x^2+9)(x+3)(x-3)|(x^2+9)(x-3)(x+3)',
+    proc:'Primer paso: \\(x^4-81=(x^2)^2-9^2=(x^2+9)(x^2-9)\\). Segundo paso: \\(x^2-9=(x+3)(x-3)\\).\\[x^4-81=(x^2+9)(x+3)(x-3)\\]'
+  },
+
+  // ══════════════ T3 · TRINOMIOS ══════════════
+  {
+    id:'q11', type:'mc', topicId:'t03', diff:'f', topic:'T3 · Factorización de trinomios',
+    stem:'Factoriza el trinomio:<div class="eq-block">\\[x^2+5x+6\\]</div>',
+    options:['\\((x+1)(x+6)\\)','\\((x+2)(x+3)\\)','\\((x-2)(x-3)\\)','\\((x+6)(x-1)\\)'],
+    answer:'b',
+    proc:'Dos números que multiplicados den \\(6\\) y sumados den \\(5\\): \\(2\\) y \\(3\\).\\[x^2+5x+6=(x+2)(x+3)\\]'
+  },
+  {
+    id:'q12', type:'fill', topicId:'t03', diff:'f', topic:'T3 · Factorización de trinomios',
+    stem:'Factoriza:<div class="eq-block">\\[x^2-8x+15\\]</div>',
+    placeholder:'(x-a)(x-b)', hint:'',
+    answer:'(x-3)(x-5)|(x-5)(x-3)',
+    proc:'Dos números que multiplicados den \\(15\\) y sumados den \\(-8\\): \\(-3\\) y \\(-5\\).\\[x^2-8x+15=(x-3)(x-5)\\]'
+  },
+  {
+    id:'q13', type:'mc', topicId:'t03', diff:'m', topic:'T3 · Factorización de trinomios',
+    stem:'Factoriza el trinomio:<div class="eq-block">\\[x^2+2x-15\\]</div>',
+    options:['\\((x+5)(x-3)\\)','\\((x-5)(x+3)\\)','\\((x+5)(x+3)\\)','\\((x-5)(x-3)\\)'],
+    answer:'a',
+    proc:'Dos números que multiplicados den \\(-15\\) y sumados den \\(2\\): \\(5\\) y \\(-3\\).\\[x^2+2x-15=(x+5)(x-3)\\]'
+  },
+  {
+    id:'q14', type:'fill', topicId:'t03', diff:'m', topic:'T3 · Factorización de trinomios',
+    stem:'Factoriza (trinomio con coeficiente principal distinto de 1):<div class="eq-block">\\[2x^2+7x+3\\]</div>',
+    placeholder:'(ax+b)(cx+d)', hint:'',
+    answer:'(2x+1)(x+3)|(x+3)(2x+1)',
+    proc:'Multiplica \\(a\\cdot c=2\\cdot 3=6\\). Buscar números que multipliquen \\(6\\) y sumen \\(7\\): \\(6\\) y \\(1\\). Reescribe:\\[2x^2+6x+x+3=2x(x+3)+1(x+3)=(2x+1)(x+3)\\]'
+  },
+  {
+    id:'q15', type:'mc', topicId:'t03', diff:'d', topic:'T3 · Factorización de trinomios',
+    stem:'Factoriza completamente:<div class="eq-block">\\[6x^2-x-15\\]</div>',
+    options:['\\((3x-5)(2x+3)\\)','\\((6x-5)(x+3)\\)','\\((3x+5)(2x-3)\\)','\\((2x-5)(3x+3)\\)'],
+    answer:'a',
+    proc:'\\(a\\cdot c=6\\cdot(-15)=-90\\). Números que multipliquen \\(-90\\) y sumen \\(-1\\): \\(-10\\) y \\(9\\).\\[6x^2-10x+9x-15=2x(3x-5)+3(3x-5)=(3x-5)(2x+3)\\]'
+  },
+
+  // ══════════════ T4 · FRACC. ALGEBRAICAS (SIMPLIFICACIÓN) ══════════════
+  {
+    id:'q16', type:'fill', topicId:'t04', diff:'f', topic:'T4 · Fracciones algebraicas — Simplificación',
+    stem:'Simplifica la fracción algebraica:<div class="eq-block">\\[\\frac{6x^2}{2x}\\]</div>',
+    placeholder:'Resultado en términos de x', hint:'',
+    answer:'3x',
+    proc:'Divide coeficientes y resta exponentes:\\[\\frac{6x^2}{2x}=\\frac{6}{2}\\cdot x^{2-1}=3x\\]'
+  },
+  {
+    id:'q17', type:'mc', topicId:'t04', diff:'f', topic:'T4 · Fracciones algebraicas — Simplificación',
+    stem:'Simplifica:<div class="eq-block">\\[\\frac{x^2-4}{x-2}\\]</div>',
+    options:['\\(x+2\\)','\\(x-2\\)','\\(x+4\\)','\\(x^2+2\\)'],
+    answer:'a',
+    proc:'Factoriza el numerador como diferencia de cuadrados:\\[\\frac{x^2-4}{x-2}=\\frac{(x+2)(x-2)}{x-2}=x+2\\]'
+  },
+  {
+    id:'q18', type:'fill', topicId:'t04', diff:'m', topic:'T4 · Fracciones algebraicas — Simplificación',
+    stem:'Simplifica (factoriza el trinomio):<div class="eq-block">\\[\\frac{x^2-5x+6}{x-3}\\]</div>',
+    placeholder:'Resultado simplificado', hint:'',
+    answer:'x-2|(x-2)',
+    proc:'Factoriza el numerador: \\(x^2-5x+6=(x-2)(x-3)\\).\\[\\frac{(x-2)(x-3)}{x-3}=x-2\\]'
+  },
+  {
+    id:'q19', type:'mc', topicId:'t04', diff:'m', topic:'T4 · Fracciones algebraicas — Simplificación',
+    stem:'Simplifica:<div class="eq-block">\\[\\frac{x^2+7x+12}{x^2+4x+3}\\]</div>',
+    options:['\\(\\dfrac{x+4}{x+1}\\)','\\(\\dfrac{x+3}{x+1}\\)','\\(\\dfrac{x+4}{x+3}\\)','\\(\\dfrac{x+1}{x+4}\\)'],
+    answer:'a',
+    proc:'Factoriza ambos: \\(x^2+7x+12=(x+3)(x+4)\\); \\(x^2+4x+3=(x+1)(x+3)\\).\\[\\frac{(x+3)(x+4)}{(x+1)(x+3)}=\\frac{x+4}{x+1}\\]'
+  },
+  {
+    id:'q20', type:'fill', topicId:'t04', diff:'d', topic:'T4 · Fracciones algebraicas — Simplificación',
+    stem:'Simplifica completamente:<div class="eq-block">\\[\\frac{2x^2-8}{x^2+4x+4}\\]</div>',
+    placeholder:'Resultado simplificado', hint:'',
+    answer:'2(x-2)/(x+2)|(2x-4)/(x+2)|2(x-2)/(x+2)',
+    proc:'Factoriza: numerador \\(2x^2-8=2(x^2-4)=2(x+2)(x-2)\\); denominador \\(x^2+4x+4=(x+2)^2\\).\\[\\frac{2(x+2)(x-2)}{(x+2)^2}=\\frac{2(x-2)}{x+2}\\]'
+  },
+
+  // ══════════════ T5 · SUMA/RESTA DE FRACCIONES ══════════════
+  {
+    id:'q21', type:'mc', topicId:'t05', diff:'f', topic:'T5 · Suma y resta de fracciones algebraicas',
+    stem:'Suma las fracciones:<div class="eq-block">\\[\\frac{1}{x}+\\frac{2}{x}\\]</div>',
+    options:['\\(\\dfrac{3}{2x}\\)','\\(\\dfrac{3}{x}\\)','\\(\\dfrac{2}{x^2}\\)','\\(\\dfrac{1}{2x}\\)'],
+    answer:'b',
+    proc:'Denominadores iguales: se suman los numeradores.\\[\\frac{1}{x}+\\frac{2}{x}=\\frac{1+2}{x}=\\frac{3}{x}\\]'
+  },
+  {
+    id:'q22', type:'fill', topicId:'t05', diff:'f', topic:'T5 · Suma y resta de fracciones algebraicas',
+    stem:'Suma (MCM en denominadores):<div class="eq-block">\\[\\frac{1}{x}+\\frac{1}{2x}\\]</div>',
+    placeholder:'Ej: a/(bx)', hint:'',
+    answer:'3/(2x)|3/2x',
+    proc:'MCM de \\(x\\) y \\(2x\\) es \\(2x\\):\\[\\frac{1}{x}+\\frac{1}{2x}=\\frac{2}{2x}+\\frac{1}{2x}=\\frac{3}{2x}\\]'
+  },
+  {
+    id:'q23', type:'mc', topicId:'t05', diff:'m', topic:'T5 · Suma y resta de fracciones algebraicas',
+    stem:'Realiza la resta:<div class="eq-block">\\[\\frac{5}{3x}-\\frac{2}{x}\\]</div>',
+    options:['\\(\\dfrac{3}{3x}\\)','\\(\\dfrac{-1}{3x}\\)','\\(\\dfrac{3}{2x}\\)','\\(\\dfrac{7}{3x}\\)'],
+    answer:'b',
+    proc:'MCM \\(=3x\\):\\[\\frac{5}{3x}-\\frac{6}{3x}=\\frac{5-6}{3x}=\\frac{-1}{3x}\\]'
+  },
+  {
+    id:'q24', type:'fill', topicId:'t05', diff:'m', topic:'T5 · Suma y resta de fracciones algebraicas',
+    stem:'Suma (denominadores diferentes):<div class="eq-block">\\[\\frac{1}{x+1}+\\frac{1}{x-1}\\]</div>',
+    placeholder:'Forma simplificada', hint:'',
+    answer:'2x/((x+1)(x-1))|2x/(x^2-1)',
+    proc:'MCM \\(=(x+1)(x-1)\\):\\[\\frac{(x-1)+(x+1)}{(x+1)(x-1)}=\\frac{2x}{(x+1)(x-1)}=\\frac{2x}{x^2-1}\\]'
+  },
+  {
+    id:'q25', type:'mc', topicId:'t05', diff:'d', topic:'T5 · Suma y resta de fracciones algebraicas',
+    stem:'Simplifica la operación combinada:<div class="eq-block">\\[\\frac{x}{x-2}-\\frac{4}{x^2-4}\\]</div>',
+    options:['\\(\\dfrac{x+2}{x+2}\\)','\\(\\dfrac{x^2-2x-4}{(x-2)(x+2)}\\)','\\(\\dfrac{x^2+2x-4}{(x-2)(x+2)}\\)','\\(\\dfrac{x-4}{x-2}\\)'],
+    answer:'c',
+    proc:'Factoriza: \\(x^2-4=(x-2)(x+2)\\). MCM \\(=(x-2)(x+2)\\):\\[\\frac{x(x+2)}{(x-2)(x+2)}-\\frac{4}{(x-2)(x+2)}=\\frac{x^2+2x-4}{(x-2)(x+2)}\\]'
+  },
+
+  // ══════════════ T6 · ECUACIONES FRACCIONARIAS ══════════════
+  {
+    id:'q26', type:'fill', topicId:'t06', diff:'f', topic:'T6 · Ecuaciones fraccionarias',
+    stem:'Resuelve:<div class="eq-block">\\[\\frac{x}{3}=4\\]</div>',
+    placeholder:'x = ?', hint:'',
+    answer:'12|x=12',
+    proc:'Multiplica ambos lados por \\(3\\):\\[x=4\\cdot 3=12\\]'
+  },
+  {
+    id:'q27', type:'mc', topicId:'t06', diff:'f', topic:'T6 · Ecuaciones fraccionarias',
+    stem:'Resuelve:<div class="eq-block">\\[\\frac{2}{x}=6\\]</div>',
+    options:['\\(x=3\\)','\\(x=\\tfrac{1}{3}\\)','\\(x=12\\)','\\(x=\\tfrac{2}{3}\\)'],
+    answer:'b',
+    proc:'Despeja \\(x\\) multiplicando en cruz:\\[2=6x \\quad\\Rightarrow\\quad x=\\frac{2}{6}=\\frac{1}{3}\\]'
+  },
+  {
+    id:'q28', type:'fill', topicId:'t06', diff:'m', topic:'T6 · Ecuaciones fraccionarias',
+    stem:'Resuelve para \\(x\\) (multiplica por el MCM):<div class="eq-block">\\[\\frac{x}{2}+\\frac{x}{3}=5\\]</div>',
+    placeholder:'x = ?', hint:'',
+    answer:'6|x=6',
+    proc:'MCM \\(=6\\). Multiplica toda la ecuación:\\[3x+2x=30 \\quad\\Rightarrow\\quad 5x=30 \\quad\\Rightarrow\\quad x=6\\]'
+  },
+  {
+    id:'q29', type:'mc', topicId:'t06', diff:'m', topic:'T6 · Ecuaciones fraccionarias',
+    stem:'Resuelve:<div class="eq-block">\\[\\frac{5}{x}+\\frac{1}{2}=\\frac{3}{x}\\]</div>',
+    options:['\\(x=-4\\)','\\(x=4\\)','\\(x=-2\\)','\\(x=2\\)'],
+    answer:'a',
+    proc:'MCM \\(=2x\\). Multiplica:\\[10+x=6 \\quad\\Rightarrow\\quad x=-4\\]'
+  },
+  {
+    id:'q30', type:'fill', topicId:'t06', diff:'d', topic:'T6 · Ecuaciones fraccionarias',
+    stem:'Resuelve (verifica que no sea solución extraña):<div class="eq-block">\\[\\frac{2}{x-1}+\\frac{3}{x+1}=\\frac{10}{x^2-1}\\]</div>',
+    placeholder:'x = ? (fracción o decimal)', hint:'',
+    answer:'11/5|2.2|x=11/5|x=2.2',
+    proc:'Factoriza \\(x^2-1=(x-1)(x+1)\\). MCM \\(=(x-1)(x+1)\\). Multiplica toda la ecuación:\\[2(x+1)+3(x-1)=10\\]\\[2x+2+3x-3=10 \\quad\\Rightarrow\\quad 5x-1=10 \\quad\\Rightarrow\\quad x=\\tfrac{11}{5}\\]Verifica que \\(x\\neq 1\\) y \\(x\\neq -1\\) (para que los denominadores no se anulen): \\(\\tfrac{11}{5}\\) es válida.'
+  },
+
+  // ══════════════ T7 · EC. CUADRÁTICAS (FACTORIZACIÓN) ══════════════
+  {
+    id:'q31', type:'mc', topicId:'t07', diff:'f', topic:'T7 · Ecuaciones cuadráticas — Factorización',
+    stem:'Resuelve factorizando:<div class="eq-block">\\[x^2-9=0\\]</div>',
+    options:['\\(x=3\\) únicamente','\\(x=\\pm3\\)','\\(x=\\pm9\\)','\\(x=0,x=9\\)'],
+    answer:'b',
+    proc:'Diferencia de cuadrados: \\(x^2-9=(x+3)(x-3)=0\\).\\[x+3=0\\Rightarrow x=-3,\\quad x-3=0\\Rightarrow x=3\\]'
+  },
+  {
+    id:'q32', type:'fill', topicId:'t07', diff:'f', topic:'T7 · Ecuaciones cuadráticas — Factorización',
+    stem:'Encuentra las raíces:<div class="eq-block">\\[x^2-5x+6=0\\]</div>',
+    placeholder:'Escribe ambas: Ej: 2,3', hint:'',
+    answer:'2,3|3,2|x=2,x=3',
+    proc:'Factoriza: \\((x-2)(x-3)=0\\).\\[x=2\\quad\\text{o}\\quad x=3\\]'
+  },
+  {
+    id:'q33', type:'mc', topicId:'t07', diff:'m', topic:'T7 · Ecuaciones cuadráticas — Factorización',
+    stem:'Resuelve:<div class="eq-block">\\[x^2+4x-12=0\\]</div>',
+    options:['\\(x=2,\\,x=-6\\)','\\(x=-2,\\,x=6\\)','\\(x=3,\\,x=-4\\)','\\(x=-3,\\,x=4\\)'],
+    answer:'a',
+    proc:'Números que multipliquen \\(-12\\) y sumen \\(4\\): \\(6\\) y \\(-2\\).\\[(x+6)(x-2)=0 \\Rightarrow x=-6,\\,x=2\\]'
+  },
+  {
+    id:'q34', type:'fill', topicId:'t07', diff:'m', topic:'T7 · Ecuaciones cuadráticas — Factorización',
+    stem:'Resuelve (factoriza primero):<div class="eq-block">\\[2x^2-8x=0\\]</div>',
+    placeholder:'Ambas raíces', hint:'',
+    answer:'0,4|4,0|x=0,x=4',
+    proc:'Factor común \\(2x\\):\\[2x(x-4)=0 \\Rightarrow x=0,\\,x=4\\]'
+  },
+  {
+    id:'q35', type:'mc', topicId:'t07', diff:'d', topic:'T7 · Ecuaciones cuadráticas — Factorización',
+    stem:'Resuelve factorizando:<div class="eq-block">\\[6x^2+x-2=0\\]</div>',
+    options:['\\(x=\\tfrac{1}{2},\\,x=-\\tfrac{2}{3}\\)','\\(x=\\tfrac{2}{3},\\,x=-\\tfrac{1}{2}\\)','\\(x=-\\tfrac{2}{3},\\,x=-\\tfrac{1}{2}\\)','\\(x=2,\\,x=-3\\)'],
+    answer:'a',
+    proc:'\\(a\\cdot c=-12\\). Números que den \\(-12\\) y sumen \\(1\\): \\(4\\) y \\(-3\\).\\[6x^2+4x-3x-2=2x(3x+2)-1(3x+2)=(3x+2)(2x-1)=0\\]\\[x=-\\tfrac{2}{3},\\quad x=\\tfrac{1}{2}\\]'
+  },
+
+  // ══════════════ T8 · FÓRMULA CUADRÁTICA ══════════════
+  {
+    id:'q36', type:'fill', topicId:'t08', diff:'f', topic:'T8 · Fórmula cuadrática',
+    stem:'Usando \\(x=\\tfrac{-b\\pm\\sqrt{b^2-4ac}}{2a}\\), calcula el discriminante de:<div class="eq-block">\\[x^2-5x+6=0\\]</div>',
+    placeholder:'Valor de b²-4ac', hint:'',
+    answer:'1',
+    proc:'Identifica: \\(a=1,\\,b=-5,\\,c=6\\).\\[\\Delta=b^2-4ac=(-5)^2-4(1)(6)=25-24=1\\]'
+  },
+  {
+    id:'q37', type:'mc', topicId:'t08', diff:'f', topic:'T8 · Fórmula cuadrática',
+    stem:'Sin resolver, ¿cuántas soluciones reales tiene la ecuación? (\\(\\Delta=b^2-4ac\\))<div class="eq-block">\\[x^2+2x+5=0\\]</div>',
+    options:['Dos reales distintas','Una real doble','Ninguna real','Infinitas'],
+    answer:'c',
+    proc:'\\(a=1,\\,b=2,\\,c=5\\). \\(\\Delta=4-20=-16<0\\). Si \\(\\Delta<0\\), no hay soluciones reales.'
+  },
+  {
+    id:'q38', type:'fill', topicId:'t08', diff:'m', topic:'T8 · Fórmula cuadrática',
+    stem:'Aplica la fórmula cuadrática y calcula la raíz mayor:<div class="eq-block">\\[x^2-6x+5=0\\]</div>',
+    placeholder:'x = ?', hint:'La mayor de las dos',
+    answer:'5|x=5',
+    proc:'\\(a=1,\\,b=-6,\\,c=5\\). \\(\\Delta=36-20=16\\).\\[x=\\frac{6\\pm 4}{2}\\Rightarrow x_1=5,\\,x_2=1\\]'
+  },
+  {
+    id:'q39', type:'mc', topicId:'t08', diff:'m', topic:'T8 · Fórmula cuadrática',
+    stem:'Aplica la fórmula cuadrática:<div class="eq-block">\\[2x^2+5x-3=0\\]</div>',
+    options:['\\(x=\\tfrac{1}{2},\\,x=-3\\)','\\(x=-\\tfrac{1}{2},\\,x=3\\)','\\(x=1,\\,x=-\\tfrac{3}{2}\\)','\\(x=\\tfrac{3}{2},\\,x=-1\\)'],
+    answer:'a',
+    proc:'\\(a=2,\\,b=5,\\,c=-3\\). \\(\\Delta=25+24=49\\).\\[x=\\frac{-5\\pm 7}{4}\\Rightarrow x_1=\\tfrac{1}{2},\\,x_2=-3\\]'
+  },
+  {
+    id:'q40', type:'fill', topicId:'t08', diff:'d', topic:'T8 · Fórmula cuadrática',
+    stem:'Aplica la fórmula cuadrática y calcula la suma \\(x_1+x_2\\):<div class="eq-block">\\[3x^2-4x-4=0\\]</div>',
+    placeholder:'Suma de raíces (fracción o decimal)', hint:'Tip: \\(x_1+x_2=-b/a\\)',
+    answer:'4/3|1.333|1.33',
+    proc:'\\(a=3,\\,b=-4,\\,c=-4\\). Por propiedad: \\(x_1+x_2=-\\tfrac{b}{a}=\\tfrac{4}{3}\\). Verificación con fórmula: \\(\\Delta=16+48=64\\), \\(x=\\tfrac{4\\pm 8}{6}\\Rightarrow x_1=2,\\,x_2=-\\tfrac{2}{3}\\); suma \\(=\\tfrac{4}{3}\\).'
+  },
+
+  // ══════════════ T9 · RADICALES ══════════════
+  {
+    id:'q41', type:'mc', topicId:'t09', diff:'f', topic:'T9 · Radicales — Simplificación',
+    stem:'Simplifica el radical:<div class="eq-block">\\[\\sqrt{16}\\]</div>',
+    options:['\\(2\\)','\\(4\\)','\\(8\\)','\\(\\pm 4\\)'],
+    answer:'b',
+    proc:'La raíz cuadrada principal: \\(\\sqrt{16}=\\sqrt{4^2}=4\\).'
+  },
+  {
+    id:'q42', type:'fill', topicId:'t09', diff:'f', topic:'T9 · Radicales — Simplificación',
+    stem:'Simplifica:<div class="eq-block">\\[\\sqrt{9x^2}\\]</div>',
+    placeholder:'Resultado (asume x≥0)', hint:'',
+    answer:'3x',
+    proc:'Aplica \\(\\sqrt{ab}=\\sqrt{a}\\sqrt{b}\\):\\[\\sqrt{9x^2}=\\sqrt{9}\\cdot\\sqrt{x^2}=3x\\]'
+  },
+  {
+    id:'q43', type:'mc', topicId:'t09', diff:'m', topic:'T9 · Radicales — Simplificación',
+    stem:'Simplifica a su forma más reducida:<div class="eq-block">\\[\\sqrt{72}\\]</div>',
+    options:['\\(6\\sqrt{2}\\)','\\(8\\sqrt{3}\\)','\\(2\\sqrt{18}\\)','\\(12\\)'],
+    answer:'a',
+    proc:'Descompón en cuadrado perfecto: \\(72=36\\cdot 2\\).\\[\\sqrt{72}=\\sqrt{36}\\cdot\\sqrt{2}=6\\sqrt{2}\\]'
+  },
+  {
+    id:'q44', type:'fill', topicId:'t09', diff:'m', topic:'T9 · Radicales — Operaciones',
+    stem:'Suma radicales semejantes:<div class="eq-block">\\[\\sqrt{75}+\\sqrt{12}\\]</div>',
+    placeholder:'Ej: a√b', hint:'Simplifica ambos primero',
+    answer:'7√3|7sqrt(3)|7raiz(3)',
+    proc:'\\(\\sqrt{75}=\\sqrt{25\\cdot 3}=5\\sqrt{3}\\); \\(\\sqrt{12}=\\sqrt{4\\cdot 3}=2\\sqrt{3}\\).\\[5\\sqrt{3}+2\\sqrt{3}=7\\sqrt{3}\\]'
+  },
+  {
+    id:'q45', type:'mc', topicId:'t09', diff:'d', topic:'T9 · Radicales — Racionalización',
+    stem:'Racionaliza el denominador:<div class="eq-block">\\[\\frac{2}{\\sqrt{3}+1}\\]</div>',
+    options:['\\(\\sqrt{3}+1\\)','\\(\\sqrt{3}-1\\)','\\(2\\sqrt{3}-2\\)','\\(2\\sqrt{3}+2\\)'],
+    answer:'b',
+    proc:'Multiplica por el conjugado \\((\\sqrt{3}-1)\\):\\[\\frac{2}{\\sqrt{3}+1}\\cdot\\frac{\\sqrt{3}-1}{\\sqrt{3}-1}=\\frac{2(\\sqrt{3}-1)}{3-1}=\\frac{2(\\sqrt{3}-1)}{2}=\\sqrt{3}-1\\]'
+  },
+
+  // ══════════════ T10 · ECUACIONES CON RADICALES ══════════════
+  {
+    id:'q46', type:'fill', topicId:'t10', diff:'f', topic:'T10 · Ecuaciones con radicales',
+    stem:'Resuelve (eleva al cuadrado):<div class="eq-block">\\[\\sqrt{x}=4\\]</div>',
+    placeholder:'x = ?', hint:'',
+    answer:'16|x=16',
+    proc:'Eleva al cuadrado ambos lados:\\[x=4^2=16\\] Verificación: \\(\\sqrt{16}=4\\;\\checkmark\\)'
+  },
+  {
+    id:'q47', type:'mc', topicId:'t10', diff:'f', topic:'T10 · Ecuaciones con radicales',
+    stem:'Resuelve:<div class="eq-block">\\[\\sqrt{x+1}=3\\]</div>',
+    options:['\\(x=2\\)','\\(x=8\\)','\\(x=9\\)','\\(x=10\\)'],
+    answer:'b',
+    proc:'Eleva al cuadrado:\\[x+1=9 \\Rightarrow x=8\\] Verificación: \\(\\sqrt{8+1}=\\sqrt{9}=3\\;\\checkmark\\)'
+  },
+  {
+    id:'q48', type:'fill', topicId:'t10', diff:'m', topic:'T10 · Ecuaciones con radicales',
+    stem:'Resuelve y verifica:<div class="eq-block">\\[\\sqrt{3x+1}=4\\]</div>',
+    placeholder:'x = ?', hint:'',
+    answer:'5|x=5',
+    proc:'Eleva al cuadrado:\\[3x+1=16 \\Rightarrow 3x=15 \\Rightarrow x=5\\] Verificación: \\(\\sqrt{3(5)+1}=\\sqrt{16}=4\\;\\checkmark\\)'
+  },
+  {
+    id:'q49', type:'mc', topicId:'t10', diff:'m', topic:'T10 · Ecuaciones con radicales',
+    stem:'Resuelve (aislar el radical primero):<div class="eq-block">\\[\\sqrt{x-3}+2=5\\]</div>',
+    options:['\\(x=12\\)','\\(x=6\\)','\\(x=9\\)','\\(x=25\\)'],
+    answer:'a',
+    proc:'Aisla el radical:\\[\\sqrt{x-3}=3 \\Rightarrow x-3=9 \\Rightarrow x=12\\] Verificación: \\(\\sqrt{12-3}+2=3+2=5\\;\\checkmark\\)'
+  },
+  {
+    id:'q50', type:'fill', topicId:'t10', diff:'d', topic:'T10 · Ecuaciones con radicales',
+    stem:'Resuelve (cuida las soluciones extrañas):<div class="eq-block">\\[\\sqrt{x+7}=x-5\\]</div>',
+    placeholder:'x = ?', hint:'Una sola solución válida',
+    answer:'9|x=9',
+    proc:'Eleva al cuadrado:\\[x+7=(x-5)^2=x^2-10x+25\\]\\[x^2-11x+18=0 \\Rightarrow (x-9)(x-2)=0\\]Verificación: \\(x=9\\): \\(\\sqrt{16}=4=9-5\\;\\checkmark\\). \\(x=2\\): \\(\\sqrt{9}=3\\neq -3\\) (extraña). Solo \\(x=9\\).'
+  }
+];
+
+// ── ESTADO ────────────────────────────────────────────────────────────────────
+const TOTAL_Q = QUESTIONS.length;
+let currentQ = 0;
+let answered = false;
+let nombre = '', documento = '';
+const results = {}; // {q1:{userAns, correct}, ...}
+
+// ── PANTALLAS ─────────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── INICIO ────────────────────────────────────────────────────────────────────
+function startEval() {
+  nombre    = document.getElementById('inp-nombre').value.trim();
+  documento = document.getElementById('inp-doc').value.trim();
+  const alert = document.getElementById('alert-cover');
+  if (!nombre || !documento) { alert.classList.add('show'); return; }
+  alert.classList.remove('show');
+  currentQ = 0;
+  showScreen('screen-q');
+  loadQuestion(currentQ);
+}
+
+// ── CARGAR PREGUNTA ───────────────────────────────────────────────────────────
+function loadQuestion(idx) {
+  answered = false;
+  const q = QUESTIONS[idx];
+  const letters = ['A','B','C','D'];
+
+  // Progreso
+  const pct = Math.round(idx / TOTAL_Q * 100);
+  document.getElementById('q-prog-fill').style.width = pct + '%';
+  document.getElementById('q-prog-label').textContent = `${idx+1} / ${TOTAL_Q}`;
+
+  // Meta (número, tema, dificultad, tipo)
+  const typeClass = q.type === 'mc' ? 'mc' : 'fill';
+  const typeLabel = q.type === 'mc' ? 'Selección múltiple' : 'Respuesta abierta';
+  const diffLabel = q.diff === 'f' ? 'Fácil' : q.diff === 'm' ? 'Media' : 'Difícil';
+  document.getElementById('q-meta').innerHTML =
+    `<span class="q-num-badge">P${idx+1}</span>
+     <span class="q-topic-label">${q.topic}</span>
+     <span class="q-diff-badge ${q.diff}">${diffLabel}</span>
+     <span class="q-type-badge ${typeClass}">${typeLabel}</span>`;
+
+  // Enunciado
+  document.getElementById('q-stem').innerHTML = q.stem;
+
+  // Input
+  let inputHTML = '';
+  if (q.type === 'mc') {
+    inputHTML = '<div class="options">' +
+      q.options.map((opt, i) =>
+        `<label class="opt-label" id="opt-${i}">
+           <input type="radio" name="current-q" value="${letters[i].toLowerCase()}">
+           <span class="opt-letter">${letters[i]}</span>
+           <span class="opt-text">${opt}</span>
+         </label>`
+      ).join('') + '</div>';
+  } else {
+    inputHTML = `<div class="fill-row">
+      <input class="fill-input" id="fill-ans" placeholder="${q.placeholder}" autocomplete="off">
+      ${q.hint ? `<span class="fill-hint">${q.hint}</span>` : ''}
+    </div>`;
+  }
+  document.getElementById('q-input').innerHTML = inputHTML;
+
+  // Reset feedback & alerta
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'q-feedback';
+  fb.innerHTML = '';
+  document.getElementById('alert-q').classList.remove('show');
+
+  // Botón
+  document.getElementById('q-btn-row').innerHTML =
+    `<button class="btn btn-primary" id="btn-confirm" onclick="confirmAnswer()">Confirmar respuesta</button>`;
+
+  // Listener selección MC
+  if (q.type === 'mc') {
+    document.querySelectorAll('input[name="current-q"]').forEach(r => {
+      r.addEventListener('change', () => {
+        document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('selected'));
+        r.closest('label').classList.add('selected');
+      });
+    });
+  }
+
+  rk(document.getElementById('screen-q'));
+}
+
+// ── CONFIRMAR RESPUESTA ───────────────────────────────────────────────────────
+function confirmAnswer() {
+  if (answered) return;
+  const q = QUESTIONS[currentQ];
+  const alertQ = document.getElementById('alert-q');
+  let userAns = '';
+
+  if (q.type === 'mc') {
+    const sel = document.querySelector('input[name="current-q"]:checked');
+    if (!sel) { alertQ.classList.add('show'); return; }
+    userAns = sel.value;
+  } else {
+    userAns = document.getElementById('fill-ans').value.trim();
+    if (!userAns) { alertQ.classList.add('show'); return; }
+  }
+
+  alertQ.classList.remove('show');
+  answered = true;
+
+  const correct = q.type === 'mc'
+    ? userAns === q.answer
+    : q.answer.split('|').some(a => norm(a) === norm(userAns));
+
+  results[q.id] = { userAns, correct, topicId: q.topicId, diff: q.diff };
+
+  // Feedback inline con procedimiento
+  const fb = document.getElementById('q-feedback');
+  const displayAns = q.answer.split('|')[0];
+  fb.className = 'q-feedback show ' + (correct ? 'ok' : 'bad');
+  fb.innerHTML = correct
+    ? `<span class="fb-title">✔ Correcto</span>${q.proc}`
+    : `<span class="fb-title">✗ Incorrecto — Respuesta correcta: <code>${displayAns}</code></span>${q.proc}`;
+  rk(fb);
+
+  // Deshabilitar input
+  if (q.type === 'mc') {
+    document.querySelectorAll('input[name="current-q"]').forEach(r => r.disabled = true);
+  } else {
+    document.getElementById('fill-ans').disabled = true;
+  }
+
+  // Cambiar botón
+  const isLast = currentQ === TOTAL_Q - 1;
+  document.getElementById('q-btn-row').innerHTML = isLast
+    ? `<button class="btn btn-warn" onclick="finishEval()">Finalizar taller</button>`
+    : `<button class="btn btn-primary" onclick="nextQuestion()">Siguiente pregunta →</button>`;
+}
+
+// ── SIGUIENTE ─────────────────────────────────────────────────────────────────
+function nextQuestion() {
+  currentQ++;
+  loadQuestion(currentQ);
+}
+
+// ── FINALIZAR ─────────────────────────────────────────────────────────────────
+function finishEval() {
+  let score = 0, okF = 0, okM = 0, okD = 0;
+  const respuestas = {}, detalles = {};
+  for (const [k, v] of Object.entries(results)) {
+    if (v.correct) {
+      score++;
+      if (v.diff === 'f') okF++;
+      else if (v.diff === 'm') okM++;
+      else okD++;
+    }
+    respuestas[k] = v.userAns;
+    detalles[k]   = { correcto: v.correct, respuesta: v.userAns, topicId: v.topicId, diff: v.diff };
+  }
+
+  showScreen('screen-result');
+  document.getElementById('res-icon').textContent  = score >= 35 ? '🎓' : score >= 25 ? '📘' : '📖';
+  document.getElementById('res-score').textContent = `${score}/${TOTAL_Q}`;
+  document.getElementById('res-ok').textContent    = score;
+  document.getElementById('res-bad').textContent   = TOTAL_Q - score;
+  document.getElementById('res-f').textContent     = `${okF}/20`;
+  document.getElementById('res-m').textContent     = `${okM}/20`;
+  document.getElementById('res-d').textContent     = `${okD}/10`;
+  setTimeout(() => { document.getElementById('res-bar').style.width = `${score/TOTAL_Q*100}%`; }, 120);
+
+  const msgs = [
+    [45, `¡Excelente, ${nombre}! Dominio sobresaliente de los 10 temas.`],
+    [35, `Buen trabajo, ${nombre}. Estás en nivel aprobado. Refuerza los ítems con error.`],
+    [25, `${nombre}, estás en proceso. Revisa el procedimiento de cada pregunta incorrecta y repasa los temas donde acumulaste más errores.`],
+    [0,  `${nombre}, se recomienda repasar todos los temas desde el inicio con el material de clase antes de intentar de nuevo.`]
+  ];
+  document.getElementById('res-msg').textContent =
+    msgs.find(([m]) => score >= m)?.[1] ?? msgs[3][1];
+
+  if (db) {
+    db.ref(FORM_KEY).push({
+      nombre, documento,
+      puntaje: score, sobre: TOTAL_Q,
+      aciertosFacil: okF, aciertosMedia: okM, aciertosDificil: okD,
+      timestamp: new Date().toISOString(),
+      respuestas, detalles
+    })
+    .then(() => document.getElementById('status-msg').textContent = '✔ Resultado guardado correctamente.')
+    .catch(e  => document.getElementById('status-msg').textContent = '⚠ Error al guardar: ' + e.message);
+  } else {
+    document.getElementById('status-msg').textContent = '⚠ Configura el firebaseConfig para guardar resultados.';
+  }
+}
+
+// ── NORMALIZAR fill ───────────────────────────────────────────────────────────
+function norm(s) {
+  return s.toLowerCase()
+    .replace(/\s+/g,'')
+    .replace(/^x=/,'')
+    .replace(/√/g,'sqrt')
+    .replace(/raiz/g,'sqrt')
+    .trim();
+}
+</script>
+</body>
+</html>

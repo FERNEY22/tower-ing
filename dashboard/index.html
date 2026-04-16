@@ -16,6 +16,8 @@
   <script src="render-yuncar-enc.js"></script>
   <script src="render-yuncar-ent.js"></script>
   <script src="render-flipflops-sd.js"></script>
+  <script src="render-taller.js"></script>
+  <script src="render-taller10.js"></script> 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -160,6 +162,8 @@
     <option value="yuncarEnc">YUNCAR · Encuesta Mantenimiento Industrial</option>
     <option value="yuncarEnt">YUNCAR · Entrevistas Actores Clave</option>
     <option value="flipflopsSD">Cuestionario Flip-Flops — Sistemas Digitales</option>
+    <option value="taller">Taller Integral · Matemáticas Básicas</option>
+    <option value="taller10">Taller R2 · Matemáticas Básicas</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -402,6 +406,71 @@
     </div>
   </div>
 
+  <!-- MATEMÁTICAS BÁSICAS · TALLER INTEGRAL -->
+  <div class="vista" id="vista-taller">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-users"></i><h3 id="t-total">0</h3><p>Total estudiantes</p></div>
+      <div class="kpi-card"><i class="fas fa-star" style="color:#3498db"></i><h3 id="t-avg" style="font-size:1.4rem">—</h3><p>Puntaje promedio / 50</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="t-aprob">0</h3><p>✅ Aprobados ≥ 35</p></div>
+      <div class="kpi-card orange"><i class="fas fa-minus-circle"></i><h3 id="t-proceso">0</h3><p>🟡 En proceso 25–34</p></div>
+      <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="t-riesgo">0</h3><p>🔴 En riesgo ≤ 24</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución de desempeño</h2><div class="chart-wrap"><canvas id="chart-t-dist"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2><div class="chart-wrap"><canvas id="chart-t-hist"></canvas></div></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-layer-group"></i> % de acierto por tema</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Barras rojas = menos del 50% de aciertos en ese tema → concepto a reforzar. Cada tema tiene 5 preguntas (fácil, media y difícil).</p>
+      <div class="chart-wrap" style="height:320px"><canvas id="chart-t-temas"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-signal"></i> % de acierto por nivel de dificultad</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Porcentaje promedio grupal en los tres niveles: 20 fáciles, 20 medias y 10 difíciles.</p>
+      <div class="chart-wrap" style="height:240px"><canvas id="chart-t-dificultad"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Detalle por estudiante</h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Nombre</th><th style="text-align:center">Documento</th><th style="text-align:center">Puntaje / 50</th><th style="text-align:center">F · M · D</th><th style="text-align:center">%</th><th style="text-align:center">Nivel</th><th>Fecha</th></tr></thead>
+        <tbody id="t-tabla"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- MATEMÁTICAS BÁSICAS · TALLER EXPRESS (/10 ALEATORIO) -->
+  <div class="vista" id="vista-taller10">
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-users"></i><h3 id="t10-total">0</h3><p>Total intentos</p></div>
+      <div class="kpi-card"><i class="fas fa-star" style="color:#3498db"></i><h3 id="t10-avg" style="font-size:1.4rem">—</h3><p>Puntaje promedio / 10</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="t10-aprob">0</h3><p>✅ Aprobados ≥ 7</p></div>
+      <div class="kpi-card orange"><i class="fas fa-minus-circle"></i><h3 id="t10-proceso">0</h3><p>🟡 En proceso 5–6</p></div>
+      <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="t10-riesgo">0</h3><p>🔴 En riesgo ≤ 4</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución de desempeño</h2><div class="chart-wrap"><canvas id="chart-t10-dist"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2><div class="chart-wrap"><canvas id="chart-t10-hist"></canvas></div></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-layer-group"></i> % de acierto por tema</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Como cada intento toma 10 preguntas aleatorias del banco de 50, algunos temas pueden tener menos datos que otros. Barras rojas = menos del 50% de aciertos → concepto a reforzar.</p>
+      <div class="chart-wrap" style="height:320px"><canvas id="chart-t10-temas"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-signal"></i> % de acierto por nivel de dificultad</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Porcentaje promedio grupal. Cada intento tiene 2 fáciles, 4 medias y 4 difíciles.</p>
+      <div class="chart-wrap" style="height:240px"><canvas id="chart-t10-dificultad"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Detalle por intento</h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Nombre</th><th style="text-align:center">Documento</th><th style="text-align:center">Puntaje / 10</th><th style="text-align:center">F · M · D</th><th style="text-align:center">%</th><th style="text-align:center">Nivel</th><th>Fecha</th></tr></thead>
+        <tbody id="t10-tabla"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+
 </main>
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
@@ -421,7 +490,7 @@
   // ── Estado global compartido con todos los render-*.js ──
   let DATA = {
     roles: {}, geo: {}, ac: {},
-    mate: {}, yuncarEnc: {}, yuncarEnt: {},
+    mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
     flipflopsSD: {},
   };
   let CHARTS       = {};
@@ -434,7 +503,10 @@
   db.ref('evaluaciones/matematicasBasicas').on('value', snap => { DATA.mate      = snap.val()||{}; if(vistaActiva==='mate')      renderMate();      });
   db.ref('encuesta_yuncar').on('value',                 snap => { DATA.yuncarEnc = snap.val()||{}; if(vistaActiva==='yuncarEnc') renderYuncarEnc(); });
   db.ref('entrevistas_yuncar').on('value',              snap => { DATA.yuncarEnt = snap.val()||{}; if(vistaActiva==='yuncarEnt') renderYuncarEnt(); });
-  db.ref('flipflops_sd').on('value', snap => { DATA.flipflopsSD = snap.val()||{}; if(vistaActiva==='flipflopsSD') renderFlipflopsSD(); });
+  db.ref('quizzes/flipflops_sd').on('value', snap => { DATA.flipflopsSD = snap.val()||{}; if(vistaActiva==='flipflopsSD') renderFlipflopsSD(); });
+  db.ref('evaluaciones/tallerMatematicas').on('value',  snap => { DATA.taller    = snap.val()||{}; if(vistaActiva==='taller')    renderTaller();    });
+  db.ref('evaluaciones/tallerMate10').on('value',       snap => { DATA.taller10  = snap.val()||{}; if(vistaActiva==='taller10')  renderTaller10();  });
+
 
   // ── Selector de formulario ──────────────────────────────
   function cambiarVista() {
@@ -452,7 +524,9 @@
       mate:      [renderMate,      DATA.mate],
       yuncarEnc: [renderYuncarEnc, DATA.yuncarEnc],
       yuncarEnt: [renderYuncarEnt, DATA.yuncarEnt],
-      flipflopsSD: [renderFlipflopsSD, DATA.flipflopsSD]
+      flipflopsSD: [renderFlipflopsSD, DATA.flipflopsSD],
+      taller:    [renderTaller,    DATA.taller],
+      taller10:  [renderTaller10,  DATA.taller10]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
