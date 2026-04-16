@@ -434,7 +434,7 @@
   db.ref('evaluaciones/matematicasBasicas').on('value', snap => { DATA.mate      = snap.val()||{}; if(vistaActiva==='mate')      renderMate();      });
   db.ref('encuesta_yuncar').on('value',                 snap => { DATA.yuncarEnc = snap.val()||{}; if(vistaActiva==='yuncarEnc') renderYuncarEnc(); });
   db.ref('entrevistas_yuncar').on('value',              snap => { DATA.yuncarEnt = snap.val()||{}; if(vistaActiva==='yuncarEnt') renderYuncarEnt(); });
-  db.ref('quizzes/flipflops_sd').on('value', snap => { DATA.flipflopsSD = snap.val()||{}; if(vistaActiva==='flipflopsSD') renderFlipflopsSD(); });
+  db.ref('flipflops_sd').on('value', snap => { DATA.flipflopsSD = snap.val()||{}; if(vistaActiva==='flipflopsSD') renderFlipflopsSD(); });
 
   // ── Selector de formulario ──────────────────────────────
   function cambiarVista() {
