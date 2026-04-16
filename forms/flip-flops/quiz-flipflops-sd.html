@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario — Flip-Flops | Sistemas Digitales</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+:root {
+  --navy:#1B2A5E; --blue:#2E5BA8; --lblue:#D6E4F7;
+  --gray:#6B7280; --lgray:#E5E7EB; --offwh:#F7F8FC;
+  --white:#FFFFFF; --red:#C0392B; --lred:#FDECEA;
+  --green:#1A7A4A; --lgreen:#D4EDDA;
+  --yellow:#B7791F; --lyellow:#FEF3C7; --text:#1E293B;
+  --font-h:'Cormorant Garamond',Georgia,serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-b);background:var(--white);color:var(--text);display:flex;flex-direction:column}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:.7rem 2rem;border-bottom:2px solid var(--navy);background:var(--white);flex-shrink:0;gap:1rem}
+.hdr-course{font-family:var(--font-m);font-size:.68rem;color:var(--gray);letter-spacing:.06em}
+.hdr-title{font-family:var(--font-h);font-size:1.3rem;font-weight:700;color:var(--navy)}
+.hdr-right{display:flex;align-items:center;gap:1.2rem;flex-shrink:0}
+
+/* Timer */
+.timer-box{display:none;align-items:center;gap:.45rem;background:var(--offwh);border:1px solid var(--lgray);border-radius:4px;padding:.3rem .7rem;font-family:var(--font-m);font-size:.95rem;font-weight:500;color:var(--navy);min-width:82px;justify-content:center}
+.timer-box.warn{background:var(--lyellow);border-color:var(--yellow);color:var(--yellow)}
+.timer-box.danger{background:var(--lred);border-color:var(--red);color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* Progress */
+.prog-wrap{display:none;align-items:center;gap:.6rem}
+.prog-lbl{font-family:var(--font-m);font-size:.7rem;color:var(--gray)}
+.prog-outer{width:130px;height:5px;background:var(--lgray);border-radius:3px;overflow:hidden}
+.prog-inner{height:100%;background:var(--navy);border-radius:3px;transition:width .4s ease}
+
+/* ── Main ── */
+.main{flex:1;overflow:hidden;position:relative}
+
+/* ── Sections ── */
+.sec{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5rem 1rem;opacity:0;pointer-events:none;transform:translateX(50px);transition:opacity .3s ease,transform .3s ease;overflow-y:auto}
+.sec.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.sec.exit{opacity:0;transform:translateX(-50px);transition:opacity .22s ease,transform .22s ease}
+
+.card{background:var(--white);border:1px solid var(--lgray);border-top:4px solid var(--navy);border-radius:4px;padding:2rem;width:100%;max-width:680px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin:0 auto}
+.card.blue{border-top-color:var(--blue)}
+.card.green{border-top-color:var(--green)}
+
+/* ── Inst section ── */
+.inst-title{font-family:var(--font-h);font-size:1.7rem;font-weight:700;color:var(--navy);margin-bottom:.2rem}
+.inst-sub{font-size:.83rem;color:var(--gray);font-weight:300;margin-bottom:1.2rem;padding-bottom:.9rem;border-bottom:1px solid var(--lgray)}
+.inst-list{list-style:none;margin-bottom:1.2rem}
+.inst-list li{display:flex;gap:.7rem;padding:.5rem 0;border-bottom:1px solid var(--lgray);font-size:.88rem;font-weight:300;align-items:flex-start}
+.inst-list li:last-child{border-bottom:none}
+.dot{width:1.25rem;height:1.25rem;background:var(--navy);border-radius:50%;color:var(--white);font-family:var(--font-m);font-size:.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.inst-warn{background:var(--lred);border-left:4px solid var(--red);padding:.7rem .9rem;border-radius:0 4px 4px 0;font-size:.83rem;color:var(--red);font-weight:500;margin-bottom:1.2rem}
+
+/* Form */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:520px){.frow{grid-template-columns:1fr}}
+.ff label{display:block;font-family:var(--font-m);font-size:.68rem;color:var(--gray);letter-spacing:.05em;margin-bottom:.3rem;text-transform:uppercase}
+.ff input{width:100%;border:1px solid var(--lgray);border-radius:4px;padding:.55rem .8rem;font-family:var(--font-b);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s}
+.ff input:focus{border-color:var(--navy)}
+.ff .err{font-size:.73rem;color:var(--red);margin-top:.22rem;display:none}
+.ff.invalid input{border-color:var(--red)}
+.ff.invalid .err{display:block}
+
+/* Buttons */
+.btn{font-family:var(--font-b);font-size:.88rem;font-weight:500;padding:.65rem 1.6rem;border:none;border-radius:4px;cursor:pointer;transition:background .2s,opacity .2s;display:inline-flex;align-items:center;gap:.45rem}
+.btn-p{background:var(--navy);color:var(--white)}
+.btn-p:hover{background:var(--blue)}
+.btn-p:disabled{opacity:.45;cursor:not-allowed}
+.btn-o{background:var(--white);color:var(--navy);border:1px solid var(--navy)}
+.btn-o:hover{background:var(--offwh)}
+.brow{display:flex;justify-content:flex-end;gap:.65rem;margin-top:1.4rem}
+
+/* ── Theory block ── */
+.theory-label{font-family:var(--font-m);font-size:.68rem;color:var(--blue);font-weight:500;letter-spacing:.08em;margin-bottom:.5rem}
+.theory-title{font-family:var(--font-h);font-size:1.55rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+.theory-sub{font-size:.82rem;color:var(--gray);font-weight:300;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--lgray)}
+.theory-h3{font-family:var(--font-h);font-size:1.1rem;font-weight:600;color:var(--navy);margin:1.1rem 0 .4rem}
+.theory-p{font-size:.9rem;font-weight:300;color:var(--text);margin-bottom:.5rem;line-height:1.6}
+.info{background:var(--lblue);border-left:4px solid var(--blue);padding:.7rem .9rem;border-radius:0 4px 4px 0;font-size:.85rem;color:var(--navy);margin:.7rem 0}
+.warn-box{background:var(--lred);border-left:4px solid var(--red);padding:.7rem .9rem;border-radius:0 4px 4px 0;font-size:.85rem;color:var(--red);font-weight:500;margin:.7rem 0}
+.formula{font-family:var(--font-m);background:var(--offwh);border:1px solid var(--lgray);border-radius:4px;padding:.4rem .85rem;font-size:.85rem;color:var(--navy);display:inline-block;margin:.3rem 0;font-weight:500}
+.trans-banner{background:var(--navy);color:var(--white);border-radius:4px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.trans-banner h2{font-family:var(--font-h);font-size:1.6rem;font-weight:700;margin-bottom:.4rem}
+.trans-banner p{font-size:.88rem;font-weight:300;opacity:.8}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-family:var(--font-m);font-size:.8rem}
+thead th{background:var(--navy);color:var(--white);padding:.45rem .8rem;text-align:center;font-weight:500;letter-spacing:.04em}
+tbody td{padding:.42rem .8rem;text-align:center;border-bottom:1px solid var(--lgray)}
+tbody tr:nth-child(even) td{background:var(--offwh)}
+.td-mem{background:var(--lblue)!important;color:var(--navy);font-weight:600}
+.td-warn{background:var(--lred)!important;color:var(--red);font-weight:600}
+.td-tog{background:#D6EAF8!important;color:var(--blue);font-weight:600}
+.td-l{text-align:left}
+
+/* ── Question ── */
+.q-num{font-family:var(--font-m);font-size:.7rem;color:var(--blue);font-weight:500;letter-spacing:.06em;margin-bottom:.45rem}
+.q-txt{font-family:var(--font-h);font-size:1.22rem;font-weight:600;color:var(--navy);line-height:1.4;margin-bottom:1.1rem}
+.opts{list-style:none}
+.opt-item{margin-bottom:.55rem}
+.opt-lbl{display:flex;align-items:flex-start;gap:.8rem;padding:.7rem .95rem;border:1.5px solid var(--lgray);border-radius:4px;cursor:pointer;font-size:.9rem;font-weight:300;transition:border-color .15s,background .15s;user-select:none;line-height:1.4}
+.opt-lbl:hover{border-color:var(--blue);background:var(--lblue)}
+.opt-radio{display:none}
+.opt-radio:checked+.opt-lbl{border-color:var(--navy);background:var(--lblue);font-weight:500;color:var(--navy)}
+.opt-key{font-family:var(--font-m);font-size:.72rem;background:var(--navy);color:var(--white);border-radius:2px;padding:.08rem .4rem;flex-shrink:0;margin-top:.05rem}
+.opt-radio:checked+.opt-lbl .opt-key{background:var(--blue)}
+
+/* ── Results ── */
+.res-wrap{text-align:center;margin-bottom:1.5rem}
+.score-circle{width:100px;height:100px;border-radius:50%;border:4px solid var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem}
+.score-num{font-family:var(--font-h);font-size:2rem;font-weight:700;color:var(--navy);line-height:1}
+.score-den{font-family:var(--font-m);font-size:.68rem;color:var(--gray)}
+.score-pct{font-family:var(--font-h);font-size:1.1rem;font-weight:600;margin-bottom:.2rem}
+.score-msg{font-size:.86rem;color:var(--gray);font-weight:300;margin-bottom:1.2rem}
+.res-item{display:flex;gap:.7rem;padding:.65rem 0;border-bottom:1px solid var(--lgray);font-size:.86rem;align-items:flex-start}
+.res-item:last-child{border-bottom:none}
+.res-q{font-weight:400;color:var(--text);line-height:1.4}
+.res-a{font-size:.79rem;color:var(--gray);font-weight:300;margin-top:.12rem}
+.res-a.w{color:var(--red)}
+.res-a.r{color:var(--green)}
+.tag{display:inline-block;background:var(--lblue);color:var(--blue);font-family:var(--font-m);font-size:.67rem;padding:.12rem .5rem;border-radius:2px;font-weight:500}
+
+/* ── Overlay ── */
+.overlay{position:fixed;inset:0;background:rgba(27,42,94,.96);display:none;align-items:center;justify-content:center;z-index:200;flex-direction:column}
+.overlay.show{display:flex}
+.ov-card{background:var(--white);border-top:4px solid var(--red);border-radius:4px;padding:2rem 2.2rem;max-width:400px;width:90%;text-align:center}
+.ov-card.yellow{border-top-color:var(--yellow)}
+.ov-card h2{font-family:var(--font-h);font-size:1.55rem;color:var(--navy);margin-bottom:.45rem}
+.ov-card p{font-size:.88rem;color:var(--gray);font-weight:300;margin-bottom:1rem}
+.ov-score{font-family:var(--font-m);font-size:1rem;color:var(--navy);margin-bottom:1.1rem}
+
+/* Spinner */
+.spin{display:inline-block;width:1rem;height:1rem;border:2px solid var(--lgray);border-top-color:var(--navy);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Section type badge */
+.sec-badge{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-m);font-size:.68rem;padding:.18rem .55rem;border-radius:2px;margin-bottom:.6rem;font-weight:500;letter-spacing:.04em}
+.sec-badge.theory{background:var(--lblue);color:var(--blue)}
+.sec-badge.quiz{background:var(--offwh);color:var(--navy);border:1px solid var(--lgray)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div>
+    <div class="hdr-course">SISTEMAS DIGITALES · CUESTIONARIO</div>
+    <div class="hdr-title">Flip-Flops y Circuitos Secuenciales</div>
+  </div>
+  <div class="hdr-right">
+    <div class="prog-wrap" id="prog-wrap">
+      <span class="prog-lbl" id="prog-lbl">0/10</span>
+      <div class="prog-outer"><div class="prog-inner" id="prog-bar" style="width:0%"></div></div>
+    </div>
+    <div class="timer-box" id="timer-box">⏱ <span id="timer-txt">45:00</span></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main" id="main">
+
+<!-- ══ SEC 0: IDENTIFICACIÓN ══════════════════════════════════════════ -->
+<div class="sec active" id="sec-0">
+  <div class="card" style="max-width:660px;">
+    <h1 class="inst-title">Cuestionario de Flip-Flops</h1>
+    <p class="inst-sub">Sistemas Digitales · Ingeniería · 3er – 4to Semestre</p>
+
+    <ul class="inst-list">
+      <li><span class="dot">1</span><span>El cuestionario incluye <strong>2 bloques de teoría</strong> seguidos cada uno de <strong>5 preguntas</strong> (10 en total, selección aleatoria de un banco de 20).</span></li>
+      <li><span class="dot">2</span><span>Dispones de <strong>45 minutos</strong> desde que inicias. El temporizador corre durante teoría y preguntas.</span></li>
+      <li><span class="dot">3</span><span>Solo tienes <strong>un intento</strong>. El número de identificación bloquea nuevos intentos.</span></li>
+      <li><span class="dot">4</span><span>Puedes navegar con los botones <em>Anterior</em> y <em>Siguiente</em>; las respuestas quedan guardadas en memoria.</span></li>
+      <li><span class="dot">5</span><span>Al finalizar verás tu puntaje y el detalle de aciertos y fallos por pregunta.</span></li>
+    </ul>
+
+    <div class="inst-warn">⚠ Si cambias de pestaña, minimizas la ventana o abres otra aplicación, el cuestionario se cierra automáticamente y el intento queda registrado con las respuestas hasta ese momento.</div>
+
+    <div class="frow">
+      <div class="ff" id="ff-nombre">
+        <label for="inp-nombre">Nombre completo</label>
+        <input type="text" id="inp-nombre" placeholder="Apellidos, Nombre" autocomplete="off">
+        <div class="err">Ingresa tu nombre completo</div>
+      </div>
+      <div class="ff" id="ff-id">
+        <label for="inp-id">Número de identificación</label>
+        <input type="text" id="inp-id" placeholder="Ej: 1234567890" autocomplete="off" inputmode="numeric">
+        <div class="err">Ingresa un número válido (6–12 dígitos)</div>
+      </div>
+    </div>
+    <div id="start-err" style="display:none;font-size:.82rem;color:var(--red);margin-bottom:.6rem;font-weight:500;"></div>
+    <div class="brow" style="margin-top:.6rem;">
+      <button class="btn btn-p" id="btn-start" onclick="startQuiz()">
+        <span id="start-txt">Iniciar</span>
+        <span id="start-sp" class="spin" style="display:none"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 1: TEORÍA BLOQUE 1 ════════════════════════════════════════ -->
+<div class="sec" id="sec-1">
+  <div class="card blue" style="max-width:680px;">
+    <div class="sec-badge theory">📖 BLOQUE TEÓRICO 1 DE 2</div>
+    <h2 class="theory-title">Conceptos y los 4 Flip-Flops</h2>
+    <p class="theory-sub">Combinacional vs. Secuencial · SR · D · JK · T · Señal de reloj</p>
+
+    <h3 class="theory-h3">Combinacional vs. Secuencial</h3>
+    <p class="theory-p">En un <strong>circuito combinacional</strong> la salida depende únicamente de las entradas en ese instante — sin memoria, sin reloj. En un <strong>circuito secuencial</strong> la salida depende de las entradas actuales <em>y del estado interno previo</em>, almacenado en flip-flops. Además aparece una <strong>señal de reloj (CLK)</strong> que regula el instante exacto en que el circuito puede cambiar de estado.</p>
+    <div class="info">En el flanco ascendente ↑ (CLK: 0→1) el FF captura las entradas y actualiza Q. Entre flancos, Q no cambia aunque cambien las entradas.</div>
+
+    <h3 class="theory-h3">FF-SR — Set / Reset</h3>
+    <p class="theory-p">S lleva Q a 1 (Set), R lleva Q a 0 (Reset). S=R=0 mantiene el estado. <strong>S=R=1 es condición prohibida.</strong></p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>S</th><th>R</th><th>Q(t+1)</th><th class="td-l">Operación</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td class="td-mem">Q(t)</td><td class="td-l">Sin cambio</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td class="td-l">Reset</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td class="td-l">Set</td></tr>
+          <tr><td class="td-warn">1</td><td class="td-warn">1</td><td class="td-warn">X</td><td class="td-warn td-l">PROHIBIDO ⚠</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="theory-h3">FF-D — Data / Delay</h3>
+    <p class="theory-p">Una sola entrada D. En cada flanco ↑, Q copia el valor de D. Elimina la condición prohibida del SR. El más usado en registros y memorias.</p>
+    <div class="formula">Q(t+1) = D</div>
+
+    <h3 class="theory-h3">FF-JK</h3>
+    <p class="theory-p">Mejora el SR: cuando J=K=1 la salida <strong>conmuta (Toggle)</strong> en lugar de quedar indeterminada. Sin condición prohibida — el más versátil.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>J</th><th>K</th><th>Q(t+1)</th><th class="td-l">Operación</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td class="td-mem">Q(t)</td><td class="td-l">Sin cambio</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td><td class="td-l">Reset</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td class="td-l">Set</td></tr>
+          <tr><td class="td-tog">1</td><td class="td-tog">1</td><td class="td-tog">Q'(t)</td><td class="td-l" style="background:#D6EAF8;">Toggle</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="theory-h3">FF-T — Toggle</h3>
+    <p class="theory-p">Derivado del JK con J=K=T. T=1 → Q conmuta. T=0 → Q se mantiene. Base de los contadores binarios.</p>
+    <div class="formula">T=0 → mantener &nbsp;|&nbsp; T=1 → conmutar</div>
+
+    <div class="brow">
+      <button class="btn btn-p" onclick="goTo(2)">Ir a las preguntas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECS 2–6: PREGUNTAS BLOQUE 1 (generadas por JS) ════════════════ -->
+
+<!-- ══ SEC 7: TRANSICIÓN + TEORÍA BLOQUE 2 ═══════════════════════════ -->
+<div class="sec" id="sec-7">
+  <div class="card blue" style="max-width:680px;">
+    <div class="sec-badge theory">📖 BLOQUE TEÓRICO 2 DE 2</div>
+    <h2 class="theory-title">Tablas de Excitación y Diseño Secuencial</h2>
+    <p class="theory-sub">Tabla de excitación · Proceso de diseño · Contador módulo-4</p>
+
+    <h3 class="theory-h3">¿Qué es la tabla de excitación?</h3>
+    <p class="theory-p">La <strong>tabla de verdad</strong> responde: dadas las entradas, ¿cuál será Q(t+1)? La <strong>tabla de excitación</strong> responde la pregunta inversa: para pasar de Q(t) a Q(t+1) deseado, ¿qué entradas debo aplicar? Es la herramienta clave para diseñar contadores.</p>
+
+    <h3 class="theory-h3">Excitación FF-D</h3>
+    <p class="theory-p">La más simple: D = Q(t+1). La entrada debe ser exactamente el estado al que se quiere llegar.</p>
+    <div class="formula">D = Q(t+1)</div>
+
+    <h3 class="theory-h3">Excitación FF-T</h3>
+    <p class="theory-p">T = 1 si el estado cambia, T = 0 si se mantiene.</p>
+    <div class="formula">T = Q(t) ⊕ Q(t+1)</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Q(t)</th><th>Q(t+1)</th><th>T</th><th class="td-l">Interpretación</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td class="td-l">Sin cambio</td></tr>
+          <tr><td>0</td><td>1</td><td class="td-tog">1</td><td class="td-l">Conmutar 0→1</td></tr>
+          <tr><td>1</td><td>0</td><td class="td-tog">1</td><td class="td-l">Conmutar 1→0</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td class="td-l">Sin cambio</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="theory-h3">Proceso de diseño secuencial</h3>
+    <p class="theory-p"><strong>1. Especificación</strong> → <strong>2. Tabla de estados</strong> (Q(t)→Q(t+1)) → <strong>3. Tabla de excitación</strong> (¿qué entradas producen cada transición?) → <strong>4. Ecuaciones</strong> (Karnaugh o inspección) → <strong>5. Circuito</strong>.</p>
+
+    <h3 class="theory-h3">Ejemplo: Contador módulo-4 con FF-T</h3>
+    <p class="theory-p">Secuencia: 00→01→10→11→00. Aplicando T = Q⊕Q⁺:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Q1(t)</th><th>Q0(t)</th><th>Q1(t+1)</th><th>Q0(t+1)</th><th>T1</th><th>T0</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td class="td-tog">1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>0</td><td class="td-tog">1</td><td class="td-tog">1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="td-tog">1</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td><td>0</td><td class="td-tog">1</td><td class="td-tog">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info"><strong>Resultado:</strong> T0 = 1 (constante) &nbsp;·&nbsp; T1 = Q0. Circuito: FF0 con T0=VCC, FF1 con T1=Q0, CLK común. Sin compuertas adicionales.</div>
+
+    <div class="brow">
+      <button class="btn btn-o" onclick="goTo(6)">← Pregunta anterior</button>
+      <button class="btn btn-p" onclick="goTo(8)">Ir a las preguntas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECS 8–12: PREGUNTAS BLOQUE 2 (generadas por JS) ══════════════ -->
+
+<!-- ══ SEC 13: RESULTADOS ════════════════════════════════════════════ -->
+<div class="sec" id="sec-result">
+  <div class="card" style="max-width:700px;" id="result-card">
+    <div id="result-content"></div>
+  </div>
+</div>
+
+</main><!-- /main -->
+
+<!-- OVERLAY: cambio de pestaña -->
+<div class="overlay" id="ov-tab">
+  <div class="ov-card">
+    <h2>Intento finalizado</h2>
+    <p>Saliste de la ventana del cuestionario. El intento fue registrado automáticamente con las respuestas completadas hasta ese momento.</p>
+    <div class="ov-score" id="ov-tab-score"></div>
+    <button class="btn btn-p" onclick="location.reload()">Volver al inicio</button>
+  </div>
+</div>
+
+<!-- OVERLAY: tiempo agotado -->
+<div class="overlay" id="ov-time">
+  <div class="ov-card yellow">
+    <h2>Tiempo agotado</h2>
+    <p>Los 45 minutos terminaron. El cuestionario fue enviado con las respuestas registradas.</p>
+    <div class="ov-score" id="ov-time-score"></div>
+    <button class="btn btn-p" onclick="showResults()">Ver mis resultados</button>
+  </div>
+</div>
+
+<script>
+// ══ FIREBASE ═════════════════════════════════════════════════════════
+firebase.initializeApp({
+  apiKey: "AIzaSyDm7HqKSG7Z7EREGAqsrAq3DGBhvDqMVxE",
+  authDomain: "tower-ing.firebaseapp.com",
+  databaseURL: "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId: "tower-ing",
+  storageBucket: "tower-ing.appspot.com",
+  messagingSenderId: "440636238988",
+  appId: "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+const db = firebase.database();
+const QUIZ_PATH = "quizzes/flipflops_sd";
+
+// ══ BANCO (20 preguntas) ══════════════════════════════════════════════
+// Grupo A — Conceptos (12 preguntas, se eligen 5)
+const BANK_A = [
+  { id:1, txt:"¿Cuál es la diferencia fundamental entre un circuito combinacional y uno secuencial?",
+    opts:[{k:"a",t:"El combinacional usa transistores y el secuencial usa compuertas lógicas."},{k:"b",t:"El secuencial tiene memoria interna y señal de reloj; el combinacional no."},{k:"c",t:"El combinacional es siempre más rápido que el secuencial."},{k:"d",t:"No hay diferencia, ambos son equivalentes en toda aplicación."}], ok:"b" },
+  { id:2, txt:"En un FF-SR, ¿qué ocurre cuando S=0 y R=0?",
+    opts:[{k:"a",t:"Q pasa a 0."},{k:"b",t:"Q pasa a 1."},{k:"c",t:"Q mantiene su estado anterior (memoria)."},{k:"d",t:"Q queda en estado indeterminado."}], ok:"c" },
+  { id:3, txt:"¿Cuál es la condición prohibida del Flip-Flop SR?",
+    opts:[{k:"a",t:"S=0, R=1"},{k:"b",t:"S=1, R=0"},{k:"c",t:"S=0, R=0"},{k:"d",t:"S=1, R=1"}], ok:"d" },
+  { id:4, txt:"En un FF-D, si D=1 y llega un flanco ascendente de reloj (Q inicial = 0), ¿qué ocurre con Q?",
+    opts:[{k:"a",t:"Q permanece en 0."},{k:"b",t:"Q pasa a 1."},{k:"c",t:"Q queda indeterminado."},{k:"d",t:"Q alterna entre 0 y 1."}], ok:"b" },
+  { id:5, txt:"¿Cuál es la ecuación que describe el comportamiento del Flip-Flop D?",
+    opts:[{k:"a",t:"Q(t+1) = D'"},{k:"b",t:"Q(t+1) = Q(t) XOR D"},{k:"c",t:"Q(t+1) = D"},{k:"d",t:"Q(t+1) = Q(t) AND D"}], ok:"c" },
+  { id:6, txt:"En un FF-JK con J=1 y K=1, ¿qué ocurre con la salida Q en cada flanco de reloj?",
+    opts:[{k:"a",t:"Q pasa a 0."},{k:"b",t:"Q pasa a 1."},{k:"c",t:"Q conmuta (Toggle): cambia al estado opuesto."},{k:"d",t:"Q mantiene su estado."}], ok:"c" },
+  { id:7, txt:"¿Cuál es la ventaja principal del FF-JK respecto al FF-SR?",
+    opts:[{k:"a",t:"Es más rápido en frecuencia de operación."},{k:"b",t:"Elimina la condición prohibida: J=K=1 produce Toggle."},{k:"c",t:"Tiene menos entradas y ocupa menos área."},{k:"d",t:"Consume menos potencia en reposo."}], ok:"b" },
+  { id:8, txt:"Un FF-T tiene Q=1 inicial. Si T=0 y llegan 5 flancos de reloj, ¿cuál es el estado final de Q?",
+    opts:[{k:"a",t:"Q = 0"},{k:"b",t:"Q = 1"},{k:"c",t:"Indeterminado"},{k:"d",t:"Depende de la frecuencia del reloj"}], ok:"b" },
+  { id:14, txt:"¿Qué es el flanco ascendente de una señal de reloj?",
+    opts:[{k:"a",t:"El instante en que CLK pasa de 1 a 0."},{k:"b",t:"El instante en que CLK pasa de 0 a 1."},{k:"c",t:"El intervalo en que CLK permanece en nivel alto."},{k:"d",t:"El instante en que CLK permanece en nivel bajo."}], ok:"b" },
+  { id:16, txt:"¿Cuál flip-flop es el más utilizado en la práctica para implementar registros y memorias?",
+    opts:[{k:"a",t:"FF-SR, por ser el más básico."},{k:"b",t:"FF-JK, por ser el más versátil."},{k:"c",t:"FF-D, por su simplicidad y ausencia de condición prohibida."},{k:"d",t:"FF-T, por su capacidad de división de frecuencia."}], ok:"c" },
+  { id:19, txt:"Un FF-JK tiene Q=1, J=1, K=0. Llega un flanco de reloj. ¿Cuál es Q(t+1)?",
+    opts:[{k:"a",t:"Q(t+1) = 0"},{k:"b",t:"Q(t+1) = 1"},{k:"c",t:"Q(t+1) conmuta a 0"},{k:"d",t:"Indeterminado"}], ok:"b" },
+  { id:20, txt:"¿Qué distingue al circuito secuencial del combinacional respecto a la señal de reloj?",
+    opts:[{k:"a",t:"El combinacional usa reloj rápido y el secuencial lento."},{k:"b",t:"Ambos usan señal de reloj obligatoriamente."},{k:"c",t:"Solo el secuencial usa señal de reloj para sincronizar cambios de estado."},{k:"d",t:"La señal de reloj solo se usa en flip-flops SR."}], ok:"c" }
+];
+
+// Grupo B — Excitación y diseño (8 preguntas, se eligen 5)
+const BANK_B = [
+  { id:9, txt:"¿Cuál es la regla de excitación del Flip-Flop T?",
+    opts:[{k:"a",t:"T = Q(t) AND Q(t+1)"},{k:"b",t:"T = Q(t) OR Q(t+1)"},{k:"c",t:"T = Q(t) XNOR Q(t+1)"},{k:"d",t:"T = Q(t) XOR Q(t+1)"}], ok:"d" },
+  { id:10, txt:"¿Para qué sirve la tabla de excitación en el diseño de circuitos secuenciales?",
+    opts:[{k:"a",t:"Para calcular el retardo de propagación del circuito."},{k:"b",t:"Para analizar la salida dado el estado de las entradas."},{k:"c",t:"Para determinar qué entradas se aplican para lograr una transición de estado deseada."},{k:"d",t:"Para simplificar expresiones booleanas combinacionales."}], ok:"c" },
+  { id:11, txt:"¿Cuántos FF-T se necesitan como mínimo para implementar un contador módulo-8?",
+    opts:[{k:"a",t:"2, porque 2² = 4"},{k:"b",t:"3, porque 2³ = 8"},{k:"c",t:"4, porque se requiere margen adicional"},{k:"d",t:"8, uno por estado"}], ok:"b" },
+  { id:12, txt:"En el diseño del contador módulo-4 con FF-T, ¿cuál es la ecuación simplificada de T0?",
+    opts:[{k:"a",t:"T0 = Q1"},{k:"b",t:"T0 = Q0"},{k:"c",t:"T0 = 0"},{k:"d",t:"T0 = 1 (constante)"}], ok:"d" },
+  { id:13, txt:"En el diseño del contador módulo-4 con FF-T, ¿cuál es la ecuación simplificada de T1?",
+    opts:[{k:"a",t:"T1 = 1"},{k:"b",t:"T1 = Q1"},{k:"c",t:"T1 = Q0"},{k:"d",t:"T1 = Q0 XOR Q1"}], ok:"c" },
+  { id:15, txt:"Un FF-JK tiene Q=0, J=0, K=1. Llega un flanco de reloj. ¿Cuál es el nuevo estado de Q?",
+    opts:[{k:"a",t:"Q = 0"},{k:"b",t:"Q = 1"},{k:"c",t:"Q conmuta"},{k:"d",t:"Indeterminado"}], ok:"a" },
+  { id:17, txt:"Para el FF-D, la tabla de excitación indica que para pasar de Q=1 a Q=0, se debe aplicar:",
+    opts:[{k:"a",t:"D = 1"},{k:"b",t:"D = 0"},{k:"c",t:"D = X (cualquier valor)"},{k:"d",t:"No es posible con el FF-D"}], ok:"b" },
+  { id:18, txt:"¿Cuál es el orden correcto del proceso de diseño de un circuito secuencial?",
+    opts:[{k:"a",t:"Circuito → Ecuaciones → Tabla de estados → Especificación"},{k:"b",t:"Especificación → Tabla de estados → Excitación → Ecuaciones → Circuito"},{k:"c",t:"Excitación → Tabla de estados → Ecuaciones → Circuito"},{k:"d",t:"Tabla de estados → Especificación → Circuito → Ecuaciones"}], ok:"b" }
+];
+
+// ══ STATE ═════════════════════════════════════════════════════════════
+let S = {
+  started:false, nombre:"", id:"",
+  qA:[], qB:[],           // selected questions
+  answers:{},             // { globalIdx: key }  0-4 = A, 5-9 = B
+  cur:0,                  // current section number
+  timerInt:null, secsLeft:45*60,
+  submitted:false, startTime:null, terminadoPor:"submit"
+};
+
+// ══ HELPERS ═══════════════════════════════════════════════════════════
+function shuffle(a){ const r=[...a]; for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];} return r; }
+function sanKey(id){ return id.replace(/[.#$[\]/]/g,"_"); }
+function allQ(){ return [...S.qA,...S.qB]; }
+
+// ══ BUILD QUESTION SECTIONS ═══════════════════════════════════════════
+function buildQSections(){
+  const main = document.getElementById("main");
+  const res  = document.getElementById("sec-result");
+  const keys = ["a","b","c","d"];
+
+  // Secs 2-6: preguntas bloque A (indices 0-4)
+  S.qA.forEach((q,i)=>{
+    const globalIdx = i;
+    const secNum = i+2;  // 2,3,4,5,6
+    const isLast = i===4;
+    const sec = mkQSec(secNum, q, globalIdx, i+1, 10,
+      secNum===2 ? null : secNum-1,
+      isLast ? "theory2" : secNum+1);
+    main.insertBefore(sec, document.getElementById("sec-7"));
+  });
+
+  // Secs 8-12: preguntas bloque B (indices 5-9)
+  S.qB.forEach((q,i)=>{
+    const globalIdx = i+5;
+    const secNum = i+8;  // 8,9,10,11,12
+    const isLast = i===4;
+    const sec = mkQSec(secNum, q, globalIdx, i+6, 10,
+      secNum===8 ? 7 : secNum-1,
+      isLast ? "submit" : secNum+1);
+    main.insertBefore(sec, document.getElementById("sec-result"));
+  });
+}
+
+function mkQSec(secNum, q, globalIdx, qNum, qTotal, prevSec, nextAction){
+  const sec = document.createElement("div");
+  sec.className = "section sec";
+  sec.id = `sec-${secNum}`;
+  const shuffledOpts = shuffle(q.opts);
+  const keys = ["a","b","c","d"];
+
+  const nextBtn = nextAction === "submit"
+    ? `<button class="btn btn-p" id="btn-submit" onclick="confirmSubmit()">Enviar cuestionario ✓</button>`
+    : nextAction === "theory2"
+    ? `<button class="btn btn-p" onclick="goTo(7)">Siguiente bloque →</button>`
+    : `<button class="btn btn-p" onclick="goTo(${nextAction})">Siguiente →</button>`;
+
+  const prevBtn = prevSec !== null
+    ? `<button class="btn btn-o" onclick="goTo(${prevSec})">← Anterior</button>`
+    : "";
+
+  sec.innerHTML = `
+    <div class="card" style="max-width:660px;">
+      <div class="sec-badge quiz">📝 PREGUNTA ${qNum} DE ${qTotal}</div>
+      <div class="q-txt">${q.txt}</div>
+      <ul class="opts" id="opts-${globalIdx}">
+        ${shuffledOpts.map((opt,oi)=>`
+          <li class="opt-item">
+            <input class="opt-radio" type="radio" name="q${globalIdx}" id="q${globalIdx}_${opt.k}" value="${opt.k}"
+              onchange="recordAns(${globalIdx},'${opt.k}')">
+            <label class="opt-lbl" for="q${globalIdx}_${opt.k}">
+              <span class="opt-key">${keys[oi]}</span>
+              <span>${opt.t}</span>
+            </label>
+          </li>`).join("")}
+      </ul>
+      <div class="brow">${prevBtn}${nextBtn}</div>
+    </div>`;
+  return sec;
+}
+
+// ══ NAVIGATION ════════════════════════════════════════════════════════
+function goTo(id){
+  const cur = document.getElementById(`sec-${S.cur}`);
+  if(cur){ cur.classList.add("exit"); setTimeout(()=>cur.classList.remove("active","exit"),260); }
+  S.cur = id;
+  const nxt = document.getElementById(`sec-${id}`);
+  if(nxt){ setTimeout(()=>nxt.classList.add("active"),40); }
+  updateProg();
+  // scroll to top of new section
+  setTimeout(()=>{ if(nxt) nxt.scrollTop=0; },50);
+}
+
+function recordAns(idx,key){ S.answers[idx]=key; updateProg(); }
+
+function updateProg(){
+  if(!S.started) return;
+  const ans = Object.keys(S.answers).length;
+  document.getElementById("prog-wrap").style.display = "flex";
+  document.getElementById("prog-lbl").textContent = `${ans}/10`;
+  document.getElementById("prog-bar").style.width = `${(ans/10)*100}%`;
+}
+
+// ══ TIMER ════════════════════════════════════════════════════════════
+function startTimer(){
+  document.getElementById("timer-box").style.display = "flex";
+  S.timerInt = setInterval(()=>{
+    S.secsLeft--;
+    renderTimer();
+    if(S.secsLeft<=0){
+      clearInterval(S.timerInt);
+      if(!S.submitted){
+        S.terminadoPor="tiempo";
+        submitQuiz().then(()=>{
+          const sc=calcScore();
+          document.getElementById("ov-time-score").textContent=`Tu puntaje: ${sc.correct}/10`;
+          document.getElementById("ov-time").classList.add("show");
+        });
+      }
+    }
+  },1000);
+}
+
+function renderTimer(){
+  const m=Math.floor(S.secsLeft/60), s=S.secsLeft%60;
+  document.getElementById("timer-txt").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  const box=document.getElementById("timer-box");
+  box.classList.remove("warn","danger");
+  if(S.secsLeft<=120) box.classList.add("danger");
+  else if(S.secsLeft<=300) box.classList.add("warn");
+}
+
+// ══ ANTI-TAB ═════════════════════════════════════════════════════════
+function setupAntiTab(){
+  const handler = async()=>{
+    if(S.started && !S.submitted){
+      S.terminadoPor="cambio_pestana";
+      clearInterval(S.timerInt);
+      await submitQuiz();
+      const sc=calcScore();
+      document.getElementById("ov-tab-score").textContent=`Tu puntaje: ${sc.correct}/10`;
+      document.getElementById("ov-tab").classList.add("show");
+    }
+  };
+  document.addEventListener("visibilitychange",()=>{ if(document.hidden) handler(); });
+  window.addEventListener("blur", handler);
+}
+
+// ══ START ═════════════════════════════════════════════════════════════
+async function startQuiz(){
+  const nombre=document.getElementById("inp-nombre").value.trim();
+  const id=document.getElementById("inp-id").value.trim();
+  let ok=true;
+  ["ff-nombre","ff-id"].forEach(id=>document.getElementById(id).classList.remove("invalid"));
+  document.getElementById("start-err").style.display="none";
+  if(!nombre||nombre.length<3){ document.getElementById("ff-nombre").classList.add("invalid"); ok=false; }
+  if(!id||!/^\d{6,12}$/.test(id)){ document.getElementById("ff-id").classList.add("invalid"); ok=false; }
+  if(!ok) return;
+
+  const btn=document.getElementById("btn-start");
+  btn.disabled=true;
+  document.getElementById("start-txt").textContent="Verificando...";
+  document.getElementById("start-sp").style.display="inline-block";
+
+  try{
+    const snap=await db.ref(`${QUIZ_PATH}/${sanKey(id)}`).once("value");
+    if(snap.exists() && (snap.val().total_intentos||0) >= 2){
+      document.getElementById("start-err").style.display="block";
+      document.getElementById("start-err").textContent="Ya completaste los 2 intentos permitidos para este número de identificación.";
+      btn.disabled=false;
+      document.getElementById("start-txt").textContent="Iniciar";
+      document.getElementById("start-sp").style.display="none";
+      return;
+    }
+  }catch(e){
+    document.getElementById("start-err").style.display="block";
+    document.getElementById("start-err").textContent="Error de conexión. Verifica tu red e inténtalo de nuevo.";
+    btn.disabled=false;
+    document.getElementById("start-txt").textContent="Iniciar";
+    document.getElementById("start-sp").style.display="none";
+    return;
+  }
+
+  S.nombre=nombre; S.id=id;
+  S.qA=shuffle(BANK_A).slice(0,5);
+  S.qB=shuffle(BANK_B).slice(0,5);
+  S.startTime=new Date().toISOString();
+  S.started=true;
+
+  buildQSections();
+  setupAntiTab();
+  startTimer();
+  updateProg();
+  goTo(1);
+}
+
+// ══ SUBMIT ════════════════════════════════════════════════════════════
+function confirmSubmit(){
+  const unanswered = 10 - Object.keys(S.answers).length;
+  if(unanswered>0){
+    if(!confirm(`Tienes ${unanswered} pregunta(s) sin responder. ¿Deseas enviar de todas formas?`)) return;
+  }
+  clearInterval(S.timerInt);
+  submitQuiz().then(()=>showResults());
+}
+
+function calcScore(){
+  const qs=allQ();
+  let correct=0;
+  const detail=qs.map((q,idx)=>{
+    const given=S.answers[idx]||null;
+    const hit=given===q.ok;
+    if(hit) correct++;
+    return{id:q.id,txt:q.txt,given,ok:q.ok,hit};
+  });
+  return{correct,detail};
+}
+
+async function submitQuiz(){
+  if(S.submitted) return;
+  S.submitted=true;
+  const elapsed=45*60-S.secsLeft;
+  const sc=calcScore();
+  const key=sanKey(S.id);
+  const record={
+    nombre:S.nombre, identificacion:S.id,
+    timestamp:S.startTime, timestamp_fin:new Date().toISOString(),
+    duracion_seg:elapsed, puntaje:sc.correct, total:10,
+    porcentaje:Math.round((sc.correct/10)*100),
+    terminado_por:S.terminadoPor,
+    bloque_a_puntaje: sc.detail.slice(0,5).filter(d=>d.hit).length,
+    bloque_b_puntaje: sc.detail.slice(5,10).filter(d=>d.hit).length,
+    preguntas:sc.detail.map(d=>({id:d.id,respuesta:d.given||"sin_respuesta",correcta:d.ok,acerto:d.hit}))
+  };
+  try{
+    const snap = await db.ref(`${QUIZ_PATH}/${key}`).once("value");
+    const n = snap.exists() ? (snap.val().total_intentos||0)+1 : 1;
+    record.numero_intento = n;
+    await db.ref(`${QUIZ_PATH}/${key}/intento_${n}`).set(record);
+    await db.ref(`${QUIZ_PATH}/${key}/total_intentos`).set(n);
+  }
+  catch(e){ console.error("Firebase error:",e); }
+}
+
+// ══ RESULTS ══════════════════════════════════════════════════════════
+function showResults(){
+  document.getElementById("ov-time").classList.remove("show");
+  const sc=calcScore();
+  const pct=Math.round((sc.correct/10)*100);
+  const msg=pct>=90?"¡Excelente dominio del tema!":pct>=70?"Buen trabajo.":pct>=50?"Desempeño aceptable. Repasa los temas fallados.":"Necesitas reforzar los conceptos. Revisa la guía teórica.";
+  const col=pct>=70?"var(--navy)":pct>=50?"var(--yellow)":"var(--red)";
+  const scA=sc.detail.slice(0,5).filter(d=>d.hit).length;
+  const scB=sc.detail.slice(5,10).filter(d=>d.hit).length;
+
+  const rows=sc.detail.map((d,i)=>`
+    <div class="res-item">
+      <span style="font-size:1rem;flex-shrink:0;margin-top:.05rem">${d.hit?"✅":"❌"}</span>
+      <div>
+        <div class="res-q"><strong>P${i+1}${i<5?" (Bloque 1)":" (Bloque 2)"}.</strong> ${d.txt}</div>
+        <div class="res-a ${d.hit?"r":"w"}">
+          Tu respuesta: ${d.given?labelFor(d,d.given):"<em>Sin responder</em>"}
+          ${!d.hit?` &nbsp;·&nbsp; Correcta: ${labelFor(d,d.ok)}`:""}
+        </div>
+      </div>
+    </div>`).join("");
+
+  document.getElementById("result-content").innerHTML=`
+    <h2 style="font-family:var(--font-h);font-size:1.6rem;font-weight:700;color:var(--navy);text-align:center;margin-bottom:.2rem;">Cuestionario completado</h2>
+    <p style="text-align:center;font-size:.83rem;color:var(--gray);font-weight:300;margin-bottom:1.2rem;">
+      ${S.nombre} &nbsp;·&nbsp; ID: ${S.id} &nbsp;·&nbsp;
+      <span class="tag">${S.terminadoPor==="submit"?"Entregado":S.terminadoPor==="tiempo"?"Tiempo agotado":"Cierre automático"}</span>
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap;">
+      <div style="text-align:center;background:var(--offwh);border:1px solid var(--lgray);border-radius:4px;padding:1rem 1.5rem;">
+        <div style="font-family:var(--font-h);font-size:2.2rem;font-weight:700;color:${col};line-height:1">${sc.correct}</div>
+        <div style="font-family:var(--font-m);font-size:.7rem;color:var(--gray)">de 10 &nbsp;·&nbsp; ${pct}%</div>
+        <div style="font-size:.8rem;color:var(--gray);font-weight:300;margin-top:.3rem">${msg}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;justify-content:center;">
+        <div style="background:var(--offwh);border:1px solid var(--lgray);border-radius:4px;padding:.6rem 1.2rem;font-family:var(--font-m);font-size:.8rem;color:var(--navy)">
+          Bloque 1 — Conceptos: <strong>${scA}/5</strong>
+        </div>
+        <div style="background:var(--offwh);border:1px solid var(--lgray);border-radius:4px;padding:.6rem 1.2rem;font-family:var(--font-m);font-size:.8rem;color:var(--navy)">
+          Bloque 2 — Excitación: <strong>${scB}/5</strong>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:2px solid var(--lgray);padding-top:1rem;">${rows}</div>`;
+
+  goTo("result");
+  document.getElementById("prog-wrap").style.display="none";
+  document.getElementById("timer-box").style.display="none";
+}
+
+function labelFor(q,key){
+  const opt=q.opts?q.opts.find(o=>o.k===key):null;
+  if(!opt) return key;
+  return `(${key}) ${opt.t.slice(0,55)}${opt.t.length>55?"…":""}`;
+}
+</script>
+</body>
+</html>
