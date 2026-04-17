@@ -17,7 +17,8 @@
   <script src="render-yuncar-ent.js"></script>
   <script src="render-flipflops-sd.js"></script>
   <script src="render-taller.js"></script>
-  <script src="render-taller10.js"></script> 
+  <script src="render-taller10.js"></script>
+  <script src="render-coordenadas-geo.js"></script> 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -164,6 +165,7 @@
     <option value="flipflopsSD">Cuestionario Flip-Flops — Sistemas Digitales</option>
     <option value="taller">Taller Integral · Matemáticas Básicas</option>
     <option value="taller10">Taller R2 · Matemáticas Básicas</option>
+    <option value="coordenadasGeo">Quiz Sistemas de Coordenadas — Tec. Geoespaciales</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -470,6 +472,55 @@
     </div>
   </div>
 
+  <!-- TEC. GEOESPACIALES · QUIZ SISTEMAS DE COORDENADAS (/10 ALEATORIO) -->
+  <div class="vista" id="vista-coordenadasGeo">
+
+    <!-- Filtro por rango de fechas -->
+    <div class="seccion" style="padding:1rem 1.2rem;margin-bottom:1rem">
+      <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
+        <span style="font-weight:600;color:#1a2a6c"><i class="fas fa-filter"></i> Filtrar por fecha y hora:</span>
+        <label style="font-size:.88rem;color:#555">Desde
+          <input type="datetime-local" id="cg-filtro-desde" style="padding:.4rem .6rem;border:1px solid #dde3ed;border-radius:6px;font-size:.88rem;margin-left:.3rem">
+        </label>
+        <label style="font-size:.88rem;color:#555">Hasta
+          <input type="datetime-local" id="cg-filtro-hasta" style="padding:.4rem .6rem;border:1px solid #dde3ed;border-radius:6px;font-size:.88rem;margin-left:.3rem">
+        </label>
+        <button onclick="aplicarFiltroCG()" style="background:#1a2a6c;color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.88rem;cursor:pointer;font-weight:600">Aplicar</button>
+        <button onclick="limpiarFiltroCG()" style="background:#ecf0f1;color:#333;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.88rem;cursor:pointer;font-weight:600">Limpiar</button>
+        <span id="cg-filtro-estado" style="font-size:.82rem;color:#7f8c8d;margin-left:auto"></span>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card"><i class="fas fa-users"></i><h3 id="cg-total">0</h3><p>Total estudiantes</p></div>
+      <div class="kpi-card"><i class="fas fa-star" style="color:#3498db"></i><h3 id="cg-promedio" style="font-size:1.4rem">—</h3><p>Promedio mejor intento / 10</p></div>
+      <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="cg-aprobados">0</h3><p>✅ Aprobados ≥ 6</p></div>
+      <div class="kpi-card orange"><i class="fas fa-minus-circle"></i><h3 id="cg-proceso">0</h3><p>🟡 En proceso 4–5</p></div>
+      <div class="kpi-card red"><i class="fas fa-redo"></i><h3 id="cg-riesgo">0</h3><p>🔴 En riesgo ≤ 3</p></div>
+      <div class="kpi-card purple"><i class="fas fa-history"></i><h3 id="cg-dos-intentos">0</h3><p>Usaron 2 intentos</p></div>
+    </div>
+    <div class="charts-row">
+      <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución de niveles</h2><div class="chart-wrap"><canvas id="cg-chart-niveles"></canvas></div></div>
+      <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de puntajes</h2><div class="chart-wrap"><canvas id="cg-chart-hist"></canvas></div></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-layer-group"></i> % de acierto por bloque temático</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">🔴 Rojo &lt; 50% (reforzar) · 🟠 Naranja 50–74% (revisar) · 🟢 Verde ≥ 75% (dominado). Los 4 bloques son: Escalas, Coordenadas Colombia (MAGNA-SIRGAS/CTM12/UTM), Distancias y Nortes (γ, δ, azimuts).</p>
+      <div class="chart-wrap" style="height:260px"><canvas id="cg-chart-temas"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-check-double"></i> % de acierto por pregunta (ID del banco)</h2>
+      <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Banco de 25 preguntas · 10 aleatorias por intento. 🔴 &lt;50% · 🟠 50–74% · 🟢 ≥75%. Pasa el mouse sobre una barra para ver el tema.</p>
+      <div class="chart-wrap" style="height:420px"><canvas id="cg-chart-preguntas"></canvas></div>
+    </div>
+    <div class="seccion">
+      <h2><i class="fas fa-list"></i> Detalle por estudiante <span style="font-weight:400;font-size:.85rem">(mejor intento)</span></h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>#</th><th>Nombre</th><th style="text-align:center">Identificación</th><th>Puntaje</th><th style="text-align:center">Escalas</th><th style="text-align:center">Coord.</th><th style="text-align:center">Dist.</th><th style="text-align:center">Nortes</th><th style="text-align:center">Nivel</th><th style="text-align:center">Intentos</th><th style="text-align:center">Cierre</th><th>Fecha</th></tr></thead>
+        <tbody id="cg-tabla-body"></tbody>
+      </table></div>
+    </div>
+  </div>
 
 </main>
 
@@ -491,7 +542,7 @@
   let DATA = {
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
-    flipflopsSD: {},
+    flipflopsSD: {}, coordenadasGeo: {},
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -506,7 +557,7 @@
   db.ref('quizzes/flipflops_sd').on('value', snap => { DATA.flipflopsSD = snap.val()||{}; if(vistaActiva==='flipflopsSD') renderFlipflopsSD(); });
   db.ref('evaluaciones/tallerMatematicas').on('value',  snap => { DATA.taller    = snap.val()||{}; if(vistaActiva==='taller')    renderTaller();    });
   db.ref('evaluaciones/tallerMate10').on('value',       snap => { DATA.taller10  = snap.val()||{}; if(vistaActiva==='taller10')  renderTaller10();  });
-
+  db.ref('quizzes/coordenadas_geo').on('value', snap => { DATA.coordenadasGeo = snap.val() || {}; if (vistaActiva === 'coordenadasGeo') renderCoordenadasGeo(); });
 
   // ── Selector de formulario ──────────────────────────────
   function cambiarVista() {
@@ -526,7 +577,8 @@
       yuncarEnt: [renderYuncarEnt, DATA.yuncarEnt],
       flipflopsSD: [renderFlipflopsSD, DATA.flipflopsSD],
       taller:    [renderTaller,    DATA.taller],
-      taller10:  [renderTaller10,  DATA.taller10]
+      taller10:  [renderTaller10,  DATA.taller10],
+      coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
