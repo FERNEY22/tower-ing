@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz · Sistemas de Coordenadas · Tecnologías Geoespaciales </title>
+
+  <!-- Firebase compat SDK v10.12.2 -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <style>
+    :root{
+      --navy:#1a2a6c;
+      --navy-2:#2d3f8f;
+      --teal:#16a085;
+      --blue:#3498db;
+      --green:#27ae60;
+      --green-soft:#eaf7ef;
+      --amber:#e67e22;
+      --red:#e74c3c;
+      --red-soft:#fdecea;
+      --text:#2c3e50;
+      --muted:#7f8c8d;
+      --border:#dde3ed;
+      --bg:linear-gradient(135deg,#f5f7fa,#c3cfe2);
+      --card:#ffffff;
+      --shadow:0 4px 15px rgba(0,0,0,.10);
+      --shadow-lg:0 10px 30px rgba(26,42,108,.18);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.55;
+      min-height:100vh;
+      padding:0 0 3rem;
+    }
+
+    header{
+      background:var(--navy);
+      color:#fff;
+      padding:1.1rem 2rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-shadow:0 2px 10px rgba(0,0,0,.2);
+      position:sticky;top:0;z-index:100;
+    }
+    header .brand{font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:.55rem}
+    header .brand a{color:#fff;text-decoration:none}
+    header .brand .sep{opacity:.55;margin:0 .35rem}
+    header .brand .sub{opacity:.8;font-weight:400}
+    #timer{
+      font-family:'Courier New',monospace;
+      font-size:1.1rem;font-weight:700;
+      background:rgba(255,255,255,.12);
+      padding:.45rem .9rem;border-radius:8px;
+      min-width:110px;text-align:center;
+      letter-spacing:1px;
+    }
+    #timer.warning{background:#e67e22;color:#fff}
+    #timer.danger{background:#e74c3c;color:#fff;animation:blink 1s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
+
+    main{max-width:900px;margin:2rem auto 0;padding:0 1rem}
+
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:2rem 2.2rem;
+      box-shadow:var(--shadow);
+      margin-bottom:1.3rem;
+    }
+    .card h2{color:var(--navy);margin-bottom:.9rem;font-size:1.45rem}
+    .card h3{color:var(--navy-2);margin:1.1rem 0 .5rem;font-size:1.1rem}
+    .card p{margin-bottom:.7rem}
+    .card ul{margin:.5rem 0 .5rem 1.4rem}
+    .card ul li{margin-bottom:.3rem}
+
+    .progress-wrap{
+      background:#fff;border-radius:10px;padding:.9rem 1.2rem;
+      box-shadow:var(--shadow);margin-bottom:1rem;
+      display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+    }
+    .progress-label{font-size:.88rem;color:var(--muted);white-space:nowrap}
+    .progress-bar{
+      flex:1;height:10px;background:#ecf0f1;border-radius:5px;overflow:hidden;
+      min-width:160px;
+    }
+    .progress-fill{
+      height:100%;background:linear-gradient(90deg,var(--navy),var(--teal));
+      width:0;transition:width .35s ease;
+    }
+    .progress-count{font-weight:600;color:var(--navy);white-space:nowrap}
+
+    label{display:block;font-weight:600;color:var(--navy);margin-bottom:.35rem;font-size:.95rem}
+    input[type="text"]{
+      width:100%;padding:.75rem 1rem;
+      border:2px solid var(--border);border-radius:8px;
+      font-size:1rem;font-family:inherit;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,42,108,.1)}
+    .field-group{margin-bottom:1.1rem}
+    .hint{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+
+    .question-header{
+      display:flex;align-items:baseline;gap:.8rem;margin-bottom:.8rem;flex-wrap:wrap;
+    }
+    .q-num{
+      background:var(--navy);color:#fff;
+      padding:.3rem .75rem;border-radius:6px;
+      font-size:.82rem;font-weight:700;
+    }
+    .q-topic{
+      background:#ecf0f1;color:var(--navy-2);
+      padding:.25rem .7rem;border-radius:5px;
+      font-size:.78rem;font-weight:600;
+    }
+    .q-text{
+      font-size:1.05rem;color:var(--text);
+      margin:.6rem 0 1.1rem;line-height:1.6;
+    }
+    .q-text code{
+      background:#f4f6fa;padding:.12rem .4rem;border-radius:4px;
+      font-family:'Courier New',monospace;font-size:.92em;
+    }
+
+    /* OPTIONS */
+    .options{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem}
+    .option{
+      display:flex;align-items:flex-start;gap:.75rem;
+      padding:.85rem 1rem;
+      border:2px solid var(--border);border-radius:8px;
+      cursor:pointer;transition:all .2s ease;
+      background:#fdfdfe;
+    }
+    .option:hover{border-color:var(--navy-2);background:#f8faff}
+    .option input[type="radio"]{
+      margin-top:.2rem;accent-color:var(--navy);transform:scale(1.15);
+      cursor:pointer;flex-shrink:0;
+    }
+    .option-label{
+      flex:1;font-size:.96rem;color:var(--text);line-height:1.45;
+    }
+    .option-key{
+      display:inline-block;font-weight:700;color:var(--navy);margin-right:.35rem;
+    }
+    .option.selected{border-color:var(--navy);background:#eef2ff}
+
+    /* Estados bloqueados tras enviar */
+    .option.locked{cursor:not-allowed;pointer-events:none}
+    .option.correct-answer{
+      border-color:var(--green);background:var(--green-soft);
+    }
+    .option.correct-answer .option-key{color:var(--green)}
+    .option.wrong-answer{
+      border-color:var(--red);background:var(--red-soft);
+    }
+    .option.wrong-answer .option-key{color:var(--red)}
+    .option.dimmed{opacity:.55}
+
+    /* FEEDBACK */
+    .feedback{
+      display:none;padding:1rem 1.15rem;border-radius:8px;
+      margin:1rem 0;border-left:4px solid;font-size:.95rem;
+      animation:fadeIn .3s ease;
+    }
+    .feedback.show{display:block}
+    .feedback.ok{background:var(--green-soft);border-left-color:var(--green);color:#1b6d3b}
+    .feedback.bad{background:var(--red-soft);border-left-color:var(--red);color:#8a2e26}
+    .feedback .fb-title{
+      display:block;font-weight:700;margin-bottom:.4rem;font-size:1rem;
+    }
+    .feedback .fb-proc{
+      background:rgba(255,255,255,.65);border-radius:6px;padding:.7rem .9rem;
+      margin-top:.55rem;color:var(--text);font-size:.9rem;line-height:1.55;
+    }
+    .feedback .fb-proc code{
+      background:#f4f6fa;padding:.1rem .35rem;border-radius:3px;
+      font-family:'Courier New',monospace;font-size:.9em;
+    }
+    .feedback .fb-proc strong{color:var(--navy)}
+
+    /* NAV BUTTONS */
+    .nav-buttons{
+      display:flex;justify-content:space-between;gap:.8rem;
+      margin-top:1.2rem;flex-wrap:wrap;
+    }
+    button{
+      padding:.75rem 1.6rem;border:none;border-radius:8px;
+      font-size:1rem;font-weight:600;cursor:pointer;
+      transition:all .2s ease;font-family:inherit;
+    }
+    .btn-primary{background:var(--navy);color:#fff}
+    .btn-primary:hover{background:var(--navy-2);transform:translateY(-1px);box-shadow:var(--shadow)}
+    .btn-secondary{background:#ecf0f1;color:var(--text)}
+    .btn-secondary:hover{background:#d8dee2}
+    .btn-success{background:var(--green);color:#fff}
+    .btn-success:hover{background:#1f8a4c;transform:translateY(-1px)}
+    .btn-warn{background:var(--amber);color:#fff}
+    .btn-warn:hover{background:#c76418}
+    button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+    .seccion{display:none;animation:fadeIn .35s ease}
+    .seccion.activa{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .result-hero{
+      text-align:center;padding:1.5rem 1rem;
+      background:linear-gradient(135deg,var(--navy),var(--teal));
+      color:#fff;border-radius:10px;margin-bottom:1.3rem;
+    }
+    .result-score{font-size:3rem;font-weight:700;margin:.4rem 0}
+    .result-label{font-size:1rem;opacity:.92}
+    .result-detail-item{
+      padding:.9rem 1rem;border-radius:8px;margin-bottom:.55rem;
+      border-left:4px solid;
+    }
+    .detail-correct{background:var(--green-soft);border-left-color:var(--green)}
+    .detail-wrong{background:var(--red-soft);border-left-color:var(--red)}
+    .detail-q{font-size:.92rem;color:var(--text);margin-bottom:.3rem}
+    .detail-a{font-size:.88rem;color:var(--muted)}
+    .detail-a strong{color:var(--text)}
+
+    .alert{
+      padding:.9rem 1.1rem;border-radius:8px;margin-bottom:1rem;
+      border-left:4px solid;font-size:.93rem;
+    }
+    .alert-info{background:#eaf3fa;border-left-color:var(--blue);color:#1e5a8a}
+    .alert-warning{background:#fef5eb;border-left-color:var(--amber);color:#8a5a1e}
+    .alert-danger{background:#fdecea;border-left-color:var(--red);color:#8a2e26}
+
+    .loader{
+      display:inline-block;width:16px;height:16px;
+      border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+      border-radius:50%;animation:spin .8s linear infinite;
+      vertical-align:middle;margin-right:.5rem;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    footer{
+      text-align:center;font-size:.82rem;color:var(--muted);
+      margin-top:2rem;padding:1rem;
+    }
+
+    @media (max-width:640px){
+      header{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem}
+      header .brand{font-size:.85rem}
+      #timer{font-size:1rem;min-width:90px}
+      .card{padding:1.3rem 1.2rem}
+      .card h2{font-size:1.2rem}
+      main{margin-top:1rem}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <a href="/">tower-ing</a>
+    <span class="sep">·</span>
+    <span class="sub">Quiz Sistemas de Coordenadas</span>
+  </div>
+  <div id="timer">45:00</div>
+</header>
+
+<main>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <span class="progress-label">Progreso</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 10</span>
+  </div>
+
+  <!-- SECCIÓN 0: INTRO + IDENTIFICACIÓN -->
+  <section class="seccion activa" id="sec-0">
+    <div class="card">
+      <h2>📐 Quiz · Sistemas de Coordenadas en Colombia</h2>
+      <p><strong>Tecnologías Geoespaciales</strong> · Ing. Ferney Torres · <em></em></p>
+
+      <h3>Temática evaluada</h3>
+      <ul>
+        <li>Escalas cartográficas (numérica, gráfica, conversiones)</li>
+        <li>Sistemas de referencia en Colombia (MAGNA-SIRGAS, UTM, CTM12)</li>
+        <li>Conversión de coordenadas (DMS ↔ DD), zonas UTM, códigos EPSG</li>
+        <li>Cálculo de distancias (euclidiana, haversine, área por Gauss)</li>
+        <li>Norte geográfico, magnético y de cuadrícula · convergencia γ · declinación δ</li>
+      </ul>
+
+      <h3>Reglas del intento</h3>
+      <ul>
+        <li><strong>10 preguntas</strong> seleccionadas aleatoriamente de un banco de 25.</li>
+        <li><strong>Retroalimentación inmediata</strong>: al enviar cada respuesta verás si es correcta y el procedimiento resumido.</li>
+        <li><strong>Tiempo:</strong> 45 minutos totales. Al agotarse, el quiz se entrega automáticamente.</li>
+        <li><strong>Intentos permitidos:</strong> máximo 2 por número de identificación.</li>
+        <li>Salir de la pestaña, minimizar o cambiar de aplicación <strong>cierra el intento automáticamente</strong>.</li>
+        <li>No se permite uso de IA, calculadoras externas ni material de apoyo.</li>
+      </ul>
+
+      <div class="alert alert-warning" style="margin-top:1rem">
+        ⚠️ Una vez pulses <em>Iniciar intento</em>, el cronómetro arranca. No recargues la página.
+      </div>
+
+      <h3>Identificación</h3>
+      <div class="field-group">
+        <label for="inp-nombre">Nombre completo</label>
+        <input type="text" id="inp-nombre" placeholder="Nombres y apellidos" autocomplete="off">
+      </div>
+      <div class="field-group">
+        <label for="inp-cedula">Número de identificación</label>
+        <input type="text" id="inp-cedula" placeholder="Solo dígitos, sin puntos" inputmode="numeric" autocomplete="off">
+        <div class="hint">Se usa como identificador único del intento.</div>
+      </div>
+      <div class="field-group">
+        <label for="inp-programa">Programa / curso</label>
+        <input type="text" id="inp-programa" placeholder="Ej. Ing. Topográfica · Tecnologías Geoespaciales" autocomplete="off">
+      </div>
+
+      <div id="msg-inicio"></div>
+
+      <div class="nav-buttons" style="justify-content:flex-end">
+        <button class="btn-primary" id="btn-iniciar" onclick="iniciarIntento()">Iniciar intento →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN FINAL: RESULTADOS -->
+  <section class="seccion" id="sec-final">
+    <div class="card">
+      <div class="result-hero">
+        <div class="result-label">Puntaje obtenido</div>
+        <div class="result-score" id="scoreValue">—</div>
+        <div class="result-label" id="scoreMsg">—</div>
+      </div>
+
+      <div id="motivoCierre" style="margin-bottom:1rem"></div>
+
+      <div class="nav-buttons" style="justify-content:center;margin-top:1.4rem">
+        <button class="btn-secondary" onclick="window.location.href='/forms/'">← Volver a formularios</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  tower-ing.com · Tecnologías Geoespaciales · © Ing. Ferney Torres
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   FIREBASE — configuración tower-ing (Realtime DB)
+   ═══════════════════════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+};
+
+let db = null;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  console.log('✅ Firebase conectado');
+}catch(e){
+  console.error('❌ Firebase no inicializó:', e);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BANCO DE PREGUNTAS (25) — Sistemas de Coordenadas
+   Cada pregunta incluye: enunciado · opciones A-B-C-D · correcta · procedimiento
+   ═══════════════════════════════════════════════════════════════ */
+const BANCO = [
+  /* ───── BLOQUE A — ESCALAS CARTOGRÁFICAS (7) ───── */
+  {
+    id:1, tema:"Escalas",
+    enunciado:"Sobre un mapa topográfico a escala 1:25 000 una vía mide 14.8 cm. ¿Cuál es su longitud real?",
+    opciones:[
+      {k:"A", txt:"370 m"},
+      {k:"B", txt:"3 700 m"},
+      {k:"C", txt:"37 000 m"},
+      {k:"D", txt:"1 850 m"}
+    ],
+    correcta:"B",
+    proc:"<strong>D = d × N</strong> = 14.8 cm × 25 000 = 370 000 cm = <code>3 700 m</code>."
+  },
+  {
+    id:2, tema:"Escalas",
+    enunciado:"En un mapa a escala 1:50 000, ¿a qué distancia real corresponde 1 cm sobre el papel?",
+    opciones:[
+      {k:"A", txt:"50 m"},
+      {k:"B", txt:"500 m"},
+      {k:"C", txt:"5 km"},
+      {k:"D", txt:"50 km"}
+    ],
+    correcta:"B",
+    proc:"<strong>D = d × N</strong> = 1 cm × 50 000 = 50 000 cm = <code>500 m</code>."
+  },
+  {
+    id:3, tema:"Escalas",
+    enunciado:"La afirmación verbal «1 cm equivale a 1 km» corresponde a la escala:",
+    opciones:[
+      {k:"A", txt:"1:1 000"},
+      {k:"B", txt:"1:10 000"},
+      {k:"C", txt:"1:100 000"},
+      {k:"D", txt:"1:1 000 000"}
+    ],
+    correcta:"C",
+    proc:"1 km = 100 000 cm. El denominador de escala es 100 000 → <code>1:100 000</code>."
+  },
+  {
+    id:4, tema:"Escalas",
+    enunciado:"¿Cuál de las siguientes escalas tiene el mayor nivel de detalle cartográfico?",
+    opciones:[
+      {k:"A", txt:"1:500"},
+      {k:"B", txt:"1:10 000"},
+      {k:"C", txt:"1:100 000"},
+      {k:"D", txt:"1:500 000"}
+    ],
+    correcta:"A",
+    proc:"A <strong>menor denominador</strong> (N), mayor detalle. 1:500 es la más grande de las cuatro y muestra más elementos por unidad de área."
+  },
+  {
+    id:5, tema:"Escalas",
+    enunciado:"Sobre un plano catastral a 1:2 000 el lado de un lote mide 8 cm. La longitud real del lado es:",
+    opciones:[
+      {k:"A", txt:"16 m"},
+      {k:"B", txt:"80 m"},
+      {k:"C", txt:"160 m"},
+      {k:"D", txt:"1 600 m"}
+    ],
+    correcta:"C",
+    proc:"<strong>D = d × N</strong> = 8 cm × 2 000 = 16 000 cm = <code>160 m</code>."
+  },
+  {
+    id:6, tema:"Escalas",
+    enunciado:"¿Cuál afirmación sobre escalas cartográficas es <strong>correcta</strong>?",
+    opciones:[
+      {k:"A", txt:"La escala numérica 1:5 000 es más pequeña que 1:50 000."},
+      {k:"B", txt:"La escala gráfica mantiene su validez cuando el mapa se fotocopia a otro tamaño."},
+      {k:"C", txt:"A mayor denominador de escala, mayor nivel de detalle."},
+      {k:"D", txt:"Una escala 1:1 000 es menos precisa que una 1:100 000."}
+    ],
+    correcta:"B",
+    proc:"La <strong>escala gráfica</strong> se amplía o reduce proporcionalmente con el papel, por lo que conserva su validez tras fotocopias. La numérica no."
+  },
+  {
+    id:7, tema:"Escalas",
+    enunciado:"Con curvímetro sobre un mapa 1:50 000 se mide una longitud de 50 cm. La distancia real es:",
+    opciones:[
+      {k:"A", txt:"2.5 km"},
+      {k:"B", txt:"25 km"},
+      {k:"C", txt:"250 km"},
+      {k:"D", txt:"250 m"}
+    ],
+    correcta:"B",
+    proc:"<strong>D = d × N</strong> = 50 cm × 50 000 = 2 500 000 cm = 25 000 m = <code>25 km</code>."
+  },
+
+  /* ───── BLOQUE B — COORDENADAS COLOMBIA (7) ───── */
+  {
+    id:8, tema:"Coordenadas Colombia",
+    enunciado:"El sistema de referencia geodésico oficial de Colombia, adoptado por el IGAC en 2005 en reemplazo del Datum Bogotá (1941), es:",
+    opciones:[
+      {k:"A", txt:"Datum Bogotá (1941)"},
+      {k:"B", txt:"WGS84"},
+      {k:"C", txt:"MAGNA-SIRGAS"},
+      {k:"D", txt:"PSAD56"}
+    ],
+    correcta:"C",
+    proc:"<strong>MAGNA-SIRGAS</strong> (Marco Geocéntrico Nacional de Referencia) fue adoptado por el IGAC en 2005 (Resolución 068). Usa el elipsoide GRS80 y corrige errores de hasta ~500 m del Datum Bogotá."
+  },
+  {
+    id:9, tema:"Coordenadas Colombia",
+    enunciado:"Bogotá se localiza aproximadamente en λ ≈ 74°04'W. Aplicando <code>Zona = int((λ + 180°)/6°) + 1</code>, la zona UTM que le corresponde es:",
+    opciones:[
+      {k:"A", txt:"17N"},
+      {k:"B", txt:"18N"},
+      {k:"C", txt:"19N"},
+      {k:"D", txt:"20N"}
+    ],
+    correcta:"B",
+    proc:"λ = −74.067°. <code>(−74.067 + 180)/6 = 105.933/6 = 17.66</code> → int = 17; <strong>Zona = 17 + 1 = 18</strong>. Como φ > 0 (hemisferio norte) → <code>18N</code>."
+  },
+  {
+    id:10, tema:"Coordenadas Colombia",
+    enunciado:"El meridiano central de la zona UTM 18N es:",
+    opciones:[
+      {k:"A", txt:"69°00'W"},
+      {k:"B", txt:"72°00'W"},
+      {k:"C", txt:"75°00'W"},
+      {k:"D", txt:"78°00'W"}
+    ],
+    correcta:"C",
+    proc:"<strong>λ₀ = 6·Zona − 183</strong> = 6·18 − 183 = 108 − 183 = <code>−75° = 75°W</code>."
+  },
+  {
+    id:11, tema:"Coordenadas Colombia",
+    enunciado:"El código EPSG del sistema <strong>CTM12</strong> (origen nacional único de Colombia) es:",
+    opciones:[
+      {k:"A", txt:"EPSG:4686 (MAGNA-SIRGAS geográficas)"},
+      {k:"B", txt:"EPSG:9377"},
+      {k:"C", txt:"EPSG:32618 (UTM 18N WGS84)"},
+      {k:"D", txt:"EPSG:4326 (WGS84 geográficas)"}
+    ],
+    correcta:"B",
+    proc:"<strong>EPSG:9377</strong> corresponde a MAGNA-SIRGAS/Origen-Nacional (CTM12), adoptado por el IGAC en 2018 como proyección única para todo Colombia con meridiano central ≈ −74.0775°."
+  },
+  {
+    id:12, tema:"Coordenadas Colombia",
+    enunciado:"La latitud <code>φ = 4°42'N</code> convertida a grados decimales (6 decimales) es:",
+    opciones:[
+      {k:"A", txt:"4.420000°"},
+      {k:"B", txt:"4.700000°"},
+      {k:"C", txt:"4.070000°"},
+      {k:"D", txt:"4.742000°"}
+    ],
+    correcta:"B",
+    proc:"<strong>DD = G + M/60 + S/3600</strong> = 4 + 42/60 + 0/3600 = 4 + 0.7 = <code>4.700000°</code>."
+  },
+  {
+    id:13, tema:"Coordenadas Colombia",
+    enunciado:"En CTM12 se eligieron Falso Este = Falso Norte = 1 000 000 m. La razón técnica principal es:",
+    opciones:[
+      {k:"A", txt:"Mantener compatibilidad numérica con Datum Bogotá 1941."},
+      {k:"B", txt:"Evitar valores negativos en todo el territorio y diferenciar visualmente de coordenadas UTM."},
+      {k:"C", txt:"Reducir el error de proyección al ecuador."},
+      {k:"D", txt:"Estandarizar con los valores de Falso Este del sistema UTM internacional."}
+    ],
+    correcta:"B",
+    proc:"Los valores FE = FN = 1 000 000 m garantizan que toda Colombia quede en el cuadrante positivo y, al no coincidir con los valores UTM típicos (500 000 / 0 / 10 000 000), evitan confusión entre sistemas."
+  },
+  {
+    id:14, tema:"Coordenadas Colombia",
+    enunciado:"¿Cuál de las siguientes coordenadas geográficas es <strong>inválida</strong>?",
+    opciones:[
+      {k:"A", txt:"φ = 4.710°, λ = −74.072°"},
+      {k:"B", txt:"φ = −92.300°, λ = −74.000°"},
+      {k:"C", txt:"φ = 12.550°, λ = −81.700°"},
+      {k:"D", txt:"φ = 1.500°, λ = −70.000°"}
+    ],
+    correcta:"B",
+    proc:"Rango válido: <strong>φ ∈ [−90°, +90°]</strong>, <strong>λ ∈ [−180°, +180°]</strong>. El caso B tiene φ = −92.3° que está fuera del rango de latitud."
+  },
+
+  /* ───── BLOQUE C — DISTANCIAS (5) ───── */
+  {
+    id:15, tema:"Distancias",
+    enunciado:"Dos puntos en UTM 18N: P1 (N=1 165 480.25, E=830 142.60) y P2 (N=1 165 840.75, E=830 618.30). La distancia euclidiana d(P1→P2) es aproximadamente:",
+    opciones:[
+      {k:"A", txt:"478.3 m"},
+      {k:"B", txt:"596.9 m"},
+      {k:"C", txt:"836.2 m"},
+      {k:"D", txt:"1 205.0 m"}
+    ],
+    correcta:"B",
+    proc:"ΔN = 360.50, ΔE = 475.70. <strong>d = √(ΔE² + ΔN²)</strong> = √(475.70² + 360.50²) = √(226 290 + 129 960) = √356 250 ≈ <code>596.9 m</code>."
+  },
+  {
+    id:16, tema:"Distancias",
+    enunciado:"Para calcular la distancia en línea recta entre Bogotá y Cartagena (separación ≈ 650 km) a partir de sus coordenadas geográficas, el método más adecuado es:",
+    opciones:[
+      {k:"A", txt:"Pitágoras directo sobre los valores en grados."},
+      {k:"B", txt:"Distancia euclidiana en metros sin proyectar."},
+      {k:"C", txt:"Fórmula haversine sobre la esfera terrestre (R = 6 371 km)."},
+      {k:"D", txt:"Regla de tres usando la escala del mapa."}
+    ],
+    correcta:"C",
+    proc:"A distancias grandes la curvatura de la Tierra no puede despreciarse. La <strong>haversine</strong> calcula la distancia de círculo máximo directamente sobre la esfera, sin necesidad de proyectar."
+  },
+  {
+    id:17, tema:"Distancias",
+    enunciado:"Aplicar la fórmula de Pitágoras a coordenadas geográficas (lat/lon en grados) sin proyectar produce:",
+    opciones:[
+      {k:"A", txt:"Un resultado exacto si ambos puntos están en la misma zona UTM."},
+      {k:"B", txt:"Un error significativo: los grados no son métricos y la Tierra no es plana."},
+      {k:"C", txt:"Un resultado automáticamente en metros."},
+      {k:"D", txt:"El mismo resultado que haversine a cualquier escala."}
+    ],
+    correcta:"B",
+    proc:"Los grados de latitud y longitud <strong>no son unidades métricas</strong> y, además, la longitud de 1° de longitud varía con la latitud (cos φ). Pitágoras sobre grados es numéricamente inválido."
+  },
+  {
+    id:18, tema:"Distancias",
+    enunciado:"Un polígono rectangular en UTM tiene vértices: V1(N=620 400, E=914 200), V2(N=620 400, E=914 650), V3(N=619 850, E=914 650), V4(N=619 850, E=914 200). El área por Gauss es:",
+    opciones:[
+      {k:"A", txt:"11.25 ha"},
+      {k:"B", txt:"24.75 ha"},
+      {k:"C", txt:"35.00 ha"},
+      {k:"D", txt:"47.25 ha"}
+    ],
+    correcta:"B",
+    proc:"Rectángulo: base ΔE = 450 m, altura ΔN = 550 m → A = 450 × 550 = <code>247 500 m² = 24.75 ha</code>."
+  },
+  {
+    id:19, tema:"Distancias",
+    enunciado:"En UTM con factor de escala k₀ = 0.9996, para una distancia real de 180 km el error absoluto introducido al no corregir k₀ es aproximadamente:",
+    opciones:[
+      {k:"A", txt:"7.2 m"},
+      {k:"B", txt:"72 m"},
+      {k:"C", txt:"720 m"},
+      {k:"D", txt:"0.72 m"}
+    ],
+    correcta:"B",
+    proc:"Error relativo ≈ <strong>(1 − k₀)</strong> = 0.0004. Error absoluto = 180 000 m × 0.0004 = <code>72 m</code>."
+  },
+
+  /* ───── BLOQUE D — NORTES (6) ───── */
+  {
+    id:20, tema:"Nortes",
+    enunciado:"Los tres nortes (geográfico, magnético y de cuadrícula) coinciden <strong>exactamente</strong> cuando:",
+    opciones:[
+      {k:"A", txt:"El punto está sobre el meridiano central de la zona y la declinación magnética es nula."},
+      {k:"B", txt:"El punto se encuentra en el ecuador."},
+      {k:"C", txt:"Se utiliza el datum WGS84 en lugar de MAGNA-SIRGAS."},
+      {k:"D", txt:"Nunca coinciden, siempre existe una diferencia angular entre ellos."}
+    ],
+    correcta:"A",
+    proc:"Sobre el meridiano central γ = 0 (norte geográfico = norte de cuadrícula). Si además δ = 0, el norte magnético también coincide. Ambas condiciones son necesarias."
+  },
+  {
+    id:21, tema:"Nortes",
+    enunciado:"Aplique <code>γ ≈ (λ − λ₀)·sin(φ)</code> al punto Q (φ = 4°35'N, λ = 74°04'W) en zona UTM 18N (λ₀ = 75°00'W). El valor aproximado de γ es:",
+    opciones:[
+      {k:"A", txt:"0°04'"},
+      {k:"B", txt:"0°15'"},
+      {k:"C", txt:"0°35'"},
+      {k:"D", txt:"0°45'"}
+    ],
+    correcta:"A",
+    proc:"φ = 4.583°, λ−λ₀ = −74.067 − (−75) = 0.933°. <strong>γ ≈ 0.933 × sin(4.583°)</strong> = 0.933 × 0.0799 ≈ 0.0745° ≈ <code>0°04'28\"</code>."
+  },
+  {
+    id:22, tema:"Nortes",
+    enunciado:"Dado un azimut magnético αM = 137°22' y una declinación δ = −3°48' (occidental), el azimut verdadero αV = αM + δ es:",
+    opciones:[
+      {k:"A", txt:"141°10'"},
+      {k:"B", txt:"133°34'"},
+      {k:"C", txt:"140°22'"},
+      {k:"D", txt:"134°10'"}
+    ],
+    correcta:"B",
+    proc:"<strong>αV = αM + δ</strong> = 137°22' + (−3°48') = 137°22' − 3°48' = <code>133°34'</code>."
+  },
+  {
+    id:23, tema:"Nortes",
+    enunciado:"Si αV = 133°34' y la convergencia meridiana es γ = −1°14', el azimut de cuadrícula αC = αV + γ es:",
+    opciones:[
+      {k:"A", txt:"134°48'"},
+      {k:"B", txt:"132°20'"},
+      {k:"C", txt:"135°22'"},
+      {k:"D", txt:"131°46'"}
+    ],
+    correcta:"B",
+    proc:"<strong>αC = αV + γ</strong> = 133°34' + (−1°14') = 133°34' − 1°14' = <code>132°20'</code>."
+  },
+  {
+    id:24, tema:"Nortes",
+    enunciado:"En la proyección UTM, la convergencia meridiana γ es exactamente cero en:",
+    opciones:[
+      {k:"A", txt:"El ecuador geográfico."},
+      {k:"B", txt:"El meridiano central de cada zona."},
+      {k:"C", txt:"Cualquier paralelo de 45° de latitud."},
+      {k:"D", txt:"El meridiano de Greenwich, en todas las zonas."}
+    ],
+    correcta:"B",
+    proc:"Como <strong>γ ≈ (λ − λ₀)·sin(φ)</strong>, γ = 0 cuando <code>λ = λ₀</code>, es decir, sobre el meridiano central de la zona. En ese eje el norte geográfico y el norte de cuadrícula coinciden."
+  },
+  {
+    id:25, tema:"Nortes",
+    enunciado:"Si la declinación real fuera δ = −3°12' en lugar del valor usado δ = −3°48' (diferencia ≈ 0°36'), y se radia un punto a 2 500 m de la estación, el error lineal aproximado introducido es:",
+    opciones:[
+      {k:"A", txt:"2.6 m"},
+      {k:"B", txt:"26.2 m"},
+      {k:"C", txt:"262 m"},
+      {k:"D", txt:"13.1 m"}
+    ],
+    correcta:"B",
+    proc:"Δδ = 0°36' = 0.6° = 0.01047 rad. <strong>Error ≈ d · Δδ (rad)</strong> = 2 500 × 0.01047 ≈ <code>26.2 m</code>."
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   CONFIGURACIÓN Y ESTADO
+   ═══════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  NUM_PREGUNTAS: 10,
+  DURACION_MIN: 45,
+  MAX_INTENTOS: 2,
+  RUTA_FIREBASE: 'quizzes/coordenadas_geo',
+  NUM_INTENTO: 1
+};
+
+const estado = {
+  preguntas: [],
+  indice: 0,
+  respuestas: {},       // { idPregunta: clave }  — seleccionada antes de enviar
+  resultados: {},       // { idPregunta: true/false } — tras enviar
+  tiempoInicio: null,
+  tiempoRestante: 0,
+  timerId: null,
+  finalizado: false,
+  estudiante: null,
+  motivoCierre: null,
+  blurCuenta: 0
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   INICIAR INTENTO
+   ═══════════════════════════════════════════════════════════════ */
+async function iniciarIntento(){
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  const cedula = document.getElementById('inp-cedula').value.trim();
+  const prog   = document.getElementById('inp-programa').value.trim();
+  const msg    = document.getElementById('msg-inicio');
+  msg.innerHTML = '';
+
+  if(!nombre || nombre.length < 5){
+    msg.innerHTML = '<div class="alert alert-danger">Ingresa tu nombre completo.</div>';
+    return;
+  }
+  if(!/^\d{5,15}$/.test(cedula)){
+    msg.innerHTML = '<div class="alert alert-danger">El número de identificación debe contener solo dígitos (5 a 15).</div>';
+    return;
+  }
+  if(!prog || prog.length < 3){
+    msg.innerHTML = '<div class="alert alert-danger">Indica el programa o curso.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('btn-iniciar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span>Verificando intentos…';
+
+  let intentosPrevios = 0;
+  if(db){
+    try{
+      const snap = await db.ref(`${CONFIG.RUTA_FIREBASE}/${cedula}`).once('value');
+      const val = snap.val();
+      if(val){
+        intentosPrevios = Object.keys(val).filter(k => k.startsWith('intento_')).length;
+      }
+    }catch(e){
+      console.warn('No se pudo verificar intentos previos:', e);
+    }
+  }
+
+  if(intentosPrevios >= CONFIG.MAX_INTENTOS){
+    btn.disabled = false;
+    btn.innerHTML = 'Iniciar intento →';
+    msg.innerHTML = `<div class="alert alert-danger">
+      Ya registraste <strong>${intentosPrevios}</strong> intentos con esta identificación.
+      El máximo permitido es ${CONFIG.MAX_INTENTOS}. Contacta al docente.
+    </div>`;
+    return;
+  }
+
+  CONFIG.NUM_INTENTO = intentosPrevios + 1;
+  estado.estudiante = { nombre, cedula, programa: prog };
+
+  /* Seleccionar 10 preguntas aleatorias — opciones se mantienen en orden A-B-C-D */
+  estado.preguntas = seleccionarPreguntas(CONFIG.NUM_PREGUNTAS);
+
+  construirSecciones();
+
+  estado.tiempoInicio = Date.now();
+  estado.tiempoRestante = CONFIG.DURACION_MIN * 60;
+  iniciarTimer();
+  activarVigilancia();
+
+  document.getElementById('progressWrap').style.display = 'flex';
+  actualizarProgreso();
+  cambiarSeccion(1);
+}
+
+function seleccionarPreguntas(n){
+  const pool = [...BANCO];
+  for(let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const seleccionadas = pool.slice(0, n);
+  // DEBUG: muestra en consola los IDs seleccionados para verificar aleatoriedad
+  console.log('📐 Banco total:', BANCO.length,
+              '· IDs seleccionados este intento:',
+              seleccionadas.map(p => p.id).join(', '));
+  return seleccionadas;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONSTRUCCIÓN DE SECCIONES — opciones en orden A → B → C → D
+   ═══════════════════════════════════════════════════════════════ */
+function construirSecciones(){
+  const main = document.querySelector('main');
+  const secFinal = document.getElementById('sec-final');
+
+  estado.preguntas.forEach((p, idx) => {
+    const sec = document.createElement('section');
+    sec.className = 'seccion';
+    sec.id = `sec-${idx + 1}`;
+
+    /* Opciones SIN barajeo — orden A, B, C, D */
+    const opcionesHTML = p.opciones.map(op => `
+      <label class="option" data-key="${op.k}" id="opt-${idx}-${op.k}">
+        <input type="radio" name="q${idx}" value="${op.k}" onchange="seleccionarOpcion(${idx}, '${op.k}')">
+        <span class="option-label"><span class="option-key">${op.k})</span>${op.txt}</span>
+      </label>
+    `).join('');
+
+    sec.innerHTML = `
+      <div class="card">
+        <div class="question-header">
+          <span class="q-num">Pregunta ${idx + 1} / ${estado.preguntas.length}</span>
+          <span class="q-topic">${p.tema}</span>
+        </div>
+        <div class="q-text">${p.enunciado}</div>
+        <div class="options" id="opts-${idx}">${opcionesHTML}</div>
+
+        <div class="feedback" id="fb-${idx}"></div>
+
+        <div class="nav-buttons" id="nav-${idx}">
+          <div></div>
+          <button class="btn-primary" id="btn-enviar-${idx}" onclick="enviarRespuesta(${idx})" disabled>
+            Enviar respuesta
+          </button>
+        </div>
+      </div>
+    `;
+    main.insertBefore(sec, secFinal);
+  });
+}
+
+function seleccionarOpcion(idxPregunta, clave){
+  const pregunta = estado.preguntas[idxPregunta];
+  /* Si ya envió no permite cambiar */
+  if(estado.resultados[pregunta.id] !== undefined) return;
+  estado.respuestas[pregunta.id] = clave;
+  document.querySelectorAll(`#opts-${idxPregunta} .option`).forEach(el => {
+    el.classList.toggle('selected', el.dataset.key === clave);
+  });
+  document.getElementById(`btn-enviar-${idxPregunta}`).disabled = false;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ENVIAR RESPUESTA — feedback inmediato con procedimiento
+   ═══════════════════════════════════════════════════════════════ */
+function enviarRespuesta(idx){
+  const pregunta = estado.preguntas[idx];
+  const respuesta = estado.respuestas[pregunta.id];
+  if(!respuesta) return;
+
+  const esCorrecta = (respuesta === pregunta.correcta);
+  estado.resultados[pregunta.id] = esCorrecta;
+
+  /* Bloquear inputs y marcar visualmente correcta / incorrecta */
+  document.querySelectorAll(`#opts-${idx} .option`).forEach(el => {
+    el.classList.add('locked');
+    el.classList.remove('selected');
+    const k = el.dataset.key;
+    el.querySelector('input').disabled = true;
+
+    if(k === pregunta.correcta){
+      el.classList.add('correct-answer');
+    }else if(k === respuesta && !esCorrecta){
+      el.classList.add('wrong-answer');
+    }else{
+      el.classList.add('dimmed');
+    }
+  });
+
+  /* Mostrar bloque de feedback */
+  const fb = document.getElementById(`fb-${idx}`);
+  fb.classList.remove('ok','bad');
+  fb.classList.add('show', esCorrecta ? 'ok' : 'bad');
+  const correctaObj = pregunta.opciones.find(o => o.k === pregunta.correcta);
+  fb.innerHTML = esCorrecta
+    ? `<span class="fb-title">✔ Correcto</span>
+       <div class="fb-proc">${pregunta.proc}</div>`
+    : `<span class="fb-title">✗ Incorrecto — Respuesta correcta: ${pregunta.correcta}) ${stripTags(correctaObj.txt)}</span>
+       <div class="fb-proc">${pregunta.proc}</div>`;
+
+  /* Reemplazar "Enviar" por "Siguiente" o "Finalizar" */
+  const esUltima = (idx === estado.preguntas.length - 1);
+  const nav = document.getElementById(`nav-${idx}`);
+  nav.innerHTML = `
+    <button class="btn-secondary" onclick="navegarPregunta(${idx - 1})" ${idx === 0 ? 'disabled' : ''}>
+      ← Anterior
+    </button>
+    ${esUltima
+      ? `<button class="btn-warn" onclick="finalizarIntento('enviado')">Finalizar y entregar ✓</button>`
+      : `<button class="btn-primary" onclick="navegarPregunta(${idx + 1})">Siguiente pregunta →</button>`}
+  `;
+
+  actualizarProgreso();
+}
+
+function stripTags(s){
+  return String(s).replace(/<[^>]+>/g,'');
+}
+
+function navegarPregunta(nuevoIdx){
+  if(nuevoIdx < 0 || nuevoIdx >= estado.preguntas.length) return;
+  estado.indice = nuevoIdx;
+  cambiarSeccion(nuevoIdx + 1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cambiarSeccion(numSec){
+  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+  const target = document.getElementById(`sec-${numSec}`) || document.getElementById('sec-final');
+  target.classList.add('activa');
+}
+
+function actualizarProgreso(){
+  const total = estado.preguntas.length;
+  const respondidas = Object.keys(estado.resultados).length;  /* solo las enviadas */
+  const pct = (respondidas / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = `${respondidas} / ${total}`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIMER
+   ═══════════════════════════════════════════════════════════════ */
+function iniciarTimer(){
+  actualizarTimer();
+  estado.timerId = setInterval(() => {
+    estado.tiempoRestante--;
+    actualizarTimer();
+    if(estado.tiempoRestante <= 0){
+      finalizarIntento('tiempo_agotado');
+    }
+  }, 1000);
+}
+
+function actualizarTimer(){
+  const min = Math.floor(estado.tiempoRestante / 60);
+  const seg = estado.tiempoRestante % 60;
+  const el  = document.getElementById('timer');
+  el.textContent = `${String(min).padStart(2,'0')}:${String(seg).padStart(2,'0')}`;
+  el.classList.remove('warning','danger');
+  if(estado.tiempoRestante <= 120) el.classList.add('danger');
+  else if(estado.tiempoRestante <= 300) el.classList.add('warning');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VIGILANCIA ANTI-TAB
+   ═══════════════════════════════════════════════════════════════ */
+function activarVigilancia(){
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden && !estado.finalizado){
+      finalizarIntento('cambio_pestaña');
+    }
+  });
+  window.addEventListener('blur', () => {
+    if(!estado.finalizado){
+      estado.blurCuenta++;
+      if(estado.blurCuenta >= 1){
+        finalizarIntento('perdida_foco');
+      }
+    }
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if(!estado.finalizado){
+      e.preventDefault();
+      e.returnValue = '¿Seguro que quieres salir? El intento se cerrará.';
+      return e.returnValue;
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FINALIZAR Y GUARDAR
+   ═══════════════════════════════════════════════════════════════ */
+async function finalizarIntento(motivo){
+  if(estado.finalizado) return;
+  estado.finalizado = true;
+  estado.motivoCierre = motivo;
+  if(estado.timerId) clearInterval(estado.timerId);
+
+  const totalPreguntas = estado.preguntas.length;
+  let aciertos = 0;
+
+  /* Desglose por tema (4 bloques) */
+  const temas = { 'Escalas':{ok:0,total:0}, 'Coordenadas Colombia':{ok:0,total:0},
+                  'Distancias':{ok:0,total:0}, 'Nortes':{ok:0,total:0} };
+
+  /* Array "preguntas" compatible con dashboard (id, acerto, tema) */
+  const preguntas = estado.preguntas.map(p => {
+    const respuestaDada = estado.respuestas[p.id] || null;
+    const enviada = estado.resultados[p.id] !== undefined;
+    const acerto = enviada ? estado.resultados[p.id] : false;
+    if(acerto) aciertos++;
+    if(temas[p.tema]){
+      temas[p.tema].total++;
+      if(acerto) temas[p.tema].ok++;
+    }
+    return { id: p.id, tema: p.tema, acerto: acerto,
+             respuestaDada: respuestaDada, correcta: p.correcta,
+             enunciado: p.enunciado, enviada: enviada };
+  });
+
+  const duracionSeg = Math.round((Date.now() - estado.tiempoInicio) / 1000);
+
+  /* Mapeo de motivo → valor compatible con dashboard */
+  const terminadoPor = (motivo === 'enviado') ? 'submit'
+                     : (motivo === 'tiempo_agotado') ? 'tiempo'
+                     : (motivo === 'cambio_pestaña' || motivo === 'perdida_foco') ? 'cambio_pestana'
+                     : motivo;
+
+  const payload = {
+    nombre: estado.estudiante.nombre,
+    identificacion: estado.estudiante.cedula,
+    programa: estado.estudiante.programa,
+    numIntento: CONFIG.NUM_INTENTO,
+    terminado_por: terminadoPor,
+    puntaje: aciertos,              // sobre 10
+    total: totalPreguntas,          // 10
+    escalas_puntaje: temas['Escalas'].ok,
+    coordenadas_puntaje: temas['Coordenadas Colombia'].ok,
+    distancias_puntaje: temas['Distancias'].ok,
+    nortes_puntaje: temas['Nortes'].ok,
+    escalas_total: temas['Escalas'].total,
+    coordenadas_total: temas['Coordenadas Colombia'].total,
+    distancias_total: temas['Distancias'].total,
+    nortes_total: temas['Nortes'].total,
+    duracionSeg,
+    fechaInicio: new Date(estado.tiempoInicio).toLocaleString('es-CO'),
+    fechaEntrega: new Date().toLocaleString('es-CO'),
+    timestamp: Date.now(),
+    preguntas
+  };
+
+  if(db){
+    try{
+      const refEstudiante = db.ref(`${CONFIG.RUTA_FIREBASE}/${estado.estudiante.cedula}`);
+      await refEstudiante.child(`intento_${CONFIG.NUM_INTENTO}`).set(payload);
+      await refEstudiante.child('total_intentos').set(CONFIG.NUM_INTENTO);
+      console.log('✅ Intento guardado en Firebase');
+    }catch(e){
+      console.error('❌ Error al guardar en Firebase:', e);
+    }
+  }
+
+  mostrarResultados(payload);
+}
+
+function mostrarResultados(p){
+  cambiarSeccion('final');
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const pct = Math.round((p.puntaje / p.total) * 100);
+
+  const scoreEl = document.getElementById('scoreValue');
+  const msgEl   = document.getElementById('scoreMsg');
+  scoreEl.textContent = `${p.puntaje} / ${p.total}`;
+  const mensaje = pct >= 80 ? '🎯 Excelente desempeño'
+                : pct >= 60 ? '👍 Aceptable — repasar temas fallidos'
+                : pct >= 40 ? '⚠️ Requiere refuerzo'
+                : '🔁 Revisar contenidos desde el inicio';
+  msgEl.textContent = `${p.puntaje} aciertos de ${p.total} · ${mensaje}`;
+
+  const motivoDiv = document.getElementById('motivoCierre');
+  const motivoTxt = {
+    submit: 'Entrega voluntaria dentro del tiempo.',
+    tiempo: 'Tiempo agotado — se entregó automáticamente.',
+    cambio_pestana: 'El intento se cerró por cambio de pestaña o pérdida de foco.'
+  }[p.terminado_por] || p.terminado_por;
+  const alertClase = p.terminado_por === 'submit' ? 'alert-info' : 'alert-warning';
+  motivoDiv.innerHTML = `<div class="alert ${alertClase}">
+    <strong>Motivo de cierre:</strong> ${motivoTxt}<br>
+    <strong>Intento N°:</strong> ${p.numIntento} de ${CONFIG.MAX_INTENTOS} ·
+    <strong>Duración:</strong> ${Math.floor(p.duracionSeg/60)}m ${p.duracionSeg%60}s
+  </div>`;
+}
+</script>
+</body>
+</html>
