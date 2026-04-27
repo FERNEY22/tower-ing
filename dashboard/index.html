@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <!-- Renders por formulario -->
   <script src="render-roles.js"></script>
@@ -135,6 +136,39 @@
     .sg-item:last-child { border-bottom: none; }
 
     footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: .85rem; }
+    
+    /* ── Login ── */
+    .login-card {
+      max-width: 420px; margin: 80px auto; padding: 32px;
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.1);
+    }
+    .login-card h2 { color: #1a2a6c; margin: 0 0 24px; text-align: center; font-size: 1.3rem; }
+    .login-card .form-group { margin-bottom: 16px; }
+    .login-card label { display: block; margin-bottom: 6px; color: #333; font-weight: 500; font-size: .9rem; }
+    .login-card input {
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc;
+      border-radius: 8px; font-size: 14px; font-family: inherit;
+    }
+    .login-card input:focus { outline: none; border-color: #1a2a6c; }
+    .btn-login {
+      width: 100%; padding: 12px; background: #1a2a6c; color: #fff;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+    }
+    .btn-login:hover { background: #15235a; }
+    .btn-login:disabled { background: #888; cursor: not-allowed; }
+    .login-error { color: #c0392b; margin: 12px 0 0; text-align: center; font-size: 14px; min-height: 20px; }
+
+    /* ── Botón logout en el header ── */
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    #user-email { font-size: .85rem; opacity: .85; }
+    .btn-logout {
+      padding: 7px 14px; background: transparent; color: #fff;
+      border: 1px solid rgba(255,255,255,.5); border-radius: 6px;
+      cursor: pointer; font-family: inherit; font-size: .82rem;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.15); }
 
     @media (max-width: 860px) {
       .charts-row { grid-template-columns: 1fr; }
@@ -145,10 +179,32 @@
 </head>
 <body>
 
+<!-- Caja de login (visible solo sin sesión) -->
+<div id="login-box" class="login-card" style="display:none">
+  <h2><i class="fas fa-lock"></i> Panel administrativo</h2>
+  <div class="form-group">
+    <label for="email">Correo</label>
+    <input type="email" id="email" autocomplete="username" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" autocomplete="current-password" required>
+  </div>
+  <button id="btn-login" class="btn-login">Ingresar</button>
+  <p id="login-error" class="login-error"></p>
+</div>
+
+<!-- Wrapper del dashboard (visible solo con sesión válida) -->
+<div id="dashboard-content" style="display:none">
+
 <header>
   <div class="header-left">
     <h1><i class="fas fa-chart-line"></i> Dashboard · Towers Ing</h1>
     <span>Panel de administración</span>
+  </div>
+  <div class="header-right">
+    <span id="user-email"></span>
+    <button id="btn-logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
   </div>
 </header>
 
@@ -526,9 +582,11 @@
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
 
+</div> <!-- /dashboard-content -->
+
 <script>
   firebase.initializeApp({
-    apiKey:            "AIzaSyCXThSLDXwOZPSqcGSi2lMNF20bXAk1tFU",
+    apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
     authDomain:        "tower-ing.firebaseapp.com",
     databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
     projectId:         "tower-ing",
@@ -537,6 +595,8 @@
     appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
   });
   const db = firebase.database();
+  const auth = firebase.auth();
+  const ADMIN_UID = "X4dx59vaPaUhZ2CSJ9aE8VFvgLg2";
 
   // ── Estado global compartido con todos los render-*.js ──
   let DATA = {
@@ -547,6 +607,58 @@
   let CHARTS       = {};
   let vistaActiva  = '';
 
+  let listenersOn  = false;
+
+  // ── Referencias a la UI de login/logout ─────────────────
+  const loginBox    = document.getElementById('login-box');
+  const dashContent = document.getElementById('dashboard-content');
+  const loginError  = document.getElementById('login-error');
+  const userEmailEl = document.getElementById('user-email');
+
+  // ── Control de sesión ───────────────────────────────────
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      loginBox.style.display    = 'none';
+      dashContent.style.display = 'block';
+      userEmailEl.textContent   = user.email;
+      if (!listenersOn) { iniciarListeners(); listenersOn = true; }
+    } else if (user) {
+      auth.signOut();
+      loginError.textContent = 'Cuenta sin permisos para este panel.';
+    } else {
+      loginBox.style.display    = 'block';
+      dashContent.style.display = 'none';
+    }
+  });
+
+  document.getElementById('btn-login').addEventListener('click', async () => {
+    loginError.textContent = '';
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+    if (!email || !pass) { loginError.textContent = 'Completa correo y contraseña.'; return; }
+    const btn = document.getElementById('btn-login');
+    btn.disabled = true; btn.textContent = 'Ingresando…';
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+    } catch (err) {
+      let msg = 'Error de autenticación.';
+      if (['auth/invalid-credential','auth/wrong-password','auth/user-not-found'].includes(err.code))
+        msg = 'Correo o contraseña incorrectos.';
+      else if (err.code === 'auth/too-many-requests') msg = 'Demasiados intentos. Espera unos minutos.';
+      else if (err.code === 'auth/network-request-failed') msg = 'Sin conexión a Firebase.';
+      loginError.textContent = msg;
+    } finally {
+      btn.disabled = false; btn.textContent = 'Ingresar';
+    }
+  });
+
+  document.getElementById('password').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('btn-login').click();
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
+
+  function iniciarListeners() {
   // ── Listeners Firebase (uno por formulario) ─────────────
   db.ref('estudiantes').on('value',                     snap => { DATA.roles     = snap.val()||{}; if(vistaActiva==='roles')     renderRoles();     });
   db.ref('diagnostico_geoespacial').on('value',         snap => { DATA.geo       = snap.val()||{}; if(vistaActiva==='geo')       renderGeo();       });
@@ -558,6 +670,11 @@
   db.ref('evaluaciones/tallerMatematicas').on('value',  snap => { DATA.taller    = snap.val()||{}; if(vistaActiva==='taller')    renderTaller();    });
   db.ref('evaluaciones/tallerMate10').on('value',       snap => { DATA.taller10  = snap.val()||{}; if(vistaActiva==='taller10')  renderTaller10();  });
   db.ref('quizzes/coordenadas_geo').on('value', snap => { DATA.coordenadasGeo = snap.val() || {}; if (vistaActiva === 'coordenadasGeo') renderCoordenadasGeo(); });
+  
+  }
+
+
+
 
   // ── Selector de formulario ──────────────────────────────
   function cambiarVista() {
