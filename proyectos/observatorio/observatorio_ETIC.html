@@ -1,0 +1,2959 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- TOKENS ---------- */
+:root{
+  --bg:           #f7f5f0;
+  --paper:        #fbfaf6;
+  --ink:          #1c1a17;
+  --ink-2:        #4a4742;
+  --ink-3:        #807c74;
+  --ink-4:        #a8a49b;
+  --rule:         #c9c5bc;
+  --rule-soft:    #e2dfd7;
+  --rule-strong:  #5c5852;
+
+  --ok:           #3f5f2c;
+  --ok-bg:        #e8ecdc;
+  --wip:          #8a5a14;
+  --wip-bg:       #f1e6cf;
+  --pending:      #7a766e;
+  --pending-bg:   #e6e3da;
+
+  --serif:   'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  --sans:    'IBM Plex Sans', system-ui, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --measure-wide: 1180px;
+  --measure-text: 68ch;
+
+  --gutter: clamp(20px, 4vw, 56px);
+}
+
+/* ---------- RESET ---------- */
+*,*::before,*::after{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img{ max-width:100%; display:block; }
+a{ color: inherit; text-decoration: underline; text-decoration-thickness: 0.5px; text-underline-offset: 3px; text-decoration-color: var(--rule); }
+a:hover{ text-decoration-color: var(--ink); }
+button{ font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+
+/* ---------- LAYOUT WRAPPER ---------- */
+.shell{
+  max-width: var(--measure-wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ---------- TOP BAR (header global) ---------- */
+.topbar{
+  border-bottom: 0.5px solid var(--rule);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(6px);
+}
+.topbar .shell{
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-top: 14px; padding-bottom: 12px;
+}
+.brand{
+  display:flex; align-items: baseline; gap: 14px;
+  font-family: var(--serif);
+  font-weight: 500;
+}
+.brand .crest{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 0.5px solid var(--rule-strong);
+  padding: 2px 7px;
+  position: relative; top:-2px;
+}
+.brand .titles{ display:flex; flex-direction:column; gap:0; }
+.brand .titles .l1{ font-size: 18px; line-height:1.1; }
+.brand .titles .l2{ font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+
+.topnav{ display:flex; gap: 22px; font-size: 13px; color: var(--ink-2); }
+.topnav a{ text-decoration: none; padding: 4px 0; border-bottom: 1px solid transparent; }
+.topnav a.active{ border-bottom-color: var(--ink); color: var(--ink); }
+.topnav a:hover{ color: var(--ink); }
+
+/* ---------- PAGE STAGE ---------- */
+.page{ display:none; }
+.page.is-active{ display:block; }
+
+/* =================================================================
+   PORTADA (Sección 0)
+   ================================================================= */
+.cover{
+  padding: 56px 0 80px;
+  border-bottom: 0.5px solid var(--rule);
+}
+.cover-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 880px){
+  .cover-grid{ grid-template-columns: 1fr; gap: 40px; }
+}
+
+.eyebrow{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display:flex; align-items:center; gap: 14px;
+  margin-bottom: 28px;
+}
+.eyebrow::after{
+  content:""; flex:1; border-top: 0.5px solid var(--rule);
+}
+.eyebrow .ord{
+  color: var(--ink); font-weight: 500;
+}
+
+.cover h1{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(38px, 5.4vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  margin: 0 0 24px;
+  color: var(--ink);
+}
+.cover h1 em{
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.cover .lede{
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 38em;
+  margin: 0 0 32px;
+}
+.cover-meta{
+  display: flex; flex-wrap: wrap; gap: 28px 36px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding-top: 20px;
+  border-top: 0.5px solid var(--rule);
+}
+.cover-meta dt{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 4px;
+}
+.cover-meta dd{ margin:0; color: var(--ink); font-family: var(--mono); font-size: 13px; }
+
+/* Mapa de capítulos como tabla de contenidos */
+.toc{
+  border-top: 0.5px solid var(--rule-strong);
+}
+.toc h2{
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 14px 0 6px;
+}
+.toc .toc-sub{
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 0 0 18px;
+}
+.toc ol{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 0.5px solid var(--rule-soft);
+}
+.toc li{
+  border-bottom: 0.5px solid var(--rule-soft);
+}
+.toc li a{
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 12px 0;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+.toc li a:hover{
+  background: var(--paper);
+  margin: 0 -10px;
+  padding-left: 10px; padding-right: 10px;
+}
+.toc li .num{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.toc li .ttl{
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.toc li .kind{
+  display:block;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.toc li .status{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px 2px;
+  border: 0.5px solid currentColor;
+  white-space: nowrap;
+}
+.status.s-ok{ color: var(--ok); background: var(--ok-bg); }
+.status.s-wip{ color: var(--wip); background: var(--wip-bg); }
+.status.s-pending{ color: var(--pending); background: var(--pending-bg); }
+
+/* Tres tarjetas (Qué es / Para qué / Cómo funciona) */
+.proposition{
+  padding: 64px 0 56px;
+  border-bottom: 0.5px solid var(--rule);
+}
+.proposition-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 0.5px solid var(--rule);
+}
+@media (max-width: 880px){
+  .proposition-grid{ grid-template-columns: 1fr; }
+}
+.proposition-grid > div{
+  padding: 28px 28px 32px;
+  border-right: 0.5px solid var(--rule);
+}
+.proposition-grid > div:last-child{ border-right: 0; }
+@media (max-width: 880px){
+  .proposition-grid > div{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 24px 0; }
+  .proposition-grid > div:last-child{ border-bottom: 0; }
+}
+.proposition-grid .key{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+  display:flex; align-items:baseline; gap: 10px;
+}
+.proposition-grid .key .n{ color: var(--ink); }
+.proposition-grid h3{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.proposition-grid p{
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* KPIs de estado */
+.state{
+  padding: 48px 0 80px;
+}
+.state .label{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 20px;
+}
+.kpis{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 0.5px solid var(--rule-strong);
+}
+@media (max-width: 880px){ .kpis{ grid-template-columns: 1fr; } }
+.kpi{
+  padding: 24px 24px 28px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.kpi:last-child{ border-right: 0; }
+@media (max-width: 880px){
+  .kpi{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 20px 0; }
+}
+.kpi .k{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 10px;
+}
+.kpi .v{
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin: 0 0 4px;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+.kpi .s{
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* =================================================================
+   CAPÍTULOS — esqueleto común
+   ================================================================= */
+.chapter-header{
+  padding: 48px 0 24px;
+  border-bottom: 0.5px solid var(--rule);
+}
+.chapter-header .breadcrumb{
+  display:flex; align-items:center; gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 18px;
+}
+.chapter-header .breadcrumb a{
+  text-decoration: none;
+  color: var(--ink-2);
+  border-bottom: 0.5px solid var(--rule);
+}
+.chapter-header .breadcrumb a:hover{ color: var(--ink); border-bottom-color: var(--ink); }
+.chapter-header .breadcrumb .sep{ color: var(--ink-4); }
+
+.chapter-header .row{
+  display:flex; align-items: flex-end; justify-content: space-between;
+  gap: 32px;
+}
+.chapter-header .ttl{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+.chapter-header .sub{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 50em;
+}
+.chapter-header .right-meta{
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+
+/* Navegación interna entre subsecciones (Diag / Hist / Cambios / Estándar) */
+.subnav{
+  border-bottom: 0.5px solid var(--rule);
+  background: var(--bg);
+  position: sticky;
+  top: 51px;
+  z-index: 40;
+}
+.subnav .shell{
+  display:flex;
+  gap: 0;
+  overflow-x: auto;
+}
+.subnav button{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 14px 0;
+  margin-right: 28px;
+  border-bottom: 1.5px solid transparent;
+  transition: color .12s, border-color .12s;
+  white-space: nowrap;
+}
+.subnav button .n{ color: var(--ink-4); margin-right: 8px; }
+.subnav button:hover{ color: var(--ink); }
+.subnav button.is-active{ color: var(--ink); border-bottom-color: var(--ink); }
+.subnav button.is-active .n{ color: var(--ink-2); }
+
+.subsection{
+  padding: 56px 0 80px;
+  display: none;
+}
+.subsection.is-active{ display: block; }
+
+.subsection h2{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 0 0 24px;
+}
+.subsection p, .subsection li{
+  font-size: 16px;
+  color: var(--ink);
+  max-width: var(--measure-text);
+  line-height: 1.65;
+}
+.subsection p{ margin: 0 0 18px; }
+
+/* Placeholder para contenido en desarrollo */
+.placeholder{
+  border: 0.5px dashed var(--rule);
+  background: var(--paper);
+  padding: 32px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin: 24px 0;
+}
+.placeholder strong{
+  font-family: var(--sans);
+  color: var(--ink);
+  font-weight: 500;
+  display:block;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* =================================================================
+   PIE — fuentes y créditos
+   ================================================================= */
+.foot-source{
+  border-top: 0.5px solid var(--rule);
+  padding: 22px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+}
+.foot-source .shell{
+  display:flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+}
+.foot-source strong{ color: var(--ink); font-weight: 500; }
+
+.site-foot{
+  border-top: 0.5px solid var(--rule-strong);
+  padding: 56px 0 64px;
+  background: var(--bg);
+}
+.site-foot .grid{
+  display:grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 56px;
+}
+@media (max-width: 760px){
+  .site-foot .grid{ grid-template-columns: 1fr; gap: 32px; }
+}
+.site-foot h4{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+  font-weight: 500;
+}
+.site-foot p, .site-foot a{
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.site-foot .colofon{
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+.site-foot ul{ list-style: none; padding:0; margin:0; }
+.site-foot li{ margin-bottom: 6px; }
+
+/* "Pendiente" para capítulos sin desarrollar */
+.pending-shell{
+  padding: 80px 0 120px;
+}
+.pending-card{
+  border-top: 0.5px solid var(--rule-strong);
+  padding-top: 32px;
+}
+.pending-card .badge{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display:inline-block;
+  border: 0.5px solid var(--pending);
+  background: var(--pending-bg);
+  color: var(--pending);
+  padding: 3px 9px 2px;
+  margin-bottom: 22px;
+}
+.pending-card h2{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+  margin: 0 0 16px;
+}
+.pending-card .desc{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-2);
+  max-width: 36em;
+  margin: 0 0 36px;
+}
+.pending-card .scope{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  border-top: 0.5px solid var(--rule);
+  padding-top: 28px;
+  max-width: 760px;
+}
+@media (max-width: 760px){ .pending-card .scope{ grid-template-columns: 1fr; gap: 20px; } }
+.pending-card .scope .k{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 6px;
+}
+.pending-card .scope .v{
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+/* =================================================================
+   COMPONENTES DE CONTENIDO ANALÍTICO
+   ================================================================= */
+
+/* Lede de subsección (párrafo conductor) */
+.sub-lede{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 38em;
+  margin: 0 0 36px;
+}
+
+/* Etiqueta de sección dentro de subsección */
+.section-label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 48px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid var(--rule-strong);
+  display:flex; justify-content: space-between; align-items: baseline;
+}
+.section-label .lbl-meta{ color: var(--ink-4); font-size: 10px; }
+
+/* Subhead serif para bloques internos */
+.subhead{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: -0.005em;
+}
+
+/* Stats grandes en línea */
+.statline{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0;
+  border-top: 0.5px solid var(--rule-strong);
+  border-bottom: 0.5px solid var(--rule);
+  margin: 28px 0 36px;
+}
+.statline .stat{
+  padding: 18px 24px 18px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.statline .stat:last-child{ border-right: 0; }
+.statline .stat .k{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 8px;
+}
+.statline .stat .v{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+.statline .stat .s{
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 6px 0 0;
+}
+
+/* Tabla de inventario (qué hay / qué falta) */
+.invent{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 8px 0 24px;
+}
+.invent thead th{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 12px 10px 0;
+  border-bottom: 0.5px solid var(--rule-strong);
+}
+.invent thead th:last-child{ padding-right: 0; text-align: right; }
+.invent tbody td{
+  padding: 14px 12px 14px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.invent tbody td:last-child{ padding-right: 0; text-align: right; }
+.invent .it-name{
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 3px;
+}
+.invent .it-sub{
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.invent .pill{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px 2px;
+  border: 0.5px solid currentColor;
+  white-space: nowrap;
+}
+.pill.p-have{ color: var(--ok); background: var(--ok-bg); }
+.pill.p-partial{ color: var(--wip); background: var(--wip-bg); }
+.pill.p-miss{ color: var(--pending); background: var(--pending-bg); }
+
+/* Gráfico de barras horizontales SVG */
+.cov-bars{
+  font-size: 13px;
+  margin: 8px 0 28px;
+}
+.cov-bars .row{
+  display: grid;
+  grid-template-columns: 220px 1fr 90px;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+}
+.cov-bars .row:first-child{ border-top: 0.5px solid var(--rule-strong); }
+.cov-bars .lbl{
+  font-size: 13.5px;
+  color: var(--ink);
+  font-family: var(--serif);
+}
+.cov-bars .lbl .meta{
+  display:block;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 1px;
+}
+.cov-bars .bar{
+  height: 12px;
+  position: relative;
+  background: transparent;
+}
+.cov-bars .bar .fill{
+  height: 100%;
+  background: var(--ink-2);
+  display: block;
+}
+.cov-bars .bar.muted .fill{ background: var(--ink-4); }
+.cov-bars .val{
+  font-family: var(--mono);
+  font-size: 12.5px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.cov-bars .val .unit{
+  display:block;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+@media (max-width: 720px){
+  .cov-bars .row{ grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
+  .cov-bars .bar{ margin: 4px 0; }
+  .cov-bars .val{ text-align: left; }
+}
+
+/* Línea de tiempo histórica */
+.timeline{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 12px 0 36px;
+  border-top: 0.5px solid var(--rule-strong);
+}
+.timeline .tl-item{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 28px;
+  padding: 22px 0 24px;
+  border-bottom: 0.5px solid var(--rule-soft);
+}
+.timeline .tl-year{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.timeline .tl-year .tag{
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  margin-top: 6px;
+}
+.timeline .tl-body h4{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.timeline .tl-body p{
+  font-size: 14.5px;
+  color: var(--ink-2);
+  margin: 0 0 6px;
+  line-height: 1.55;
+  max-width: 50em;
+}
+.timeline .tl-body .src{
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+.timeline .tl-item.muted .tl-year{ color: var(--ink-4); }
+.timeline .tl-item.muted .tl-body h4{ color: var(--ink-3); font-style: italic; }
+@media (max-width: 640px){
+  .timeline .tl-item{ grid-template-columns: 1fr; gap: 6px; }
+}
+
+/* Callout — nota o advertencia editorial */
+.callout{
+  border-left: 2px solid var(--ink);
+  padding: 6px 0 6px 22px;
+  margin: 28px 0;
+  max-width: 50em;
+}
+.callout .ctag{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+  display: block;
+}
+.callout p{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Comparativa lado a lado (escalas 2017 vs 2022) */
+.scale-compare{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 12px 0 24px;
+  border-top: 0.5px solid var(--rule-strong);
+  border-bottom: 0.5px solid var(--rule);
+}
+@media (max-width: 720px){ .scale-compare{ grid-template-columns: 1fr; } }
+.scale-compare .col{
+  padding: 24px 28px 24px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.scale-compare .col:last-child{ border-right: 0; padding-right: 0; padding-left: 28px; }
+@media (max-width: 720px){
+  .scale-compare .col{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 20px 0; }
+  .scale-compare .col:last-child{ border-bottom: 0; padding-left: 0; }
+}
+.scale-compare .col .h{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 8px;
+}
+.scale-compare .col .yr{
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0 0 14px;
+  font-variant-numeric: tabular-nums;
+}
+.scale-compare .col table{ width: 100%; font-size: 13px; border-collapse: collapse; }
+.scale-compare .col td{ padding: 5px 0; border-bottom: 0.5px solid var(--rule-soft); vertical-align: top; }
+.scale-compare .col td:first-child{ font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); width: 110px; font-variant-numeric: tabular-nums; }
+
+/* Diagrama comparativo de barras agrupadas (2017 vs 2022, normalizado) */
+.compare-bars{
+  margin: 12px 0 28px;
+}
+.compare-bars .legend{
+  display:flex; gap: 24px; align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.compare-bars .legend .sw{
+  display:inline-block; width: 16px; height: 8px; margin-right: 8px; vertical-align: middle;
+}
+.compare-bars .sw-2017{ background: var(--ink-4); }
+.compare-bars .sw-2022{ background: var(--ink); }
+
+/* Mapping 2017 ↔ 2022 — tabla de continuidad */
+.mapping{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 28px;
+  font-size: 14px;
+}
+.mapping thead th{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 12px 10px 0;
+  border-bottom: 0.5px solid var(--rule-strong);
+  vertical-align: bottom;
+}
+.mapping thead th.col-2017{ width: 36%; }
+.mapping thead th.col-arr { width: 70px; text-align: center; padding: 12px 8px 10px; }
+.mapping thead th.col-2022{ width: 36%; }
+.mapping thead th.col-tag { width: 90px; text-align: right; padding-right: 0; }
+.mapping tbody td{
+  padding: 13px 12px 13px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.mapping tbody td.arrow{
+  text-align: center; padding: 13px 8px;
+  font-family: var(--mono);
+  color: var(--ink-4);
+  font-size: 15px;
+}
+.mapping tbody td.tag-cell{ text-align: right; padding-right: 0; }
+.mapping .src17{
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  display: block;
+}
+.mapping .src17 .id{
+  display:inline-block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin-right: 6px;
+}
+.mapping .dst22{
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  display: block;
+}
+.mapping .dst22 .id{
+  display:inline-block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin-right: 6px;
+}
+.mapping tr.is-new td:first-child{
+  color: var(--ink-4);
+  font-style: italic;
+}
+.mapping tr.is-new .src17{ color: var(--ink-4); font-style: italic; }
+.mapping .pill-tag{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px 2px;
+  border: 0.5px solid currentColor;
+  white-space: nowrap;
+}
+.pill-tag.t-kept{ color: var(--ok); background: var(--ok-bg); }
+.pill-tag.t-refo{ color: var(--wip); background: var(--wip-bg); }
+.pill-tag.t-new { color: #354b73; background: #dde6f0; }
+@media (max-width: 720px){
+  .mapping thead{ display: none; }
+  .mapping tbody td{ display: block; border-bottom: 0; padding: 4px 0; }
+  .mapping tbody tr{ border-bottom: 0.5px solid var(--rule); padding: 14px 0; display:block; }
+  .mapping tbody td.arrow{ display:none; }
+  .mapping tbody td.tag-cell{ text-align: left; padding-bottom: 8px; }
+}
+
+/* Cascada del modelo CNA — 12 → 38 → 113 */
+.cascade{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin: 12px 0 32px;
+  border-top: 0.5px solid var(--rule-strong);
+  border-bottom: 0.5px solid var(--rule);
+}
+@media (max-width: 760px){ .cascade{ grid-template-columns: 1fr; } }
+.cascade .step{
+  padding: 28px 28px 32px 0;
+  border-right: 0.5px solid var(--rule);
+  position: relative;
+}
+.cascade .step:last-child{ border-right: 0; }
+@media (max-width: 760px){
+  .cascade .step{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 22px 0; }
+  .cascade .step:last-child{ border-bottom: 0; }
+}
+.cascade .step:not(:first-child){ padding-left: 28px; }
+.cascade .step .lvl{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 12px;
+  display:flex; align-items: baseline; gap: 8px;
+}
+.cascade .step .lvl .num{ color: var(--ink-4); }
+.cascade .step .big{
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums lining-nums;
+  margin: 0 0 8px;
+}
+.cascade .step .ttl{
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.cascade .step p{
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 28em;
+}
+
+/* Lista de factores en dos columnas (conceptual / operativo) */
+.factor-lists{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 12px 0 24px;
+  border-top: 0.5px solid var(--rule-strong);
+  border-bottom: 0.5px solid var(--rule);
+}
+@media (max-width: 760px){ .factor-lists{ grid-template-columns: 1fr; } }
+.factor-lists .col{
+  padding: 24px 28px 28px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.factor-lists .col:last-child{ border-right: 0; padding-right: 0; padding-left: 28px; }
+@media (max-width: 760px){
+  .factor-lists .col{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 22px 0; }
+  .factor-lists .col:last-child{ border-bottom: 0; padding-left: 0; }
+}
+.factor-lists .h{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 4px;
+}
+.factor-lists h4{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 0 0 4px;
+}
+.factor-lists .what{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 0 0 18px;
+}
+.factor-lists ol{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.factor-lists ol li{
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  align-items: baseline;
+}
+.factor-lists ol li:last-child{ border-bottom: 0; }
+.factor-lists ol li .n{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.factor-lists ol li .t{
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* Distribución de características por factor — mini-bars */
+.minibars{
+  margin: 12px 0 24px;
+  font-size: 13px;
+  border-top: 0.5px solid var(--rule-strong);
+}
+.minibars .row{
+  display: grid;
+  grid-template-columns: 36px 1fr 200px 50px;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+}
+.minibars .num{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.minibars .name{
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.minibars .b{
+  height: 8px; background: transparent; position: relative;
+}
+.minibars .b .f{ height: 100%; background: var(--ink-2); display:block; }
+.minibars .v{
+  font-family: var(--mono);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.minibars .v .sub{
+  display: block;
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+@media (max-width: 720px){
+  .minibars .row{ grid-template-columns: 32px 1fr 60px; gap: 10px; }
+  .minibars .b{ display: none; }
+}
+
+/* =================================================================
+   INTERACTIVIDAD — Ronda 4
+   ================================================================= */
+
+/* Gráfico comparativo SVG en Historia */
+.svgchart{
+  margin: 8px 0 24px;
+  position: relative;
+}
+.svgchart svg{
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: var(--sans);
+}
+.svgchart .axis-line{ stroke: var(--rule-strong); stroke-width: 0.5; }
+.svgchart .grid-line{ stroke: var(--rule-soft); stroke-width: 0.5; stroke-dasharray: 2 3; }
+.svgchart .tick-label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  fill: var(--ink-3);
+  letter-spacing: 0.06em;
+}
+.svgchart .factor-label{
+  font-family: var(--serif);
+  font-size: 13px;
+  fill: var(--ink);
+}
+.svgchart .factor-label.new{ fill: var(--ink-4); font-style: italic; }
+.svgchart .bar-17{ fill: var(--ink-4); transition: fill .15s; }
+.svgchart .bar-22{ fill: var(--ink);   transition: fill .15s; }
+.svgchart .group:hover .bar-17{ fill: #7a4f10; }
+.svgchart .group:hover .bar-22{ fill: #2c5f1f; }
+.svgchart .group{ cursor: pointer; }
+.svgchart .value-label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  fill: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.svgchart .row-bg{ fill: transparent; }
+.svgchart .group:hover .row-bg{ fill: var(--paper); }
+
+.svg-legend{
+  display:flex; gap: 28px; align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+  padding: 10px 0;
+  border-top: 0.5px solid var(--rule-strong);
+  border-bottom: 0.5px solid var(--rule);
+}
+.svg-legend .sw{
+  display:inline-block; width: 18px; height: 9px; margin-right: 8px; vertical-align: middle;
+}
+.svg-legend .sw-17{ background: var(--ink-4); }
+.svg-legend .sw-22{ background: var(--ink); }
+.svg-legend .hint{
+  margin-left: auto;
+  color: var(--ink-4);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 11.5px;
+  font-style: italic;
+  font-family: var(--serif);
+}
+
+/* Tooltip flotante para el gráfico SVG */
+.svg-tt{
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  max-width: 280px;
+  z-index: 30;
+  opacity: 0;
+  transition: opacity .12s;
+  border: 0.5px solid var(--ink);
+}
+.svg-tt.is-visible{ opacity: 1; }
+.svg-tt .tt-title{
+  font-family: var(--serif);
+  font-size: 14px;
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+.svg-tt .tt-row{
+  display:flex; justify-content: space-between; gap: 16px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  border-top: 0.5px solid rgba(255,255,255,0.18);
+  padding: 6px 0 0;
+  margin-top: 6px;
+}
+.svg-tt .tt-row:first-of-type{ border-top: 0; padding-top: 4px; margin-top: 4px; }
+.svg-tt .tt-row .yr{ color: var(--ink-4); }
+.svg-tt .tt-row .val{ font-variant-numeric: tabular-nums; color: var(--bg); }
+.svg-tt .tt-foot{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--ink-4);
+  margin-top: 8px;
+  border-top: 0.5px solid rgba(255,255,255,0.18);
+  padding-top: 6px;
+}
+
+/* Cobertura interactiva — barras clicables */
+.cov-bars .row{ cursor: pointer; transition: background .12s; }
+.cov-bars .row:hover{ background: var(--paper); margin: 0 -10px; padding-left: 10px; padding-right: 10px; }
+.cov-bars .row.is-active{
+  background: var(--paper);
+  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.cov-bars .row.is-active .bar .fill{ background: var(--ink); }
+
+/* Panel de detalle para estamento seleccionado */
+.estamento-detail{
+  border-top: 0.5px solid var(--rule-strong);
+  margin-top: 8px;
+  padding: 20px 0 0;
+  display: none;
+}
+.estamento-detail.is-open{ display: block; }
+.estamento-detail .dh{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.estamento-detail .dh h4{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  margin: 0;
+}
+.estamento-detail .dh .closer{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 0.5px solid var(--rule);
+}
+.estamento-detail .dh .closer:hover{ color: var(--ink); border-color: var(--ink); }
+.estamento-detail .dgrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0;
+  border-top: 0.5px solid var(--rule);
+  border-bottom: 0.5px solid var(--rule);
+  margin-bottom: 18px;
+}
+.estamento-detail .dgrid .dcell{
+  padding: 14px 18px 14px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.estamento-detail .dgrid .dcell:last-child{ border-right: 0; }
+.estamento-detail .dgrid .k{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 6px;
+}
+.estamento-detail .dgrid .v{
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.estamento-detail .factor-pills{
+  display:flex; flex-wrap: wrap; gap: 6px 6px;
+  margin-top: 6px;
+}
+.estamento-detail .factor-pills .fp{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 4px 8px;
+  border: 0.5px solid var(--rule-strong);
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+.estamento-detail p.note{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 8px;
+  max-width: 50em;
+}
+
+/* Estándar — factores expandibles */
+.factor-lists ol li{
+  cursor: pointer;
+  transition: background .12s;
+}
+.factor-lists ol li:hover{
+  background: var(--paper);
+  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.factor-lists ol li.is-open{
+  background: var(--paper);
+  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.factor-lists ol li .chev{
+  font-family: var(--mono);
+  color: var(--ink-4);
+  font-size: 11px;
+  margin-left: auto;
+  align-self: center;
+  transition: transform .15s, color .15s;
+}
+.factor-lists ol li.is-open .chev{
+  transform: rotate(90deg);
+  color: var(--ink);
+}
+.factor-lists ol li{ position: relative; }
+.factor-lists ol li > .t{ padding-right: 18px; }
+.factor-lists ol li .expand{
+  grid-column: 2 / 3;
+  display: none;
+  padding: 10px 0 4px;
+  border-top: 0.5px solid var(--rule-soft);
+  margin-top: 6px;
+}
+.factor-lists ol li.is-open .expand{ display: block; }
+.factor-lists ol li .expand .ehd{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 8px;
+}
+.factor-lists ol li .expand ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.factor-lists ol li .expand ul li{
+  display: block;
+  padding: 4px 0 4px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  cursor: default;
+  background: transparent !important;
+  margin: 0 !important;
+  font-size: 13px;
+  font-family: var(--serif);
+  color: var(--ink);
+  line-height: 1.4;
+}
+.factor-lists ol li .expand ul li:hover{ margin: 0 !important; padding: 4px 0 4px 0; }
+.factor-lists ol li .expand ul li:last-child{ border-bottom: 0; }
+.factor-lists ol li .expand ul li .ord{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Indicador "interactivo" pequeño */
+.interactive-tag{
+  display:inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 3px 8px 2px;
+  border: 0.5px solid var(--rule-strong);
+  margin-left: 8px;
+  vertical-align: 2px;
+}
+.interactive-tag::before{
+  content: "";
+  width: 6px; height: 6px;
+  background: var(--ink-2);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* =================================================================
+   DIAGNÓSTICO INICIAL — capítulos pendientes (Ronda 5)
+   ================================================================= */
+.pending-shell .pending-card .desc{
+  margin-bottom: 24px;
+}
+
+/* Bloque de preguntas centrales */
+.preguntas-bloque{
+  margin: 36px 0 28px;
+  padding-top: 28px;
+  border-top: 0.5px solid var(--rule-strong);
+  max-width: 800px;
+}
+.preguntas-bloque .p-label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 18px;
+}
+.preguntas-bloque ol{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: preg;
+}
+.preguntas-bloque ol li{
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  counter-increment: preg;
+  align-items: baseline;
+}
+.preguntas-bloque ol li:last-child{ border-bottom: 0; }
+.preguntas-bloque ol li::before{
+  content: counter(preg, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+.preguntas-bloque ol li .q{
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* Bloque de fuentes esperadas */
+.fuentes-bloque{
+  margin: 8px 0 28px;
+  padding-top: 28px;
+  border-top: 0.5px solid var(--rule-strong);
+}
+.fuentes-bloque .f-label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 16px;
+  display:flex; justify-content: space-between; align-items: baseline;
+}
+.fuentes-bloque .f-label .meta{ color: var(--ink-4); }
+.fuentes-bloque table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.fuentes-bloque thead th{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: left;
+  padding: 8px 12px 8px 0;
+  border-bottom: 0.5px solid var(--rule);
+}
+.fuentes-bloque thead th:last-child{ text-align: right; padding-right: 0; }
+.fuentes-bloque tbody td{
+  padding: 12px 12px 12px 0;
+  border-bottom: 0.5px solid var(--rule-soft);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.fuentes-bloque tbody td:last-child{ text-align: right; padding-right: 0; }
+.fuentes-bloque .src-name{
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 3px;
+}
+.fuentes-bloque .src-org{
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.fuentes-bloque .pill{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px 2px;
+  border: 0.5px solid currentColor;
+  white-space: nowrap;
+}
+.pill.p-confirm  { color: var(--ok);      background: var(--ok-bg); }
+.pill.p-explore  { color: var(--wip);     background: var(--wip-bg); }
+.pill.p-unknown  { color: var(--pending); background: var(--pending-bg); }
+.pill.p-missing  { color: #6b3038;        background: #efdcde; }
+
+/* Calendario indicativo - bloque sencillo */
+.calendario-bloque{
+  margin: 12px 0 36px;
+  padding-top: 28px;
+  border-top: 0.5px solid var(--rule-strong);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-bottom: 0.5px solid var(--rule);
+}
+@media (max-width: 760px){ .calendario-bloque{ grid-template-columns: 1fr; } }
+.calendario-bloque .ccell{
+  padding: 20px 24px 24px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.calendario-bloque .ccell:last-child{ border-right: 0; padding-right: 0; }
+@media (max-width: 760px){
+  .calendario-bloque .ccell{ border-right: 0; border-bottom: 0.5px solid var(--rule); padding: 18px 0; }
+  .calendario-bloque .ccell:last-child{ border-bottom: 0; }
+}
+.calendario-bloque .k{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 8px;
+}
+.calendario-bloque .v{
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+.calendario-bloque .s{
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Ayuda de impresión y selección */
+::selection{ background: var(--ink); color: var(--bg); }
+
+/* Detalles tipográficos finos */
+h1, h2, h3, h4 { font-feature-settings: "kern" 1, "liga" 1, "calt" 1; }
+.tnum{ font-variant-numeric: tabular-nums lining-nums; }
+
+</style>
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="#/" data-nav="cover" class="active">Portada</a>
+      <a href="#/capitulo/1" data-nav="ch1">Capítulos</a>
+      <a href="#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+
+  <!-- ===================== PÁGINA: PORTADA ===================== -->
+  <section class="page is-active" data-page="cover" aria-labelledby="cover-title">
+
+    <div class="cover">
+      <div class="shell">
+        <div class="cover-grid">
+          <div>
+            <div class="eyebrow"><span class="ord">Sección 00</span><span>Presentación del observatorio</span></div>
+            <h1 id="cover-title">Un instrumento para <em>leer</em> el propio desempeño institucional.</h1>
+            <p class="lede">Plataforma que reúne en un solo lugar todo lo que la institución mide sobre sí misma: autoevaluación, pruebas externas, indicadores académicos y talento humano. Consolida datos hoy dispersos en informes y sistemas separados, y los vuelve insumo para decisiones.</p>
+
+            <dl class="cover-meta">
+              <div><dt>Versión</dt><dd>1.0</dd></div>
+              <div><dt>Fase</dt><dd>Estática · piloto</dd></div>
+              <div><dt>Publicado</dt><dd>Mayo 2026</dd></div>
+              <div><dt>Mantenido por</dt><dd>Vicerrectoría Académica</dd></div>
+            </dl>
+          </div>
+
+          <aside class="toc" aria-labelledby="toc-heading">
+            <h2 id="toc-heading">Índice de capítulos</h2>
+            <p class="toc-sub">Cada capítulo es un dominio institucional independiente, con la misma estructura interna: diagnóstico, historia, cambios y estándar.</p>
+            <ol id="chapter-toc">
+              <!-- inyectado por JS -->
+            </ol>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div class="proposition">
+      <div class="shell">
+        <div class="eyebrow"><span class="ord">§ 01</span><span>La propuesta, en tres ideas</span></div>
+        <div class="proposition-grid">
+          <div>
+            <p class="key"><span class="n">01</span><span>Qué es</span></p>
+            <h3>Una sola entrada a la propia medición.</h3>
+            <p>Plataforma que reúne en un solo lugar todo lo que la institución mide sobre sí misma: autoevaluación, pruebas externas, indicadores académicos y talento humano.</p>
+          </div>
+          <div>
+            <p class="key"><span class="n">02</span><span>Para qué sirve</span></p>
+            <h3>Datos comparables, no PDFs dispersos.</h3>
+            <p>Consolida datos hoy dispersos en informes y sistemas separados. Los hace comparables en el tiempo y los vuelve insumo concreto para decisiones académicas y de gobierno.</p>
+          </div>
+          <div>
+            <p class="key"><span class="n">03</span><span>Cómo funciona</span></p>
+            <h3>Capítulos independientes, misma estructura.</h3>
+            <p>Cada dominio institucional es un capítulo independiente con su propio análisis de qué se tiene, qué ha cambiado y cómo debería estandarizarse en el tiempo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="state">
+      <div class="shell">
+        <p class="label">Estado del observatorio</p>
+        <div class="kpis">
+          <div class="kpi">
+            <p class="k">Fase actual</p>
+            <p class="v">Fase 0 · Estática</p>
+            <p class="s">Datos cargados desde fuentes publicadas. Diseñado para evolucionar a dinámica.</p>
+          </div>
+          <div class="kpi">
+            <p class="k">Capítulos completados</p>
+            <p class="v tnum"><span id="kpi-done">0</span> <span style="color:var(--ink-3); font-size:18px;">de 8</span></p>
+            <p class="s">Capítulo 1 (Autoevaluación) actualmente en desarrollo como piloto y plantilla.</p>
+          </div>
+          <div class="kpi">
+            <p class="k">Próximo paso</p>
+            <p class="v">Capítulo 1 · piloto</p>
+            <p class="s">Cierre del análisis de Autoevaluación 2017 y 2022, comparativa entre versiones y propuesta de estándar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== PÁGINA: CAPÍTULO 1 — AUTOEVALUACIÓN ===================== -->
+  <section class="page" data-page="ch1" aria-labelledby="ch1-title">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="#/">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Capítulo 01</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl" id="ch1-title">Modelo de Autoevaluación Institucional</h1>
+            <p class="sub">Piloto y plantilla del observatorio. Cómo la ETITC se mira a sí misma bajo los lineamientos del CNA 2022.</p>
+          </div>
+          <div class="right-meta">
+            CAP. 01 / 08<br>
+            EN DESARROLLO<br>
+            ACTUALIZADO MAYO 2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="subnav" aria-label="Subsecciones del capítulo">
+      <div class="shell">
+        <button data-sub="diag" class="is-active"><span class="n">01</span>Diagnóstico</button>
+        <button data-sub="hist"><span class="n">02</span>Historia</button>
+        <button data-sub="camb"><span class="n">03</span>Cambios</button>
+        <button data-sub="estd"><span class="n">04</span>Estándar</button>
+      </div>
+    </nav>
+
+    <article class="subsection is-active" data-sub="diag">
+      <div class="shell">
+        <h2>Diagnóstico — qué información existe y qué falta</h2>
+        <p class="sub-lede">El diagnóstico abre cada capítulo. Reconocer qué se tiene y qué falta da credibilidad antes de mostrar análisis. A continuación, el inventario consolidado del proceso de autoevaluación institucional ETITC, tomado del Anexo 13.</p>
+
+        <!-- Stats globales -->
+        <div class="statline">
+          <div class="stat">
+            <p class="k">Ciclos documentados</p>
+            <p class="v tnum">2</p>
+            <p class="s">2017 (modelo formativo) y 2022 (modelo CNA).</p>
+          </div>
+          <div class="stat">
+            <p class="k">Registros analíticos</p>
+            <p class="v tnum">515</p>
+            <p class="s">Base limpia consolidada (01_BASE_ANALISIS).</p>
+          </div>
+          <div class="stat">
+            <p class="k">Encuestados en 2022</p>
+            <p class="v tnum">4.073</p>
+            <p class="s">Distribución desigual entre estamentos.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Factores en 2022</p>
+            <p class="v tnum">12</p>
+            <p class="s">Modelo CNA integral.</p>
+          </div>
+        </div>
+
+        <!-- Inventario qué hay -->
+        <p class="section-label"><span>Inventario · Qué se tiene</span><span class="lbl-meta">8 fuentes documentadas</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:42%;">Fuente</th><th>Alcance</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Instrumento 2017 — modelo formativo</span><span class="it-sub">Acuerdo 05 / 2013 · Estatuto General</span></td>
+              <td>10 factores · escala 1–5 · niveles formativos (TP, Tecnología, Profesional)</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Instrumento 2022 — modelo CNA</span><span class="it-sub">Lineamientos CNA 2022 · Resolución 2265/2023</span></td>
+              <td>12 factores · 38 características · 113 aspectos · escala 1–10 · 4 facultades</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Base analítica consolidada</span><span class="it-sub">01_BASE_ANALISIS · esquema común</span></td>
+              <td>515 registros · año · estamento · factor · pregunta · resultado</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Encuestas por estamento — 2022</span><span class="it-sub">ENC1 a ENC6</span></td>
+              <td>7 estamentos · 4.073 encuestados · cobertura desigual</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Fortalezas y oportunidades — 2022</span><span class="it-sub">Por factor y por facultad</span></td>
+              <td>Texto cualitativo derivado del análisis</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Resultados anteriores a 2017</span><span class="it-sub">Procesos institucionales previos</span></td>
+              <td>No reposan en una base estructurada en el Anexo 13</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Versiones intermedias 2018–2021</span><span class="it-sub">Aplicaciones parciales del instrumento</span></td>
+              <td>No documentadas en la base consolidada</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Trazabilidad pregunta-a-pregunta entre versiones</span><span class="it-sub">Mapeo 2017 ↔ 2022</span></td>
+              <td>Existe a nivel de factor, no a nivel de aspecto</td>
+              <td><span class="pill p-partial">Parcial</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Cobertura por estamento -->
+        <p class="section-label"><span>Cobertura participativa por estamento · 2022<span class="interactive-tag">Interactivo</span></span><span class="lbl-meta">Fuente · Estamentos</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 18px; max-width: 50em;">La cobertura por estamento es <strong style="font-weight:500;">marcadamente asimétrica</strong>. Estudiantes y egresados técnicos concentran el 91% de los encuestados; empresarios y directivos quedan con muestras estadísticamente débiles. Haz click en cada estamento para ver el detalle.</p>
+
+        <div class="cov-bars" id="bars-cobertura">
+          <!-- inyectado por JS -->
+        </div>
+
+        <div class="estamento-detail" id="estamento-detail">
+          <!-- inyectado por JS al hacer click -->
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Lectura del diagnóstico</span>
+          <p>El número de encuestados por estamento condiciona la fuerza estadística de las conclusiones. Empresarios (n = 2) y Directivos (n = 11) deben leerse como insumo cualitativo, no como una medición representativa. Esta es una limitación estructural del ciclo 2022 que el estándar del Capítulo 4 deberá abordar.</p>
+        </div>
+
+        <!-- Preguntas por estamento -->
+        <p class="section-label"><span>Distribución de preguntas por estamento · 2022</span><span class="lbl-meta">Total · 153 preguntas</span></p>
+        <div class="cov-bars" id="bars-preguntas">
+          <!-- inyectado por JS -->
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Anexo 13 · Dashboard Observatorio Institucional</strong> · tablas Estamentos, BASE_ANALISIS, 01_BASE_ANALISIS</span>
+          <span>§01 Diagnóstico</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="subsection" data-sub="hist">
+      <div class="shell">
+        <h2>Historia — evolución del modelo en el tiempo</h2>
+        <p class="sub-lede">Línea histórica del proceso de autoevaluación en la ETITC. Del modelo formativo de 2017 (escala 1–5, 8 factores) a la adopción integral del modelo CNA en 2022 (escala 1–10, 12 factores, 38 características, 113 aspectos por evaluar).</p>
+
+        <!-- Línea de tiempo -->
+        <p class="section-label"><span>Hitos del modelo</span><span class="lbl-meta">2013 — 2026</span></p>
+        <div class="timeline">
+
+          <div class="tl-item muted">
+            <div class="tl-year">Antes 2013<span class="tag">Sin registro</span></div>
+            <div class="tl-body">
+              <h4>Procesos previos no documentados estructuralmente</h4>
+              <p>La base analítica consolidada del Anexo 13 no contiene autoevaluaciones anteriores. Existieron ejercicios, pero no reposan en un esquema comparable.</p>
+              <p class="src">Fuente · ausente</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2013<span class="tag">Marco interno</span></div>
+            <div class="tl-body">
+              <h4>Acuerdo 05 · Estatuto General de la ETITC</h4>
+              <p>Marco normativo interno que enmarca la actividad académica y administrativa institucional. Antecedente regulatorio del primer ciclo documentado.</p>
+              <p class="src">Fuente · Acuerdo 05/2013</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2017<span class="tag">Ciclo 1 · piloto</span></div>
+            <div class="tl-body">
+              <h4>Primer ciclo documentado — modelo formativo</h4>
+              <p>Aplicación del primer instrumento estructurado de autoevaluación. <strong style="font-weight:500;">8 factores</strong>, escala 1–5, agregación por nivel formativo (TP, Tecnología, Profesional). El promedio observado en los 8 factores se ubica entre 4,00 y 4,20, dentro del rango “Se cumple en alto grado” según la escala original.</p>
+              <p class="src">Fuente · BASE_ANALISIS (30 registros)</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2019<span class="tag">Marco externo</span></div>
+            <div class="tl-body">
+              <h4>Decreto 1330 · Registro Calificado</h4>
+              <p>Nuevo marco regulatorio nacional para la oferta de programas de educación superior. Activa la necesidad de un instrumento de autoevaluación más completo y técnicamente alineado con el CNA.</p>
+              <p class="src">Fuente · Decreto 1330/2019</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2022<span class="tag">Ciclo 2 · adopción CNA</span></div>
+            <div class="tl-body">
+              <h4>Adopción integral de los lineamientos CNA</h4>
+              <p>Segundo ciclo documentado. La ETITC adopta el modelo CNA 2022 en su totalidad: <strong style="font-weight:500;">12 factores, 38 características, 113 aspectos por evaluar</strong>. Escala recalibrada a 1–10. Aplicación a las 4 facultades (Mecatrónica, Procesos Industriales, Sistemas, Electromecánica) y a 7 estamentos. Promedio global del ciclo: <strong style="font-weight:500;">8,66</strong> — rango “Se cumple plenamente”.</p>
+              <p class="src">Fuente · BASE_ANALISIS (2) · 156 registros</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2023<span class="tag">Marco externo</span></div>
+            <div class="tl-body">
+              <h4>Resolución 2265 · Lineamientos de acreditación</h4>
+              <p>Reglamentación del proceso de acreditación en alta calidad que la institución ha definido como horizonte. Activa el plan de mejoramiento derivado de la autoevaluación 2022.</p>
+              <p class="src">Fuente · Resolución 2265/2023</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2026<span class="tag">Observatorio</span></div>
+            <div class="tl-body">
+              <h4>Consolidación en el Observatorio Institucional</h4>
+              <p>Los dos ciclos quedan documentados, comparables y vinculados a su marco normativo en este observatorio. La fase 0 cierra el inventario; la fase dinámica abrirá la lectura cruzada con los otros 7 capítulos.</p>
+              <p class="src">Fuente · esta plataforma</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Comparación de escalas -->
+        <p class="section-label"><span>Comparación de promedios por factor<span class="interactive-tag">Interactivo</span></span><span class="lbl-meta">2017 vs 2022 · normalizado a escala 1–10</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 12px; max-width: 50em;">Para hacer comparables ambos ciclos, los promedios del 2017 (escala 1–5) están multiplicados por 2 — equivalente a normalizar a escala 1–10. Hover sobre cada barra para ver detalle de la transformación y el factor original. Los dos factores nuevos (Permanencia · Medios Educativos) aparecen solo con valor 2022.</p>
+
+        <div class="svg-legend">
+          <span><span class="sw sw-17"></span>Ciclo 2017</span>
+          <span><span class="sw sw-22"></span>Ciclo 2022</span>
+          <span class="hint">pasa el cursor sobre cada barra para ver el detalle</span>
+        </div>
+
+        <div class="svgchart" id="chart-promedios">
+          <!-- inyectado por JS -->
+        </div>
+
+        <p class="section-label"><span>Escalas de valoración utilizadas</span><span class="lbl-meta">Ciclos 2017 y 2022</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 8px; max-width: 50em;">Ambos ciclos utilizan <strong style="font-weight:500;">cinco rangos cualitativos equivalentes</strong> (de “No se cumple” a “Plenamente”), pero sobre escalas numéricas distintas. La traducción entre ambas no es lineal.</p>
+
+        <div class="scale-compare">
+          <div class="col">
+            <p class="h">Ciclo · piloto</p>
+            <p class="yr tnum">2017</p>
+            <table>
+              <tr><td>4,2 – 5,0</td><td>Se cumple plenamente</td></tr>
+              <tr><td>3,4 – 4,2</td><td>Se cumple en alto grado</td></tr>
+              <tr><td>2,6 – 3,4</td><td>Se cumple aceptablemente</td></tr>
+              <tr><td>1,8 – 2,6</td><td>Se cumple insuficientemente</td></tr>
+              <tr><td>1,0 – 1,8</td><td>No se cumple</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Escala 1–5 · 5 niveles</p>
+          </div>
+          <div class="col">
+            <p class="h">Ciclo · adopción CNA</p>
+            <p class="yr tnum">2022</p>
+            <table>
+              <tr><td>8,21 – 10,00</td><td>Se cumple plenamente</td></tr>
+              <tr><td>6,41 – 8,20</td><td>Se cumple en alto grado</td></tr>
+              <tr><td>4,61 – 6,40</td><td>Se cumple aceptablemente</td></tr>
+              <tr><td>2,81 – 4,60</td><td>Se cumple insuficientemente</td></tr>
+              <tr><td>1,00 – 2,80</td><td>No se cumple</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Escala 1–10 · 5 niveles</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Nota metodológica</span>
+          <p>Para comparar resultados entre 2017 y 2022 hay que normalizar a la misma escala. El promedio 2017 de 4,10 sobre 5 equivale a 8,20 sobre 10 — frontera entre “Alto grado” y “Plenamente”. El promedio 2022 de 8,66 cae claramente en “Plenamente”. La mejora aparente debe leerse con cautela: el instrumento, la cobertura y la estructura factorial cambiaron sustancialmente entre ambos ciclos.</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Modelo de Autoevaluación y Autorregulación Institucional ETITC</strong> · CNA versión 2022 · Escalas tablas Escala y Escala (2)</span>
+          <span>§02 Historia</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="subsection" data-sub="camb">
+      <div class="shell">
+        <h2>Cambios — qué se modificó entre versiones</h2>
+        <p class="sub-lede">El instrumento 2022 no es una continuación lineal del 2017. Cambió el modelo conceptual, la cantidad de factores, la escala y la unidad de análisis. Esta sección documenta qué se conservó, qué se reformuló y qué apareció nuevo.</p>
+
+        <!-- Stats de cambios -->
+        <div class="statline">
+          <div class="stat"><p class="k">Factores · 2017</p><p class="v tnum">10</p><p class="s">Modelo formativo agregado por nivel.</p></div>
+          <div class="stat"><p class="k">Factores · 2022</p><p class="v tnum">12</p><p class="s">Modelo CNA operativo por programa.</p></div>
+          <div class="stat"><p class="k">Continuidad temática</p><p class="v tnum">10 <span style="color:var(--ink-3); font-size:18px;">conservados</span></p><p class="s">Todos los factores 2017 tienen correspondencia en 2022.</p></div>
+          <div class="stat"><p class="k">Factores nuevos</p><p class="v tnum">2</p><p class="s">Permanencia y Graduación · Medios Educativos.</p></div>
+        </div>
+
+        <!-- Mapping table -->
+        <p class="section-label"><span>Mapping factor a factor</span><span class="lbl-meta">Ciclo 2017 → ciclo 2022</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 18px; max-width: 50em;">La correspondencia entre los 10 factores de 2017 y los 12 factores operativos de 2022 es de tipo <strong style="font-weight:500;">conservado conceptualmente / reformulado en alcance</strong>. Ningún factor del 2017 desaparece; dos factores se añaden ex novo.</p>
+
+        <table class="mapping">
+          <thead>
+            <tr>
+              <th class="col-2017">Factor · 2017</th>
+              <th class="col-arr"></th>
+              <th class="col-2022">Factor · 2022 operativo</th>
+              <th class="col-tag">Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src17"><span class="id">F01</span>Misión, Visión, PEI y PEP</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F01</span>Proyecto Educativo del Programa e Identidad Institucional</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F02</span>Estudiantes</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F02</span>Estudiantes</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">Conservado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F03</span>Profesores</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F03</span>Profesores</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">Conservado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F04</span>Procesos Académicos</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F05</span>Aspectos Académicos y Resultados de Aprendizaje</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F05</span>Visibilidad Nacional e Internacional</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F07</span>Interacción con el Entorno Nacional e Internacional</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F06</span>Investigación, Innovación y Creación Artística</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F08</span>Aportes de la Investigación, Innovación, Desarrollo Tecnológico y Creación</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F07</span>Bienestar Institucional</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F09</span>Bienestar de la Comunidad Académica del Programa</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F08</span>Organización, Administración y Gestión</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F11</span>Organización, Administración y Financiación del Programa Académico</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F09</span>Impacto de los Egresados en el Medio</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F04</span>Egresados</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">F10</span>Recursos Físicos y Financieros</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">F12</span>Recursos Físicos y Tecnológicos</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr class="is-new">
+              <td><span class="src17">— sin equivalente —</span></td>
+              <td class="arrow">+</td>
+              <td><span class="dst22"><span class="id">F06</span>Permanencia y Graduación</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Nuevo</span></td>
+            </tr>
+            <tr class="is-new">
+              <td><span class="src17">— sin equivalente —</span></td>
+              <td class="arrow">+</td>
+              <td><span class="dst22"><span class="id">F10</span>Medios Educativos y Ambientes de Aprendizaje</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Nuevo</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del cambio</span>
+          <p>Los dos factores nuevos —Permanencia y Graduación, Medios Educativos y Ambientes de Aprendizaje— no son adornos del modelo CNA: responden a preocupaciones específicas de la educación superior reciente. Permanencia mide trayectoria, no solo ingreso. Medios Educativos visibiliza infraestructura pedagógica que el modelo 2017 dejaba implícita en “Recursos” o “Procesos Académicos”.</p>
+        </div>
+
+        <!-- Otros cambios estructurales -->
+        <p class="section-label"><span>Otros cambios estructurales</span><span class="lbl-meta">Más allá del listado de factores</span></p>
+
+        <table class="invent">
+          <thead><tr><th>Dimensión</th><th>2017</th><th style="text-align:right;">2022</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Escala numérica</span><span class="it-sub">Soporte cuantitativo</span></td>
+              <td>1 — 5</td>
+              <td style="text-align:right;">1 — 10</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Unidad de análisis</span><span class="it-sub">Sobre qué se hace la lectura</span></td>
+              <td>Nivel formativo (TP · Tecnología · Profesional)</td>
+              <td style="text-align:right;">Facultad y programa</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cobertura</span><span class="it-sub">Estamentos consultados</span></td>
+              <td>Limitada y agregada</td>
+              <td style="text-align:right;">7 estamentos · 4.073 encuestados</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Modelo conceptual</span><span class="it-sub">Marco subyacente</span></td>
+              <td>Formativo · ETITC</td>
+              <td style="text-align:right;">CNA 2022 — adopción integral</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Análisis cualitativo</span><span class="it-sub">Fortalezas y oportunidades</span></td>
+              <td>Por factor</td>
+              <td style="text-align:right;">Por factor y por facultad</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Granularidad de aspectos</span><span class="it-sub">Niveles de desagregación</span></td>
+              <td>Factor → pregunta</td>
+              <td style="text-align:right;">Factor → característica → aspecto</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Autoevaluacion_2017_Limpia.xlsx · Autoevaluacion_2022_Limpia.xlsx</strong> · tabla Factores_op del Anexo 13</span>
+          <span>§03 Cambios</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="subsection" data-sub="estd">
+      <div class="shell">
+        <h2>Estándar — propuesta de instrumento</h2>
+        <p class="sub-lede">El instrumento estandarizado del observatorio toma como referencia el modelo CNA 2022 en su totalidad: cascada conceptual de 12 factores, 38 características y 113 aspectos. Esta sección documenta la estructura del estándar y aclara una distinción crítica entre <em>estructura conceptual</em> y <em>estructura operativa</em>.</p>
+
+        <!-- Cascada del modelo -->
+        <p class="section-label"><span>Cascada del modelo CNA 2022</span><span class="lbl-meta">Niveles de desagregación</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 12px; max-width: 50em;">El modelo CNA organiza la evaluación en tres niveles anidados. Cada nivel se descompone en el siguiente. Cada aspecto se evalúa con referentes empíricos (percepción de la comunidad) y evidencias documentales.</p>
+
+        <div class="cascade">
+          <div class="step">
+            <p class="lvl"><span class="num">N1</span>Nivel superior</p>
+            <p class="big tnum">12</p>
+            <p class="ttl">Factores</p>
+            <p>Grandes dominios de calidad institucional. Cada uno enmarca un grupo de preocupaciones específicas del quehacer académico y de gobierno.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N2</span>Nivel intermedio</p>
+            <p class="big tnum">38</p>
+            <p class="ttl">Características</p>
+            <p>Subcomponentes evaluables dentro de cada factor. Una característica se traduce en preguntas concretas para la comunidad institucional.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N3</span>Nivel operativo</p>
+            <p class="big tnum">113</p>
+            <p class="ttl">Aspectos por evaluar</p>
+            <p>Unidad mínima de evaluación. Es lo que se mide con referentes empíricos y evidencias documentales en cada ciclo de autoevaluación.</p>
+          </div>
+        </div>
+
+        <!-- Distinción crítica -->
+        <p class="section-label"><span>Distinción crítica<span class="interactive-tag">Interactivo</span></span><span class="lbl-meta">Dos estructuras de 12 factores</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 6px; max-width: 50em;">En 2022 coexisten <strong style="font-weight:500;">dos listados de 12 factores</strong> con nombres distintos. No son intercambiables. Confundirlos es uno de los errores frecuentes al leer reportes CNA. Haz click en cualquier factor de la columna izquierda para ver sus características CNA asociadas.</p>
+
+        <div class="factor-lists">
+          <div class="col">
+            <p class="h">Estructura · A</p>
+            <h4>12 factores CNA conceptuales</h4>
+            <p class="what">Cómo el CNA organiza la calidad institucional, conceptualmente. Click para ver características.</p>
+            <ol id="factores-conceptuales">
+              <!-- inyectado por JS con sus características asociadas -->
+            </ol>
+          </div>
+          <div class="col">
+            <p class="h">Estructura · B</p>
+            <h4>12 factores operativos 2022</h4>
+            <p class="what">Cómo se aplicó el instrumento en el ciclo 2022 — por programa académico.</p>
+            <ol>
+              <li><span class="n tnum">01</span><span class="t">Proyecto Educativo del Programa e Identidad Institucional</span></li>
+              <li><span class="n tnum">02</span><span class="t">Estudiantes</span></li>
+              <li><span class="n tnum">03</span><span class="t">Profesores</span></li>
+              <li><span class="n tnum">04</span><span class="t">Egresados</span></li>
+              <li><span class="n tnum">05</span><span class="t">Aspectos Académicos y Resultados de Aprendizaje</span></li>
+              <li><span class="n tnum">06</span><span class="t">Permanencia y Graduación</span></li>
+              <li><span class="n tnum">07</span><span class="t">Interacción con el Entorno Nacional e Internacional</span></li>
+              <li><span class="n tnum">08</span><span class="t">Aportes de Investigación, Innovación, Desarrollo Tecnológico y Creación</span></li>
+              <li><span class="n tnum">09</span><span class="t">Bienestar de la Comunidad Académica del Programa</span></li>
+              <li><span class="n tnum">10</span><span class="t">Medios Educativos y Ambientes de Aprendizaje</span></li>
+              <li><span class="n tnum">11</span><span class="t">Organización, Administración y Financiación del Programa Académico</span></li>
+              <li><span class="n tnum">12</span><span class="t">Recursos Físicos y Tecnológicos</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Por qué importa la distinción</span>
+          <p>El listado <strong style="font-weight:500;">A</strong> es cómo el CNA piensa la calidad institucional. El listado <strong style="font-weight:500;">B</strong> es cómo la ETITC organizó la evaluación operativa por programa. El estándar del observatorio debe documentar siempre <em>cuál estructura</em> se usa al presentar un resultado. Mezclarlas oculta el nivel de análisis y rompe la comparabilidad entre ciclos.</p>
+        </div>
+
+        <!-- Distribución de las 38 características por factor -->
+        <p class="section-label"><span>Distribución de las 38 características</span><span class="lbl-meta">Por factor CNA conceptual</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 14px; max-width: 50em;">No todos los factores pesan igual en número de características. <strong style="font-weight:500;">Comunidad de profesores</strong> tiene 5, mientras que <strong style="font-weight:500;">Bienestar institucional</strong> tiene 1. Este peso estructural condiciona la lectura de los promedios globales.</p>
+
+        <div class="minibars" id="bars-caracteristicas">
+          <!-- inyectado por JS -->
+        </div>
+
+        <!-- Propuesta del estándar -->
+        <p class="section-label"><span>Propuesta de estándar institucional</span><span class="lbl-meta">Lo que el observatorio fija a futuro</span></p>
+        <table class="invent">
+          <thead><tr><th>Componente</th><th>Estándar propuesto</th><th style="text-align:right;">Justificación</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Modelo conceptual</span></td>
+              <td>CNA 2022 — 12 factores, 38 características, 113 aspectos</td>
+              <td style="text-align:right;">Adopción integral ya realizada en 2022</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Escala</span></td>
+              <td>1 — 10 con 5 rangos cualitativos</td>
+              <td style="text-align:right;">Continuidad con ciclo 2022</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Periodicidad</span></td>
+              <td>Bianual</td>
+              <td style="text-align:right;">Tiempo razonable para implementar mejoras</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Unidad de análisis</span></td>
+              <td>Facultad y programa</td>
+              <td style="text-align:right;">Granularidad útil para gobierno académico</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Estamentos cubiertos</span></td>
+              <td>7 (con muestras representativas)</td>
+              <td style="text-align:right;">Corregir asimetría observada en 2022</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Trazabilidad histórica</span></td>
+              <td>Mapping pregunta-a-pregunta entre ciclos</td>
+              <td style="text-align:right;">Habilita comparabilidad real</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Documentación de fuente</span></td>
+              <td>Toda métrica con su instrumento y año</td>
+              <td style="text-align:right;">Principio: nada se inventa</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Modelo_CNA_2022_PowerBI.xlsx</strong> · tablas Factores_CNA, Caracteristicas_CNA</span>
+          <span>§04 Estándar</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ===================== PÁGINAS: CAPÍTULOS 2-8 (Pendiente) ===================== -->
+  <!-- Generadas por JS -->
+
+  <!-- ===================== PÁGINA: ACERCA ===================== -->
+  <section class="page" data-page="about">
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="#/">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Acerca</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl">Acerca de este observatorio</h1>
+            <p class="sub">Cómo está hecho, cómo se mantiene y bajo qué principios opera.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection is-active">
+      <div class="shell">
+        <h2>Principios de operación</h2>
+        <p><strong>Esquema de datos común.</strong> Todo hecho se modela como <em>año · tipo de información · indicador · valor · fuente</em>. Esto permite la transición de estático a dinámico sin rehacer nada.</p>
+        <p><strong>Cada capítulo es independiente.</strong> No se cruzan entre sí en la fase estática. La integración se reserva para la fase dinámica, cuando los datos sean vivos.</p>
+        <p><strong>Diagnóstico antes que análisis.</strong> Cada capítulo arranca reconociendo qué hay y qué falta. Esto da credibilidad antes de mostrar resultados.</p>
+        <p><strong>Nada se inventa.</strong> Si una fuente no existe, se deja explícito. Los vacíos de información son parte del hallazgo, no se ocultan ni se llenan con supuestos.</p>
+
+        <h2 style="margin-top:48px;">Stack tecnológico</h2>
+        <p>Procesamiento en Python (Google Colab). Intercambio en Excel/CSV con esquema común. Visualización en este sitio web estático, complementada por archivos Power BI publicados al Service para análisis profundo.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-foot" role="contentinfo">
+  <div class="shell">
+    <div class="grid">
+      <div>
+        <h4>Sobre el observatorio</h4>
+        <p class="colofon">Documento institucional vivo. Pasar de “tener datos” a “leer el propio desempeño”. Deja un instrumento estandarizado por dominio.</p>
+      </div>
+      <div>
+        <h4>Capítulos</h4>
+        <ul id="footer-chapters"></ul>
+      </div>
+      <div>
+        <h4>Institución</h4>
+        <ul>
+          <li><a href="https://www.itc.edu.co" target="_blank" rel="noopener">www.itc.edu.co ↗</a></li>
+          <li>Bogotá D.C., Colombia</li>
+          <li>Vicerrectoría Académica</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · v1.0 · Fase 0 — Mayo 2026
+    </p>
+  </div>
+</footer>
+
+<!-- ===================== JS ===================== -->
+<script>
+(function(){
+  'use strict';
+
+  // ----- Catálogo de capítulos -----
+  const CHAPTERS = [
+    { n: 1, slug: 'autoevaluacion',     title: 'Modelo de Autoevaluación Institucional', kind: 'Piloto · plantilla', status: 'wip',     statusLabel: 'En desarrollo' },
+    { n: 2, slug: 'saber-11',            title: 'Saber 11',                                kind: 'Prueba externa',    status: 'pending', statusLabel: 'Pendiente' },
+    { n: 3, slug: 'saber-pro',           title: 'Saber TyT / Saber Pro',                   kind: 'Prueba externa',    status: 'pending', statusLabel: 'Pendiente' },
+    { n: 4, slug: 'evaluacion-docente',  title: 'Evaluación docente',                      kind: 'Talento humano',    status: 'pending', statusLabel: 'Pendiente' },
+    { n: 5, slug: 'matricula',           title: 'Matrícula y admisiones',                  kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente' },
+    { n: 6, slug: 'desercion',           title: 'Deserción y permanencia',                 kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente' },
+    { n: 7, slug: 'egresados',           title: 'Graduados y egresados',                   kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente' },
+    { n: 8, slug: 'planta-docente',      title: 'Planta docente',                          kind: 'Talento humano',    status: 'pending', statusLabel: 'Pendiente' },
+  ];
+
+  // ----- Diagnósticos iniciales por capítulo pendiente -----
+  // Cada capítulo declara: descripción, preguntas centrales, fuentes esperadas, calendario
+  // Principio: nada se inventa. Si una fuente no se ha confirmado, se marca como tal.
+  const CHAPTER_BRIEFS = {
+    2: {
+      desc: 'Resultados de la prueba Saber 11 de los estudiantes que ingresan a la ETITC. Composición de la cohorte de entrada, dispersión por colegio y municipio, comparación con referentes nacionales por área evaluada.',
+      preguntas: [
+        '¿Cuál es el perfil de Saber 11 de los estudiantes que ingresan a la ETITC, por programa y año?',
+        '¿Cómo se compara el puntaje de ingreso de la ETITC con el promedio nacional en cada área evaluada?',
+        '¿Cómo ha evolucionado la cohorte de entrada en los últimos cinco años?',
+        '¿Existe correlación entre Saber 11 y permanencia o desempeño en Saber TyT / Pro?',
+      ],
+      fuentes: [
+        { name: 'Resultados Saber 11 individuales',  org: 'ICFES · base nominal por estudiante',      estado: 'explore' },
+        { name: 'Agregados Saber 11 institucionales', org: 'ICFES · reporte institucional anual',     estado: 'explore' },
+        { name: 'Referentes nacionales y departamentales', org: 'ICFES · informes públicos',          estado: 'confirm' },
+        { name: 'Vínculo Saber 11 ↔ matrícula ETITC', org: 'Cruce interno por documento',             estado: 'unknown' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Acceso al microdato ICFES' }
+    },
+    3: {
+      desc: 'Resultados de Saber TyT y Saber Pro de los estudiantes ETITC. Valor agregado del paso por la institución (Saber 11 → Saber Pro), comparación con pares y con referentes nacionales por programa académico.',
+      preguntas: [
+        '¿Cuáles son los resultados de Saber TyT y Saber Pro por programa académico en cada cohorte?',
+        '¿Qué valor agregado se observa entre Saber 11 y Saber Pro?',
+        '¿Cómo se compara la ETITC con instituciones técnicas y tecnológicas pares?',
+        '¿Qué competencias muestran las mayores brechas frente al referente nacional?',
+      ],
+      fuentes: [
+        { name: 'Resultados Saber TyT individuales',  org: 'ICFES · base nominal',                    estado: 'explore' },
+        { name: 'Resultados Saber Pro individuales',  org: 'ICFES · base nominal',                    estado: 'explore' },
+        { name: 'Reporte institucional Saber Pro',    org: 'ICFES · ya referenciado en Anexo 13',     estado: 'confirm' },
+        { name: 'Pares para comparación',             org: 'Selección manual del observatorio',       estado: 'unknown' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Decisión sobre conjunto de pares' }
+    },
+    4: {
+      desc: 'Evaluación docente como instrumento de mejora del talento humano académico. Composición del instrumento, resultados agregados por facultad y dedicación, evolución temporal y relación con el modelo de autoevaluación CNA 2022.',
+      preguntas: [
+        '¿Qué instrumento de evaluación docente se ha aplicado, y cómo ha cambiado en el tiempo?',
+        '¿Cuáles son los resultados agregados por facultad, dedicación y categoría?',
+        '¿Cómo dialoga la evaluación docente con el factor "Profesores" de la autoevaluación CNA?',
+        '¿Qué fracción de la planta docente ha sido evaluada en cada ciclo?',
+      ],
+      fuentes: [
+        { name: 'Resultados evaluación docente',      org: 'Sistema interno ETITC',                   estado: 'unknown' },
+        { name: 'Instrumento aplicado por año',       org: 'Vicerrectoría Académica',                 estado: 'unknown' },
+        { name: 'Base de profesores activos',         org: 'Talento humano ETITC',                    estado: 'unknown' },
+        { name: 'Acuerdo 09 / 2015 — Estatuto de Profesores', org: 'Marco normativo interno',         estado: 'confirm' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Disponibilidad de la base de evaluación' }
+    },
+    5: {
+      desc: 'Matrícula y admisiones por programa académico, jornada, modalidad y nivel formativo. Capacidad institucional declarada vs. matrícula efectiva, concentración por programa y demanda histórica.',
+      preguntas: [
+        '¿Cómo se distribuye la matrícula activa por programa, jornada y modalidad?',
+        '¿Cuál es la relación entre cupos ofertados y matrícula efectiva por programa?',
+        '¿Cómo ha evolucionado la demanda y la matrícula en los últimos cinco años?',
+        '¿Qué programas concentran la mayor parte del crecimiento o decrecimiento?',
+      ],
+      fuentes: [
+        { name: 'Base de matrícula activa por semestre', org: 'Sistema institucional',                estado: 'unknown' },
+        { name: 'Admisiones — inscritos y admitidos',    org: 'Oficina de admisiones ETITC',          estado: 'unknown' },
+        { name: 'Programas con registro calificado',     org: 'SNIES · MEN',                          estado: 'confirm' },
+        { name: 'Histórico de matrícula',                org: 'SNIES · estadísticas de educación superior', estado: 'confirm' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Acceso a la base institucional' }
+    },
+    6: {
+      desc: 'Deserción y permanencia estudiantil por programa, momento del ciclo en que ocurre la deserción y comparación con referentes nacionales. Identificación de cohortes con mayor riesgo.',
+      preguntas: [
+        '¿Cuáles son las tasas de deserción por programa, cohorte y semestre de pérdida?',
+        '¿En qué momento del ciclo académico ocurre la mayor parte de la deserción?',
+        '¿Cómo se compara la ETITC con instituciones técnicas y tecnológicas pares?',
+        '¿Qué factores institucionales correlacionan con mayor o menor permanencia?',
+      ],
+      fuentes: [
+        { name: 'Indicadores de deserción institucionales', org: 'SPADIES · MEN',                     estado: 'confirm' },
+        { name: 'Base nominal de matrícula histórica',     org: 'Sistema institucional ETITC',        estado: 'unknown' },
+        { name: 'Causales de retiro registradas',          org: 'Registro académico',                 estado: 'unknown' },
+        { name: 'Referentes nacionales TyT',               org: 'SPADIES · informes públicos',        estado: 'confirm' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Conexión SPADIES + base interna' }
+    },
+    7: {
+      desc: 'Graduados y egresados. Trayectoria post-graduación, vinculación laboral, seguimiento institucional y relación con el factor "Egresados" de la autoevaluación CNA 2022.',
+      preguntas: [
+        '¿Cuántos egresados ha graduado la ETITC por programa, año y nivel?',
+        '¿Qué se sabe sobre su vinculación laboral después del egreso?',
+        '¿Existe un instrumento de seguimiento sistemático a egresados?',
+        '¿Cómo dialogan estos datos con los resultados del estamento "Egresados" del ciclo CNA 2022?',
+      ],
+      fuentes: [
+        { name: 'Base de graduados por cohorte',        org: 'Registro y control ETITC',              estado: 'unknown' },
+        { name: 'Observatorio Laboral OLE',             org: 'MEN · vinculación laboral por programa', estado: 'confirm' },
+        { name: 'Encuesta a egresados ENC5',            org: 'Anexo 13 · 1.804 respuestas en 2022',   estado: 'confirm' },
+        { name: 'Bolsa de empleo / seguimiento',        org: 'Oficina de egresados ETITC',            estado: 'unknown' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Coordinación con oficina de egresados' }
+    },
+    8: {
+      desc: 'Planta docente: composición, dedicación, formación, antigüedad y categoría. Capacidad real de la planta frente a los requerimientos académicos de cada programa.',
+      preguntas: [
+        '¿Cómo se compone actualmente la planta docente por dedicación, formación y antigüedad?',
+        '¿Cuál es la relación entre planta docente y matrícula por programa?',
+        '¿Cómo ha cambiado la planta en los últimos cinco años?',
+        '¿Qué brechas existen entre planta declarada y necesidades académicas por programa?',
+      ],
+      fuentes: [
+        { name: 'Planta docente activa',                org: 'Talento humano ETITC',                  estado: 'unknown' },
+        { name: 'Histórico contractual',                org: 'Talento humano · jurídica',             estado: 'unknown' },
+        { name: 'Hojas de vida / formación máxima',     org: 'Talento humano ETITC',                  estado: 'unknown' },
+        { name: 'Acuerdo 09 / 2015 — Estatuto de Profesores', org: 'Marco normativo interno',         estado: 'confirm' },
+      ],
+      cal: { fecha: 'Por programar', entregas: 'Notebook · tablas · brief · análisis', dependencia: 'Acceso a la base de planta' }
+    },
+  };
+
+  const ESTADO_LABELS = {
+    confirm: { lbl: 'Confirmada',         cls: 'p-confirm' },
+    explore: { lbl: 'Por explorar',       cls: 'p-explore' },
+    unknown: { lbl: 'Sin confirmar',      cls: 'p-unknown' },
+    missing: { lbl: 'No identificada',    cls: 'p-missing' },
+  };
+
+  // ----- Generar páginas para Caps 2-8 con diagnóstico inicial -----
+  const stage = document.getElementById('stage');
+  CHAPTERS.filter(c => c.status === 'pending').forEach(ch => {
+    const brief = CHAPTER_BRIEFS[ch.n];
+    const sec = document.createElement('section');
+    sec.className = 'page';
+    sec.dataset.page = 'ch' + ch.n;
+
+    const preguntasHtml = brief.preguntas.map(q => `<li><span class="q">${q}</span></li>`).join('');
+    const fuentesHtml = brief.fuentes.map(f => {
+      const st = ESTADO_LABELS[f.estado];
+      return `<tr>
+        <td><span class="src-name">${f.name}</span><span class="src-org">${f.org}</span></td>
+        <td><span class="pill ${st.cls}">${st.lbl}</span></td>
+      </tr>`;
+    }).join('');
+
+    sec.innerHTML = `
+      <div class="chapter-header">
+        <div class="shell">
+          <div class="breadcrumb">
+            <a href="#/">Observatorio</a>
+            <span class="sep">/</span>
+            <span>Capítulo ${String(ch.n).padStart(2,'0')}</span>
+          </div>
+          <div class="row">
+            <div>
+              <h1 class="ttl">${ch.title}</h1>
+              <p class="sub">${ch.kind}</p>
+            </div>
+            <div class="right-meta">
+              CAP. ${String(ch.n).padStart(2,'0')} / 08<br>
+              PENDIENTE<br>
+              FASE 0
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pending-shell">
+        <div class="shell">
+          <div class="pending-card">
+            <span class="badge">Capítulo pendiente · diagnóstico inicial</span>
+            <h2>Qué deberá responder este capítulo</h2>
+            <p class="desc">${brief.desc}</p>
+
+            <div class="preguntas-bloque">
+              <p class="p-label">Preguntas centrales</p>
+              <ol>${preguntasHtml}</ol>
+            </div>
+
+            <div class="fuentes-bloque">
+              <p class="f-label"><span>Fuentes esperadas</span><span class="meta">${brief.fuentes.length} identificadas</span></p>
+              <table>
+                <thead>
+                  <tr><th style="width: 70%;">Fuente / Origen</th><th>Estado</th></tr>
+                </thead>
+                <tbody>${fuentesHtml}</tbody>
+              </table>
+            </div>
+
+            <div class="calendario-bloque">
+              <div class="ccell">
+                <p class="k">Cuándo</p>
+                <p class="v">${brief.cal.fecha}</p>
+                <p class="s">Cada capítulo se desarrolla en una sesión dedicada, con su propio chat.</p>
+              </div>
+              <div class="ccell">
+                <p class="k">Entregables</p>
+                <p class="v">${brief.cal.entregas}</p>
+                <p class="s">Estructura común: Diagnóstico · Historia · Cambios · Estándar.</p>
+              </div>
+              <div class="ccell">
+                <p class="k">Dependencia crítica</p>
+                <p class="v">${brief.cal.dependencia}</p>
+                <p class="s">Resolver antes de iniciar el chat del capítulo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="foot-source">
+          <div class="shell">
+            <span>Fuente · <strong>Plan de Fase 0 · Observatorio Institucional ETITC</strong> · Versión 1.0, mayo 2026</span>
+            <span>Diagnóstico inicial</span>
+          </div>
+        </div>
+      </div>
+    `;
+    stage.appendChild(sec);
+  });
+
+  // ----- Inyección del índice (portada) -----
+  const tocOl = document.getElementById('chapter-toc');
+  CHAPTERS.forEach(ch => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <a href="#/capitulo/${ch.n}">
+        <span class="num tnum">${String(ch.n).padStart(2,'0')}</span>
+        <span>
+          <span class="ttl">${ch.title}</span>
+          <span class="kind">${ch.kind}</span>
+        </span>
+        <span class="status s-${ch.status}">${ch.statusLabel}</span>
+      </a>`;
+    tocOl.appendChild(li);
+  });
+
+  // ----- Footer chapters list -----
+  const footUl = document.getElementById('footer-chapters');
+  CHAPTERS.forEach(ch => {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#/capitulo/${ch.n}">${String(ch.n).padStart(2,'0')} · ${ch.title}</a>`;
+    footUl.appendChild(li);
+  });
+
+  // ----- Router por hash -----
+  function activatePage(pageKey){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('is-active'));
+    const target = document.querySelector(`.page[data-page="${pageKey}"]`);
+    if(target){ target.classList.add('is-active'); }
+    else { document.querySelector('.page[data-page="cover"]').classList.add('is-active'); }
+
+    // top nav active
+    document.querySelectorAll('.topnav a').forEach(a => a.classList.remove('active'));
+    if(pageKey === 'cover'){ document.querySelector('.topnav a[data-nav="cover"]').classList.add('active'); }
+    else if(pageKey === 'about'){ document.querySelector('.topnav a[data-nav="about"]').classList.add('active'); }
+    else { document.querySelector('.topnav a[data-nav="ch1"]').classList.add('active'); }
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function parseHash(){
+    const h = location.hash.replace(/^#\/?/, '').trim();
+    if(!h) return 'cover';
+    if(h === 'acerca') return 'about';
+    const m = h.match(/^capitulo\/(\d+)$/);
+    if(m) return 'ch' + m[1];
+    return 'cover';
+  }
+
+  window.addEventListener('hashchange', () => activatePage(parseHash()));
+  activatePage(parseHash());
+
+  // ----- Subnav dentro del Cap 1 -----
+  const subnavButtons = document.querySelectorAll('.subnav button');
+  subnavButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.dataset.sub;
+      subnavButtons.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      document.querySelectorAll('.page[data-page="ch1"] .subsection').forEach(s => s.classList.remove('is-active'));
+      const target = document.querySelector(`.page[data-page="ch1"] .subsection[data-sub="${sub}"]`);
+      if(target){ target.classList.add('is-active'); }
+      // scroll a comienzo del contenido (debajo de subnav sticky)
+      const top = document.querySelector('.subnav').getBoundingClientRect().bottom + window.scrollY;
+      window.scrollTo({ top: top - 8, behavior: 'smooth' });
+    });
+  });
+
+  // =============== DATOS REALES — Diagnóstico ===============
+  // Encuestados por estamento — ciclo 2022 (fuente: tabla Estamentos, Anexo 13)
+  const ESTAMENTOS_COB = [
+    { lbl: 'Estudiantes',                       meta: 'ENC3 · Encuesta a Estudiantes',                          n: 2072 },
+    { lbl: 'Egresados téc. profesionales',      meta: 'ENC5 · Egresados Tec./Tecnol.',                          n: 1652 },
+    { lbl: 'Egresados profesionales',           meta: 'ENC5 · Egresados Profesionales',                         n: 152  },
+    { lbl: 'Administrativos',                   meta: 'ENC2 · Encuesta a Administrativos',                      n: 130  },
+    { lbl: 'Profesores',                        meta: 'ENC4 · Encuesta a Profesores',                           n: 54   },
+    { lbl: 'Directivos',                        meta: 'ENC1 · Encuesta a Directivos',                           n: 11   },
+    { lbl: 'Empresarios',                       meta: 'ENC6 · Sector productivo',                               n: 2    },
+  ];
+  const ESTAMENTOS_PREG = [
+    { lbl: 'Estudiantes',                       meta: 'F1, F2, F3, F5, F6, F10, F11, F12',                       n: 39 },
+    { lbl: 'Directivos',                        meta: 'F1, F3, F5, F9, F10, F11, F12',                            n: 27 },
+    { lbl: 'Egresados profesionales',           meta: 'F1, F2, F5, F11',                                          n: 27 },
+    { lbl: 'Egresados téc. profesionales',      meta: 'F1, F2, F5, F11',                                          n: 23 },
+    { lbl: 'Profesores',                        meta: 'F3, F9, F10, F11, F12',                                    n: 21 },
+    { lbl: 'Administrativos',                   meta: 'F1, F9, F11, F12',                                         n: 8  },
+    { lbl: 'Empresarios',                       meta: 'F1, F4, F7, F11, F12',                                     n: 8  },
+  ];
+
+  function renderBars(containerId, data, opts){
+    const c = document.getElementById(containerId);
+    if(!c) return;
+    const max = Math.max(...data.map(d => d.n));
+    const unit = opts.unit || '';
+    const mutedBelow = opts.mutedBelow || 0;
+    c.innerHTML = data.map(d => {
+      const pct = (d.n / max) * 100;
+      const muted = d.n < mutedBelow ? ' muted' : '';
+      return `
+        <div class="row">
+          <div class="lbl">${d.lbl}<span class="meta">${d.meta}</span></div>
+          <div class="bar${muted}"><span class="fill" style="width:${pct.toFixed(1)}%"></span></div>
+          <div class="val tnum">${d.n.toLocaleString('es-CO')}<span class="unit">${unit}</span></div>
+        </div>`;
+    }).join('');
+  }
+  renderBars('bars-cobertura', ESTAMENTOS_COB, { unit: 'encuestados', mutedBelow: 50 });
+  renderBars('bars-preguntas', ESTAMENTOS_PREG, { unit: 'preguntas',   mutedBelow: 0  });
+
+  // =============== DATOS REALES — Estándar ===============
+  // Distribución de las 38 características por los 12 factores CNA conceptuales
+  // Fuente: Caracteristicas_CNA del Anexo 13
+  const CARACT_POR_FACTOR = [
+    { n: 1,  factor: 'Identidad institucional',                     k: 3 },
+    { n: 2,  factor: 'Gobierno institucional y transparencia',      k: 3 },
+    { n: 3,  factor: 'Desarrollo, gestión y sostenibilidad',        k: 6 },
+    { n: 4,  factor: 'Mejoramiento continuo y autorregulación',     k: 4 },
+    { n: 5,  factor: 'Estructura y procesos académicos',            k: 4 },
+    { n: 6,  factor: 'Aportes de la investigación y la innovación', k: 2 },
+    { n: 7,  factor: 'Impacto social',                              k: 2 },
+    { n: 8,  factor: 'Visibilidad nacional e internacional',        k: 2 },
+    { n: 9,  factor: 'Bienestar institucional',                     k: 1 },
+    { n: 10, factor: 'Comunidad de profesores',                     k: 5 },
+    { n: 11, factor: 'Comunidad de estudiantes',                    k: 3 },
+    { n: 12, factor: 'Comunidad de egresados',                      k: 3 },
+  ];
+  (function renderCaract(){
+    const c = document.getElementById('bars-caracteristicas');
+    if(!c) return;
+    const max = Math.max(...CARACT_POR_FACTOR.map(d => d.k));
+    c.innerHTML = CARACT_POR_FACTOR.map(d => {
+      const pct = (d.k / max) * 100;
+      return `<div class="row">
+        <div class="num tnum">${String(d.n).padStart(2,'0')}</div>
+        <div class="name">${d.factor}</div>
+        <div class="b"><span class="f" style="width:${pct.toFixed(1)}%"></span></div>
+        <div class="v tnum">${d.k}<span class="sub">caract.</span></div>
+      </div>`;
+    }).join('');
+  })();
+
+  // ===================================================================
+  // INTERACTIVIDAD — Ronda 4
+  // ===================================================================
+
+  // ---------- 1. DETALLE EXPANDIBLE POR ESTAMENTO ----------
+  const ESTAMENTO_FULL = {
+    'Estudiantes':                       { factores: ['F01','F02','F03','F05','F06','F10','F11','F12'], factoresLabels: ['Proy. Educativo','Estudiantes','Profesores','Aspectos Acad.','Permanencia','Medios Educativos','Org. y Admin.','Recursos Físicos'], prom: 8.77, aspectos: 30 },
+    'Egresados téc. profesionales':      { factores: ['F01','F02','F05','F11'], factoresLabels: ['Proy. Educativo','Estudiantes','Aspectos Acad.','Org. y Admin.'], prom: 8.20, aspectos: 5 },
+    'Egresados profesionales':           { factores: ['F01','F02','F05','F11'], factoresLabels: ['Proy. Educativo','Estudiantes','Aspectos Acad.','Org. y Admin.'], prom: 8.20, aspectos: 5 },
+    'Administrativos':                   { factores: ['F01','F09','F11','F12'], factoresLabels: ['Proy. Educativo','Bienestar','Org. y Admin.','Recursos Físicos'], prom: 8.26, aspectos: 5 },
+    'Profesores':                        { factores: ['F03','F09','F10','F11','F12'], factoresLabels: ['Profesores','Bienestar','Medios Educativos','Org. y Admin.','Recursos Físicos'], prom: 7.92, aspectos: 13 },
+    'Directivos':                        { factores: ['F01','F03','F05','F09','F10','F11','F12'], factoresLabels: ['Proy. Educativo','Profesores','Aspectos Acad.','Bienestar','Medios Educativos','Org. y Admin.','Recursos Físicos'], prom: 9.45, aspectos: 16 },
+    'Empresarios':                       { factores: ['F01','F04','F07','F11','F12'], factoresLabels: ['Proy. Educativo','Egresados','Interacción Entorno','Org. y Admin.','Recursos Físicos'], prom: 8.50, aspectos: 5 },
+  };
+
+  function openEstamento(name, n){
+    const data = ESTAMENTO_FULL[name];
+    if(!data) return;
+    const det = document.getElementById('estamento-detail');
+    const fLabels = data.factores.map((f, i) => `<span class="fp" title="${data.factoresLabels[i]}">${f} · ${data.factoresLabels[i]}</span>`).join('');
+    let stat = '';
+    if(n < 50){ stat = 'Muestra estadísticamente débil — leer como insumo cualitativo.'; }
+    else if(n < 200){ stat = 'Muestra moderada — interpretar con prudencia.'; }
+    else { stat = 'Muestra estadísticamente representativa.'; }
+    det.innerHTML = `
+      <div class="dh">
+        <h4>${name}</h4>
+        <span class="closer" id="close-estamento">Cerrar ×</span>
+      </div>
+      <div class="dgrid">
+        <div class="dcell"><p class="k">Encuestados</p><p class="v">${n.toLocaleString('es-CO')}</p></div>
+        <div class="dcell"><p class="k">Preguntas</p><p class="v">${ESTAMENTOS_PREG.find(e=>e.lbl===name).n}</p></div>
+        <div class="dcell"><p class="k">Promedio</p><p class="v">${data.prom.toFixed(2)}</p></div>
+        <div class="dcell"><p class="k">Aspectos</p><p class="v">${data.aspectos}</p></div>
+      </div>
+      <p class="note">${stat}</p>
+      <p class="k" style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-3); margin: 16px 0 8px;">Factores operativos cubiertos</p>
+      <div class="factor-pills">${fLabels}</div>
+    `;
+    det.classList.add('is-open');
+    document.getElementById('close-estamento').addEventListener('click', closeEstamento);
+  }
+  function closeEstamento(){
+    document.querySelectorAll('.cov-bars[id="bars-cobertura"] .row').forEach(r => r.classList.remove('is-active'));
+    const det = document.getElementById('estamento-detail');
+    if(det){ det.classList.remove('is-open'); }
+  }
+
+  // Reasignar handlers en cov-bars de cobertura
+  (function bindCovBars(){
+    const rows = document.querySelectorAll('#bars-cobertura .row');
+    rows.forEach((r, i) => {
+      r.addEventListener('click', () => {
+        const wasActive = r.classList.contains('is-active');
+        rows.forEach(x => x.classList.remove('is-active'));
+        if(wasActive){ closeEstamento(); return; }
+        r.classList.add('is-active');
+        const d = ESTAMENTOS_COB[i];
+        openEstamento(d.lbl, d.n);
+      });
+    });
+  })();
+
+  // ---------- 2. GRÁFICO SVG COMPARATIVO 2017 vs 2022 ----------
+  // Promedios reales por factor (escala original)
+  const PROMS = [
+    { id17:'F01', id22:'F01', name22:'Proyecto Educativo / Identidad Institucional',          name17:'Misión, Visión, PEI y PEP',              v17: 4.09, v22: 8.95, tipo:'reformulado' },
+    { id17:'F02', id22:'F02', name22:'Estudiantes',                                          name17:'Estudiantes',                            v17: 4.10, v22: 8.83, tipo:'conservado'  },
+    { id17:'F03', id22:'F03', name22:'Profesores',                                           name17:'Profesores',                             v17: 3.98, v22: 8.55, tipo:'conservado'  },
+    { id17:'F09', id22:'F04', name22:'Egresados',                                            name17:'Impacto de los Egresados en el Medio',   v17: 4.00, v22: 8.18, tipo:'reformulado' },
+    { id17:'F04', id22:'F05', name22:'Aspectos Académicos y Resultados de Aprendizaje',      name17:'Procesos Académicos',                    v17: 4.13, v22: 8.73, tipo:'reformulado' },
+    { id17:null,  id22:'F06', name22:'Permanencia y Graduación',                              name17:null,                                     v17: null, v22: 8.68, tipo:'nuevo'       },
+    { id17:'F05', id22:'F07', name22:'Interacción con el Entorno Nacional e Internacional',  name17:'Visibilidad Nacional e Internacional',   v17: 4.00, v22: 8.58, tipo:'reformulado' },
+    { id17:'F06', id22:'F08', name22:'Aportes de Investigación, Innovación y Creación',      name17:'Investigación, Innovación y Creación A.', v17: 4.00, v22: 8.65, tipo:'reformulado' },
+    { id17:'F07', id22:'F09', name22:'Bienestar de la Comunidad Académica del Programa',     name17:'Bienestar Institucional',                v17: 4.10, v22: 8.78, tipo:'reformulado' },
+    { id17:null,  id22:'F10', name22:'Medios Educativos y Ambientes de Aprendizaje',         name17:null,                                     v17: null, v22: 8.60, tipo:'nuevo'       },
+    { id17:'F08', id22:'F11', name22:'Organización, Administración y Financiación',          name17:'Organización, Administración y Gestión', v17: 4.13, v22: 8.73, tipo:'reformulado' },
+    { id17:'F10', id22:'F12', name22:'Recursos Físicos y Tecnológicos',                      name17:'Recursos Físicos y Financieros',         v17: 4.03, v22: 8.88, tipo:'reformulado' },
+  ];
+
+  function renderPromedios(){
+    const container = document.getElementById('chart-promedios');
+    if(!container) return;
+    const W = 1100, H = PROMS.length * 56 + 60;
+    const padL = 360, padR = 80, padT = 30, padB = 30;
+    const plotW = W - padL - padR;
+    const scaleX = v => padL + (v / 10) * plotW;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
+
+    // Grid + ticks 0..10
+    for(let i=0; i<=10; i+=2){
+      const x = scaleX(i);
+      svg += `<line class="grid-line" x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}"/>`;
+      svg += `<text class="tick-label" x="${x}" y="${padT - 8}" text-anchor="middle">${i}</text>`;
+      svg += `<text class="tick-label" x="${x}" y="${H - padB + 14}" text-anchor="middle">${i}</text>`;
+    }
+    // Eje
+    svg += `<line class="axis-line" x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}"/>`;
+
+    PROMS.forEach((d, i) => {
+      const y = padT + i * 56 + 28;
+      const rowY = padT + i * 56;
+      // Row background (para hover)
+      svg += `<g class="group" data-i="${i}">`;
+      svg += `<rect class="row-bg" x="0" y="${rowY}" width="${W}" height="56"/>`;
+      // Label
+      const lblClass = d.tipo === 'nuevo' ? 'factor-label new' : 'factor-label';
+      const lblTxt = d.name22.length > 48 ? d.name22.substring(0, 47) + '…' : d.name22;
+      svg += `<text class="${lblClass}" x="${padL - 12}" y="${y + 5}" text-anchor="end">${lblTxt}</text>`;
+      // 2017 bar (normalizada × 2)
+      if(d.v17 !== null){
+        const v17n = d.v17 * 2;
+        const x17 = scaleX(v17n);
+        svg += `<rect class="bar-17" x="${padL}" y="${y - 18}" width="${x17 - padL}" height="14"/>`;
+        svg += `<text class="value-label" x="${x17 + 6}" y="${y - 7}">${v17n.toFixed(2)}</text>`;
+      }
+      // 2022 bar
+      const x22 = scaleX(d.v22);
+      svg += `<rect class="bar-22" x="${padL}" y="${y + 2}" width="${x22 - padL}" height="14"/>`;
+      svg += `<text class="value-label" x="${x22 + 6}" y="${y + 13}">${d.v22.toFixed(2)}</text>`;
+      svg += `</g>`;
+    });
+
+    svg += `</svg>`;
+    container.innerHTML = svg + `<div class="svg-tt" id="svg-tt"></div>`;
+
+    // Interactividad: tooltip on hover
+    const tt = document.getElementById('svg-tt');
+    container.querySelectorAll('g.group').forEach((g, idx) => {
+      const d = PROMS[idx];
+      g.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left + 14;
+        const y = e.clientY - rect.top + 14;
+        let html = `<p class="tt-title">${d.name22}</p>`;
+        if(d.v17 !== null){
+          html += `<div class="tt-row"><span class="yr">2017 · "${d.name17}"</span><span class="val">${d.v17.toFixed(2)} / 5</span></div>`;
+          html += `<div class="tt-row"><span class="yr">2017 · normalizado</span><span class="val">${(d.v17*2).toFixed(2)} / 10</span></div>`;
+        } else {
+          html += `<div class="tt-row"><span class="yr">2017</span><span class="val">— sin equivalente</span></div>`;
+        }
+        html += `<div class="tt-row"><span class="yr">2022 · Global</span><span class="val">${d.v22.toFixed(2)} / 10</span></div>`;
+        if(d.v17 !== null){
+          const delta = d.v22 - (d.v17 * 2);
+          const sign = delta >= 0 ? '+' : '';
+          html += `<div class="tt-row"><span class="yr">Δ normalizado</span><span class="val">${sign}${delta.toFixed(2)}</span></div>`;
+        }
+        const tipoTxt = { conservado: 'Factor conservado', reformulado: 'Factor reformulado', nuevo: 'Factor nuevo en 2022' }[d.tipo];
+        html += `<div class="tt-foot">${tipoTxt}</div>`;
+        tt.innerHTML = html;
+        tt.style.left = Math.min(x, container.offsetWidth - 300) + 'px';
+        tt.style.top  = Math.min(y, container.offsetHeight - 200) + 'px';
+        tt.classList.add('is-visible');
+      });
+      g.addEventListener('mouseleave', () => tt.classList.remove('is-visible'));
+    });
+  }
+  renderPromedios();
+
+  // ---------- 3. FACTORES CONCEPTUALES EXPANDIBLES (Estándar) ----------
+  // 38 características CNA reales — Fuente: Caracteristicas_CNA del Anexo 13
+  const CARACTERISTICAS_CNA = {
+    1: ['Coherencia y pertinencia de la Misión', 'Orientaciones y estrategias del PEI', 'Formación integral y construcción de identidad'],
+    2: ['Buen Gobierno y máximo órgano de Gobierno', 'Relación con grupos de interés', 'Rendición de cuentas'],
+    3: ['Administración y gestión', 'Procesos de comunicación', 'Capacidad de gestión', 'Recursos de apoyo académico', 'Desarrollo profesoral', 'Recursos y gestión financiera'],
+    4: ['Cultura de la Autoevaluación', 'Procesos de autorregulación', 'Sistema interno de aseguramiento de la calidad', 'Evaluación de Directivas, Profesores y Personal Administrativo'],
+    5: ['Componentes formativos', 'Componentes pedagógicos y de evaluación', 'Componente de interacción y relevancia social', 'Procesos de creación, modificación y ampliación de programas'],
+    6: ['Formación para la investigación, creación e innovación', 'Investigación, desarrollo tecnológico, innovación y creación'],
+    7: ['Institución y entorno', 'Impacto cultural y artístico'],
+    8: ['Inserción en contextos académicos nacionales e internacionales', 'Relaciones externas de profesores y estudiantes'],
+    9: ['Estructura y funcionamiento del Bienestar Institucional'],
+    10:['Derechos y deberes de los profesores', 'Planta profesoral', 'Trayectoria profesoral', 'Desarrollo profesoral', 'Interacción académica de los profesores'],
+    11:['Derechos y deberes de los estudiantes', 'Admisión y permanencia de estudiantes', 'Estímulos y apoyos para estudiantes'],
+    12:['Seguimiento a egresados', 'Egresados y programas académicos', 'Relación de los egresados con la Institución'],
+  };
+  const FACTORES_CONCEPTUALES = [
+    [1,  'Identidad institucional'],
+    [2,  'Gobierno institucional y transparencia'],
+    [3,  'Desarrollo, gestión y sostenibilidad'],
+    [4,  'Mejoramiento continuo y autorregulación'],
+    [5,  'Estructura y procesos académicos'],
+    [6,  'Aportes de la investigación y la innovación'],
+    [7,  'Impacto social'],
+    [8,  'Visibilidad nacional e internacional'],
+    [9,  'Bienestar institucional'],
+    [10, 'Comunidad de profesores'],
+    [11, 'Comunidad de estudiantes'],
+    [12, 'Comunidad de egresados'],
+  ];
+
+  (function renderFactoresConceptuales(){
+    const ol = document.getElementById('factores-conceptuales');
+    if(!ol) return;
+    ol.innerHTML = FACTORES_CONCEPTUALES.map(([n, name]) => {
+      const cars = CARACTERISTICAS_CNA[n] || [];
+      const carsHtml = cars.map((c, i) => `<li><span class="ord">${String(i+1).padStart(2,'0')}</span>${c}</li>`).join('');
+      return `<li data-fid="${n}">
+        <span class="n tnum">${String(n).padStart(2,'0')}</span>
+        <span class="t">${name}<span class="chev">›</span></span>
+        <div class="expand">
+          <p class="ehd">${cars.length} característica${cars.length>1?'s':''} CNA · factor ${String(n).padStart(2,'0')}</p>
+          <ul>${carsHtml}</ul>
+        </div>
+      </li>`;
+    }).join('');
+
+    // Toggle expand
+    ol.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasOpen = li.classList.contains('is-open');
+        ol.querySelectorAll('li').forEach(x => x.classList.remove('is-open'));
+        if(!wasOpen) li.classList.add('is-open');
+      });
+    });
+  })();
+
+})();
+</script>
+
+</body>
+</html>
