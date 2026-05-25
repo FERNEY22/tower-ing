@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Capítulo 06 · Deserción y Permanencia · Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Placeholders visuales para capítulo en estructuración */
+.placeholder-card {
+  background: var(--paper, #FAF7F2);
+  border: 1px dashed var(--ink-line, #D9D5CC);
+  border-radius: 4px;
+  padding: 36px 32px;
+  margin: 18px 0;
+  text-align: center;
+}
+.placeholder-card .ptag {
+  display: inline-block;
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-3, #8A8278);
+  border: 1px solid var(--ink-line, #D9D5CC);
+  border-radius: 2px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+.placeholder-card h4 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink-1, #2C3E50);
+  margin: 0 0 8px;
+}
+.placeholder-card p {
+  font-size: 14px;
+  color: var(--ink-2, #555049);
+  line-height: 1.55;
+  margin: 0 auto;
+  max-width: 48em;
+}
+.placeholder-card.is-small {
+  padding: 22px 20px;
+  text-align: left;
+}
+.placeholder-card.is-small h4 {
+  font-size: 14.5px;
+  margin: 0 0 4px;
+}
+.placeholder-card.is-small p {
+  font-size: 13px;
+}
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  margin: 24px 0;
+}
+.draft-banner {
+  background: #FEF6E5;
+  border-left: 3px solid #D68910;
+  padding: 14px 20px;
+  margin: 0 0 28px;
+  font-size: 14px;
+  color: var(--ink-1, #2C3E50);
+  line-height: 1.55;
+}
+.draft-banner strong {
+  font-weight: 500;
+  color: #B7791F;
+}
+@media (max-width: 880px) {
+  .placeholder-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="index.html" data-nav="cover">Portada</a>
+      <a href="index.html#capitulos" data-nav="capitulos" class="active">Capítulos</a>
+      <a href="index.html#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+
+  <section class="page is-active" data-page="ch6" aria-labelledby="ch6-title">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="index.html">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Capítulo 06</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl" id="ch6-title">Deserción y Permanencia</h1>
+            <p class="sub">El otro lado del cierre académico: los estudiantes que no llegan al grado. La permanencia y la deserción no son sólo dos métricas — son la radiografía del recorrido institucional entre el ingreso y la titulación.</p>
+          </div>
+          <div class="right-meta">
+            CAP. 06 / 08<br>
+            ESTRUCTURA PRELIMINAR<br>
+            ACTUALIZADO MAYO 2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="subnav" aria-label="Subsecciones del capítulo">
+      <div class="shell">
+        <button data-sub="diag" class="is-active"><span class="n">01</span>Diagnóstico</button>
+        <button data-sub="hist"><span class="n">02</span>Historia</button>
+        <button data-sub="camb"><span class="n">03</span>Cambios</button>
+        <button data-sub="dash"><span class="subnav-num">04</span><span class="subnav-lbl">Dashboard</span></button>
+        <button data-sub="estd"><span class="n">05</span>Estándar</button>
+      </div>
+    </nav>
+
+    <!-- §1 DIAGNÓSTICO — ETITC · institucional -->
+    <article class="subsection is-active" data-sub="diag">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · institucional</p>
+        <h2>Diagnóstico — qué información existe y qué falta</h2>
+
+        <div class="draft-banner">
+          <strong>Capítulo en estructura preliminar.</strong> Este capítulo está construido como plantilla del observatorio: define la estructura, el marco normativo, las preguntas a responder y la propuesta de estándar institucional. Los datos sistematizados de deserción y permanencia ETITC no están aún disponibles para el observatorio. Cuando lleguen, se incorporarán al diagnóstico, los cambios y el dashboard.
+        </div>
+
+        <p class="sub-lede">La deserción no es un evento puntual: es un proceso. Se mide por cohortes de ingreso, semestre a semestre, hasta determinar cuántos estudiantes continúan, cuántos se gradúan y cuántos abandonan. Esta sección inventaría las fuentes que el capítulo requiere para su lectura completa.</p>
+
+        <p class="section-label"><span>Inventario · fuentes requeridas para el capítulo</span><span class="lbl-meta">6 ítems · estado actual</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:38%;">Fuente</th><th>Lo que aportaría</th><th>Estado actual</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Matrícula longitudinal por estudiante</span><span class="it-sub">Cap. 5 · disponible</span></td>
+              <td>52.115 registros semestrales de 10.562 estudiantes únicos (2014-2023). Permite reconstruir trayectorias individuales — quién sigue, quién paró.</td>
+              <td><span class="pill p-have">Disponible · Cap. 5</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Registro de retiros y abandonos</span><span class="it-sub">Fuente institucional</span></td>
+              <td>Identificación de estudiantes que dejaron de matricularse · semestre del último curso · clasificación (retiro voluntario, académico, administrativo).</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Causas declaradas de retiro</span><span class="it-sub">Encuestas de salida</span></td>
+              <td>Razones que el estudiante declara para no continuar: económicas, académicas, familiares, vocacionales. Es la pieza cualitativa.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">SPADIES institucional</span><span class="it-sub">Reporte oficial al MEN</span></td>
+              <td>Tasas de deserción reportadas a SPADIES (Sistema de Prevención y Análisis de la Deserción) por cohorte y por programa. Es la métrica oficial nacional.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Estudiantes en situación de riesgo</span><span class="it-sub">Sistemas de alerta temprana</span></td>
+              <td>Indicadores académicos (semestre, pérdida de materias, materias canceladas) y administrativos (situación de pago) que predicen deserción.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Programas de acompañamiento</span><span class="it-sub">Tutorías, mentorías, apoyo</span></td>
+              <td>Registro de quiénes recibieron acompañamiento institucional y cuál fue el efecto sobre su permanencia.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del diagnóstico</span>
+          <p>La pieza más valiosa disponible es la <strong style="font-weight:500;">matrícula longitudinal del Cap. 5</strong>: con 52.115 registros semestrales y 10.562 estudiantes únicos identificables por documento, es posible reconstruir trayectorias y detectar interrupciones — un estudiante que aparece en 2018-I y deja de aparecer después es candidato a deserción. Esa es una <em>aproximación inferencial</em> a la deserción. La <em>medición directa</em> requiere las otras cinco fuentes: registro de retiros, causas declaradas, SPADIES, alertas tempranas y acompañamiento. Hasta que estén disponibles, el capítulo opera como estructura preliminar.</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Inventario de fuentes requeridas</strong> · plantilla estructural · capítulo pendiente de datos institucionales</span>
+          <span>§01 Diagnóstico</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §2 HISTORIA — Contexto nacional -->
+    <article class="subsection" data-sub="hist">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Historia — la medición de la deserción en Colombia</h2>
+        <p class="sub-lede">La deserción en educación superior ha pasado de ser un fenómeno reconocido pero no medido, a ser un indicador oficial con sistema de seguimiento propio (SPADIES). Esta sección documenta los hitos del marco normativo y las definiciones técnicas que enmarcan el Cap. 6.</p>
+
+        <p class="section-label"><span>Hitos del marco normativo</span><span class="lbl-meta">1992 — 2026</span></p>
+        <div class="timeline">
+
+          <div class="tl-item">
+            <div class="tl-year">1992<span class="tag">Ley marco</span></div>
+            <div class="tl-body">
+              <h4>Ley 30 — autonomía y permanencia</h4>
+              <p>La Ley de Educación Superior reconoce la responsabilidad institucional sobre la permanencia estudiantil, sin definir aún métricas específicas. Establece el marco general bajo el cual las IES deben velar por la trayectoria del estudiante hasta su graduación.</p>
+              <p class="src">Fuente · Ley 30 de 1992</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2003<span class="tag">Condición de calidad</span></div>
+            <div class="tl-body">
+              <h4>Decreto 2566 — permanencia como condición mínima</h4>
+              <p>Por primera vez se establece la permanencia y graduación como una de las 15 condiciones mínimas de calidad. Las IES deben demostrar que tienen políticas y mecanismos para favorecer la permanencia. Antecedente directo de los actuales requisitos de Registro Calificado.</p>
+              <p class="src">Fuente · Decreto 2566 de 2003</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2006<span class="tag">Sistema de seguimiento</span></div>
+            <div class="tl-body">
+              <h4>Creación de SPADIES</h4>
+              <p>El Ministerio de Educación crea el Sistema de Prevención y Análisis de la Deserción (SPADIES), basado en información de SNIES e ICETEX. Es el primer sistema nacional para medir, comparar y prevenir la deserción. Define las métricas oficiales que las IES deben reportar.</p>
+              <p class="src">Fuente · Ministerio de Educación Nacional · SPADIES</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2008<span class="tag">Aseguramiento</span></div>
+            <div class="tl-body">
+              <h4>Ley 1188 — seguimiento sistemático a estudiantes</h4>
+              <p>Modifica el régimen de Registro Calificado e introduce la exigencia de seguimiento sistemático a los estudiantes durante toda su trayectoria. Las IES deben implementar mecanismos formales — no sólo declarativos — para reducir la deserción.</p>
+              <p class="src">Fuente · Ley 1188 de 2008</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2010<span class="tag">Registro calificado</span></div>
+            <div class="tl-body">
+              <h4>Decreto 1295 — métricas de permanencia</h4>
+              <p>Reglamenta cómo las IES deben reportar permanencia: tasa de retención por cohorte, tasa de deserción anual, tasa de deserción por programa. SPADIES queda como sistema central. La deserción deja de ser percepción institucional para volverse métrica auditable.</p>
+              <p class="src">Fuente · Decreto 1295 de 2010</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2019<span class="tag">Aseguramiento</span></div>
+            <div class="tl-body">
+              <h4>Decreto 1330 — permanencia con foco en resultados</h4>
+              <p>El nuevo modelo de aseguramiento de calidad vincula la permanencia con los resultados de aprendizaje. Ya no basta con retener al estudiante: hay que retenerlo aprendiendo. La IES debe demostrar planes de acompañamiento efectivos, no sólo políticas declaradas.</p>
+              <p class="src">Fuente · Decreto 1330 de 2019</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2020<span class="tag">Parámetros</span></div>
+            <div class="tl-body">
+              <h4>Resolución 21795 — evidencias del seguimiento</h4>
+              <p>Especifica qué se considera evidencia válida de seguimiento a la permanencia: reglamento institucional, sistemas de alerta temprana, programas de acompañamiento con resultados medibles, planes de mejora derivados. Operativiza lo que el Decreto 1330 exige.</p>
+              <p class="src">Fuente · Resolución MEN 21795 de 2020</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2026<span class="tag">Observatorio</span></div>
+            <div class="tl-body">
+              <h4>Estructuración del capítulo en el observatorio</h4>
+              <p>El observatorio incorpora el Cap. 6 como plantilla estructural. Define las fuentes que se requerirán, las preguntas que el capítulo debe responder, y la propuesta de estándar institucional. Queda pendiente la integración de datos sistematizados de deserción y permanencia, ya sea por reporte interno o por consulta a SPADIES.</p>
+              <p class="src">Fuente · esta plataforma</p>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="section-label"><span>Definiciones técnicas</span><span class="lbl-meta">Términos del marco SPADIES</span></p>
+        <table class="invent">
+          <thead><tr><th style="width:30%;">Concepto</th><th>Definición operativa</th><th style="text-align:right;">Fuente</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Deserción por cohorte</span></td>
+              <td>Proporción de estudiantes de una cohorte de ingreso que abandonan sin graduarse en un período determinado.</td>
+              <td style="text-align:right;">SPADIES · MEN</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Deserción anual</span></td>
+              <td>Estudiantes que abandonan en un año específico, sobre el total de matriculados al inicio de ese año.</td>
+              <td style="text-align:right;">SPADIES · MEN</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Deserción acumulada</span></td>
+              <td>Total de estudiantes desertores acumulado desde el ingreso de la cohorte hasta el período de medición.</td>
+              <td style="text-align:right;">SPADIES · MEN</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Tasa de retención</span></td>
+              <td>Complemento de la deserción: proporción de la cohorte que continúa matriculada o se gradúa en un período dado.</td>
+              <td style="text-align:right;">SPADIES · MEN</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Deserción temprana</span></td>
+              <td>Abandono que ocurre durante los primeros tres semestres — es el segmento crítico, generalmente el mayor porcentaje.</td>
+              <td style="text-align:right;">Literatura técnica</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Ley 1188/2008</strong> · SPADIES · Decretos 1295/2010 y 1330/2019 · Resolución 21795/2020</span>
+          <span>§02 Historia</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §3 CAMBIOS — pendiente datos -->
+    <article class="subsection" data-sub="camb">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · evolución institucional</p>
+        <h2>Cambios — preguntas que el capítulo debe responder</h2>
+        <p class="sub-lede">Sin datos sistematizados de deserción, el §3 Cambios no puede aún documentar tendencias. Lo que sí puede hacer es explicitar las preguntas que va a responder cuando los datos lleguen — y la metodología prevista para cada una.</p>
+
+        <p class="section-label"><span>Preguntas estructurales del capítulo</span><span class="lbl-meta">7 preguntas a documentar</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:32%;">Pregunta</th><th>Metodología prevista</th><th style="text-align:right;">Insumo principal</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">¿Cuál es la tasa de retención por cohorte?</span><span class="it-sub">Métrica principal</span></td>
+              <td>Para cada cohorte de ingreso (2014-I, 2014-II, …), cuántos siguen matriculados o graduados al semestre N+1, N+2, …</td>
+              <td style="text-align:right;">Matrícula longitudinal · Cap. 5</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Cuándo deserta la cohorte?</span><span class="it-sub">Distribución temporal</span></td>
+              <td>Distribución del semestre de último contacto. Permite identificar si la deserción es temprana (primer año), intermedia o tardía.</td>
+              <td style="text-align:right;">Matrícula longitudinal · Cap. 5</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Difiere la deserción entre programas?</span><span class="it-sub">Desagregación</span></td>
+              <td>Comparación de tasas entre los 34 programas ETITC. Identifica los más problemáticos.</td>
+              <td style="text-align:right;">Programas · Cap. 5</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Difiere por nivel propedéutico?</span><span class="it-sub">Estructura formativa</span></td>
+              <td>Tasas comparativas T, Tg, U, E. ¿La cadena propedéutica reduce la deserción al fragmentar el cierre académico en logros tempranos?</td>
+              <td style="text-align:right;">Niveles · Cap. 5 y Cap. 7</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Cómo se relaciona con el Saber 11?</span><span class="it-sub">Predictor de ingreso</span></td>
+              <td>Tasa de deserción por quintil de Saber 11 al ingreso. Mide si el puntaje predice efectivamente la trayectoria.</td>
+              <td style="text-align:right;">COD_PRUEBA_SABER_11 · Cap. 5</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Cómo se relaciona con la planta docente?</span><span class="it-sub">Variable institucional</span></td>
+              <td>Comparación con tendencias del Cap. 8: ¿la deserción se mueve con la composición de la planta (TC vs Cátedra, Doctorado vs Maestría)?</td>
+              <td style="text-align:right;">Planta docente · Cap. 8</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">¿Qué causas reporta el desertor?</span><span class="it-sub">Lectura cualitativa</span></td>
+              <td>Si existen encuestas de salida sistematizadas: distribución de causas declaradas (económicas, académicas, vocacionales, familiares).</td>
+              <td style="text-align:right;">Encuestas de salida · pendiente</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura preliminar · qué sabe el observatorio sin datos directos</span>
+          <p>El observatorio no necesita tasas de deserción declaradas para empezar a leer permanencia: con la <strong style="font-weight:500;">matrícula longitudinal del Cap. 5</strong> (10.562 estudiantes únicos · 19 semestres) puede construir una <em>aproximación inferencial</em>. Un estudiante con matrícula en 2014-I que aparece consistentemente cada semestre hasta 2018-II y desaparece sin graduarse, es un caso de deserción tardía. Esta lectura inferencial será el punto de partida del capítulo cuando se publique con datos. La medición directa (registros administrativos de retiro, SPADIES, encuestas de salida) la enriquecerá pero no la sustituye.</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Plantilla estructural</strong> · preguntas a responder cuando estén los datos · metodología prevista</span>
+          <span>§03 Cambios</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §4 DASHBOARD — placeholders -->
+    <article class="subsection" data-sub="dash">
+      <div class="shell">
+        <header class="sub-head">
+          <p class="eyebrow"><span class="ord">§ 6.4</span><span>Dashboard pendiente · estructura preliminar</span></p>
+          <h2>Reporte analítico — Deserción y Permanencia ETITC</h2>
+          <p class="lede">Cuando los datos sistematizados estén disponibles, este dashboard mostrará seis visualizaciones nativas HTML/SVG con la radiografía de la deserción institucional. Mientras tanto, esta sección documenta qué visualización irá en cada celda y qué pregunta responderá.</p>
+        </header>
+
+        <div class="placeholder-card">
+          <span class="ptag">Dashboard pendiente</span>
+          <h4>Sin datos sistematizados disponibles</h4>
+          <p>El Cap. 5 (Matrícula y Admisiones) permite construir una <em>aproximación inferencial</em> a la deserción rastreando interrupciones en la matrícula longitudinal. Esa aproximación se incorporará como primer paso. La medición directa requiere fuentes adicionales: registros institucionales de retiro, reportes SPADIES y encuestas de salida.</p>
+        </div>
+
+        <p class="section-label"><span>Visualizaciones previstas</span><span class="lbl-meta">6 paneles del dashboard</span></p>
+
+        <div class="placeholder-grid">
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 1 · full-width</span>
+            <h4>Embudo de retención por cohorte</h4>
+            <p>Para una cohorte de ingreso (ej. 2014-I), número de estudiantes en cada semestre subsiguiente: N → N+1 → N+2 … hasta el grado o última matrícula. Visualiza la pérdida acumulada.</p>
+          </div>
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 2</span>
+            <h4>Tasa de retención por cohorte</h4>
+            <p>Comparación de las cohortes 2014 a 2023, mostrando el % retenido al semestre N+2, N+4, N+6 y N+8. Permite ver si las cohortes recientes retienen mejor.</p>
+          </div>
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 3</span>
+            <h4>Distribución del momento de deserción</h4>
+            <p>Histograma del semestre en que ocurre el último contacto con la institución. Identifica el segmento crítico (temprano · intermedio · tardío).</p>
+          </div>
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 4</span>
+            <h4>Deserción por programa</h4>
+            <p>Tasa de deserción acumulada para los 34 programas. Identifica los programas con mayores tasas y los más retentivos.</p>
+          </div>
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 5</span>
+            <h4>Deserción × Saber 11 al ingreso</h4>
+            <p>Cruce con el código Saber 11 disponible al 97,4% en Cap. 5. Tasas de deserción por quintil de puntaje. Mide la capacidad predictiva del filtro al ingreso.</p>
+          </div>
+
+          <div class="placeholder-card is-small">
+            <span class="ptag">Panel 6 · full-width</span>
+            <h4>Evolución temporal de la tasa de deserción anual</h4>
+            <p>Serie 2014-2023 de la tasa de deserción anual institucional. Permite identificar si la deserción crece, decrece o se mantiene, y si responde a momentos específicos (pandemia, cambios institucionales).</p>
+          </div>
+
+        </div>
+
+        <footer class="dash-foot">
+          <p><strong>Fuente prevista.</strong> Para los paneles 1, 2, 3 y 6: matrícula longitudinal del Cap. 5 (52.115 registros · 10.562 estudiantes únicos). Para el panel 4: cruce con los 34 programas del Cap. 5. Para el panel 5: el campo COD_PRUEBA_SABER_11 disponible al 97,4% en Estudiantes Primer Curso. El observatorio puede construir los paneles 1, 2, 3 y 6 como <em>aproximación inferencial</em> con los datos ya disponibles; los paneles 4 y 5 requieren cruce adicional.</p>
+        </footer>
+      </div>
+    </article>
+
+    <!-- §5 ESTÁNDAR — propuesta conceptual -->
+    <article class="subsection" data-sub="estd">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC × Contexto nacional</p>
+        <h2>Estándar — propuesta de instrumento</h2>
+        <p class="sub-lede">La propuesta de estándar para el Cap. 6 no requiere datos para definirse. Lo que requiere es claridad sobre qué dimensiones medir, qué referente normativo seguir, y cómo articularse con los otros capítulos del observatorio.</p>
+
+        <p class="section-label"><span>Cascada del modelo</span><span class="lbl-meta">Cuatro lecturas de la permanencia</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 12px; max-width: 50em;">El instrumento se organiza en cuatro lecturas anidadas. Cada una responde a una pregunta distinta y requiere un enfoque distinto.</p>
+
+        <div class="cascade">
+          <div class="step">
+            <p class="lvl"><span class="num">N1</span>Anual</p>
+            <p class="big tnum">%</p>
+            <p class="ttl">Deserción anual</p>
+            <p>Estudiantes que abandonaron durante un año, sobre matriculados al inicio. Métrica de operación inmediata.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N2</span>Cohorte</p>
+            <p class="big tnum">%</p>
+            <p class="ttl">Deserción por cohorte</p>
+            <p>Para cada cohorte de ingreso, deserción acumulada al semestre N+k. Métrica longitudinal central.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N3</span>Programa</p>
+            <p class="big tnum">×34</p>
+            <p class="ttl">Deserción por programa</p>
+            <p>Desagregación por los 34 programas ETITC. Identifica los problemáticos.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N4</span>Cualitativo</p>
+            <p class="big tnum">5+</p>
+            <p class="ttl">Causas de retiro</p>
+            <p>Distribución cualitativa de causas declaradas. Insumo para planes de mejora.</p>
+          </div>
+        </div>
+
+        <p class="section-label"><span>Referente normativo · qué exige el sistema</span><span class="lbl-meta">Resolución 21795 · seguimiento a la permanencia</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 14px; max-width: 50em;">La Resolución 21795 de 2020 fija qué se considera evidencia válida de seguimiento a la permanencia. El Cap. 6 debe poder demostrar los cuatro componentes:</p>
+
+        <div class="scale-compare">
+          <div class="col">
+            <p class="h">Resolución 21795 · exige</p>
+            <p class="yr tnum">4</p>
+            <table>
+              <tr><td>Reglamento institucional documentado</td><td>Política de permanencia</td></tr>
+              <tr><td>Sistema de alerta temprana</td><td>Indicadores predictivos</td></tr>
+              <tr><td>Programas de acompañamiento</td><td>Con resultados medibles</td></tr>
+              <tr><td>Planes de mejora derivados</td><td>Cierre del ciclo</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Fuente · Resolución MEN 21795 de 2020</p>
+          </div>
+          <div class="col">
+            <p class="h">ETITC · estado del observatorio</p>
+            <p class="yr tnum">0/4</p>
+            <table>
+              <tr><td>Documentado en el observatorio</td><td>Pendiente</td></tr>
+              <tr><td>Sistema de alerta</td><td>No documentado</td></tr>
+              <tr><td>Acompañamiento medible</td><td>No documentado</td></tr>
+              <tr><td>Planes de mejora</td><td>No documentado</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Fuente · plantilla estructural · pendiente</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Nota metodológica · qué falta</span>
+          <p>El estado actual del Cap. 6 no es por debilidad metodológica del observatorio — es por <strong style="font-weight:500;">ausencia de fuentes institucionales sistematizadas</strong>. La institución probablemente <em>opera</em> con programas de acompañamiento y políticas de permanencia, pero esa información no ha sido integrada al observatorio como insumo procesable. La primera tarea concreta para activar este capítulo es identificar qué documentos institucionales existen (reglamentos, informes, encuestas) y cómo sistematizarlos.</p>
+        </div>
+
+        <p class="section-label"><span>Propuesta de estándar institucional</span><span class="lbl-meta">Lo que el observatorio fija a futuro</span></p>
+        <table class="invent">
+          <thead><tr><th>Componente</th><th>Estándar propuesto</th><th style="text-align:right;">Justificación</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Métrica primaria</span></td>
+              <td>Tasa de retención por cohorte al semestre N+1, N+2, N+4 y N+8</td>
+              <td style="text-align:right;">Coherente con SPADIES nacional</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Métrica secundaria</span></td>
+              <td>Distribución del momento de deserción (temprana · intermedia · tardía)</td>
+              <td style="text-align:right;">Identifica el segmento crítico</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Lectura inferencial inicial</span></td>
+              <td>Reconstrucción de trayectorias desde matrícula longitudinal del Cap. 5</td>
+              <td style="text-align:right;">Habilita publicación parcial sin esperar todas las fuentes</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Ventana temporal</span></td>
+              <td>Desde 2014-I (coherente con cobertura del Cap. 5)</td>
+              <td style="text-align:right;">Cohortes completamente trazables</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Granularidad</span></td>
+              <td>Semestral · por cohorte de ingreso</td>
+              <td style="text-align:right;">Compatible con el reporte SNIES y SPADIES</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cruce con Cap. 5 (Matrícula)</span></td>
+              <td>Insumo central · reconstrucción de trayectorias</td>
+              <td style="text-align:right;">Base de la lectura inferencial</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cruce con Cap. 2 (Saber 11)</span></td>
+              <td>Tasa de deserción × puntaje Saber 11 al ingreso</td>
+              <td style="text-align:right;">Mide la capacidad predictiva del filtro</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cruce con Cap. 7 (Graduados)</span></td>
+              <td>Complemento exacto: quienes no aparecen en Cap. 7 son candidatos a deserción</td>
+              <td style="text-align:right;">Cierra el balance académico institucional</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cruce con Cap. 8 (Planta docente)</span></td>
+              <td>Relación entre composición de la planta y tasas de retención por programa</td>
+              <td style="text-align:right;">Pregunta institucional pendiente</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Documentación de fuente</span></td>
+              <td>Toda métrica con su período, cohorte y archivo de origen</td>
+              <td style="text-align:right;">Principio: nada se inventa</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Ley 1188/2008</strong> · SPADIES · Resolución 21795/2020 · plantilla estructural del observatorio</span>
+          <span>§04 Estándar</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">
+    <div class="cols">
+      <div>
+        <p class="t">Observatorio Institucional</p>
+        <p class="s">Escuela Tecnológica · Instituto Técnico Central</p>
+      </div>
+      <div>
+        <p class="t">Capítulos</p>
+        <ul id="footer-chapters"></ul>
+      </div>
+      <div>
+        <p class="t">Acerca</p>
+        <ul>
+          <li><a href="index.html#/acerca">Sobre el observatorio</a></li>
+          <li><a href="index.html">Portada</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · v1.0 · Fase 0 — Mayo 2026
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script src="cap-06.js"></script>
+
+</body>
+</html>
