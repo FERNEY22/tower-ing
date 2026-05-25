@@ -20,8 +20,8 @@
     { n: 3, slug: 'saber-pro',           title: 'Saber TyT / Saber Pro',                   kind: 'Prueba externa',    status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-03-saber-pro.html' },
     { n: 4, slug: 'evaluacion-docente',  title: 'Evaluación docente',                      kind: 'Talento humano',    status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-04-evaluacion-docente.html' },
     { n: 5, slug: 'matricula',           title: 'Matrícula y admisiones',                  kind: 'Indicador',         status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-05-matricula-admisiones.html' },
-    { n: 6, slug: 'desercion',           title: 'Deserción y permanencia',                 kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente',     file: null },
-    { n: 7, slug: 'egresados',           title: 'Graduados y egresados',                   kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente',     file: null },
+    { n: 6, slug: 'desercion',           title: 'Deserción y permanencia',                 kind: 'Indicador',         status: 'draft',   statusLabel: 'Estructura preliminar',     file: 'cap-06-desercion-permanencia.html' },
+    { n: 7, slug: 'egresados',           title: 'Graduados y egresados',                   kind: 'Indicador',         status: 'wip',     statusLabel: 'En desarrollo',     file: 'cap-07-graduados.html' },
     { n: 8, slug: 'planta-docente',      title: 'Planta docente',                          kind: 'Talento humano',    status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-08-planta-docente.html' },
   ];
 
