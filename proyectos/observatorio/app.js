@@ -16,7 +16,7 @@
   // file: si existe, es el HTML del capítulo. Si no, el item se renderiza sin link.
   const CHAPTERS = [
     { n: 1, slug: 'autoevaluacion',     title: 'Modelo de Autoevaluación Institucional', kind: 'Piloto · plantilla', status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-01-autoevaluacion.html' },
-    { n: 2, slug: 'saber-11',            title: 'Saber 11',                                kind: 'Prueba externa',    status: 'pending', statusLabel: 'Pendiente',     file: null },
+    { n: 2, slug: 'saber-11',            title: 'Saber 11',                                kind: 'Prueba externa',    status: 'wip',     statusLabel: 'En desarrollo', file: 'cap-02-saber-11.html' },
     { n: 3, slug: 'saber-pro',           title: 'Saber TyT / Saber Pro',                   kind: 'Prueba externa',    status: 'pending', statusLabel: 'Pendiente',     file: null },
     { n: 4, slug: 'evaluacion-docente',  title: 'Evaluación docente',                      kind: 'Talento humano',    status: 'pending', statusLabel: 'Pendiente',     file: null },
     { n: 5, slug: 'matricula',           title: 'Matrícula y admisiones',                  kind: 'Indicador',         status: 'pending', statusLabel: 'Pendiente',     file: null },
