@@ -98,7 +98,7 @@
     return 'cover';
   }
 
-  if(document.querySelectorAll('.page').length > 0){
+  if(document.querySelector('.page[data-page="cover"]')){
     window.addEventListener('hashchange', () => activatePage(parseHash()));
     activatePage(parseHash());
   }
