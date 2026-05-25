@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Capítulo 02 · Saber 11 · Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="index.html" data-nav="cover">Portada</a>
+      <a href="index.html#capitulos" data-nav="capitulos" class="active">Capítulos</a>
+      <a href="index.html#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+
+  <!-- ===================== PÁGINA: CAPÍTULO 02 — SABER 11 ===================== -->
+  <section class="page is-active" data-page="ch2" aria-labelledby="ch2-title">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="index.html">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Capítulo 02</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl" id="ch2-title">Saber 11</h1>
+            <p class="sub">Examen de Estado de la Educación Media. Cómo la ETITC se lee a través del referente nacional aplicado a sus estudiantes de origen.</p>
+          </div>
+          <div class="right-meta">
+            CAP. 02 / 08<br>
+            EN DESARROLLO<br>
+            ACTUALIZADO MAYO 2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="subnav" aria-label="Subsecciones del capítulo">
+      <div class="shell">
+        <button data-sub="diag" class="is-active"><span class="n">01</span>Diagnóstico</button>
+        <button data-sub="hist"><span class="n">02</span>Historia</button>
+        <button data-sub="camb"><span class="n">03</span>Cambios</button>
+        <button data-sub="dash"><span class="subnav-num">04</span><span class="subnav-lbl">Dashboard</span></button>
+        <button data-sub="estd"><span class="n">05</span>Estándar</button>
+      </div>
+    </nav>
+
+    <!-- §1 DIAGNÓSTICO — ETITC · institucional -->
+    <article class="subsection is-active" data-sub="diag">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · institucional</p>
+        <h2>Diagnóstico — qué información existe y qué falta</h2>
+        <p class="sub-lede">La ETITC no aplica el examen Saber 11: lo reciben sus aspirantes como prueba externa del ICFES. Lo que la institución sí tiene es la información del desempeño de quienes presentaron la prueba. Esta sección documenta qué reposa hoy en la base institucional y qué referentes externos faltan para completar la lectura.</p>
+
+        <div class="statline">
+          <div class="stat">
+            <p class="k">Tabla institucional</p>
+            <p class="v tnum">1</p>
+            <p class="s"><code style="font-family:var(--mono); font-size:12px;">BD_SABER_11_LIMPIA</code> — base nominal a nivel de estudiante.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Áreas evaluadas</p>
+            <p class="v tnum">5</p>
+            <p class="s">Lectura Crítica, Matemáticas, Ciencias Naturales, Sociales y Ciudadanas, Inglés.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Ventana temporal</p>
+            <p class="v tnum">12</p>
+            <p class="s">Años cubiertos: 2012–2023. Datos pre-agosto 2014 corresponden a recalibración ICFES a la estructura post-reforma.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Promedio global ETITC</p>
+            <p class="v tnum">276,93</p>
+            <p class="s">Promedio histórico sobre 500. Variación por año visible en el dashboard.</p>
+          </div>
+        </div>
+
+        <p class="section-label"><span>Inventario · Qué se tiene</span><span class="lbl-meta">5 fuentes documentadas</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:42%;">Fuente</th><th>Alcance</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Base nominal Saber 11 institucional</span><span class="it-sub"><code>BD_SABER_11_LIMPIA</code> · campos: CODREGSNP, ANO_PRUEBA, GLOBAL, PLC, PMA, PCN, PSC, PIN</span></td>
+              <td>Resultados a nivel de estudiante en las 5 áreas y puntaje global.</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Dashboard institucional Saber 11</span><span class="it-sub">Anexo · construido sobre la base nominal</span></td>
+              <td>1 página · 16 visuales · promedios globales y por área a lo largo del tiempo.</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Referentes nacionales por año</span><span class="it-sub">ICFES · promedios país</span></td>
+              <td>Permitiría contrastar el desempeño ETITC contra el nivel nacional.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Vínculo Saber 11 ↔ matrícula ETITC</span><span class="it-sub">Cruce con base de admisiones por documento</span></td>
+              <td>Permitiría leer cuántos de los evaluados ingresaron, en qué programa.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Trazabilidad pre-2014</span><span class="it-sub">Estructura anterior a la reforma del examen</span></td>
+              <td>Los datos previos a agosto de 2014 corresponden a una estructura distinta (8 pruebas) — no comparable directamente con la actual.</td>
+              <td><span class="pill p-partial">Parcial</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del diagnóstico</span>
+          <p>La base institucional tiene el dato propio de la ETITC bien estructurado a nivel nominal, pero le faltan dos piezas críticas para tener una lectura completa: <strong style="font-weight:500;">el referente nacional</strong> (sin el cual no se puede afirmar si el desempeño es alto o bajo) y <strong style="font-weight:500;">el cruce con admisiones</strong> (sin el cual no se puede saber si quienes presentaron la prueba terminaron en la ETITC, y en qué programa). El Estándar de este capítulo propone cómo incorporar ambos.</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Anexo · Dashboard Resultados Saber 11 · ETITC</strong> · tabla <code style="font-family:var(--mono);">BD_SABER_11_LIMPIA</code></span>
+          <span>§01 Diagnóstico</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §2 HISTORIA — Contexto nacional · Saber 11 -->
+    <article class="subsection" data-sub="hist">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Historia — evolución del examen como instrumento nacional</h2>
+        <p class="sub-lede">El Saber 11 no es una herramienta de la ETITC: es el Examen de Estado de la Educación Media, instrumento nacional aplicado por el ICFES. Conocer su trayectoria normativa importa para entender por qué los datos institucionales sólo son comparables a partir de cierto punto.</p>
+
+        <p class="section-label"><span>Hitos del instrumento</span><span class="lbl-meta">1968 — 2026</span></p>
+        <div class="timeline">
+
+          <div class="tl-item">
+            <div class="tl-year">1968<span class="tag">Origen</span></div>
+            <div class="tl-body">
+              <h4>Creación del ICFES</h4>
+              <p>Se crea el Instituto Colombiano para el Fomento de la Educación Superior por la Ley 60 de 1968, como organismo autónomo encargado de evaluar el sistema educativo. Entre el 7 y el 8 de septiembre se aplican los primeros exámenes nacionales en Colombia.</p>
+              <p class="src">Fuente · Ley 60 de 1968</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">1980<span class="tag">Obligatoriedad</span></div>
+            <div class="tl-body">
+              <h4>Decreto 2343 — examen obligatorio para ingreso a educación superior</h4>
+              <p>El examen pasa de ser voluntario a requisito obligatorio para el ingreso a cualquier programa de pregrado en el país. El mismo decreto establece que el ICFES debe reportar al MEN la información agregada de resultados por colegios.</p>
+              <p class="src">Fuente · Decreto 2343 de 1980</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2009<span class="tag">Reforma institucional</span></div>
+            <div class="tl-body">
+              <h4>Decreto 5014 — reforma estructural del ICFES</h4>
+              <p>El instituto cambia su nombre de "Instituto Colombiano para el Fomento de la Educación Superior" a "Instituto Colombiano para la Evaluación de la Educación". La sigla ICFES se conserva. En adelante, el examen pasa a llamarse oficialmente Saber 11, aunque popularmente se siga conociendo como ICFES.</p>
+              <p class="src">Fuente · Decreto 5014 de 2009</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2010<span class="tag">Reglamentación</span></div>
+            <div class="tl-body">
+              <h4>Decreto 869 — reglamentación del examen Saber 11</h4>
+              <p>Marco normativo que regula el Examen de Estado de la Educación Media tal como se aplica hoy: condiciones, alcance, reporte. Es el decreto vigente para la operación actual de la prueba.</p>
+              <p class="src">Fuente · Decreto 869 de 2010</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2014<span class="tag">Reforma estructural · agosto</span></div>
+            <div class="tl-body">
+              <h4>Nueva estructura del examen — de 8 pruebas a 5 áreas</h4>
+              <p>A partir de Saber 11 calendario A 2014-2 (agosto), el examen cambia profundamente para alinearse con las demás pruebas Saber. Pasa de un núcleo común de <strong style="font-weight:500;">8 pruebas</strong> (Lenguaje, Matemáticas, Biología, Física, Química, Sociales, Filosofía, Inglés) más un Componente Flexible, a <strong style="font-weight:500;">5 áreas</strong>: Lectura Crítica, Matemáticas, Ciencias Naturales, Sociales y Ciudadanas e Inglés. La columna de Cambios documenta el mapeo en detalle. <em>Es la fecha-corte que delimita la comparabilidad histórica de los datos.</em></p>
+              <p class="src">Fuente · ICFES · Alineación del examen Saber 11 (2013–2014)</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2015-2<span class="tag">Métrica cualitativa</span></div>
+            <div class="tl-body">
+              <h4>Niveles de desempeño en todas las pruebas</h4>
+              <p>Desde el segundo semestre de 2015 se incorporan <strong style="font-weight:500;">4 niveles de desempeño</strong> (1 a 4) para todas las pruebas, no sólo Inglés. Pasa de ser una medida sólo cuantitativa a tener también una valoración cualitativa.</p>
+              <p class="src">Fuente · ICFES · Guía de orientación Saber 11° 2015-2</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2016<span class="tag">Métrica posicional</span></div>
+            <div class="tl-body">
+              <h4>Sustitución de "puesto" por percentil</h4>
+              <p>El ICFES elimina la métrica de puesto (que comparaba al estudiante por grupos de 1000) y adopta el percentil tradicional. La comparación con los demás evaluados pasa a expresarse en una escala estandarizada y más legible internacionalmente.</p>
+              <p class="src">Fuente · ICFES · Cambios metodológicos 2016</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2026<span class="tag">Observatorio</span></div>
+            <div class="tl-body">
+              <h4>Sistematización en el Observatorio Institucional ETITC</h4>
+              <p>Los datos institucionales del Saber 11 quedan consolidados como capítulo dedicado del observatorio, con su línea histórica nacional declarada como contexto y sus referentes nacionales identificados como pieza faltante por incorporar.</p>
+              <p class="src">Fuente · esta plataforma</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Marco normativo y técnico del Saber 11</strong> · ICFES — Guías de orientación, documentos de alineación 2013–2014, normativa MEN</span>
+          <span>§02 Historia</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §3 CAMBIOS — Contexto nacional · estructura -->
+    <article class="subsection" data-sub="camb">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Cambios — qué se modificó en agosto de 2014</h2>
+        <p class="sub-lede">La reforma de 2014 es el cambio estructural más importante en la historia reciente del Saber 11. No fue ajuste de detalle: cambió el núcleo, la cantidad de pruebas, la lógica de calificación. Esta sección documenta el mapeo área por área.</p>
+
+        <div class="statline">
+          <div class="stat"><p class="k">Pruebas · antes de 2014-II</p><p class="v tnum">8</p><p class="s">Núcleo común + componente flexible.</p></div>
+          <div class="stat"><p class="k">Pruebas · desde 2014-II</p><p class="v tnum">5</p><p class="s">Áreas consolidadas, sin componente flexible.</p></div>
+          <div class="stat"><p class="k">Áreas con cambio</p><p class="v tnum">6</p><p class="s">Fusiones, reformulaciones o aparición de subpruebas.</p></div>
+          <div class="stat"><p class="k">Áreas conservadas</p><p class="v tnum">2</p><p class="s">Matemáticas e Inglés mantienen nombre y formato.</p></div>
+        </div>
+
+        <p class="section-label"><span>Mapping área a área</span><span class="lbl-meta">Estructura pre-2014 → Estructura desde 2014-II</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 18px; max-width: 50em;">El cambio fue mayormente <strong style="font-weight:500;">consolidación por fusión</strong>: pruebas con materias afines se agruparon en áreas más amplias. Sólo Matemáticas e Inglés conservaron su forma original. El Componente Flexible (profundización o interdisciplinar) desaparece por completo.</p>
+
+        <table class="mapping">
+          <thead>
+            <tr>
+              <th class="col-2017">Antes · hasta 2014-I</th>
+              <th class="col-arr"></th>
+              <th class="col-2022">Desde · 2014-II</th>
+              <th class="col-tag">Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src17"><span class="id">A1</span>Lenguaje + Filosofía</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">PLC</span>Lectura Crítica</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Fusión</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">A2</span>Matemáticas</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">PMA</span>Matemáticas (+ Razonamiento Cuantitativo)</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">Conservado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">A3</span>Biología + Física + Química</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">PCN</span>Ciencias Naturales</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Fusión</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">A4</span>Sociales</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">PSC</span>Sociales y Ciudadanas (+ Competencias Ciudadanas)</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">A5</span>Inglés</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">PIN</span>Inglés</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">Conservado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">CF</span>Componente Flexible (profundización o interdisciplinar)</span></td>
+              <td class="arrow">×</td>
+              <td><span class="dst22">— eliminado —</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Eliminado</span></td>
+            </tr>
+            <tr class="is-new">
+              <td><span class="src17">— sin equivalente —</span></td>
+              <td class="arrow">+</td>
+              <td><span class="dst22"><span class="id">sub</span>Razonamiento Cuantitativo (subprueba dentro de PMA)</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Subprueba nueva</span></td>
+            </tr>
+            <tr class="is-new">
+              <td><span class="src17">— sin equivalente —</span></td>
+              <td class="arrow">+</td>
+              <td><span class="dst22"><span class="id">sub</span>Competencias Ciudadanas (subprueba dentro de PSC)</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Subprueba nueva</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del cambio</span>
+          <p>Para la lectura institucional, lo más importante de este cambio es la <strong style="font-weight:500;">fecha-corte</strong>: cualquier dato Saber 11 anterior a agosto de 2014 corresponde a una estructura distinta y no es comparable directamente con los datos posteriores. Los códigos del modelo institucional ETITC (<code style="font-family:var(--mono);">PLC, PMA, PCN, PSC, PIN</code>) corresponden exactamente a las 5 áreas post-2014: el modelo actual <em>sólo</em> trabaja con la estructura vigente.</p>
+        </div>
+
+        <p class="section-label"><span>Otros cambios estructurales</span><span class="lbl-meta">Más allá de las áreas</span></p>
+
+        <table class="invent">
+          <thead><tr><th>Dimensión</th><th>Antes</th><th style="text-align:right;">Desde</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Niveles de desempeño</span><span class="it-sub">Valoración cualitativa por área</span></td>
+              <td>Sólo en Inglés (A1–C2)</td>
+              <td style="text-align:right;">4 niveles en todas las áreas (desde 2015-2)</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Métrica posicional</span><span class="it-sub">Comparación con la población</span></td>
+              <td>Puesto (por grupos de 1000)</td>
+              <td style="text-align:right;">Percentil (desde 2016)</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Escala por área</span><span class="it-sub">Puntaje individual</span></td>
+              <td>0 — 100</td>
+              <td style="text-align:right;">0 — 100 (sin cambio)</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Escala global</span><span class="it-sub">Puntaje total</span></td>
+              <td>Variaciones históricas</td>
+              <td style="text-align:right;">0 — 500</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Tipo de pregunta</span><span class="it-sub">Formato</span></td>
+              <td>Selección múltiple únicamente</td>
+              <td style="text-align:right;">Selección múltiple + pregunta abierta</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>ICFES</strong> · Documentos de alineación 2013, Guías de orientación Saber 11° 2014, 2015, 2017</span>
+          <span>§03 Cambios</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §4 DASHBOARD — ETITC · institucional -->
+    <article class="subsection" data-sub="dash">
+      <div class="shell">
+        <header class="sub-head">
+          <p class="eyebrow"><span class="ord">§ 2.4</span><span>Dashboard interactivo</span></p>
+          <h2>Reporte analítico — Saber 11 ETITC</h2>
+          <p class="lede">Tablero analítico construido sobre la base nominal institucional <code style="font-family:var(--mono);">BD_SABER_11_LIMPIA</code>. Permite explorar promedios globales y por área a lo largo del tiempo, con datos a nivel de estudiante.</p>
+        </header>
+
+        <nav class="dash-tabs" aria-label="Páginas del reporte">
+          <button data-pg="ReportSection" class="is-active">Resultados generales</button>
+        </nav>
+
+        <div class="dash-frame" id="dash-frame">
+          <div class="dash-placeholder">
+            <p class="ph-label">Reporte en publicación</p>
+            <p class="ph-text">El reporte se está publicando al Power BI Service con el tema gráfico institucional aplicado. La incrustación se activa al confirmar la URL de embed.</p>
+            <p class="ph-meta">1 página · 16 visuales · construido sobre BD_SABER_11_LIMPIA</p>
+          </div>
+        </div>
+
+        <footer class="dash-foot">
+          <p><strong>Fuente.</strong> Base nominal Saber 11 institucional · 5 áreas (PLC, PMA, PCN, PSC, PIN) + puntaje global · campo temporal ANO_PRUEBA. Procesamiento en Power BI. <em>Tema gráfico en migración a la paleta institucional ETITC.</em></p>
+          <p><strong>Cómo leer.</strong> Los visuales muestran el desempeño de quienes presentaron el Saber 11 — no necesariamente quienes ingresaron a la ETITC. El cruce con admisiones (Cap. 5 Matrícula) cerraría esa lectura.</p>
+        </footer>
+      </div>
+    </article>
+
+    <!-- §5 ESTÁNDAR — ETITC × Contexto nacional -->
+    <article class="subsection" data-sub="estd">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC × Contexto nacional</p>
+        <h2>Estándar — propuesta de instrumento</h2>
+        <p class="sub-lede">El estándar del observatorio para Saber 11 toma la estructura vigente de la prueba (post-2014) como referencia obligada, y propone leer cada cohorte ETITC contra el referente nacional anual. Esta sección documenta la cascada del modelo y la propuesta de lectura institucional.</p>
+
+        <p class="section-label"><span>Cascada del Saber 11 actual</span><span class="lbl-meta">Niveles de desagregación · post-2014</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 12px; max-width: 50em;">La prueba se organiza en tres niveles anidados. La cobertura institucional puede operar en cualquiera de los tres según la pregunta que se quiera responder.</p>
+
+        <div class="cascade">
+          <div class="step">
+            <p class="lvl"><span class="num">N1</span>Nivel superior</p>
+            <p class="big tnum">5</p>
+            <p class="ttl">Áreas</p>
+            <p>Lectura Crítica, Matemáticas, Sociales y Ciudadanas, Ciencias Naturales, Inglés. Cada área reportada en escala 0–100. El puntaje global (0–500) es una ponderación de las 5 áreas.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N2</span>Nivel intermedio</p>
+            <p class="big tnum">2</p>
+            <p class="ttl">Subpruebas</p>
+            <p>Razonamiento Cuantitativo (dentro de Matemáticas) y Competencias Ciudadanas (dentro de Sociales). Cada una en escala 0–100 propia.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N3</span>Nivel operativo</p>
+            <p class="big tnum">4</p>
+            <p class="ttl">Niveles de desempeño</p>
+            <p>Valoración cualitativa de 1 (más bajo) a 4 (más alto), reportada por área. Permite traducir el puntaje numérico en una categoría comparable.</p>
+          </div>
+        </div>
+
+        <p class="section-label"><span>Referente nacional reciente</span><span class="lbl-meta">Promedio global del país</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 14px; max-width: 50em;">El ICFES publica anualmente el promedio nacional del puntaje global. Es el referente externo natural contra el cual contrastar el desempeño de los estudiantes ETITC. Los valores recientes son consistentes en una banda estrecha:</p>
+
+        <div class="scale-compare">
+          <div class="col">
+            <p class="h">Calendario A · 2023</p>
+            <p class="yr tnum">257</p>
+            <table>
+              <tr><td>Promedio global del país</td><td>Sobre 500</td></tr>
+              <tr><td>Aprobada (referencia)</td><td>≥ 270</td></tr>
+              <tr><td>Excepcional (referencia)</td><td>≥ 400</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Fuente · ICFES · Reporte 2023</p>
+          </div>
+          <div class="col">
+            <p class="h">Calendario A · 2024</p>
+            <p class="yr tnum">259</p>
+            <table>
+              <tr><td>Promedio global del país</td><td>Sobre 500</td></tr>
+              <tr><td>Variación frente a 2023</td><td>+2 puntos</td></tr>
+              <tr><td>Aumento atribuido a</td><td>Matemáticas y Ciencias Naturales</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Fuente · ICFES · Comunicado 5 noviembre 2024</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Nota metodológica</span>
+          <p>El rango histórico reciente del promedio nacional se ubica entre <strong style="font-weight:500;">250 y 260 puntos</strong>. Comparar el promedio ETITC contra esa banda es la lectura inmediata. Una lectura más fina requiere desagregar por <em>Núcleo Básico de Conocimiento</em> (institutos técnicos/tecnológicos vs universidades, por ejemplo) — referente que el observatorio aún no incorpora.</p>
+        </div>
+
+        <p class="section-label"><span>Propuesta de estándar institucional</span><span class="lbl-meta">Lo que el observatorio fija a futuro</span></p>
+        <table class="invent">
+          <thead><tr><th>Componente</th><th>Estándar propuesto</th><th style="text-align:right;">Justificación</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Métrica primaria</span></td>
+              <td>Promedio global (0–500) + promedios por las 5 áreas (0–100 cada una)</td>
+              <td style="text-align:right;">Coherente con la estructura vigente del examen</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Referente externo</span></td>
+              <td>Promedio nacional ICFES del año correspondiente</td>
+              <td style="text-align:right;">Permite contextualizar el desempeño</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Ventana temporal</span></td>
+              <td>Desde 2014-II en adelante (estructura post-reforma)</td>
+              <td style="text-align:right;">Garantiza comparabilidad histórica</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Desagregación temporal</span></td>
+              <td>Por año-calendario de presentación de la prueba</td>
+              <td style="text-align:right;">Granularidad mínima útil</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Desagregación por unidad</span></td>
+              <td>Por programa de ingreso ETITC (cruce con admisiones)</td>
+              <td style="text-align:right;">Habilita lectura útil para gobierno académico — <em>pendiente de incorporar</em></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Niveles de desempeño</span></td>
+              <td>Distribución de la cohorte ETITC en los 4 niveles por área</td>
+              <td style="text-align:right;">Complementa el puntaje numérico con valoración cualitativa</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Documentación de fuente</span></td>
+              <td>Toda métrica con su año y origen ICFES</td>
+              <td style="text-align:right;">Principio: nada se inventa</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>ICFES</strong> · Guías de orientación Saber 11°, comunicado de resultados 2024, base institucional <code style="font-family:var(--mono);">BD_SABER_11_LIMPIA</code></span>
+          <span>§04 Estándar</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-foot">
+  <div class="shell">
+    <div class="cols">
+      <div>
+        <p class="t">Observatorio Institucional</p>
+        <p class="s">Escuela Tecnológica · Instituto Técnico Central</p>
+      </div>
+      <div>
+        <p class="t">Capítulos</p>
+        <ul id="footer-chapters">
+          <!-- inyectado por JS -->
+        </ul>
+      </div>
+      <div>
+        <p class="t">Acerca</p>
+        <ul>
+          <li><a href="index.html#/acerca">Sobre el observatorio</a></li>
+          <li><a href="index.html">Portada</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · v1.0 · Fase 0 — Mayo 2026
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script src="cap-02.js"></script>
+
+</body>
+</html>
