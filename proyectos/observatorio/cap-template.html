@@ -1,0 +1,439 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  PLANTILLA DE CAPÍTULO · Observatorio Institucional ETITC                 ║
+  ║                                                                           ║
+  ║  PASOS PARA CREAR UN CAPÍTULO NUEVO:                                      ║
+  ║                                                                           ║
+  ║  1. Copiar este archivo. Renombrarlo cap-XX-slug.html                     ║
+  ║     (ej: cap-02-saber-11.html)                                            ║
+  ║  2. Copiar cap-template.js. Renombrarlo cap-XX.js (ej: cap-02.js)         ║
+  ║  3. Buscar y reemplazar TODOS los marcadores [[NOMBRE]] en ambos archivos ║
+  ║     (Ctrl+H en VS Code, "Replace All")                                    ║
+  ║  4. En app.js, en el catálogo CHAPTERS, cambiar `file: null` por          ║
+  ║     `file: \'cap-XX-slug.html\'` para activar el link en el índice          ║
+  ║  5. Llenar el contenido específico de cada subsección                     ║
+  ║                                                                           ║
+  ║  MARCADORES REEMPLAZABLES:                                                ║
+  ║    [[CAP_NUM]]         Número con cero: "02", "03", ..., "08"             ║
+  ║    [[CAP_DATA_PAGE]]   data-page de la section: "ch2", "ch3", ...         ║
+  ║    [[CAP_TITLE]]       Título completo del capítulo                       ║
+  ║    [[CAP_SUBTITLE]]    Subtítulo bajo el título                           ║
+  ║    [[CAP_STATUS]]      "EN DESARROLLO" | "PENDIENTE" | "CERRADO"          ║
+  ║    [[CAP_FECHA]]       Fecha de actualización: "MAYO 2026"                ║
+  ║    [[CAP_JS]]          Nombre del JS específico: "cap-02.js"              ║
+  ║                                                                           ║
+  ║  COMPONENTES DISPONIBLES (todos en styles.css):                           ║
+  ║    .statline        Línea de 4 KPIs                                       ║
+  ║    .invent          Tabla Fuente/Alcance/Estado con pills                 ║
+  ║      pills: .p-have | .p-miss | .p-partial                                ║
+  ║    .timeline        Línea de tiempo con .tl-item (año + título + texto)   ║
+  ║    .mapping         Tabla de mapeo con flechas → entre versiones          ║
+  ║      pills: .t-kept | .t-refo | .t-new                                    ║
+  ║    .cascade         Cascada de N niveles (con .step y .num)               ║
+  ║    .scale-compare   Comparativo en 2 columnas                             ║
+  ║    .factor-lists    Listados expandibles en 2 columnas                    ║
+  ║    .callout         Cita destacada con .ctag (etiqueta)                   ║
+  ║    .dash-frame      Iframe del dashboard Power BI                         ║
+  ║                                                                           ║
+  ║  DISTINCIÓN ETITC vs CONTEXTO NACIONAL:                                   ║
+  ║    Al inicio de cada subsección, después del .shell de apertura,          ║
+  ║    agregar UNA de estas dos líneas según corresponda:                     ║
+  ║                                                                           ║
+  ║      <p class="scope-tag scope-etitc">ETITC · institucional</p>           ║
+  ║      <p class="scope-tag scope-context">Contexto nacional</p>             ║
+  ║                                                                           ║
+  ║    Regla: Diagnóstico y Dashboard suelen ser ETITC. Historia y Cambios    ║
+  ║    suelen ser Contexto nacional. Estándar es comparativo (puede llevar    ║
+  ║    ambos según el bloque interno).                                        ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Capítulo [[CAP_NUM]] · [[CAP_TITLE]] · Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="index.html" data-nav="cover">Portada</a>
+      <a href="index.html#capitulos" data-nav="capitulos" class="active">Capítulos</a>
+      <a href="index.html#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+
+  <!-- ===================== PÁGINA: CAPÍTULO [[CAP_NUM]] ===================== -->
+  <section class="page is-active" data-page="[[CAP_DATA_PAGE]]" aria-labelledby="[[CAP_DATA_PAGE]]-title">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="index.html">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Capítulo [[CAP_NUM]]</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl" id="[[CAP_DATA_PAGE]]-title">[[CAP_TITLE]]</h1>
+            <p class="sub">[[CAP_SUBTITLE]]</p>
+          </div>
+          <div class="right-meta">
+            CAP. [[CAP_NUM]] / 08<br>
+            [[CAP_STATUS]]<br>
+            ACTUALIZADO [[CAP_FECHA]]
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="subnav" aria-label="Subsecciones del capítulo">
+      <div class="shell">
+        <button data-sub="diag" class="is-active"><span class="n">01</span>Diagnóstico</button>
+        <button data-sub="hist"><span class="n">02</span>Historia</button>
+        <button data-sub="camb"><span class="n">03</span>Cambios</button>
+        <button data-sub="dash"><span class="subnav-num">04</span><span class="subnav-lbl">Dashboard</span></button>
+        <button data-sub="estd"><span class="n">05</span>Estándar</button>
+      </div>
+    </nav>
+
+    <!-- ============================================================= -->
+    <!-- §1 DIAGNÓSTICO — ETITC · institucional                         -->
+    <!-- Qué información existe y qué falta sobre [[CAP_TITLE]] en ETITC -->
+    <!-- ============================================================= -->
+    <article class="subsection is-active" data-sub="diag">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · institucional</p>
+        <h2>Diagnóstico — qué información existe y qué falta</h2>
+        <p class="sub-lede">[[Reemplazar: párrafo introductorio del diagnóstico. Reconocer qué se tiene y qué falta sobre [[CAP_TITLE]] en la ETITC, antes de presentar análisis.]]</p>
+
+        <!-- COMPONENTE: statline (4 KPIs) -->
+        <div class="statline">
+          <div class="stat">
+            <p class="k">[Indicador 1]</p>
+            <p class="v tnum">[valor]</p>
+            <p class="s">[breve descripción]</p>
+          </div>
+          <div class="stat">
+            <p class="k">[Indicador 2]</p>
+            <p class="v tnum">[valor]</p>
+            <p class="s">[breve descripción]</p>
+          </div>
+          <div class="stat">
+            <p class="k">[Indicador 3]</p>
+            <p class="v tnum">[valor]</p>
+            <p class="s">[breve descripción]</p>
+          </div>
+          <div class="stat">
+            <p class="k">[Indicador 4]</p>
+            <p class="v tnum">[valor]</p>
+            <p class="s">[breve descripción]</p>
+          </div>
+        </div>
+
+        <!-- COMPONENTE: tabla invent (Fuente / Alcance / Estado) -->
+        <p class="section-label"><span>Inventario · Qué se tiene</span><span class="lbl-meta">[N] fuentes documentadas</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:42%;">Fuente</th><th>Alcance</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">[Nombre fuente disponible]</span><span class="it-sub">[Detalle / origen]</span></td>
+              <td>[Alcance]</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">[Nombre fuente parcial]</span><span class="it-sub">[Detalle / origen]</span></td>
+              <td>[Alcance]</td>
+              <td><span class="pill p-partial">Parcial</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">[Nombre fuente faltante]</span><span class="it-sub">[Por qué falta]</span></td>
+              <td>[Lo que tendría]</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del diagnóstico</span>
+          <p>[[Interpretación honesta: qué permite afirmar el dato disponible y dónde quedan los gaps.]]</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>[Anexo / archivo / base]</strong> · [Detalle adicional]</span>
+          <span>§01 Diagnóstico</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ============================================================= -->
+    <!-- §2 HISTORIA — Contexto nacional                                -->
+    <!-- Evolución de [[CAP_TITLE]] como instrumento nacional           -->
+    <!-- ============================================================= -->
+    <article class="subsection" data-sub="hist">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Historia — evolución del instrumento</h2>
+        <p class="sub-lede">[[Reemplazar: línea histórica de [[CAP_TITLE]] como instrumento de medición en Colombia, con sus hitos normativos.]]</p>
+
+        <!-- COMPONENTE: timeline -->
+        <p class="section-label"><span>Hitos del instrumento</span><span class="lbl-meta">[AÑO] — [AÑO]</span></p>
+        <div class="timeline">
+
+          <div class="tl-item">
+            <div class="tl-year">[Año]<span class="tag">[Tag breve]</span></div>
+            <div class="tl-body">
+              <h4>[Título del hito]</h4>
+              <p>[Descripción del hito. Qué pasó, qué cambió, por qué importa.]</p>
+              <p class="src">Fuente · [Decreto / Ley / Resolución / Documento]</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">[Año]<span class="tag">[Tag breve]</span></div>
+            <div class="tl-body">
+              <h4>[Título del hito]</h4>
+              <p>[Descripción.]</p>
+              <p class="src">Fuente · [Norma]</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">[Año]<span class="tag">[Tag breve]</span></div>
+            <div class="tl-body">
+              <h4>[Título del hito]</h4>
+              <p>[Descripción.]</p>
+              <p class="src">Fuente · [Norma]</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>[Documentos normativos]</strong> · [Detalle]</span>
+          <span>§02 Historia</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ============================================================= -->
+    <!-- §3 CAMBIOS — Contexto nacional · estructura                    -->
+    <!-- Qué se modificó en el instrumento entre versiones              -->
+    <!-- ============================================================= -->
+    <article class="subsection" data-sub="camb">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Cambios — qué se modificó entre versiones</h2>
+        <p class="sub-lede">[[Reemplazar: introducción a los cambios estructurales del instrumento.]]</p>
+
+        <!-- COMPONENTE: statline con stats del cambio -->
+        <div class="statline">
+          <div class="stat"><p class="k">[Antes]</p><p class="v tnum">[valor]</p><p class="s">[descripción]</p></div>
+          <div class="stat"><p class="k">[Después]</p><p class="v tnum">[valor]</p><p class="s">[descripción]</p></div>
+          <div class="stat"><p class="k">[Conservado]</p><p class="v tnum">[valor]</p><p class="s">[descripción]</p></div>
+          <div class="stat"><p class="k">[Nuevo]</p><p class="v tnum">[valor]</p><p class="s">[descripción]</p></div>
+        </div>
+
+        <!-- COMPONENTE: tabla mapping (antes → después) -->
+        <p class="section-label"><span>Mapping de cambios estructurales</span><span class="lbl-meta">[Versión antes] → [Versión después]</span></p>
+
+        <table class="mapping">
+          <thead>
+            <tr>
+              <th class="col-2017">[Antes]</th>
+              <th class="col-arr"></th>
+              <th class="col-2022">[Después]</th>
+              <th class="col-tag">Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src17"><span class="id">[Id]</span>[Elemento antes]</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">[Id]</span>[Elemento después]</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">Conservado</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">[Id]</span>[Elemento antes]</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">[Id]</span>[Elemento reformulado]</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Reformulado</span></td>
+            </tr>
+            <tr class="is-new">
+              <td><span class="src17">— sin equivalente —</span></td>
+              <td class="arrow">+</td>
+              <td><span class="dst22"><span class="id">[Id]</span>[Elemento nuevo]</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Nuevo</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del cambio</span>
+          <p>[[Interpretación: qué implica el cambio para la lectura institucional ETITC de este instrumento.]]</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>[Documentos]</strong> · [Detalle]</span>
+          <span>§03 Cambios</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ============================================================= -->
+    <!-- §4 DASHBOARD — ETITC · institucional                           -->
+    <!-- Tablero analítico construido sobre datos ETITC                 -->
+    <!-- ============================================================= -->
+    <article class="subsection" data-sub="dash">
+      <div class="shell">
+        <header class="sub-head">
+          <p class="eyebrow"><span class="ord">§ [[CAP_NUM]].4</span><span>Dashboard interactivo</span></p>
+          <h2>Reporte analítico — [[CAP_TITLE]]</h2>
+          <p class="lede">[[Reemplazar: descripción del tablero. Qué permite filtrar y comparar.]]</p>
+        </header>
+
+        <nav class="dash-tabs" aria-label="Páginas del reporte">
+          <button data-pg="[[hash-pagina-1]]" class="is-active">[Nombre página 1]</button>
+          <button data-pg="[[hash-pagina-2]]">[Nombre página 2]</button>
+        </nav>
+
+        <div class="dash-frame" id="dash-frame">
+          <!-- Placeholder hasta que esté la URL de Publish to Web -->
+          <div class="dash-placeholder">
+            <p class="ph-label">Reporte en publicación</p>
+            <p class="ph-text">El reporte se está publicando al Power BI Service. La incrustación se activa al confirmar la URL de embed.</p>
+            <p class="ph-meta">[N páginas · N visuales · construido sobre Anexo X]</p>
+          </div>
+        </div>
+
+        <footer class="dash-foot">
+          <p><strong>Fuente.</strong> [[Anexo / origen del dato. Procesamiento. Tema gráfico aplicado.]]</p>
+          <p><strong>Cómo leer.</strong> [[Notas sobre cómo interactuar con el tablero. Qué filtros aplican.]]</p>
+        </footer>
+      </div>
+    </article>
+
+    <!-- ============================================================= -->
+    <!-- §5 ESTÁNDAR — ETITC × Contexto nacional (comparativo)          -->
+    <!-- Cómo el observatorio fija la lectura institucional             -->
+    <!-- ============================================================= -->
+    <article class="subsection" data-sub="estd">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC × Contexto nacional</p>
+        <h2>Estándar — propuesta de instrumento</h2>
+        <p class="sub-lede">[[Reemplazar: cómo el observatorio fija la lectura ETITC de [[CAP_TITLE]] contra los referentes nacionales.]]</p>
+
+        <!-- COMPONENTE: cascade (niveles del modelo) -->
+        <p class="section-label"><span>Estructura del estándar</span><span class="lbl-meta">Niveles de desagregación</span></p>
+
+        <div class="cascade">
+          <div class="step">
+            <p class="lvl"><span class="num">N1</span>Nivel superior</p>
+            <p class="big tnum">[N]</p>
+            <p class="ttl">[Concepto N1]</p>
+            <p>[Descripción del nivel.]</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N2</span>Nivel intermedio</p>
+            <p class="big tnum">[N]</p>
+            <p class="ttl">[Concepto N2]</p>
+            <p>[Descripción.]</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N3</span>Nivel operativo</p>
+            <p class="big tnum">[N]</p>
+            <p class="ttl">[Concepto N3]</p>
+            <p>[Descripción.]</p>
+          </div>
+        </div>
+
+        <!-- COMPONENTE: tabla invent con la propuesta de estándar -->
+        <p class="section-label"><span>Propuesta de estándar institucional</span><span class="lbl-meta">Lo que el observatorio fija a futuro</span></p>
+        <table class="invent">
+          <thead><tr><th>Componente</th><th>Estándar propuesto</th><th style="text-align:right;">Justificación</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">[Componente 1]</span></td>
+              <td>[Lo que se propone]</td>
+              <td style="text-align:right;">[Por qué]</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">[Componente 2]</span></td>
+              <td>[Lo que se propone]</td>
+              <td style="text-align:right;">[Por qué]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>[Documentos]</strong> · [Detalle]</span>
+          <span>§04 Estándar</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-foot">
+  <div class="shell">
+    <div class="cols">
+      <div>
+        <p class="t">Observatorio Institucional</p>
+        <p class="s">Escuela Tecnológica · Instituto Técnico Central</p>
+      </div>
+      <div>
+        <p class="t">Capítulos</p>
+        <ul id="footer-chapters">
+          <!-- inyectado por JS -->
+        </ul>
+      </div>
+      <div>
+        <p class="t">Acerca</p>
+        <ul>
+          <li><a href="index.html#/acerca">Sobre el observatorio</a></li>
+          <li><a href="index.html">Portada</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · v1.0 · Fase 0 — Mayo 2026
+    </p>
+  </div>
+</footer>
+
+<!-- ===================== JS ===================== -->
+<script src="app.js"></script>
+<script src="[[CAP_JS]]"></script>
+
+</body>
+</html>
