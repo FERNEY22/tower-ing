@@ -1,0 +1,2515 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Capítulo 08 · Planta Docente · Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Estilos específicos del dashboard nativo del Cap. 8 */
+.dash-native {
+  background: var(--paper, #FAF7F2);
+  border: 1px solid var(--ink-line, #D9D5CC);
+  border-radius: 4px;
+  padding: 36px 32px 28px;
+  margin: 24px 0 14px;
+}
+.dash-native__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px 40px;
+}
+.dash-native__cell {
+  min-width: 0;
+}
+.dash-native__cell--full {
+  grid-column: 1 / -1;
+}
+.dash-native__cell svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+.dash-native__cell svg text {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
+}
+.dash-native__note {
+  font-size: 13px;
+  color: var(--ink-2, #555049);
+  margin: 6px 0 0;
+  line-height: 1.45;
+  font-style: italic;
+}
+@media (max-width: 880px) {
+  .dash-native { padding: 24px 18px 18px; }
+  .dash-native__grid { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="index.html" data-nav="cover">Portada</a>
+      <a href="index.html#capitulos" data-nav="capitulos" class="active">Capítulos</a>
+      <a href="index.html#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+
+  <section class="page is-active" data-page="ch8" aria-labelledby="ch8-title">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="index.html">Observatorio</a>
+          <span class="sep">/</span>
+          <span>Capítulo 08</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl" id="ch8-title">Planta Docente</h1>
+            <p class="sub">Composición, evolución y cualificación de los profesores ETITC entre 2018 y 2024. Datos consolidados del SNIES, complementados con el Cuadro CNA y verificados por cruce nominal.</p>
+          </div>
+          <div class="right-meta">
+            CAP. 08 / 08<br>
+            EN DESARROLLO<br>
+            ACTUALIZADO MAYO 2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="subnav" aria-label="Subsecciones del capítulo">
+      <div class="shell">
+        <button data-sub="diag" class="is-active"><span class="n">01</span>Diagnóstico</button>
+        <button data-sub="hist"><span class="n">02</span>Historia</button>
+        <button data-sub="camb"><span class="n">03</span>Cambios</button>
+        <button data-sub="dash"><span class="subnav-num">04</span><span class="subnav-lbl">Dashboard</span></button>
+        <button data-sub="estd"><span class="n">05</span>Estándar</button>
+      </div>
+    </nav>
+
+    <!-- §1 DIAGNÓSTICO — ETITC · institucional -->
+    <article class="subsection is-active" data-sub="diag">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · institucional</p>
+        <h2>Diagnóstico — qué información existe y qué falta</h2>
+        <p class="sub-lede">La planta docente se mide en varias fuentes a la vez: el reporte oficial SNIES (cuantitativo, longitudinal), el Cuadro 04 del CNA para acreditación (nominal, snapshot) y archivos institucionales por facultad. El observatorio consolida las tres en un dataset único, identificando lo que cada fuente aporta y lo que cada una omite.</p>
+
+        <div class="statline">
+          <div class="stat">
+            <p class="k">Docentes únicos</p>
+            <p class="v tnum">520</p>
+            <p class="s">Identificados por número de documento, 2018-I a 2024-I.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Períodos cubiertos</p>
+            <p class="v tnum">12</p>
+            <p class="s">Semestres consecutivos: 2018-I → 2024-I.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Registros nominales</p>
+            <p class="v tnum">3.078</p>
+            <p class="s">Filas docente×período en el dataset consolidado.</p>
+          </div>
+          <div class="stat">
+            <p class="k">Cobertura nominal</p>
+            <p class="v tnum">100%</p>
+            <p class="s">En 2024-I (vía Cuadro CNA). Desciende a 52% en 2018-I.</p>
+          </div>
+        </div>
+
+        <p class="section-label"><span>Inventario · fuentes consolidadas</span><span class="lbl-meta">3 fuentes principales + 1 auxiliar</span></p>
+        <table class="invent">
+          <thead>
+            <tr><th style="width:38%;">Fuente</th><th>Qué aporta</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Docentes SNIES 2018-2023</span><span class="it-sub">Reporte oficial nacional</span></td>
+              <td>11 semestres · 2.789 registros · 470 docentes únicos. Nivel, dedicación, salario, horas, % por actividad. Sin nombres ni facultad.</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">CONSOLIDADO SNIES 2024-I</span><span class="it-sub">Anexo CNA — formato SNIES</span></td>
+              <td>1 semestre adicional · 289 registros. Extiende la serie temporal a 2024-I.</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cuadro 04 · Listado detallado</span><span class="it-sub">CNA · Proceso Acreditación Institucional</span></td>
+              <td>289 docentes con nombre, documento y facultad. Única fuente con la variable facultad. Solo período 2024-I.</td>
+              <td><span class="pill p-have">Disponible</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Planta Docente Facultad Sistemas</span><span class="it-sub">Archivo institucional 2017-2023</span></td>
+              <td>12 semestres con detalle nominal de F. Sistemas (HC/MTO/TC/TCO) y áreas académicas. Cobertura parcial: una sola facultad.</td>
+              <td><span class="pill p-partial">Auxiliar</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Variable Facultad para 2018-2023</span><span class="it-sub">Equivalente del Cuadro CNA para períodos previos</span></td>
+              <td>Permitiría desagregar la serie histórica por facultad — no solo el snapshot 2024-I.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Categoría en escalafón institucional</span><span class="it-sub">Auxiliar o Asistente o Asociado o Titular</span></td>
+              <td>Columna en SNIES reportada como 100% vacía. La categorización del Estatuto de Profesores no se diligencia.</td>
+              <td><span class="pill p-miss">No consta</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del diagnóstico</span>
+          <p>El SNIES tiene datos cuantitativos longitudinales pero <strong style="font-weight:500;">8 columnas críticas vacías</strong> (nombres, facultad, escalafón, CvLAC, investigador, grupo de investigación, programas). El Cuadro CNA llena dos de esos huecos (nombre y facultad) pero solo para 2024-I. El observatorio cruza ambas fuentes por número de documento para enriquecer el SNIES histórico — el 100% del catálogo activo en 2024-I queda cruzado; los activos antes de 2024 quedan sin nombre solo si dejaron la institución.</p>
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Dataset consolidado planta docente ETITC</strong> · SNIES 2018-I a 2024-I + Cuadro CNA 04 · 520 docentes únicos</span>
+          <span>§01 Diagnóstico</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §2 HISTORIA — Contexto nacional -->
+    <article class="subsection" data-sub="hist">
+      <div class="shell">
+        <p class="scope-tag scope-context">Contexto nacional</p>
+        <h2>Historia — marco normativo de la docencia universitaria en Colombia</h2>
+        <p class="sub-lede">La planta docente de una IES no es un asunto interno: es una variable que el sistema nacional define, mide y exige reportar. Conocer el marco normativo importa para entender qué se mide, por qué se mide así, y qué queda por fuera.</p>
+
+        <p class="section-label"><span>Hitos normativos</span><span class="lbl-meta">1992 — 2026</span></p>
+        <div class="timeline">
+
+          <div class="tl-item">
+            <div class="tl-year">1992<span class="tag">Ley marco</span></div>
+            <div class="tl-body">
+              <h4>Ley 30 — Ley de Educación Superior</h4>
+              <p>Marco fundamental que organiza el servicio público de educación superior en Colombia. Define autonomía universitaria, niveles de formación (técnica profesional, tecnológica, universitaria, posgrado) y obligaciones de las IES respecto al personal docente: contratación, escalafón, dedicación.</p>
+              <p class="src">Fuente · Ley 30 de 1992</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2003<span class="tag">Calidad</span></div>
+            <div class="tl-body">
+              <h4>Decreto 2566 — condiciones mínimas de calidad</h4>
+              <p>Establece las condiciones mínimas que debe cumplir un programa académico para ofrecerse en Colombia. Una de ellas: contar con un cuerpo profesoral suficiente, idóneo y con dedicación apropiada al programa. Antecedente directo del actual régimen de Registro Calificado.</p>
+              <p class="src">Fuente · Decreto 2566 de 2003</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2010<span class="tag">Registro calificado</span></div>
+            <div class="tl-body">
+              <h4>Decreto 1295 — reglamentación del Registro Calificado</h4>
+              <p>Reglamenta la oferta y desarrollo de programas académicos de educación superior. Especifica criterios cuantitativos para la planta docente: número de profesores de tiempo completo equivalente (TCE), proporciones por nivel de formación, vínculo con investigación.</p>
+              <p class="src">Fuente · Decreto 1295 de 2010</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2015<span class="tag">Estatuto institucional</span></div>
+            <div class="tl-body">
+              <h4>Acuerdo 09 ETITC — Estatuto del Profesor</h4>
+              <p>Institucional: el Consejo Directivo aprueba el Estatuto del Profesor. Categorías de escalafón (auxiliar, asistente, asociado, titular), criterios de evaluación, deberes y derechos. Es la norma <em>interna</em> que opera junto con el marco nacional. <em>Documentado en el Capítulo 1 del observatorio (Modelo de Autoevaluación).</em></p>
+              <p class="src">Fuente · Acuerdo 09 de 2015 · ETITC</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2019<span class="tag">Aseguramiento</span></div>
+            <div class="tl-body">
+              <h4>Decreto 1330 — actualización del modelo</h4>
+              <p>Modifica el régimen anterior introduciendo un modelo de aseguramiento de calidad con énfasis en resultados de aprendizaje. Para la planta docente: refuerza los criterios de evaluación de la docencia, exige planes de desarrollo del profesorado, conecta la cualificación docente con los resultados del programa.</p>
+              <p class="src">Fuente · Decreto 1330 de 2019</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2020<span class="tag">Parámetros</span></div>
+            <div class="tl-body">
+              <h4>Resolución 21795 — parámetros de autoevaluación</h4>
+              <p>Operativiza el Decreto 1330 con parámetros técnicos: cómo se mide la suficiencia, idoneidad y dedicación del profesorado, qué evidencias se requieren, cómo se reportan al MEN. Es la norma de mayor detalle operativo hoy vigente para el reporte de planta.</p>
+              <p class="src">Fuente · Resolución MEN 21795 de 2020</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">Permanente<span class="tag">Sistema de información</span></div>
+            <div class="tl-body">
+              <h4>SNIES — Sistema Nacional de Información de la Educación Superior</h4>
+              <p>Sistema oficial del MEN para el reporte de información de las IES. Las planillas semestrales que alimentan el Capítulo 8 vienen de aquí. SNIES define los códigos, las categorías, los campos obligatorios. Lo que el observatorio puede leer está limitado por lo que SNIES exige reportar.</p>
+              <p class="src">Fuente · SNIES · Ministerio de Educación Nacional</p>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-year">2026<span class="tag">Observatorio</span></div>
+            <div class="tl-body">
+              <h4>Consolidación en el Observatorio Institucional ETITC</h4>
+              <p>Los reportes SNIES + el Cuadro CNA + los archivos institucionales se cruzan en un dataset único, 12 períodos, 520 docentes. La planta deja de ser un agregado anual difuso para volverse una serie longitudinal con catálogo nominal.</p>
+              <p class="src">Fuente · esta plataforma</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Marco normativo de docencia universitaria · Colombia</strong> · MEN, ICFES, Acuerdo institucional ETITC</span>
+          <span>§02 Historia</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §3 CAMBIOS — ETITC · evolución institucional -->
+    <article class="subsection" data-sub="camb">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC · evolución institucional</p>
+        <h2>Cambios — qué pasó con la planta entre 2018 y 2024</h2>
+        <p class="sub-lede">La planta no es estable: cambia de tamaño, de composición, de cualificación. Esta sección documenta las tres tendencias principales que el dataset consolidado deja ver.</p>
+
+        <div class="statline">
+          <div class="stat"><p class="k">Crecimiento total</p><p class="v tnum">+24%</p><p class="s">Registros activos 2018-I → 2023-I.</p></div>
+          <div class="stat"><p class="k">Tiempo Completo</p><p class="v tnum">−3 pts</p><p class="s">17,1% (2018-I) → 13,8% (2024-I).</p></div>
+          <div class="stat"><p class="k">Doctorado</p><p class="v tnum">×2,6</p><p class="s">10,4% (2018-I) → 27,0% (2024-I).</p></div>
+          <div class="stat"><p class="k">Salario TC</p><p class="v tnum">+56%</p><p class="s">$2,9M → $4,6M (2018 → 2024).</p></div>
+        </div>
+
+        <p class="section-label"><span>Antes y después · resumen comparativo</span><span class="lbl-meta">2018-I vs 2024-I</span></p>
+        <table class="mapping">
+          <thead>
+            <tr>
+              <th class="col-2017">2018-I</th>
+              <th class="col-arr"></th>
+              <th class="col-2022">2024-I</th>
+              <th class="col-tag">Tendencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src17"><span class="id">N</span>240 registros activos</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">N</span>289 registros activos</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Crecimiento</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">%TC</span>17,1% Tiempo Completo</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">%TC</span>13,8% Tiempo Completo</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Decreciente</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">%C</span>61,3% Cátedra</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">%C</span>67,1% Cátedra</span></td>
+              <td class="tag-cell"><span class="pill-tag t-refo">Creciente</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">%D</span>10,4% Doctorado</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">%D</span>27,0% Doctorado</span></td>
+              <td class="tag-cell"><span class="pill-tag t-new">Triplica</span></td>
+            </tr>
+            <tr>
+              <td><span class="src17"><span class="id">$</span>Salario TC promedio $2,9M</span></td>
+              <td class="arrow">→</td>
+              <td><span class="dst22"><span class="id">$</span>Salario TC promedio $4,6M</span></td>
+              <td class="tag-cell"><span class="pill-tag t-kept">+56%</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="ctag">Lectura del cambio · tensión entre dos tendencias</span>
+          <p>Dos tendencias avanzan en paralelo y aparentemente <em>en direcciones distintas</em>. Por un lado, la planta se cualifica fuertemente: el Doctorado pasa de 10% a 27%, una triplicación en 6 años. Por otro, la planta se precariza en términos de vínculo: la cátedra crece 6 puntos y el tiempo completo cae 3 puntos. Coexisten <strong style="font-weight:500;">más doctores</strong> y <strong style="font-weight:500;">menos vínculos estables</strong>. Esta tensión es propia de muchas IES públicas colombianas en la última década y vale la pena identificarla con claridad.</p>
+        </div>
+
+        <p class="section-label"><span>Otros indicadores observados</span><span class="lbl-meta">Periferia del cambio principal</span></p>
+        <table class="invent">
+          <thead><tr><th>Dimensión</th><th>Observación</th><th style="text-align:right;">Notas</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Postdoctorado reportado</span><span class="it-sub">Categoría SNIES</span></td>
+              <td>Cae de 39,2% (2018-I) a 24,9% (2024-I)</td>
+              <td style="text-align:right;">La sobre-clasificación administrativa parece corregirse</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Maestría</span><span class="it-sub">Categoría SNIES</span></td>
+              <td>Se mantiene cerca del 50% (50,4% → 48,1%)</td>
+              <td style="text-align:right;">Sin cambio estructural</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Inconsistencia en nivel</span><span class="it-sub">Calidad del dato</span></td>
+              <td>138 docentes (26,5%) con más de un nivel reportado a lo largo del tiempo</td>
+              <td style="text-align:right;">Documentado en README del dataset</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cobertura nominal</span><span class="it-sub">% con nombre asignado</span></td>
+              <td>52,5% (2018-I) → 100% (2024-I)</td>
+              <td style="text-align:right;">Cruce con Cuadro CNA progresivamente más completo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Dataset consolidado planta docente ETITC</strong> · cálculos del observatorio · 12 períodos · 520 docentes únicos</span>
+          <span>§03 Cambios</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- §4 DASHBOARD — Dashboard nativo HTML/SVG -->
+    <article class="subsection" data-sub="dash">
+      <div class="shell">
+        <header class="sub-head">
+          <p class="eyebrow"><span class="ord">§ 8.4</span><span>Dashboard nativo · visualizaciones HTML/SVG</span></p>
+          <h2>Reporte analítico — Planta Docente ETITC</h2>
+          <p class="lede">A diferencia de los Capítulos 1 a 3, este capítulo no se apoya en un reporte Power BI publicado. Las visualizaciones se generan directamente sobre el dataset consolidado y se embeben como SVG nativo en este capítulo. Datos: 12 períodos (2018-I a 2024-I) · 3.078 registros · 520 docentes únicos.</p>
+        </header>
+
+        <div class="dash-native">
+          <div class="dash-native__grid">
+
+            <div class="dash-native__cell dash-native__cell--full">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"  viewBox="0 0 530.354375 249.280767" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-25T11:11:37.789589</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 249.280767 
+L 530.354375 249.280767 
+L 530.354375 0 
+L 0 0 
+L 0 249.280767 
+z
+" />
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 48.874375 205.096511 
+L 523.154375 205.096511 
+L 523.154375 35.198047 
+L 48.874375 35.198047 
+L 48.874375 205.096511 
+z
+" style="fill: none"/>
+   </g>
+   <g id="FillBetweenPolyCollection_1">
+    <defs>
+     <path id="m8d1f9c6f17" d="M 70.432557 -44.184255 
+L 70.432557 -160.533144 
+L 109.629251 -155.200486 
+L 148.825945 -155.685273 
+L 188.022639 -161.987505 
+L 227.219334 -172.168033 
+L 266.416028 -158.593996 
+L 305.612722 -161.987505 
+L 344.809416 -170.228885 
+L 384.006111 -173.137607 
+L 423.202805 -180.409412 
+L 462.399499 -188.166005 
+L 501.596193 -184.287709 
+L 501.596193 -44.184255 
+L 501.596193 -44.184255 
+L 462.399499 -44.184255 
+L 423.202805 -44.184255 
+L 384.006111 -44.184255 
+L 344.809416 -44.184255 
+L 305.612722 -44.184255 
+L 266.416028 -44.184255 
+L 227.219334 -44.184255 
+L 188.022639 -44.184255 
+L 148.825945 -44.184255 
+L 109.629251 -44.184255 
+L 70.432557 -44.184255 
+z
+" style="stroke: #2c3e50; stroke-opacity: 0.1"/>
+    </defs>
+    <g clip-path="url(#p7e62b091e6)">
+     <use xlink:href="#m8d1f9c6f17" x="0" y="249.280767" style="fill: #2c3e50; fill-opacity: 0.1; stroke: #2c3e50; stroke-opacity: 0.1"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="mbe2773e3cf" d="M 0 0 
+L 0 3.5 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="70.432557" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(47.53423 238.702067) rotate(-45)">2018-I</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="109.629251" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(84.749257 240.683734) rotate(-45)">2018-II</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="148.825945" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(125.927618 238.702067) rotate(-45)">2019-I</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="188.022639" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(163.142645 240.683734) rotate(-45)">2019-II</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="227.219334" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(204.321006 238.702067) rotate(-45)">2020-I</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="266.416028" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(241.536034 240.683734) rotate(-45)">2020-II</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="305.612722" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(282.714395 238.702067) rotate(-45)">2021-I</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="344.809416" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(319.929422 240.683734) rotate(-45)">2021-II</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="384.006111" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(361.107783 238.702067) rotate(-45)">2022-I</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="423.202805" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(398.322811 240.683734) rotate(-45)">2022-II</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="462.399499" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(439.501172 238.702067) rotate(-45)">2023-I</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#mbe2773e3cf" x="501.596193" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(478.697866 238.702067) rotate(-45)">2024-I</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13">
+      <defs>
+       <path id="m8df0ec4443" d="M 0 0 
+L -3.5 0 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m8df0ec4443" x="48.874375" y="205.096511" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="41.874375" y="209.275652" transform="rotate(-0 41.874375 209.275652)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m8df0ec4443" x="48.874375" y="156.617808" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="41.874375" y="160.796948" transform="rotate(-0 41.874375 160.796948)">100</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m8df0ec4443" x="48.874375" y="108.139104" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="41.874375" y="112.318245" transform="rotate(-0 41.874375 112.318245)">200</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m8df0ec4443" x="48.874375" y="59.660401" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="41.874375" y="63.839541" transform="rotate(-0 41.874375 63.839541)">300</text>
+     </g>
+    </g>
+    <g id="text_17">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="14.798438" y="120.147279" transform="rotate(-90 14.798438 120.147279)">Registros activos en SNIES</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 48.874375 205.096511 
+L 48.874375 35.198047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 48.874375 205.096511 
+L 523.154375 205.096511 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_17">
+    <path d="M 70.432557 88.747623 
+L 109.629251 94.08028 
+L 148.825945 93.595493 
+L 188.022639 87.293262 
+L 227.219334 77.112734 
+L 266.416028 90.686771 
+L 305.612722 87.293262 
+L 344.809416 79.051882 
+L 384.006111 76.14316 
+L 423.202805 68.871354 
+L 462.399499 61.114762 
+L 501.596193 64.993058 
+" clip-path="url(#p7e62b091e6)" style="fill: none; stroke: #2c3e50; stroke-width: 2.2; stroke-linecap: square"/>
+    <defs>
+     <path id="m8bd4ec218a" d="M 0 3 
+C 0.795609 3 1.55874 2.683901 2.12132 2.12132 
+C 2.683901 1.55874 3 0.795609 3 0 
+C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 
+C 1.55874 -2.683901 0.795609 -3 0 -3 
+C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 
+C -2.683901 -1.55874 -3 -0.795609 -3 0 
+C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 
+C -1.55874 2.683901 -0.795609 3 0 3 
+z
+" style="stroke: #2c3e50; stroke-width: 1.8"/>
+    </defs>
+    <g clip-path="url(#p7e62b091e6)">
+     <use xlink:href="#m8bd4ec218a" x="70.432557" y="88.747623" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="109.629251" y="94.08028" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="148.825945" y="93.595493" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="188.022639" y="87.293262" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="227.219334" y="77.112734" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="266.416028" y="90.686771" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="305.612722" y="87.293262" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="344.809416" y="79.051882" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="384.006111" y="76.14316" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="423.202805" y="68.871354" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="462.399499" y="61.114762" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+     <use xlink:href="#m8bd4ec218a" x="501.596193" y="64.993058" style="fill: #ffffff; stroke: #2c3e50; stroke-width: 1.8"/>
+    </g>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="70.432557" y="76.747623" transform="rotate(-0 70.432557 76.747623)">240</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="501.596193" y="52.993058" transform="rotate(-0 501.596193 52.993058)">289</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #d68910" x="462.399499" y="49.114762" transform="rotate(-0 462.399499 49.114762)">297</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="48.874375" y="17.198047" transform="rotate(-0 48.874375 17.198047)">Evolución de la planta docente · 2018-I — 2024-I</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p7e62b091e6">
+   <rect x="48.874375" y="35.198047" width="474.28" height="169.898464"/>
+  </clipPath>
+ </defs>
+</svg>
+              <p class="dash-native__note">Crecimiento sostenido: el pico en 2023-I (297 registros) marca el máximo del período observado. El ligero descenso a 2024-I (289) es información reciente — vale observar si es ajuste de un solo semestre o cambio de tendencia.</p>
+            </div>
+
+            <div class="dash-native__cell">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"  viewBox="0 0 529.892849 250.482207" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-25T11:11:37.925748</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 250.482207 
+L 529.892849 250.482207 
+L 529.892849 0 
+L 0 0 
+L 0 250.482207 
+z
+" />
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.274375 187.170207 
+L 507.465031 187.170207 
+L 507.465031 35.198047 
+L 49.274375 35.198047 
+L 49.274375 187.170207 
+z
+" style="fill: none"/>
+   </g>
+   <g id="FillBetweenPolyCollection_1">
+    <defs>
+     <path id="ma891cf15a7" d="M 71.808342 -89.273911 
+L 71.808342 -63.312 
+L 109.364953 -63.312 
+L 146.921564 -63.312 
+L 184.478175 -63.312 
+L 222.034786 -63.312 
+L 259.591397 -63.312 
+L 297.148008 -63.312 
+L 334.70462 -63.312 
+L 372.261231 -63.312 
+L 409.817842 -63.312 
+L 447.374453 -63.312 
+L 484.931064 -63.312 
+L 484.931064 -84.346209 
+L 484.931064 -84.346209 
+L 447.374453 -83.779631 
+L 409.817842 -84.945048 
+L 372.261231 -86.736281 
+L 334.70462 -86.692333 
+L 297.148008 -88.953393 
+L 259.591397 -87.782094 
+L 222.034786 -85.186781 
+L 184.478175 -89.578793 
+L 146.921564 -91.063438 
+L 109.364953 -90.52099 
+L 71.808342 -89.273911 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pdd5bcc1fe5)">
+     <use xlink:href="#ma891cf15a7" x="0" y="250.482207" style="fill: #1b4f72; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="FillBetweenPolyCollection_2">
+    <defs>
+     <path id="mf451cc1af1" d="M 71.808342 -122.201212 
+L 71.808342 -89.273911 
+L 109.364953 -90.52099 
+L 146.921564 -91.063438 
+L 184.478175 -89.578793 
+L 222.034786 -85.186781 
+L 259.591397 -87.782094 
+L 297.148008 -88.953393 
+L 334.70462 -86.692333 
+L 372.261231 -86.736281 
+L 409.817842 -84.945048 
+L 447.374453 -83.779631 
+L 484.931064 -84.346209 
+L 484.931064 -113.268247 
+L 484.931064 -113.268247 
+L 447.374453 -113.969387 
+L 409.817842 -116.853793 
+L 372.261231 -120.444391 
+L 334.70462 -120.593814 
+L 297.148008 -115.845586 
+L 259.591397 -119.335635 
+L 222.034786 -114.545039 
+L 184.478175 -122.724985 
+L 146.921564 -125.422361 
+L 109.364953 -123.03905 
+L 71.808342 -122.201212 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pdd5bcc1fe5)">
+     <use xlink:href="#mf451cc1af1" x="0" y="250.482207" style="fill: #5d6d7e; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="FillBetweenPolyCollection_3">
+    <defs>
+     <path id="m2e6df85f4b" d="M 71.808342 -215.28416 
+L 71.808342 -122.201212 
+L 109.364953 -123.03905 
+L 146.921564 -125.422361 
+L 184.478175 -122.724985 
+L 222.034786 -114.545039 
+L 259.591397 -119.335635 
+L 297.148008 -115.845586 
+L 334.70462 -120.593814 
+L 372.261231 -120.444391 
+L 409.817842 -116.853793 
+L 447.374453 -113.969387 
+L 484.931064 -113.268247 
+L 484.931064 -215.28416 
+L 484.931064 -215.28416 
+L 447.374453 -215.28416 
+L 409.817842 -215.28416 
+L 372.261231 -215.28416 
+L 334.70462 -215.28416 
+L 297.148008 -215.28416 
+L 259.591397 -215.28416 
+L 222.034786 -215.28416 
+L 184.478175 -215.28416 
+L 146.921564 -215.28416 
+L 109.364953 -215.28416 
+L 71.808342 -215.28416 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pdd5bcc1fe5)">
+     <use xlink:href="#m2e6df85f4b" x="0" y="250.482207" style="fill: #aab7b8; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m4806c6224e" d="M 0 0 
+L 0 3.5 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m4806c6224e" x="71.808342" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(48.910014 220.775762) rotate(-45)">2018-I</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m4806c6224e" x="109.364953" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(84.484959 222.757429) rotate(-45)">2018-II</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m4806c6224e" x="146.921564" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(124.023237 220.775762) rotate(-45)">2019-I</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m4806c6224e" x="184.478175" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(159.598181 222.757429) rotate(-45)">2019-II</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m4806c6224e" x="222.034786" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(199.136459 220.775762) rotate(-45)">2020-I</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m4806c6224e" x="259.591397" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(234.711403 222.757429) rotate(-45)">2020-II</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m4806c6224e" x="297.148008" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(274.249681 220.775762) rotate(-45)">2021-I</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m4806c6224e" x="334.70462" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(309.824626 222.757429) rotate(-45)">2021-II</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m4806c6224e" x="372.261231" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(349.362903 220.775762) rotate(-45)">2022-I</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m4806c6224e" x="409.817842" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(384.937848 222.757429) rotate(-45)">2022-II</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m4806c6224e" x="447.374453" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(424.476126 220.775762) rotate(-45)">2023-I</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m4806c6224e" x="484.931064" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(462.032737 220.775762) rotate(-45)">2024-I</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13">
+      <defs>
+       <path id="m97c4240199" d="M 0 0 
+L -3.5 0 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="191.349347" transform="rotate(-0 42.274375 191.349347)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="156.775775" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="160.954915" transform="rotate(-0 42.274375 160.954915)">20</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="126.381343" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="130.560483" transform="rotate(-0 42.274375 130.560483)">40</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="95.986911" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="100.166051" transform="rotate(-0 42.274375 100.166051)">60</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="65.592479" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="69.771619" transform="rotate(-0 42.274375 69.771619)">80</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m97c4240199" x="49.274375" y="35.198047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="39.377187" transform="rotate(-0 42.274375 39.377187)">100</text>
+     </g>
+    </g>
+    <g id="text_19">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="15.198438" y="111.184127" transform="rotate(-90 15.198438 111.184127)">Composición (%)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 49.274375 187.170207 
+L 49.274375 35.198047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 49.274375 187.170207 
+L 507.465031 187.170207 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #ffffff" x="56.785697" y="176.810658" transform="rotate(-0 56.785697 176.810658)">17%</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #ffffff" x="499.953709" y="179.274509" transform="rotate(-0 499.953709 179.274509)">14%</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="56.785697" y="84.360927" transform="rotate(-0 56.785697 84.360927)">61%</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="499.953709" y="88.82741" transform="rotate(-0 499.953709 88.82741)">67%</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="49.274375" y="17.198047" transform="rotate(-0 49.274375 17.198047)">Composición por dedicación contractual</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_5">
+     <path d="M 117.277515 237.20252 
+L 137.277515 237.20252 
+L 137.277515 230.20252 
+L 117.277515 230.20252 
+z
+" style="fill: #1b4f72; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_25">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="145.277515" y="237.20252" transform="rotate(-0 145.277515 237.20252)">Tiempo Completo</text>
+    </g>
+    <g id="patch_6">
+     <path d="M 253.550953 237.20252 
+L 273.550953 237.20252 
+L 273.550953 230.20252 
+L 253.550953 230.20252 
+z
+" style="fill: #5d6d7e; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_26">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="281.550953" y="237.20252" transform="rotate(-0 281.550953 237.20252)">Medio Tiempo</text>
+    </g>
+    <g id="patch_7">
+     <path d="M 371.690015 237.20252 
+L 391.690015 237.20252 
+L 391.690015 230.20252 
+L 371.690015 230.20252 
+z
+" style="fill: #aab7b8; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_27">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="399.690015" y="237.20252" transform="rotate(-0 399.690015 237.20252)">Cátedra</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pdd5bcc1fe5">
+   <rect x="49.274375" y="35.198047" width="458.190656" height="151.97216"/>
+  </clipPath>
+ </defs>
+</svg>
+              <p class="dash-native__note">La cátedra avanza 6 puntos en 6 años. Es la base del modelo de vinculación actual y crece. El Tiempo Completo retrocede.</p>
+            </div>
+
+            <div class="dash-native__cell">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"  viewBox="0 0 529.807754 250.482207" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-25T11:11:38.067377</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 250.482207 
+L 529.807754 250.482207 
+L 529.807754 0 
+L 0 0 
+L 0 250.482207 
+z
+" />
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.274375 187.170207 
+L 504.945031 187.170207 
+L 504.945031 35.198047 
+L 49.274375 35.198047 
+L 49.274375 187.170207 
+z
+" style="fill: none"/>
+   </g>
+   <g id="FillBetweenPolyCollection_1">
+    <defs>
+     <path id="mdde969254b" d="M 71.684407 -79.142434 
+L 71.684407 -63.312 
+L 109.034461 -63.312 
+L 146.384515 -63.312 
+L 183.734568 -63.312 
+L 221.084622 -63.312 
+L 258.434676 -63.312 
+L 295.78473 -63.312 
+L 333.134783 -63.312 
+L 370.484837 -63.312 
+L 407.834891 -63.312 
+L 445.184945 -63.312 
+L 482.534998 -63.312 
+L 482.534998 -104.328708 
+L 482.534998 -104.328708 
+L 445.184945 -98.106973 
+L 407.834891 -100.629007 
+L 370.484837 -103.304674 
+L 333.134783 -89.030366 
+L 295.78473 -72.692998 
+L 258.434676 -72.971248 
+L 221.084622 -71.946782 
+L 183.734568 -73.318398 
+L 146.384515 -71.901731 
+L 109.034461 -75.921044 
+L 71.684407 -79.142434 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pd2a0c93760)">
+     <use xlink:href="#mdde969254b" x="0" y="250.482207" style="fill: #1b4f72; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="FillBetweenPolyCollection_2">
+    <defs>
+     <path id="m6f40311e1e" d="M 71.684407 -155.761731 
+L 71.684407 -79.142434 
+L 109.034461 -75.921044 
+L 146.384515 -71.901731 
+L 183.734568 -73.318398 
+L 221.084622 -71.946782 
+L 258.434676 -72.971248 
+L 295.78473 -72.692998 
+L 333.134783 -89.030366 
+L 370.484837 -103.304674 
+L 407.834891 -100.629007 
+L 445.184945 -98.106973 
+L 482.534998 -104.328708 
+L 482.534998 -177.422584 
+L 482.534998 -177.422584 
+L 445.184945 -175.883971 
+L 407.834891 -160.660715 
+L 370.484837 -162.722361 
+L 333.134783 -162.678413 
+L 295.78473 -160.248975 
+L 258.434676 -160.548425 
+L 221.084622 -155.991992 
+L 183.734568 -158.372775 
+L 146.384515 -157.799039 
+L 109.034461 -155.55711 
+L 71.684407 -155.761731 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pd2a0c93760)">
+     <use xlink:href="#m6f40311e1e" x="0" y="250.482207" style="fill: #5d6d7e; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="FillBetweenPolyCollection_3">
+    <defs>
+     <path id="m71db66c654" d="M 71.684407 -215.28416 
+L 71.684407 -155.761731 
+L 109.034461 -155.55711 
+L 146.384515 -157.799039 
+L 183.734568 -158.372775 
+L 221.084622 -155.991992 
+L 258.434676 -160.548425 
+L 295.78473 -160.248975 
+L 333.134783 -162.678413 
+L 370.484837 -162.722361 
+L 407.834891 -160.660715 
+L 445.184945 -175.883971 
+L 482.534998 -177.422584 
+L 482.534998 -215.28416 
+L 482.534998 -215.28416 
+L 445.184945 -215.28416 
+L 407.834891 -215.28416 
+L 370.484837 -215.28416 
+L 333.134783 -215.28416 
+L 295.78473 -215.28416 
+L 258.434676 -215.28416 
+L 221.084622 -215.28416 
+L 183.734568 -215.28416 
+L 146.384515 -215.28416 
+L 109.034461 -215.28416 
+L 71.684407 -215.28416 
+z
+" style="stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </defs>
+    <g clip-path="url(#pd2a0c93760)">
+     <use xlink:href="#m71db66c654" x="0" y="250.482207" style="fill: #aab7b8; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m14a0c75f96" d="M 0 0 
+L 0 3.5 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m14a0c75f96" x="71.684407" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(48.78608 220.775762) rotate(-45)">2018-I</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="109.034461" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(84.154467 222.757429) rotate(-45)">2018-II</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="146.384515" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(123.486187 220.775762) rotate(-45)">2019-I</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="183.734568" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(158.854574 222.757429) rotate(-45)">2019-II</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="221.084622" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(198.186295 220.775762) rotate(-45)">2020-I</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="258.434676" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(233.554682 222.757429) rotate(-45)">2020-II</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="295.78473" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(272.886402 220.775762) rotate(-45)">2021-I</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="333.134783" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(308.254789 222.757429) rotate(-45)">2021-II</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="370.484837" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(347.58651 220.775762) rotate(-45)">2022-I</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="407.834891" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(382.954897 222.757429) rotate(-45)">2022-II</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="445.184945" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(422.286617 220.775762) rotate(-45)">2023-I</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m14a0c75f96" x="482.534998" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #5d6d7e" transform="translate(459.636671 220.775762) rotate(-45)">2024-I</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13">
+      <defs>
+       <path id="m8c8eebdb1d" d="M 0 0 
+L -3.5 0 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="187.170207" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="191.349347" transform="rotate(-0 42.274375 191.349347)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="156.775775" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="160.954915" transform="rotate(-0 42.274375 160.954915)">20</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="126.381343" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="130.560483" transform="rotate(-0 42.274375 130.560483)">40</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="95.986911" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="100.166051" transform="rotate(-0 42.274375 100.166051)">60</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="65.592479" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="69.771619" transform="rotate(-0 42.274375 69.771619)">80</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m8c8eebdb1d" x="49.274375" y="35.198047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="42.274375" y="39.377187" transform="rotate(-0 42.274375 39.377187)">100</text>
+     </g>
+    </g>
+    <g id="text_19">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="15.198438" y="111.184127" transform="rotate(-90 15.198438 111.184127)">Composición (%)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 49.274375 187.170207 
+L 49.274375 35.198047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 49.274375 187.170207 
+L 504.945031 187.170207 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #ffffff" x="56.744386" y="181.876396" transform="rotate(-0 56.744386 181.876396)">10%</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1b4f72" x="497.47502" y="169.559197" transform="rotate(-0 497.47502 169.559197)">27%</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="49.274375" y="17.198047" transform="rotate(-0 49.274375 17.198047)">Composición por nivel académico (datos crudos SNIES)</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_5">
+     <path d="M 131.737047 237.20252 
+L 151.737047 237.20252 
+L 151.737047 230.20252 
+L 131.737047 230.20252 
+z
+" style="fill: #1b4f72; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_23">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="159.737047" y="237.20252" transform="rotate(-0 159.737047 237.20252)">Doctorado</text>
+    </g>
+    <g id="patch_6">
+     <path d="M 231.799547 237.20252 
+L 251.799547 237.20252 
+L 251.799547 230.20252 
+L 231.799547 230.20252 
+z
+" style="fill: #5d6d7e; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_24">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="259.799547" y="237.20252" transform="rotate(-0 259.799547 237.20252)">Maestría</text>
+    </g>
+    <g id="patch_7">
+     <path d="M 322.855797 237.20252 
+L 342.855797 237.20252 
+L 342.855797 230.20252 
+L 322.855797 230.20252 
+z
+" style="fill: #aab7b8; fill-opacity: 0.92; stroke: #ffffff; stroke-opacity: 0.92; stroke-width: 0.6; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_25">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="350.855797" y="237.20252" transform="rotate(-0 350.855797 237.20252)">Postdoctorado</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd2a0c93760">
+   <rect x="49.274375" y="35.198047" width="455.670656" height="151.97216"/>
+  </clipPath>
+ </defs>
+</svg>
+              <p class="dash-native__note">Vista del campo NIVEL crudo del SNIES. La caída del "Postdoctorado" sugiere corrección administrativa, no pérdida de cualificación. Tomar con cautela el dato de inconsistencia entre años.</p>
+            </div>
+
+            <div class="dash-native__cell">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"  viewBox="0 0 530.989687 254.347039" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-25T11:11:38.203267</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 254.347039 
+L 530.989687 254.347039 
+L 530.989687 -0 
+L 0 -0 
+L 0 254.347039 
+z
+" />
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 115.979688 195.597087 
+L 523.789688 195.597087 
+L 523.789688 35.198047 
+L 115.979688 35.198047 
+L 115.979688 195.597087 
+z
+" style="fill: none"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 115.979688 188.306221 
+L 115.979688 188.306221 
+L 115.979688 172.219614 
+L 115.979688 172.219614 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 115.979688 162.360081 
+L 153.895907 162.360081 
+L 153.895907 146.273474 
+L 115.979688 146.273474 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 115.979688 136.413941 
+L 137.044254 136.413941 
+L 137.044254 120.327334 
+L 115.979688 120.327334 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 115.979688 110.4678 
+L 158.10882 110.4678 
+L 158.10882 94.381193 
+L 115.979688 94.381193 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 115.979688 84.52166 
+L 145.47008 84.52166 
+L 145.47008 68.435053 
+L 115.979688 68.435053 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 115.979688 58.575519 
+L 153.895907 58.575519 
+L 153.895907 42.488912 
+L 115.979688 42.488912 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 115.979688 188.306221 
+L 120.192601 188.306221 
+L 120.192601 172.219614 
+L 115.979688 172.219614 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 153.895907 162.360081 
+L 162.321733 162.360081 
+L 162.321733 146.273474 
+L 153.895907 146.273474 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 137.044254 136.413941 
+L 179.173386 136.413941 
+L 179.173386 120.327334 
+L 137.044254 120.327334 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 158.10882 110.4678 
+L 208.663778 110.4678 
+L 208.663778 94.381193 
+L 158.10882 94.381193 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 145.47008 84.52166 
+L 208.663778 84.52166 
+L 208.663778 68.435053 
+L 145.47008 68.435053 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 153.895907 58.575519 
+L 217.089605 58.575519 
+L 217.089605 42.488912 
+L 153.895907 42.488912 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 120.192601 188.306221 
+L 137.044254 188.306221 
+L 137.044254 172.219614 
+L 120.192601 172.219614 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 162.321733 162.360081 
+L 259.218737 162.360081 
+L 259.218737 146.273474 
+L 162.321733 146.273474 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 179.173386 136.413941 
+L 271.857477 136.413941 
+L 271.857477 120.327334 
+L 179.173386 120.327334 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 208.663778 110.4678 
+L 368.754481 110.4678 
+L 368.754481 94.381193 
+L 208.663778 94.381193 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 208.663778 84.52166 
+L 389.819047 84.52166 
+L 389.819047 68.435053 
+L 208.663778 68.435053 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 217.089605 58.575519 
+L 486.716051 58.575519 
+L 486.716051 42.488912 
+L 217.089605 42.488912 
+z
+" clip-path="url(#p5aff50d6d4)" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 115.979688 195.597087 
+L 115.979688 35.198047 
+" clip-path="url(#p5aff50d6d4)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m9957899ea1" d="M 0 0 
+L 0 3.5 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m9957899ea1" x="115.979688" y="195.597087" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="115.979688" y="210.955368" transform="rotate(-0 115.979688 210.955368)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 200.237952 195.597087 
+L 200.237952 35.198047 
+" clip-path="url(#p5aff50d6d4)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m9957899ea1" x="200.237952" y="195.597087" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="200.237952" y="210.955368" transform="rotate(-0 200.237952 210.955368)">20</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 284.496216 195.597087 
+L 284.496216 35.198047 
+" clip-path="url(#p5aff50d6d4)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m9957899ea1" x="284.496216" y="195.597087" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="284.496216" y="210.955368" transform="rotate(-0 284.496216 210.955368)">40</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 368.754481 195.597087 
+L 368.754481 35.198047 
+" clip-path="url(#p5aff50d6d4)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m9957899ea1" x="368.754481" y="195.597087" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="368.754481" y="210.955368" transform="rotate(-0 368.754481 210.955368)">60</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 453.012745 195.597087 
+L 453.012745 35.198047 
+" clip-path="url(#p5aff50d6d4)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m9957899ea1" x="453.012745" y="195.597087" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="453.012745" y="210.955368" transform="rotate(-0 453.012745 210.955368)">80</text>
+     </g>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="319.884688" y="224.841462" transform="rotate(-0 319.884688 224.841462)">Docentes (2024-I)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_11">
+      <defs>
+       <path id="m70159cd622" d="M 0 0 
+L -3.5 0 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="180.262918" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="184.062137" transform="rotate(-0 108.979688 184.062137)">ESPECIALIZACIONES</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="154.316777" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="158.115996" transform="rotate(-0 108.979688 158.115996)">MECANICA</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="128.370637" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="132.169856" transform="rotate(-0 108.979688 132.169856)">PROCESOS</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="102.424497" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="106.223715" transform="rotate(-0 108.979688 106.223715)">MECATRONICA</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="76.478356" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="80.277575" transform="rotate(-0 108.979688 80.277575)">ELECTROMECANICA</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m70159cd622" x="115.979688" y="50.532216" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="108.979688" y="54.331435" transform="rotate(-0 108.979688 54.331435)">SISTEMAS</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_21">
+    <path d="M 115.979688 195.597087 
+L 115.979688 35.198047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 115.979688 195.597087 
+L 523.789687 195.597087 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="143.363623" y="183.160262" transform="rotate(-0 143.363623 183.160262)">5</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="265.538107" y="157.214121" transform="rotate(-0 265.538107 157.214121)">34</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="278.176847" y="131.267981" transform="rotate(-0 278.176847 131.267981)">37</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="375.073851" y="105.32184" transform="rotate(-0 375.073851 105.32184)">60</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="396.138417" y="79.3757" transform="rotate(-0 396.138417 79.3757)">65</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="493.035421" y="53.42956" transform="rotate(-0 493.035421 53.42956)">88</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="115.979688" y="17.198047" transform="rotate(-0 115.979688 17.198047)">Composición por facultad · snapshot 2024-I</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_23">
+     <path d="M 224.379219 241.067352 
+L 244.379219 241.067352 
+L 244.379219 234.067352 
+L 224.379219 234.067352 
+z
+" style="fill: #1b4f72; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_20">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="252.379219" y="241.067352" transform="rotate(-0 252.379219 241.067352)">TC</text>
+    </g>
+    <g id="patch_24">
+     <path d="M 284.882344 241.067352 
+L 304.882344 241.067352 
+L 304.882344 234.067352 
+L 284.882344 234.067352 
+z
+" style="fill: #5d6d7e; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_21">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="312.882344" y="241.067352" transform="rotate(-0 312.882344 241.067352)">MT</text>
+    </g>
+    <g id="patch_25">
+     <path d="M 347.618281 241.067352 
+L 367.618281 241.067352 
+L 367.618281 234.067352 
+L 347.618281 234.067352 
+z
+" style="fill: #aab7b8; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_22">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="375.618281" y="241.067352" transform="rotate(-0 375.618281 241.067352)">Cátedra</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p5aff50d6d4">
+   <rect x="115.979688" y="35.198047" width="407.81" height="160.39904"/>
+  </clipPath>
+ </defs>
+</svg>
+              <p class="dash-native__note">Snapshot 2024-I — única vista por facultad disponible. Sistemas concentra el 30% de la planta. Especializaciones aparece como facultad pequeña pero distinta.</p>
+            </div>
+
+            <div class="dash-native__cell">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"  viewBox="0 0 530.271563 248.996172" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-25T11:11:38.346576</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 248.996172 
+L 530.271563 248.996172 
+L 530.271563 0 
+L 0 0 
+L 0 248.996172 
+z
+" />
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 45.371563 225.118047 
+L 523.071563 225.118047 
+L 523.071563 35.198047 
+L 45.371563 35.198047 
+L 45.371563 225.118047 
+z
+" style="fill: none"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m55b6cc8bdb" d="M 0 0 
+L 0 3.5 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="84.103995" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="84.103995" y="239.716484" transform="rotate(-0 84.103995 239.716484)">2018</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="148.658049" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="148.658049" y="239.716484" transform="rotate(-0 148.658049 239.716484)">2019</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="213.212103" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="213.212103" y="239.716484" transform="rotate(-0 213.212103 239.716484)">2020</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="277.766157" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="277.766157" y="239.716484" transform="rotate(-0 277.766157 239.716484)">2021</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="342.320211" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="342.320211" y="239.716484" transform="rotate(-0 342.320211 239.716484)">2022</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="406.874265" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="406.874265" y="239.716484" transform="rotate(-0 406.874265 239.716484)">2023</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m55b6cc8bdb" x="471.428319" y="225.118047" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #5d6d7e" x="471.428319" y="239.716484" transform="rotate(-0 471.428319 239.716484)">2024</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_8">
+      <path d="M 45.371563 207.985404 
+L 523.071563 207.985404 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_9">
+      <defs>
+       <path id="m851419a2d3" d="M 0 0 
+L -3.5 0 
+" style="stroke: #5d6d7e; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="207.985404" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="212.164544" transform="rotate(-0 38.371563 212.164544)">1.5</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_10">
+      <path d="M 45.371563 181.423166 
+L 523.071563 181.423166 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="181.423166" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="185.602306" transform="rotate(-0 38.371563 185.602306)">2.0</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_12">
+      <path d="M 45.371563 154.860928 
+L 523.071563 154.860928 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="154.860928" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="159.040069" transform="rotate(-0 38.371563 159.040069)">2.5</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_14">
+      <path d="M 45.371563 128.29869 
+L 523.071563 128.29869 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="128.29869" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="132.477831" transform="rotate(-0 38.371563 132.477831)">3.0</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_16">
+      <path d="M 45.371563 101.736452 
+L 523.071563 101.736452 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="101.736452" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="105.915593" transform="rotate(-0 38.371563 105.915593)">3.5</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_18">
+      <path d="M 45.371563 75.174215 
+L 523.071563 75.174215 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="75.174215" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="79.353355" transform="rotate(-0 38.371563 79.353355)">4.0</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_20">
+      <path d="M 45.371563 48.611977 
+L 523.071563 48.611977 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #eceef1; stroke-opacity: 0.6; stroke-width: 0.6"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m851419a2d3" x="45.371563" y="48.611977" style="fill: #5d6d7e; stroke: #5d6d7e; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="38.371563" y="52.791118" transform="rotate(-0 38.371563 52.791118)">4.5</text>
+     </g>
+    </g>
+    <g id="text_15">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #2c3e50" x="14.798438" y="130.158047" transform="rotate(-90 14.798438 130.158047)">Salario mensual promedio (millones COP)</text>
+    </g>
+   </g>
+   <g id="line2d_22">
+    <path d="M 84.103995 130.954914 
+L 148.658049 127.767445 
+L 213.212103 115.017571 
+L 277.766157 111.298858 
+L 342.320211 94.830271 
+L 406.874265 93.236536 
+L 471.428319 43.830774 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke: #1b4f72; stroke-width: 2; stroke-linecap: square"/>
+    <defs>
+     <path id="md61d9d58fc" d="M 0 3.25 
+C 0.86191 3.25 1.688635 2.907559 2.298097 2.298097 
+C 2.907559 1.688635 3.25 0.86191 3.25 0 
+C 3.25 -0.86191 2.907559 -1.688635 2.298097 -2.298097 
+C 1.688635 -2.907559 0.86191 -3.25 0 -3.25 
+C -0.86191 -3.25 -1.688635 -2.907559 -2.298097 -2.298097 
+C -2.907559 -1.688635 -3.25 -0.86191 -3.25 0 
+C -3.25 0.86191 -2.907559 1.688635 -2.298097 2.298097 
+C -1.688635 2.907559 -0.86191 3.25 0 3.25 
+z
+" style="stroke: #1b4f72; stroke-width: 1.5"/>
+    </defs>
+    <g clip-path="url(#p5a0b1c1c4e)">
+     <use xlink:href="#md61d9d58fc" x="84.103995" y="130.954914" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="148.658049" y="127.767445" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="213.212103" y="115.017571" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="277.766157" y="111.298858" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="342.320211" y="94.830271" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="406.874265" y="93.236536" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     <use xlink:href="#md61d9d58fc" x="471.428319" y="43.830774" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+    </g>
+   </g>
+   <g id="line2d_23">
+    <path d="M 84.103995 210.110383 
+L 148.658049 211.172872 
+L 213.212103 203.735445 
+L 277.766157 206.922914 
+L 342.320211 198.954243 
+L 406.874265 197.891753 
+L 471.428319 172.92325 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke: #5d6d7e; stroke-width: 2; stroke-linecap: square"/>
+    <defs>
+     <path id="mbc765b89f7" d="M -3.25 3.25 
+L 3.25 3.25 
+L 3.25 -3.25 
+L -3.25 -3.25 
+z
+" style="stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+    </defs>
+    <g clip-path="url(#p5a0b1c1c4e)">
+     <use xlink:href="#mbc765b89f7" x="84.103995" y="210.110383" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="148.658049" y="211.172872" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="213.212103" y="203.735445" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="277.766157" y="206.922914" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="342.320211" y="198.954243" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="406.874265" y="197.891753" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#mbc765b89f7" x="471.428319" y="172.92325" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="line2d_24">
+    <path d="M 84.103995 209.579138 
+L 148.658049 216.48532 
+L 213.212103 212.235362 
+L 277.766157 204.26669 
+L 342.320211 198.422998 
+L 406.874265 195.766774 
+L 471.428319 166.548313 
+" clip-path="url(#p5a0b1c1c4e)" style="fill: none; stroke: #aab7b8; stroke-width: 2; stroke-linecap: square"/>
+    <defs>
+     <path id="m81127c1c79" d="M 0 -3.25 
+L -3.25 3.25 
+L 3.25 3.25 
+z
+" style="stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+    </defs>
+    <g clip-path="url(#p5a0b1c1c4e)">
+     <use xlink:href="#m81127c1c79" x="84.103995" y="209.579138" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="148.658049" y="216.48532" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="213.212103" y="212.235362" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="277.766157" y="204.26669" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="342.320211" y="198.422998" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="406.874265" y="195.766774" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     <use xlink:href="#m81127c1c79" x="471.428319" y="166.548313" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 45.371563 225.118047 
+L 45.371563 35.198047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 45.371563 225.118047 
+L 523.071563 225.118047 
+" style="fill: none; stroke: #bdc3c7; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1b4f72" x="74.103995" y="133.438352" transform="rotate(-0 74.103995 133.438352)">$3.0M</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1b4f72" x="481.428319" y="46.314212" transform="rotate(-0 481.428319 46.314212)">$4.6M</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #5d6d7e" x="74.103995" y="212.59382" transform="rotate(-0 74.103995 212.59382)">$1.5M</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #5d6d7e" x="481.428319" y="175.406687" transform="rotate(-0 481.428319 175.406687)">$2.2M</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #aab7b8" x="74.103995" y="212.062575" transform="rotate(-0 74.103995 212.062575)">$1.5M</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #aab7b8" x="481.428319" y="169.03175" transform="rotate(-0 481.428319 169.03175)">$2.3M</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="45.371563" y="17.198047" transform="rotate(-0 45.371563 17.198047)">Asignación básica mensual promedio por dedicación</text>
+   </g>
+   <g id="legend_1">
+    <g id="line2d_25">
+     <path d="M 54.371563 48.296484 
+L 64.371563 48.296484 
+L 74.371563 48.296484 
+" style="fill: none; stroke: #1b4f72; stroke-width: 2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#md61d9d58fc" x="64.371563" y="48.296484" style="fill: #ffffff; stroke: #1b4f72; stroke-width: 1.5"/>
+     </g>
+    </g>
+    <g id="text_23">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="82.371563" y="51.796484" transform="rotate(-0 82.371563 51.796484)">Tiempo Completo</text>
+    </g>
+    <g id="line2d_26">
+     <path d="M 54.371563 62.974609 
+L 64.371563 62.974609 
+L 74.371563 62.974609 
+" style="fill: none; stroke: #5d6d7e; stroke-width: 2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#mbc765b89f7" x="64.371563" y="62.974609" style="fill: #ffffff; stroke: #5d6d7e; stroke-width: 1.5; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="text_24">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="82.371563" y="66.474609" transform="rotate(-0 82.371563 66.474609)">Medio Tiempo</text>
+    </g>
+    <g id="line2d_27">
+     <path d="M 54.371563 77.652734 
+L 64.371563 77.652734 
+L 74.371563 77.652734 
+" style="fill: none; stroke: #aab7b8; stroke-width: 2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m81127c1c79" x="64.371563" y="77.652734" style="fill: #ffffff; stroke: #aab7b8; stroke-width: 1.5; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="text_25">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2c3e50" x="82.371563" y="81.152734" transform="rotate(-0 82.371563 81.152734)">Cátedra</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p5a0b1c1c4e">
+   <rect x="45.371563" y="35.198047" width="477.7" height="189.92"/>
+  </clipPath>
+ </defs>
+</svg>
+              <p class="dash-native__note">Crecimiento salarial sostenido en las tres modalidades. El TC promedió +56% acumulado; cátedra +55%. Ambos por encima de la inflación promedio del período.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <footer class="dash-foot">
+          <p><strong>Fuente.</strong> Dataset consolidado planta docente ETITC · cruza Docentes_SNIES_2018-2023 + CONSOLIDADO SNIES (anexo CNA 2024-I) + Cuadro 04 CNA por número de documento. Visualizaciones generadas con matplotlib (Python) y embebidas como SVG nativo, sin dependencia de un reporte Power BI publicado.</p>
+          <p><strong>Cómo leer.</strong> Cada gráfico muestra una tendencia distinta. Los cinco juntos cuentan la historia: la planta crece y se cualifica, pero la proporción de Tiempo Completo decae y la cátedra absorbe el crecimiento. El snapshot por facultad da una sola fotografía (2024-I) — la dimensión facultad no está disponible para años previos.</p>
+        </footer>
+      </div>
+    </article>
+
+    <!-- §5 ESTÁNDAR — ETITC × Contexto nacional -->
+    <article class="subsection" data-sub="estd">
+      <div class="shell">
+        <p class="scope-tag scope-etitc">ETITC × Contexto nacional</p>
+        <h2>Estándar — propuesta de instrumento</h2>
+        <p class="sub-lede">El estándar institucional para planta docente debe articular tres lecturas: las exigencias normativas nacionales (Decreto 1330, Resolución 21795), las categorías del Estatuto de Profesores ETITC, y las dimensiones efectivas que el SNIES permite medir. Esta sección propone cómo se hace esa articulación.</p>
+
+        <p class="section-label"><span>Cascada del modelo de planta</span><span class="lbl-meta">Niveles de desagregación · observación</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 12px; max-width: 50em;">El modelo se organiza en cuatro niveles. Cada nivel responde a una pregunta institucional distinta.</p>
+
+        <div class="cascade">
+          <div class="step">
+            <p class="lvl"><span class="num">N1</span>Tamaño</p>
+            <p class="big tnum">520</p>
+            <p class="ttl">Docentes únicos</p>
+            <p>Personas distintas que han pasado por la planta entre 2018-I y 2024-I. Métrica de capacidad nominal del sistema.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N2</span>Vinculación</p>
+            <p class="big tnum">3</p>
+            <p class="ttl">Modalidades</p>
+            <p>Tiempo Completo o Exclusiva · Medio Tiempo · Cátedra. Reportadas en SNIES y comparables a lo largo de toda la serie.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N3</span>Cualificación</p>
+            <p class="big tnum">3</p>
+            <p class="ttl">Niveles académicos</p>
+            <p>Doctorado · Maestría · Postdoctorado (este último, atención: posiblemente sobre-clasificado administrativamente). El campo Especialización aparece vacío.</p>
+          </div>
+          <div class="step">
+            <p class="lvl"><span class="num">N4</span>Unidad académica</p>
+            <p class="big tnum">5+1</p>
+            <p class="ttl">Facultades</p>
+            <p>Sistemas · Electromecánica · Mecatrónica · Procesos · Mecánica · Especializaciones. Solo disponible para 2024-I — el SNIES histórico no la reporta.</p>
+          </div>
+        </div>
+
+        <p class="section-label"><span>Referente normativo · indicadores típicos</span><span class="lbl-meta">Decreto 1330 / Resolución 21795 — magnitudes observadas</span></p>
+        <p style="font-size:14.5px; color:var(--ink-2); margin: 0 0 14px; max-width: 50em;">La normativa nacional define las dimensiones a medir pero deja a cada IES fijar sus metas. Estos son los rangos típicamente observados en IES técnicas y tecnológicas colombianas:</p>
+
+        <div class="scale-compare">
+          <div class="col">
+            <p class="h">Indicadores típicos · IES técnica</p>
+            <p class="yr tnum">— ref. —</p>
+            <table>
+              <tr><td>Tiempo Completo (% planta)</td><td>20% — 30%</td></tr>
+              <tr><td>Doctorado (% planta)</td><td>10% — 20%</td></tr>
+              <tr><td>Maestría (% planta)</td><td>40% — 60%</td></tr>
+              <tr><td>Relación estudiantes / TCE</td><td>30 — 60</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Rangos referenciales · Lineamientos CNA + Decreto 1330</p>
+          </div>
+          <div class="col">
+            <p class="h">ETITC · 2024-I observado</p>
+            <p class="yr tnum">2024-I</p>
+            <table>
+              <tr><td>Tiempo Completo</td><td>13,8%</td></tr>
+              <tr><td>Doctorado</td><td>27,0%</td></tr>
+              <tr><td>Maestría</td><td>48,1%</td></tr>
+              <tr><td>Relación E/TCE</td><td>por calcular (Cap. 5)</td></tr>
+            </table>
+            <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin: 12px 0 0;">Fuente · Dataset consolidado · snapshot 2024-I</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="ctag">Nota metodológica · lectura del referente</span>
+          <p>La ETITC <strong style="font-weight:500;">supera ampliamente el referente típico en Doctorado</strong> (27% vs 10–20%) y se ubica <strong style="font-weight:500;">por debajo en Tiempo Completo</strong> (13,8% vs 20–30%). La cualificación académica está alta; el vínculo estable está bajo. Esa es la tensión que el observatorio identifica con claridad. La relación estudiantes/TCE (el indicador más usado de capacidad real) requiere cruzar con la matrícula del Cap. 5.</p>
+        </div>
+
+        <p class="section-label"><span>Propuesta de estándar institucional</span><span class="lbl-meta">Lo que el observatorio fija a futuro</span></p>
+        <table class="invent">
+          <thead><tr><th>Componente</th><th>Estándar propuesto</th><th style="text-align:right;">Justificación</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="it-name">Métrica primaria</span></td>
+              <td>Docentes únicos × período + distribución por dedicación (TC, MT, Cátedra)</td>
+              <td style="text-align:right;">Variables 100% reportadas en SNIES desde 2018</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Métrica de cualificación</span></td>
+              <td>Distribución por nivel máximo reportado (Doctorado, Maestría, Postdoctorado)</td>
+              <td style="text-align:right;">Mitiga el ruido del campo nivel crudo</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Ventana temporal</span></td>
+              <td>Desde 2018-I (cobertura SNIES completa)</td>
+              <td style="text-align:right;">Cobertura comparable y verificable</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Granularidad</span></td>
+              <td>Semestral (12 períodos · ANNIO+SEMESTRE)</td>
+              <td style="text-align:right;">Coherente con el reporte SNIES</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Desagregación facultad</span></td>
+              <td>Por facultad — disponible solo desde 2024-I</td>
+              <td style="text-align:right;">Resolver retrocompatibilidad con archivos institucionales (pendiente)</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Indicadores derivados</span></td>
+              <td>% TC, % Doctorado, salario promedio por dedicación, % cobertura nominal</td>
+              <td style="text-align:right;">Cuatro indicadores comunicables al gobierno académico</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Cruce con otros capítulos</span></td>
+              <td>E/TCE (Cap. 5 Matrícula), Evaluación Docente (Cap. 4), Egresados (Cap. 7)</td>
+              <td style="text-align:right;">Construye la lectura completa del rol docente en la trayectoria del estudiante</td>
+            </tr>
+            <tr>
+              <td><span class="it-name">Calidad del dato</span></td>
+              <td>Documentar inconsistencias (138 docentes con cambio de nivel) y campos vacíos como gap declarado, no como error a corregir</td>
+              <td style="text-align:right;">Principio: nada se inventa, los huecos se explican</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot-source">
+        <div class="shell">
+          <span>Fuente · <strong>Dataset consolidado planta docente</strong> · Decreto 1330/2019 · Resolución 21795/2020 · Acuerdo 09/2015 ETITC</span>
+          <span>§04 Estándar</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">
+    <div class="cols">
+      <div>
+        <p class="t">Observatorio Institucional</p>
+        <p class="s">Escuela Tecnológica · Instituto Técnico Central</p>
+      </div>
+      <div>
+        <p class="t">Capítulos</p>
+        <ul id="footer-chapters"></ul>
+      </div>
+      <div>
+        <p class="t">Acerca</p>
+        <ul>
+          <li><a href="index.html#/acerca">Sobre el observatorio</a></li>
+          <li><a href="index.html">Portada</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · v1.0 · Fase 0 — Mayo 2026
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script src="cap-08.js"></script>
+
+</body>
+</html>
