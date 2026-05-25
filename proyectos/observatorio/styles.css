@@ -1,11 +1,11 @@
 /* ===================================================================
    Observatorio Institucional ETITC
    styles.css — Hoja de estilos común
-   
-
+   Extraída del HTML monolítico para arquitectura por capas.
+   Refactor: 25 mayo 2026.
    =================================================================== */
 
-/* ----------  ---------- */
+/* ---------- TOKENS ---------- */
 :root{
   --bg:           #f7f5f0;
   --paper:        #fbfaf6;
@@ -1719,3 +1719,25 @@ button{ font: inherit; color: inherit; background: none; border: none; cursor: p
 h1, h2, h3, h4 { font-feature-settings: "kern" 1, "liga" 1, "calt" 1; }
 .tnum{ font-variant-numeric: tabular-nums lining-nums; }
 
+
+
+/* ===================================================================
+   Items deshabilitados (capítulos pendientes sin archivo aún)
+   Agregado en Paso 3 del refactor.
+   =================================================================== */
+.toc li .toc-item-disabled{
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 12px 0;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.toc li .toc-item-disabled:hover{
+  background: transparent;
+}
+.site-foot .foot-disabled{
+  opacity: 0.55;
+  cursor: not-allowed;
+}
