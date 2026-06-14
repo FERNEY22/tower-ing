@@ -1,243 +1,126 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8">
   <title>CV - Towers Ing</title>
   <meta name="description" content="Currículum Vitae de Towers Ing — Ingeniería, educación y desarrollo de habilidades colaborativas.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .cv-section {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .cv-section h2 {
-      color: #1a2a6c;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.5rem;
-    }
-    .cv-section h2 i {
-      color: #3498db;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 30px;
-      margin: 20px 0;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 3px;
-      background: #3498db;
-    }
-    .timeline-item {
-      position: relative;
-      margin-bottom: 30px;
-    }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -33px;
-      top: 5px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #3498db;
-      border: 3px solid white;
-      box-shadow: 0 0 0 2px #3498db;
-    }
-    .timeline-item h3 {
-      color: #1a2a6c;
-      margin-bottom: 5px;
-    }
-    .timeline-item .date {
-      color: #e74c3c;
-      font-weight: 600;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .timeline-item p {
-      color: #555;
-    }
-
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin: 20px 0;
-    }
-    .skill-tag {
-      background: #e8f4fc;
-      color: #1a2a6c;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .back-home:hover {
-      background: #2980b9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-user-graduate"></i> Currículum Vitae</h1>
-      <p>Ingeniería, educación y desarrollo de habilidades colaborativas.</p>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html">Proyectos</a>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
     </div>
   </header>
 
-  <main>
+  <main class="shell">
 
-    <!-- Perfil -->
-    <section class="cv-section">
-      <h2><i class="fas fa-user"></i> Perfil Profesional</h2>
-      <p>
-        Ingeniero apasionado por la educación, la innovación y el trabajo en equipo. Especializado en el análisis de roles colaborativos, diseño de herramientas educativas y formación de grupos equilibrados para proyectos técnicos.
-      </p>
+    <section class="page-head">
+      <span class="kicker">Currículum vitae</span>
+      <h1>Ingeniería, educación &amp; <em>colaboración</em></h1>
+      <p>Trayectoria, formación y obsesiones técnicas: análisis de roles, herramientas educativas y formación de equipos para proyectos de ingeniería.</p>
     </section>
 
-    <!-- Experiencia -->
-    <section class="cv-section">
-      <h2><i class="fas fa-briefcase"></i> Experiencia</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="date">2023 - Presente</span>
-          <h3>Instructor de Habilidades Colaborativas</h3>
-          <p>Diseño e implementación de formularios y algoritmos para identificar roles naturales en equipos técnicos. Capacitación a estudiantes y profesionales.</p>
-        </div>
-        <div class="timeline-item">
-          <span class="date">2021 - 2023</span>
-          <h3>Desarrollador de Herramientas Educativas</h3>
-          <p>Creación de dashboards, formularios interactivos y sistemas de visualización de datos para instituciones educativas.</p>
-        </div>
-        <div class="timeline-item">
-          <span class="date">2019 - 2021</span>
-          <h3>Analista de Proyectos Técnicos</h3>
-          <p>Evaluación de desempeño de equipos, asignación de roles y optimización de procesos colaborativos en entornos de ingeniería.</p>
+    <section class="section" style="padding-top:8px; max-width: 860px;">
+
+      <!-- Perfil -->
+      <div class="cv-section">
+        <h2>Perfil <em>profesional</em></h2>
+        <p class="cv-lead">
+          Ingeniero apasionado por la educación, la innovación y el trabajo en equipo. Especializado en el análisis de roles colaborativos, diseño de herramientas educativas y formación de grupos equilibrados para proyectos técnicos.
+        </p>
+      </div>
+
+      <!-- Experiencia -->
+      <div class="cv-section">
+        <h2>Experiencia</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="date">2023 — Presente</span>
+            <h3>Instructor de habilidades colaborativas</h3>
+            <p>Diseño e implementación de formularios y algoritmos para identificar roles naturales en equipos técnicos. Capacitación a estudiantes y profesionales.</p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">2021 — 2023</span>
+            <h3>Desarrollador de herramientas educativas</h3>
+            <p>Creación de dashboards, formularios interactivos y sistemas de visualización de datos para instituciones educativas.</p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">2019 — 2021</span>
+            <h3>Analista de proyectos técnicos</h3>
+            <p>Evaluación de desempeño de equipos, asignación de roles y optimización de procesos colaborativos en entornos de ingeniería.</p>
+          </div>
         </div>
       </div>
-    </section>
 
-    <!-- Educación -->
-    <section class="cv-section">
-      <h2><i class="fas fa-graduation-cap"></i> Educación</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="date">2015 - 2019</span>
-          <h3>Ingeniería de Sistemas</h3>
-          <p>Universidad Nacional de Ingeniería — Promedio: 4.5/5.0</p>
-        </div>
-        <div class="timeline-item">
-          <span class="date">2020</span>
-          <h3>Especialización en Pedagogía Tecnológica</h3>
-          <p>Instituto de Educación Superior — Certificación en metodologías activas y aprendizaje basado en proyectos.</p>
+      <!-- Educación -->
+      <div class="cv-section">
+        <h2>Educación</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="date">2015 — 2019</span>
+            <h3>Ingeniería de Sistemas</h3>
+            <p>Universidad Nacional de Ingeniería — Promedio: 4.5/5.0</p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">2020</span>
+            <h3>Especialización en Pedagogía Tecnológica</h3>
+            <p>Instituto de Educación Superior — Certificación en metodologías activas y aprendizaje basado en proyectos.</p>
+          </div>
         </div>
       </div>
-    </section>
 
-    <!-- Habilidades -->
-    <section class="cv-section">
-      <h2><i class="fas fa-tools"></i> Habilidades</h2>
-      <div class="skills">
-        <span class="skill-tag">Análisis de Roles</span>
-        <span class="skill-tag">Formación de Equipos</span>
-        <span class="skill-tag">HTML / CSS / JS</span>
-        <span class="skill-tag">Diseño de Formularios</span>
-        <span class="skill-tag">Visualización de Datos</span>
-        <span class="skill-tag">Metodologías Ágiles</span>
-        <span class="skill-tag">Educación STEM</span>
-        <span class="skill-tag">Trabajo Colaborativo</span>
+      <!-- Habilidades -->
+      <div class="cv-section">
+        <h2>Habilidades</h2>
+        <div class="tags">
+          <span class="tag">Análisis de roles</span>
+          <span class="tag">Formación de equipos</span>
+          <span class="tag">HTML / CSS / JS</span>
+          <span class="tag">Diseño de formularios</span>
+          <span class="tag">Visualización de datos</span>
+          <span class="tag">Metodologías ágiles</span>
+          <span class="tag">Educación STEM</span>
+          <span class="tag">Trabajo colaborativo</span>
+        </div>
       </div>
-    </section>
 
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+      <a href="../index.html" class="btn btn-ghost">← Volver al inicio</a>
+
+    </section>
 
   </main>
 
-  <footer>
-    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../index.html">Inicio</a><a href="../blog/index.html">Blog</a><a href="../proyectos/index.html">Proyectos</a><a href="../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../training/index.html">Capacitación</a><a href="../cv/index.html">Currículum</a><a href="../forms/index.html">Formularios</a><a href="../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
   </footer>
 
 </body>

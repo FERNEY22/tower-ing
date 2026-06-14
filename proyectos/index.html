@@ -1,277 +1,191 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mis Proyectos – Towers Ing</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      min-height: 100vh;
-    }
-
-    header {
-      background: linear-gradient(135deg, #161b22 0%, #1f2937 100%);
-      border-bottom: 1px solid #30363d;
-      padding: 3rem 2rem 2rem;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.2rem;
-      color: #58a6ff;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      color: #8b949e;
-      font-size: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 2.5rem auto;
-      padding: 0 1.5rem;
-    }
-
-    /* Proyecto destacado */
-    .destacado {
-      background: linear-gradient(135deg, #1a2332 0%, #162032 100%);
-      border: 1px solid #1f6feb;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .destacado::before {
-      content: '★ PROYECTO DESTACADO';
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      font-size: 0.7rem;
-      color: #f0c040;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-    }
-
-    .destacado h2 {
-      font-size: 1.6rem;
-      color: #58a6ff;
-      margin-bottom: 0.5rem;
-    }
-
-    .destacado .estado {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .destacado p.desc {
-      color: #c9d1d9;
-      line-height: 1.7;
-      margin-bottom: 1.2rem;
-    }
-
-    /* Grid de proyectos */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 1.5rem;
-      transition: border-color 0.2s, transform 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card:hover {
-      border-color: #58a6ff;
-      transform: translateY(-2px);
-    }
-
-    .card h3 {
-      font-size: 1rem;
-      color: #e6edf3;
-      margin-bottom: 0.4rem;
-    }
-
-    .card .desc {
-      font-size: 0.875rem;
-      color: #8b949e;
-      line-height: 1.6;
-      flex: 1;
-      margin-bottom: 1rem;
-    }
-
-    /* Tags de tecnologías */
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 1rem;
-    }
-
-    .tag {
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #8b949e;
-    }
-
-    .destacado .tags .tag {
-      background: #162032;
-      border-color: #1f6feb;
-      color: #58a6ff;
-    }
-
-    /* Estados */
-    .estado-finalizado { background: #1a2f1a; color: #3fb950; }
-    .estado-desarrollo { background: #2a1a00; color: #d29922; }
-    .estado-prototipo  { background: #1a1a2e; color: #a371f7; }
-
-    /* Botón */
-    .btn {
-      display: inline-block;
-      padding: 0.5rem 1.2rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .btn:hover { opacity: 0.85; }
-
-    .btn-primary {
-      background: #1f6feb;
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background: #21262d;
-      color: #8b949e;
-      border: 1px solid #30363d;
-      cursor: default;
-    }
-
-    /* Fecha */
-    .fecha {
-      font-size: 0.75rem;
-      color: #8b949e;
-      margin-bottom: 0.5rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: #8b949e;
-      font-size: 0.85rem;
-      border-top: 1px solid #21262d;
-      margin-top: 3rem;
-    }
-
-    footer a {
-      color: #58a6ff;
-      text-decoration: none;
-    }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.6rem; }
-      .destacado::before { display: none; }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
 </head>
 <body>
 
-<header>
-  <h1>Mis Proyectos</h1>
-  <p>Desarrollos tecnológicos aplicados a la educación, ingeniería y colaboración.</p>
-</header>
-
-<div class="container">
-  <!-- Proyecto destacado -->
-  <div id="destacado-container"></div>
-
-  <!-- Grid de proyectos -->
-  <div class="grid" id="proyectos-grid"></div>
-</div>
-
-<footer>
-  <a href="https://tower-ing.com/">← Volver al Inicio</a>
-  &nbsp;|&nbsp;
-  © 2025 Towers Ing. Todos los derechos reservados.
-</footer>
-
-<!-- Datos -->
-<script src="proyectos.js"></script>
-
-<script>
-  function getEstadoClass(estado) {
-    if (estado === 'Finalizado') return 'estado-finalizado';
-    if (estado === 'En desarrollo') return 'estado-desarrollo';
-    return 'estado-prototipo';
-  }
-
-  function renderDestacado(p) {
-    const fechaTxt = p.fecha ? `Finalizado: ${p.fecha}` : p.estado;
-    const tagsHtml = p.tecnologias.map(t => `<span class="tag">${t}</span>`).join('');
-    return `
-      <div class="destacado">
-        <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>
-        <h2>${p.titulo}</h2>
-        <p class="desc">${p.descripcion}</p>
-        <div class="tags">${tagsHtml}</div>
-        <a href="${p.link}" class="btn btn-primary">Ver proyecto →</a>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
       </div>
-    `;
-  }
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html" class="active">Proyectos</a>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
 
-  function renderCard(p) {
-    const fechaTxt = p.fecha ? `<div class="fecha">Finalizado: ${p.fecha}</div>` : `<div class="fecha">${p.estado}</div>`;
-    const tagsHtml = p.tecnologias.map(t => `<span class="tag">${t}</span>`).join('');
-    const btnHtml = p.link !== '#'
-      ? `<a href="${p.link}" class="btn btn-primary">Ver detalles →</a>`
-      : `<span class="btn btn-secondary">Ver detalles</span>`;
+  <main class="shell">
 
-    return `
-      <div class="card">
-        ${fechaTxt}
-        <h3>${p.titulo}</h3>
-        <p class="desc">${p.descripcion}</p>
-        <div class="tags">${tagsHtml}</div>
-        ${btnHtml}
+    <section class="page-head">
+      <span class="kicker">Portafolio técnico</span>
+      <h1>Mis <em>proyectos</em></h1>
+      <p>Desarrollos tecnológicos aplicados a la educación, la ingeniería y la colaboración. Prototipos abiertos, entregas y motores que siguen en producción.</p>
+    </section>
+
+    <section class="section" style="padding-top:8px;">
+      <!-- Proyecto destacado (render dinámico desde proyectos.js) -->
+      <div id="destacado-container"></div>
+
+      <!-- Grid de proyectos (render dinámico desde proyectos.js) -->
+      <div class="card-grid" id="proyectos-grid"></div>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../index.html">Inicio</a><a href="../blog/index.html">Blog</a><a href="../proyectos/index.html">Proyectos</a><a href="../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../training/index.html">Capacitación</a><a href="../cv/index.html">Currículum</a><a href="../forms/index.html">Formularios</a><a href="../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
       </div>
-    `;
-  }
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
+  </footer>
 
-  // Renderizar
-  const destacado = proyectos.find(p => p.destacado);
-  const resto = proyectos.filter(p => !p.destacado);
+  <!-- Datos (sin cambios) -->
+  <script src="proyectos.js"></script>
 
-  if (destacado) {
-    document.getElementById('destacado-container').innerHTML = renderDestacado(destacado);
-  }
+  <!-- Render: cada proyecto destacado usa su propia plantilla (diseño único) -->
+  <script>
+    function getEstadoClass(estado) {
+      if (estado === 'Finalizado') return 'estado-finalizado';
+      if (estado === 'En desarrollo') return 'estado-desarrollo';
+      return 'estado-prototipo';
+    }
+    const tagsDe = p => p.tecnologias.map(t => `<span class="tag">${t}</span>`).join('');
+    const periodoDe = p => (p.periodo || p.fecha) ? `<span class="periodo">${p.periodo || p.fecha}</span>` : '';
 
-  document.getElementById('proyectos-grid').innerHTML = resto.map(renderCard).join('');
-</script>
+    // FERIM — diseño original (esquina con degradado azul)
+    function renderFerim(p) {
+      return `
+        <article class="featured">
+          <span class="flag">★ Destacado</span>
+          <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}" class="btn btn-primary">Ver proyecto <span class="arrow">→</span></a>
+        </article>`;
+    }
+
+    // BIOMO — dos columnas con panel verde (eco)
+    function renderBiomo(p) {
+      return `
+        <article class="feat-biomo">
+          <div class="fb-body">
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+            <h2>${p.titulo}</h2>
+            <p class="desc">${p.descripcion}</p>
+            <div class="tags">${tagsDe(p)}</div>
+            <a href="${p.link}" class="btn btn-primary">Ver proyecto <span class="arrow">→</span></a>
+          </div>
+          <aside class="fb-side">
+            <div class="fb-glyph">🌿</div>
+            <div>
+              <div class="fb-place">Sotaquirá · Boyacá</div>
+              <div class="fb-tag">Monitoreo comunitario</div>
+            </div>
+          </aside>
+        </article>`;
+    }
+
+    // GEOVISOR — banda con textura de mapa + coordenadas
+    function renderGeo(p) {
+      return `
+        <article class="feat-geo">
+          <div class="fg-body">
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+            <h2>${p.titulo}</h2>
+            <p class="desc">${p.descripcion}</p>
+            <div class="tags">${tagsDe(p)}</div>
+            <a href="${p.link}" class="btn btn-primary">Abrir geovisor <span class="arrow">→</span></a>
+          </div>
+          <div class="fg-map" aria-hidden="true">
+            <span class="fg-pin"></span>
+            <span class="fg-coord">04°36′N · 73°15′O</span>
+          </div>
+        </article>`;
+    }
+
+    // OBSERVATORIO — estilo datos con franja de métricas
+    function renderObs(p) {
+      return `
+        <article class="feat-obs">
+          <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          <div class="fo-stats">
+            <div class="fo-stat"><div class="fo-n">8</div><div class="fo-l">Capítulos</div></div>
+            <div class="fo-stat"><div class="fo-n">4</div><div class="fo-l">Dominios</div></div>
+            <div class="fo-stat"><div class="fo-n">ETITC</div><div class="fo-l">Institución</div></div>
+          </div>
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}" class="btn btn-primary">Ver observatorio <span class="arrow">→</span></a>
+        </article>`;
+    }
+
+    // YUNCAR — sitio externo en vivo (identidad navy + naranja)
+    function renderYuncar(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      return `
+        <article class="feat-yuncar">
+          <div class="fy-head">
+            <span class="fy-live"><span class="dot"></span> En vivo · yuncar.co</span>
+            ${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-yuncar">Visitar yuncar.co ↗</a>
+        </article>`;
+    }
+
+    function renderCard(p) {
+      const linkHtml = p.link !== '#'
+        ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
+        : `<span class="card-link" style="color:var(--ink-3)">Próximamente</span>`;
+      return `
+        <article class="card">
+          <div class="meta"><span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}</div>
+          <h3>${p.titulo}</h3>
+          <p class="desc">${p.descripcion}</p>
+          <div class="tags">${tagsDe(p)}</div>
+          ${linkHtml}
+        </article>`;
+    }
+
+    // Cada destacado elige su plantilla según 'variante'
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar };
+
+    const destacados = proyectos.filter(p => p.destacado);
+    const resto      = proyectos.filter(p => !p.destacado);
+
+    document.getElementById('destacado-container').innerHTML =
+      destacados.map(p => (PLANTILLAS[p.variante] || renderFerim)(p)).join('');
+
+    document.getElementById('proyectos-grid').innerHTML = resto.map(renderCard).join('');
+  </script>
 
 </body>
 </html>

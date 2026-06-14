@@ -58,8 +58,6 @@ function registerUser(name, lastname, cedula, date, email, password) {
             // }, 2000); // Redirige después de 2 segundos
             //window.location.href = "estudiante.html";
 
-            // Mostrar mensaje de bienvenida en la primera sección
-            document.querySelector('main section').innerHTML = '<h2>¡Bienvenido, ' + name + '! Has iniciado sesión correctamente.</h2><p>Ahora puedes explorar el sitio.</p>';
             // Opcional: Ocultar el formulario de autenticación
             document.getElementById('auth-form').style.display = 'none';
 
@@ -89,8 +87,6 @@ function loginUser(email, password) {
           const userData = snapshot.val();
           const displayName = userData ? userData.name : userCredential.user.email;
 
-          // Mostrar mensaje de bienvenida en la primera sección
-          document.querySelector('main section').innerHTML = `<h2>¡Bienvenido de nuevo, ${displayName}! Has iniciado sesión correctamente.</h2><p>Ahora puedes explorar el sitio.</p>`;
           // Ocultar el formulario de autenticación
           document.getElementById('auth-form').style.display = 'none';
 
@@ -105,8 +101,6 @@ function loginUser(email, password) {
         .catch((error) => {
           // Si hay error al obtener nombre, usar UID o email
           console.error("Error al obtener datos del usuario para el mensaje:", error);
-          // Mostrar mensaje de bienvenida genérico
-          document.querySelector('main section').innerHTML = '<h2>¡Bienvenido de nuevo! Has iniciado sesión correctamente.</h2><p>Ahora puedes explorar el sitio.</p>';
           // Ocultar el formulario de autenticación
           document.getElementById('auth-form').style.display = 'none';
 
@@ -178,12 +172,10 @@ auth.onAuthStateChanged((user) => {
         .then((snapshot) => {
           const userData = snapshot.val();
           const displayName = userData ? userData.name : user.email; // Usa nombre o email
-          authSection.innerHTML = `<h2>¡Bienvenido, ${displayName}! Has iniciado sesión correctamente.</h2><p>Ahora puedes explorar el sitio.</p>`;
           authFormSection.style.display = 'none';
         })
         .catch((error) => {
           // Si hay error al obtener nombre, usar UID o email
-          authSection.innerHTML = `<h2>¡Bienvenido! Has iniciado sesión correctamente.</h2><p>Ahora puedes explorar el sitio.</p>`;
           authFormSection.style.display = 'none';
         });
     }

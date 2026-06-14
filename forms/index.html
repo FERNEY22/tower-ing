@@ -1,293 +1,178 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8">
   <title>Formularios - Towers Ing</title>
   <meta name="description" content="Herramientas interactivas para análisis de roles, evaluación de equipos y formación colaborativa.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .forms-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 30px;
-      margin-top: 30px;
-    }
-
-    .form-card {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .form-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    .form-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 5px;
-      height: 100%;
-      background: #e74c3c;
-    }
-    .form-card h3 {
-      color: #1a2a6c;
-      margin-bottom: 10px;
-      font-size: 1.4rem;
-    }
-    .form-card .purpose {
-      font-size: 0.95rem;
-      color: #27ae60;
-      margin-bottom: 15px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .form-card p {
-      margin-bottom: 20px;
-      color: #555;
-    }
-    .btn-access {
-      display: inline-block;
-      padding: 10px 25px;
-      background: #e74c3c;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-access:hover {
-      background: #c0392b;
-    }
-
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .back-home:hover {
-      background: #2980b9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-code"></i> Herramientas Interactivas</h1>
-      <p>Formularios inteligentes para análisis, evaluación y formación de equipos colaborativos.</p>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html">Proyectos</a>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
     </div>
   </header>
 
-  <main>
+  <main class="shell">
 
-    <div class="forms-grid">
+    <section class="page-head">
+      <span class="kicker">Herramientas interactivas</span>
+      <h1>Formularios &amp; <em>evaluaciones</em></h1>
+      <p>Formularios inteligentes para análisis, evaluación y formación de equipos colaborativos. Diagnósticos, quizzes y encuestas listos para usar.</p>
+    </section>
 
-      <!-- Formulario 1 -->
-      <div class="form-card">
-        <h3>Identificador de Rol Colaborativo</h3>
-        <div class="purpose"><i class="fas fa-bullseye"></i> Propósito: Autoconocimiento</div>
-        <p>Descubre tu rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista de Datos. Basado en 20 preguntas contextuales.</p>
-        <a href="../estudiante.html" class="btn-access"><i class="fas fa-external-link-alt"></i> Acceder al Formulario</a>
+    <section class="section" style="padding-top:8px;">
+      <div class="section-head">
+        <h2>Catálogo de <em>formularios</em></h2>
+        <span class="meta">Disponibles &amp; próximos</span>
       </div>
 
-      <!-- Formulario 2 -->
-      <div class="form-card">
-        <h3>Evaluación de Desempeño Grupal</h3>
-        <div class="purpose"><i class="fas fa-users"></i> Propósito: Retroalimentación</div>
-        <p>Evalúa el desempeño de tus compañeros en proyectos colaborativos. Genera reportes individuales y grupales.</p>
-        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
-      </div>
+      <div class="card-grid">
 
-      <!-- Formulario 3 -->
-      <div class="form-card">
-        <h3>Encuesta de Satisfacción del Equipo</h3>
-        <div class="purpose"><i class="fas fa-smile"></i> Propósito: Mejora continua</div>
-        <p>Mide el clima, comunicación y organización de tu equipo. Recibe sugerencias personalizadas para mejorar.</p>
-        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
-      </div>
-
-      <!-- Formulario 4 -->
-      <div class="form-card">
-        <h3>Formulario de Autoevaluación Técnica</h3>
-        <div class="purpose"><i class="fas fa-chart-bar"></i> Propósito: Diagnóstico</div>
-        <p>Evalúa tus habilidades técnicas en áreas clave: programación, bases de datos, redes, metodologías ágiles.</p>
-        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
-      </div>
-
-      <!-- Formulario 5 -->
-      <div class="form-card">
-        <h3>Registro de Progreso de Proyecto</h3>
-        <div class="purpose"><i class="fas fa-tasks"></i> Propósito: Seguimiento</div>
-        <p>Registra avances semanales de tu proyecto. Visualiza gráficos de progreso y alertas de retraso.</p>
-        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
-      </div>
-
-      <!-- Formulario 6 -->
-      <div class="form-card">
-        <h3>Asignador de Tareas Inteligente</h3>
-        <div class="purpose"><i class="fas fa-brain"></i> Propósito: Optimización</div>
-        <p>Asigna tareas a miembros del equipo según habilidades, carga de trabajo y preferencias. ¡Equilibrio perfecto!</p>
-        <a href="#" class="btn-access"><i class="fas fa-external-link-alt"></i> Próximamente</a>
-      </div>
-
-      <!-- Formulario 7: Diagnóstico Acción Climática -->
-      <div class="form-card">
-        <h3>Diagnóstico de Entrada · Acción Climática</h3>
-        <div class="purpose"><i class="fas fa-leaf"></i> Propósito: Diagnóstico</div>
-        <p>Prueba de nivel de 40 preguntas (V/F, selección múltiple y escala Likert) para identificar si necesitas repaso antes de iniciar el curso de Acción Climática.</p>
-        <a href="diagnosito-ac/" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar prueba</a>
-      </div>
-
-      <!-- Formulario 8: Diagnóstico · Tecnologías Geoespaciales -->
-      <div class="form-card">
-        <h3>Diagnóstico de Entrada · Tecnologías Geoespaciales</h3>
-        <div class="purpose"><i class="fas fa-map"></i> Propósito: Diagnóstico</div>
-        <p>Prueba de nivel de 40 preguntas (selección múltiple, V/F y escala Likert) para identificar tu punto de entrada en SIG, cartografía y teledetección. Sin nota — sirve para adaptar el curso.</p>
-        <a href="diagnostico geoespacial/" class="btn-access">
-          <i class="fas fa-play-circle"></i> Iniciar prueba
+        <a class="card" href="../estudiante.html">
+          <div class="meta"><span>Autoconocimiento</span></div>
+          <h3>Identificador de Rol Colaborativo</h3>
+          <p class="desc">Descubre tu rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista de Datos. Basado en 20 preguntas contextuales.</p>
+          <span class="card-link">Acceder al formulario <span class="arrow">→</span></span>
         </a>
+
+        <a class="card" href="roles-colaborativos/index.html">
+          <div class="meta"><span>Autoconocimiento</span></div>
+          <h3>Identificador de Rol Colaborativo <span style="color:var(--ink-3); font-weight:400;">· v2</span></h3>
+          <p class="desc">Versión actualizada del identificador de rol natural en equipos técnicos, con 20 preguntas contextuales y resultados detallados.</p>
+          <span class="card-link">Acceder al formulario <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="diagnosito-ac/index.html">
+          <div class="meta"><span>Diagnóstico</span></div>
+          <h3>Diagnóstico de Entrada · Acción Climática</h3>
+          <p class="desc">Prueba de nivel de 40 preguntas (V/F, selección múltiple y escala Likert) para identificar si necesitas repaso antes de iniciar el curso de Acción Climática.</p>
+          <span class="card-link">Iniciar prueba <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="diagnostico geoespacial/index.html">
+          <div class="meta"><span>Diagnóstico</span></div>
+          <h3>Diagnóstico de Entrada · Tecnologías Geoespaciales</h3>
+          <p class="desc">Prueba de nivel de 40 preguntas (selección múltiple, V/F y escala Likert) para identificar tu punto de entrada en SIG, cartografía y teledetección. Sin nota — adapta el curso.</p>
+          <span class="card-link">Iniciar prueba <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="YUNCAR/encuesta.html">
+          <div class="meta"><span>Investigación de mercado</span></div>
+          <h3>Encuesta YUNCAR · Mantenimiento Industrial</h3>
+          <p class="desc">Encuesta Likert de 35 ítems dirigida a jefes de mantenimiento y gerentes de planta del sector industrial bogotano. Práctica en Emprendimiento — FUNIBER.</p>
+          <span class="card-link">Iniciar encuesta <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="YUNCAR/entrevista.html">
+          <div class="meta"><span>Investigación cualitativa</span></div>
+          <h3>Entrevista YUNCAR · Actores Clave</h3>
+          <p class="desc">Registro de entrevistas semiestructuradas con directivos, prestadores de mantenimiento y consultores independientes. Guías A, B y C según perfil del entrevistado.</p>
+          <span class="card-link">Registrar entrevista <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="mate-eva1/examen2.html">
+          <div class="meta"><span>Evaluación formativa</span></div>
+          <h3>Evaluación Express · Matemáticas Básicas</h3>
+          <p class="desc">10 preguntas de factorización, fracciones algebraicas y radicales (temas 4.3 y 4.5). Una pregunta a la vez — requiere procedimiento de cálculo en cada ítem.</p>
+          <span class="card-link">Iniciar evaluación <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="flip-flops/quiz-flipflops-sd.html">
+          <div class="meta"><span>Evaluación formativa</span></div>
+          <h3>Cuestionario · Flip-Flops y Circuitos Secuenciales</h3>
+          <p class="desc">10 preguntas aleatorias de un banco de 20. Incluye 2 bloques teóricos y temporizador de 45 minutos. Un solo intento por número de identificación.</p>
+          <span class="card-link">Iniciar cuestionario <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="mate-eva1/taller-mate.html">
+          <div class="meta"><span>Refuerzo extenso</span></div>
+          <h3>Taller Integral · Matemáticas Básicas</h3>
+          <p class="desc">50 preguntas en 10 temas de factorización, fracciones algebraicas y radicales (20 fáciles, 20 medias, 10 difíciles). Cada pregunta muestra el procedimiento al responder.</p>
+          <span class="card-link">Iniciar taller <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="mate-eva1/taller-10.html">
+          <div class="meta"><span>Quiz de práctica</span></div>
+          <h3>Taller Express · Matemáticas Básicas</h3>
+          <p class="desc">10 preguntas aleatorias de un banco de 50 (2 fáciles, 4 medias, 4 difíciles). Cada intento es distinto — ideal para autoevaluación rápida en clase, con procedimiento.</p>
+          <span class="card-link">Iniciar taller <span class="arrow">→</span></span>
+        </a>
+
+        <article class="card">
+          <div class="meta"><span>Retroalimentación</span><span class="estado estado-prototipo" style="margin-left:auto">Próximamente</span></div>
+          <h3>Evaluación de Desempeño Grupal</h3>
+          <p class="desc">Evalúa el desempeño de tus compañeros en proyectos colaborativos. Genera reportes individuales y grupales.</p>
+          <span class="card-link" style="color:var(--ink-3)">En desarrollo</span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>Mejora continua</span><span class="estado estado-prototipo" style="margin-left:auto">Próximamente</span></div>
+          <h3>Encuesta de Satisfacción del Equipo</h3>
+          <p class="desc">Mide el clima, comunicación y organización de tu equipo. Recibe sugerencias personalizadas para mejorar.</p>
+          <span class="card-link" style="color:var(--ink-3)">En desarrollo</span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>Diagnóstico</span><span class="estado estado-prototipo" style="margin-left:auto">Próximamente</span></div>
+          <h3>Autoevaluación Técnica</h3>
+          <p class="desc">Evalúa tus habilidades técnicas en áreas clave: programación, bases de datos, redes y metodologías ágiles.</p>
+          <span class="card-link" style="color:var(--ink-3)">En desarrollo</span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>Seguimiento</span><span class="estado estado-prototipo" style="margin-left:auto">Próximamente</span></div>
+          <h3>Registro de Progreso de Proyecto</h3>
+          <p class="desc">Registra avances semanales de tu proyecto. Visualiza gráficos de progreso y alertas de retraso.</p>
+          <span class="card-link" style="color:var(--ink-3)">En desarrollo</span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>Optimización</span><span class="estado estado-prototipo" style="margin-left:auto">Próximamente</span></div>
+          <h3>Asignador de Tareas Inteligente</h3>
+          <p class="desc">Asigna tareas a miembros del equipo según habilidades, carga de trabajo y preferencias. ¡Equilibrio perfecto!</p>
+          <span class="card-link" style="color:var(--ink-3)">En desarrollo</span>
+        </article>
+
       </div>
 
-      <!-- Formulario 1: Identificador de Rol Colaborativo — actualizado -->
-      <div class="form-card">
-        <h3>Identificador de Rol Colaborativo</h3>
-        <div class="purpose"><i class="fas fa-bullseye"></i> Propósito: Autoconocimiento</div>
-        <p>Descubre tu rol natural en equipos técnicos: Coordinador, Comunicador, Investigador o Analista de Datos. Basado en 20 preguntas contextuales.</p>
-        <a href="roles-colaborativos/" class="btn-access"><i class="fas fa-external-link-alt"></i> Acceder al Formulario</a>
+      <div style="margin-top:32px;">
+        <a href="../index.html" class="btn btn-ghost">← Volver al inicio</a>
       </div>
-
-      <!-- YUNCAR — Encuesta cuantitativa -->
-      <div class="form-card">
-        <h3>Encuesta YUNCAR · Mantenimiento Industrial</h3>
-        <div class="purpose"><i class="fas fa-industry"></i> Propósito: Investigación de mercado</div>
-        <p>Encuesta Likert de 35 ítems dirigida a jefes de mantenimiento y gerentes de planta del sector industrial bogotano. Práctica en Emprendimiento — Fundación Universitaria Iberoamericana.</p>
-        <a href="yuncar/encuesta.html" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar encuesta</a>
-      </div>
-
-      <!-- YUNCAR — Entrevista semiestructurada -->
-      <div class="form-card">
-        <h3>Entrevista YUNCAR · Actores Clave</h3>
-        <div class="purpose"><i class="fas fa-comments"></i> Propósito: Investigación cualitativa</div>
-        <p>Registro de entrevistas semiestructuradas con directivos, prestadores de mantenimiento y consultores independientes. Guías A, B y C según perfil del entrevistado.</p>
-        <a href="yuncar/entrevista.html" class="btn-access"><i class="fas fa-play-circle"></i> Registrar entrevista</a>
-      </div>
-
-      <!-- Evaluación Express · Matemáticas Básicas -->
-      <div class="form-card">
-        <h3>Evaluación Express · Matemáticas Básicas</h3>
-        <div class="purpose"><i class="fas fa-square-root-variable"></i> Propósito: Evaluación formativa</div>
-        <p>10 preguntas de factorización, fracciones algebraicas y radicales (temas 4.3 y 4.5). Una pregunta a la vez — requiere procedimiento de cálculo en cada ítem.</p>
-        <a href="mate-eva1/examen2.html" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar evaluación</a>
-      </div>
-
-      <!-- Cuestionario · Flip-Flops y Circuitos Secuenciales -->
-      <div class="form-card">
-        <h3>Cuestionario · Flip-Flops y Circuitos Secuenciales</h3>
-        <div class="purpose"><i class="fas fa-microchip"></i> Propósito: Evaluación formativa</div>
-        <p>10 preguntas seleccionadas aleatoriamente de un banco de 20. Incluye 2 bloques teóricos y temporizador de 45 minutos. Un solo intento por número de identificación.</p>
-        <a href="flip-flops/quiz-flipflops-sd.html" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar cuestionario</a>
-      </div>
-
-      <!-- Taller Integral · Matemáticas Básicas (50 preguntas) -->
-      <div class="form-card">
-        <h3>Taller Integral · Matemáticas Básicas</h3>
-        <div class="purpose"><i class="fas fa-square-root-variable"></i> Propósito: Refuerzo extenso</div>
-        <p>50 preguntas distribuidas en 10 temas de factorización, fracciones algebraicas y radicales (20 fáciles, 20 medias, 10 difíciles). Cada pregunta muestra el procedimiento al responder. Ideal para estudio autónomo en casa.</p>
-        <a href="mate-eva1/taller-mate.html" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar taller</a>
-      </div>
-
-      <!-- Taller Express · Matemáticas Básicas (10 aleatorias) -->
-      <div class="form-card">
-        <h3>Taller Express · Matemáticas Básicas</h3>
-        <div class="purpose"><i class="fas fa-square-root-variable"></i> Propósito: Quiz de práctica</div>
-        <p>10 preguntas aleatorias seleccionadas de un banco de 50 (2 fáciles, 4 medias, 4 difíciles). Cada intento es distinto — ideal para autoevaluación rápida en clase. Cada pregunta muestra el procedimiento al responder.</p>
-        <a href="mate-eva1/taller-10.html" class="btn-access"><i class="fas fa-play-circle"></i> Iniciar taller</a>
-      </div>
-
-    </div>
-
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+    </section>
 
   </main>
 
-  <footer>
-    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../index.html">Inicio</a><a href="../blog/index.html">Blog</a><a href="../proyectos/index.html">Proyectos</a><a href="../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../training/index.html">Capacitación</a><a href="../cv/index.html">Currículum</a><a href="../forms/index.html">Formularios</a><a href="../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
   </footer>
 
 </body>

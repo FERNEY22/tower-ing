@@ -1,262 +1,125 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8">
   <title>Capacitación - Towers Ing</title>
   <meta name="description" content="Cursos y talleres en habilidades colaborativas, ingeniería de equipos y desarrollo personal.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .training-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 30px;
-      margin-top: 30px;
-    }
-
-    .course-card {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .course-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    .course-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 5px;
-      height: 100%;
-      background: #9b59b6;
-    }
-    .course-card h3 {
-      color: #1a2a6c;
-      margin-bottom: 10px;
-      font-size: 1.4rem;
-    }
-    .course-card .meta {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 15px;
-      font-size: 0.9rem;
-      color: #7f8c8d;
-    }
-    .course-card .meta span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .course-card p {
-      margin-bottom: 20px;
-      color: #555;
-    }
-    .btn-info {
-      display: inline-block;
-      padding: 10px 25px;
-      background: #9b59b6;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-info:hover {
-      background: #8e44ad;
-    }
-
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .back-home:hover {
-      background: #2980b9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-graduation-cap"></i> Cursos y Talleres</h1>
-      <p>Capacitación en habilidades colaborativas, ingeniería de equipos y desarrollo personal técnico.</p>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html">Proyectos</a>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
     </div>
   </header>
 
-  <main>
+  <main class="shell">
 
-    <div class="training-grid">
+    <section class="page-head">
+      <span class="kicker">Capacitación</span>
+      <h1>Cursos y <em>talleres</em></h1>
+      <p>Capacitación en habilidades colaborativas, ingeniería de equipos y desarrollo personal técnico. Metodología práctica, con datos reales y entregables de portafolio.</p>
+    </section>
 
-      <!-- Curso 1 -->
-      <div class="course-card">
-        <h3>Identificación y Gestión de Roles en Equipos Técnicos</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 8 horas</span>
-          <span><i class="fas fa-signal"></i> Intermedio</span>
-        </div>
-        <p>Aprende a identificar los roles naturales en tu equipo y cómo gestionarlos para maximizar la productividad y el bienestar grupal.</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+    <section class="section" style="padding-top:8px;">
+      <div class="section-head">
+        <h2>Catálogo <em>abierto</em></h2>
+        <span class="meta">08 cursos</span>
       </div>
 
-      <!-- Curso 2 -->
-      <div class="course-card">
-        <h3>Formación de Grupos Equilibrados: Metodología y Práctica</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 6 horas</span>
-          <span><i class="fas fa-signal"></i> Básico</span>
-        </div>
-        <p>Domina el algoritmo de formación de grupos equilibrados. Aprende a aplicarlo en clases, proyectos y entornos laborales.</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="meta"><span>8 h</span><span>·</span><span>Intermedio</span></div>
+          <h3>Identificación y gestión de roles en equipos técnicos</h3>
+          <p class="desc">Aprende a identificar los roles naturales en tu equipo y cómo gestionarlos para maximizar la productividad y el bienestar grupal.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>6 h</span><span>·</span><span>Básico</span></div>
+          <h3>Formación de grupos equilibrados: metodología y práctica</h3>
+          <p class="desc">Domina el algoritmo de formación de grupos equilibrados. Aprende a aplicarlo en clases, proyectos y entornos laborales.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>10 h</span><span>·</span><span>Intermedio</span></div>
+          <h3>Comunicación efectiva en equipos de ingeniería</h3>
+          <p class="desc">Herramientas y técnicas para mejorar la comunicación, resolver conflictos y fomentar la colaboración en equipos técnicos.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>12 h</span><span>·</span><span>Avanzado</span></div>
+          <h3>Liderazgo colaborativo sin jerarquías</h3>
+          <p class="desc">Desarrolla habilidades de liderazgo horizontal. Aprende a coordinar sin autoridad formal, motivando y facilitando el trabajo colectivo.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>8 h</span><span>·</span><span>Básico</span></div>
+          <h3>Dashboard y visualización de datos para equipos</h3>
+          <p class="desc">Crea dashboards simples para monitorear el desempeño de tu equipo. Usa HTML, CSS y JavaScript. ¡Sin frameworks!</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <article class="card">
+          <div class="meta"><span>6 h</span><span>·</span><span>Básico</span></div>
+          <h3>Autoconocimiento técnico y plan de desarrollo personal</h3>
+          <p class="desc">Identifica tus fortalezas y áreas de mejora. Construye un plan personalizado de crecimiento profesional en entornos técnicos.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </article>
+
+        <a class="card" href="accion-climatica/index.html">
+          <div class="meta"><span>32 h</span><span>·</span><span>Intermedio</span><span class="estado estado-desarrollo" style="margin-left:auto">Disponible</span></div>
+          <h3>Acción climática: diagnóstico y soluciones desde la ingeniería</h3>
+          <p class="desc">Comprende la crisis climática con datos reales, diagnostica un territorio colombiano y propone soluciones técnicas concretas. Metodología de caso acumulativo: 8 semanas, 2 entregables de portafolio.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="tgs/index.html">
+          <div class="meta"><span>48 h</span><span>·</span><span>Intermedio</span><span class="estado estado-desarrollo" style="margin-left:auto">Disponible</span></div>
+          <h3>Tecnologías geoespaciales</h3>
+          <p class="desc">SIG, teledetección y análisis espacial aplicados a ingeniería. Usa QGIS y Google Earth Engine para diagnosticar territorios, clasificar coberturas y apoyar decisiones técnicas con datos reales.</p>
+          <span class="card-link">Más información <span class="arrow">→</span></span>
+        </a>
+
       </div>
-
-      <!-- Curso 3 -->
-      <div class="course-card">
-        <h3>Comunicación Efectiva en Equipos de Ingeniería</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 10 horas</span>
-          <span><i class="fas fa-signal"></i> Intermedio</span>
-        </div>
-        <p>Herramientas y técnicas para mejorar la comunicación, resolver conflictos y fomentar la colaboración en equipos técnicos.</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-      <!-- Curso 4 -->
-      <div class="course-card">
-        <h3>Liderazgo Colaborativo sin Jerarquías</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 12 horas</span>
-          <span><i class="fas fa-signal"></i> Avanzado</span>
-        </div>
-        <p>Desarrolla habilidades de liderazgo horizontal. Aprende a coordinar sin autoridad formal, motivando y facilitando el trabajo colectivo.</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-      <!-- Curso 5 -->
-      <div class="course-card">
-        <h3>Dashboard y Visualización de Datos para Equipos</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 8 horas</span>
-          <span><i class="fas fa-signal"></i> Básico</span>
-        </div>
-        <p>Crea dashboards simples para monitorear el desempeño de tu equipo. Usa HTML, CSS y JavaScript. ¡Sin frameworks!</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-      <!-- Curso 6 -->
-      <div class="course-card">
-        <h3>Autoconocimiento Técnico y Plan de Desarrollo Personal</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 6 horas</span>
-          <span><i class="fas fa-signal"></i> Básico</span>
-        </div>
-        <p>Identifica tus fortalezas y áreas de mejora. Construye un plan personalizado de crecimiento profesional en entornos técnicos.</p>
-        <a href="#" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-      <!-- Curso 7: Acción Climática -->
-      <div class="course-card">
-        <h3>Acción Climática: Diagnóstico y Soluciones desde la Ingeniería</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 32 horas</span>
-          <span><i class="fas fa-signal"></i> Intermedio</span>
-        </div>
-        <p>Comprende la crisis climática con datos reales, diagnostica un territorio colombiano y propone soluciones técnicas concretas. Metodología de caso acumulativo: 8 semanas, 2 entregables de portafolio.</p>
-        <a href="accion-climatica/" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-      <!-- Curso 8: Tecnologías Geoespaciales -->
-      <div class="course-card">
-        <h3>Tecnologías Geoespaciales</h3>
-        <div class="meta">
-          <span><i class="fas fa-clock"></i> 48 horas</span>
-          <span><i class="fas fa-signal"></i> Intermedio</span>
-        </div>
-        <p>SIG, teledetección y análisis espacial aplicados a ingeniería. Usa QGIS y Google Earth Engine para diagnosticar territorios, clasificar coberturas y apoyar decisiones técnicas con datos reales.</p>
-        <a href="tgs/" class="btn-info"><i class="fas fa-info-circle"></i> Más información</a>
-      </div>
-
-    </div>
-
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+    </section>
 
   </main>
 
-  <footer>
-    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../index.html">Inicio</a><a href="../blog/index.html">Blog</a><a href="../proyectos/index.html">Proyectos</a><a href="../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../training/index.html">Capacitación</a><a href="../cv/index.html">Currículum</a><a href="../forms/index.html">Formularios</a><a href="../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
   </footer>
 
 </body>
