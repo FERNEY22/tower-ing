@@ -1,244 +1,132 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8">
   <title>Blog - Towers Ing</title>
   <meta name="description" content="Artículos técnicos, educativos y de ingeniería. Proyectos, análisis y metodologías colaborativas.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .post-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 30px;
-    }
-
-    .post-card {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    .post-card h3 {
-      color: #1a2a6c;
-      margin-bottom: 10px;
-      font-size: 1.3rem;
-    }
-    .post-card .meta {
-      font-size: 0.9rem;
-      color: #7f8c8d;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .post-card p {
-      margin-bottom: 20px;
-      color: #555;
-    }
-    .post-card a {
-      color: #3498db;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .post-card a:hover {
-      text-decoration: underline;
-    }
-
-    .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .back-home:hover {
-      background: #2980b9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-book-open"></i> Blog Técnico & Educativo</h1>
-      <p>Artículos, análisis y reflexiones sobre ingeniería, tecnología y aprendizaje colaborativo.</p>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html">Proyectos</a>
+        <a href="../blog/index.html" class="active">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
     </div>
   </header>
 
-  <main>
+  <main class="shell">
 
-    <div class="post-grid">
+    <section class="page-head">
+      <span class="kicker">Bitácora</span>
+      <h1>Blog técnico &amp; <em>educativo</em></h1>
+      <p>Artículos, análisis y reflexiones sobre ingeniería, tecnología y aprendizaje colaborativo. Notas de laboratorio, guías y proyectos en marcha.</p>
+    </section>
 
-      <div class="post-card">
-        <h3>¿Cómo identificar tu rol en un equipo técnico?</h3>
-        <div class="meta">
-          <i class="fas fa-calendar"></i> 5 Abr 2025
-          <i class="fas fa-user"></i> Towers Ing
-        </div>
-        <p>Descubre cómo el análisis de comportamientos y habilidades puede ayudarte a encontrar tu rol ideal en proyectos de ingeniería.</p>
-        <a href="#">Leer más <i class="fas fa-arrow-right"></i></a>
+    <section class="section" style="padding-top:8px;">
+      <div class="section-head">
+        <h2>Últimas <em>publicaciones</em></h2>
+        <span class="meta">09 artículos</span>
       </div>
 
-      <div class="post-card">
-        <h3>Herramientas para la gestión de equipos colaborativos</h3>
-        <div class="meta">
-          <i class="fas fa-calendar"></i> 3 Abr 2025
-          <i class="fas fa-user"></i> Towers Ing
-        </div>
-        <p>Comparativa de herramientas digitales para coordinar, comunicar y analizar el desempeño de equipos técnicos.</p>
-        <a href="#">Leer más <i class="fas fa-arrow-right"></i></a>
+      <div class="card-grid">
+
+        <a class="card" href="flipflops.html">
+          <div class="meta"><span>16 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>Flip-Flops y circuitos secuenciales</h3>
+          <p class="desc">Guía teórica + simulación con 6 bloques: SR, D, JK, T, tablas de excitación y diseño de contadores. Incluye ejercicios con Logisim.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="deco-digitales.html">
+          <div class="meta"><span>9 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>MUX, decodificadores &amp; ALU</h3>
+          <p class="desc">Guía de laboratorio: funciones booleanas con MUX 8:1 (74LS151), decodificador 3:8 (74LS138) y ALU de 4 bits (74LS181). Simulación en Logisim y montaje en protoboard.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="electronema1.html">
+          <div class="meta"><span>9 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>Electroneumática — Guía 1: banco MiCRO</h3>
+          <p class="desc">Guía interactiva de laboratorio para el montaje de circuitos electroneumáticos con cilindros, válvulas y banco Festo/MiCRO. Incluye lista de verificación y registro de datos.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="electro-motor.html">
+          <div class="meta"><span>9 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>Electrónica — Lab 03: control de motor DC con BJT</h3>
+          <p class="desc">Guía sobre control de potencia con transistor BJT: saturación, corte, protección contra FEM inversa con diodo flyback y análisis de la carga inductiva en motores DC.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="ferinmobiliaria-marco-teorico.html">
+          <div class="meta"><span>8 DIC 2025</span><span>· Towers Ing</span></div>
+          <h3>Marco teórico Ferinmobiliaria</h3>
+          <p class="desc">Imagina una plataforma donde propietarios, inquilinos y técnicos de mantenimiento trabajen en armonía, con transparencia total y asistencia automatizada las 24 horas.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="ferinmobiliaria.html">
+          <div class="meta"><span>7 DIC 2025</span><span>· Towers Ing</span></div>
+          <h3>Ferinmobiliaria — plataforma inteligente</h3>
+          <p class="desc">El proyecto busca diseñar e implementar una plataforma web inteligente orientada a optimizar la gestión integral de inmuebles mediante herramientas tecnológicas avanzadas.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="#">
+          <div class="meta"><span>5 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>¿Cómo identificar tu rol en un equipo técnico?</h3>
+          <p class="desc">Descubre cómo el análisis de comportamientos y habilidades puede ayudarte a encontrar tu rol ideal en proyectos de ingeniería.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="#">
+          <div class="meta"><span>3 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>Herramientas para equipos colaborativos</h3>
+          <p class="desc">Comparativa de herramientas digitales para coordinar, comunicar y analizar el desempeño de equipos técnicos.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
+        <a class="card" href="#">
+          <div class="meta"><span>1 ABR 2025</span><span>· Towers Ing</span></div>
+          <h3>Formación de grupos equilibrados: una metodología probada</h3>
+          <p class="desc">Detalles del algoritmo usado en nuestro formulario para asignar roles y conformar grupos con equilibrio de habilidades.</p>
+          <span class="card-link">Leer más <span class="arrow">→</span></span>
+        </a>
+
       </div>
-
-      <div class="post-card">
-        <h3>Formación de grupos equilibrados: una metodología probada</h3>
-        <div class="meta">
-          <i class="fas fa-calendar"></i> 1 Abr 2025
-          <i class="fas fa-user"></i> Towers Ing
-        </div>
-        <p>Detalles del algoritmo usado en nuestro formulario para asignar roles y conformar grupos con equilibrio de habilidades.</p>
-        <a href="#">Leer más <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-<div class="post-card">
-  <h3>Ferinmobiliaria - Plataforma Inteligente para Gestión Inmobiliaria</h3>
-  <div class="meta">
-    <i class="fas fa-calendar"></i> 7 Dic 2025
-    <i class="fas fa-user"></i> Towers Ing
-  </div>
-  <p>El proyecto propuesto tiene como finalidad diseñar e implementar una plataforma web inteligente orientada a optimizar la gestión integral de inmuebles, mediante herramientas tecnológicas avanzadas.</p>
-  <a href="ferinmobiliaria.html">Leer más <i class="fas fa-arrow-right"></i></a>
-</div>
-
-<div class="post-card">
-  <h3>Marco teórico Ferinmobiliaria - Plataforma Inteligente para Gestión Inmobiliaria</h3>
-  <div class="meta">
-    <i class="fas fa-calendar"></i> 8 Dic 2025
-    <i class="fas fa-user"></i> Towers Ing
-  </div>
-  <p>Imagina una plataforma donde propietarios, inquilinos y técnicos de mantenimiento trabajen en armonía, sin conflictos, con transparencia total y asistencia automatizada las 24 horas.</p>
-  <a href="ferinmobiliaria-marco-teorico.html">Leer más <i class="fas fa-arrow-right"></i></a>
-</div>
-
-<div class="post-card">
-  <h3>MUX, Decodificadores &amp; ALU — Circuitos Combinacionales</h3>
-  <div class="meta">
-    <i class="fas fa-calendar"></i> 9 Abr 2025
-    <i class="fas fa-user"></i> Towers Ing
-  </div>
-  <p>Guía de laboratorio: implementación de funciones booleanas con MUX 8:1 (74LS151), decodificador 3:8 (74LS138) y ALU de 4 bits (74LS181). Simulación en Logisim y montaje en protoboard.</p>
-  <a href="deco-digitales.html">Leer más <i class="fas fa-arrow-right"></i></a>
-</div>
-
-<div class="post-card">
-  <h3>Electroneumática — Guía No. 1: Montaje Físico en Banco MiCRO</h3>
-  <div class="meta">
-    <i class="fas fa-calendar"></i> 9 Abr 2025
-    <i class="fas fa-user"></i> Towers Ing
-  </div>
-  <p>Guía interactiva de laboratorio para el montaje de circuitos electroneumáticos con cilindros, válvulas y banco Festo/MiCRO. Incluye lista de verificación, procedimiento paso a paso y registro de datos.</p>
-  <a href="electronema1.html">Leer más <i class="fas fa-arrow-right"></i></a>
-</div>
-
-<div class="post-card">
-  <h3>Electrónica — Lab 03: Control de Motor DC con BJT</h3>
-  <div class="meta">
-    <i class="fas fa-calendar"></i> 9 Abr 2025
-    <i class="fas fa-user"></i> Towers Ing
-  </div>
-  <p>Guía de laboratorio sobre control de potencia con transistor BJT: saturación, corte, protección contra FEM inversa con diodo flyback y análisis de la carga inductiva en motores DC.</p>
-  <a href="electro-motor.html">Leer más <i class="fas fa-arrow-right"></i></a>
-</div>
-
-
-<!-- Flip-Flops y Circuitos Secuenciales -->
-  <div class="post-card">
-    <h3>Flip-Flops y Circuitos Secuenciales</h3>
-    <div class="meta">
-      <i class="fas fa-calendar"></i> 16 Abr 2025
-      <i class="fas fa-user"></i> Towers Ing
-    </div>
-    <p>Guía teórica + simulación con 6 bloques: SR, D, JK, T, tablas de excitación y diseño de contadores. Incluye ejercicios con Logisim.</p>
-    <a href="flipflops.html">Leer más <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-    <a href="../index.html" class="back-home"><i class="fas fa-home"></i> Volver al Inicio</a>
+    </section>
 
   </main>
 
-  <footer>
-    <p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p>
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../index.html">Inicio</a><a href="../blog/index.html">Blog</a><a href="../proyectos/index.html">Proyectos</a><a href="../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../training/index.html">Capacitación</a><a href="../cv/index.html">Currículum</a><a href="../forms/index.html">Formularios</a><a href="../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
   </footer>
 
 </body>
