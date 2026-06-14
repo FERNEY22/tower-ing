@@ -1,7 +1,0 @@
-[[edge_functions]]
-  path = "/dashboard/*"
-  function = "auth"
-
-[[edge_functions]]
-  path = "/proyectos/*"
-  function = "auth"
