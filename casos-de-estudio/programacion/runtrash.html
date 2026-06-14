@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RunTrash · Programación de software – Towers Ing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles/towers.css">
+
+  <!-- Caso de estudio · estilos de página (scoped) — reutilizan los tokens de towers.css, no tocan la hoja compartida -->
+  <style>
+    .cs-wrap { display:grid; grid-template-columns: 236px minmax(0,1fr); gap: clamp(28px,5vw,64px); align-items:start; padding-top: 8px; }
+
+    /* Índice lateral = control de pestañas (mismo aspecto) */
+    .cs-index { position: sticky; top: 84px; }
+    .cs-index .cs-il-label { font-family:var(--font-mono); font-size:var(--t-xs); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:12px; }
+    .cs-index ol { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px; counter-reset: idx; }
+    .cs-index li { display:flex; }
+    .cs-index a { flex:1; display:flex; gap:9px; padding:6px 12px; font-size:var(--t-sm); color:var(--ink-2); border-left:2px solid transparent; cursor:pointer; transition: color .2s, background .2s, border-color .2s; }
+    .cs-index a::before { counter-increment: idx; content: counter(idx,decimal-leading-zero); font-family:var(--font-mono); font-size:10px; color:var(--ink-3); padding-top:2px; }
+    .cs-index a:hover { color:var(--ink); background:var(--paper-2); }
+    .cs-index a.active { color:var(--electric-ink); border-left-color:var(--electric); background:var(--electric-soft); font-weight:600; }
+    .cs-index a.active::before { color:var(--electric-ink); }
+    .cs-index a:focus-visible { outline:2px solid var(--electric); outline-offset:-2px; }
+
+    /* Panel de pestaña + transición de aparición */
+    .cs-content .cs-panel { padding: 4px 0 14px; }
+    .cs-panel[hidden] { display:none; }
+    .cs-panel:focus { outline:none; }
+    .cs-panel.cs-anim { animation: csfade .32s var(--ease) both; }
+    @keyframes csfade { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+
+    /* Bloques de prosa */
+    .cs-prose { max-width: 70ch; color: var(--ink-2); }
+    .cs-prose + .cs-prose { margin-top: 14px; }
+    .cs-content h3 { font-size: var(--t-lg); margin-top: 22px; }
+    .cs-list { max-width: 72ch; margin: 12px 0 0; padding-left: 1.25rem; color: var(--ink-2); }
+    .cs-list li { margin-bottom: 6px; }
+
+    /* Apilado de tarjetas de contenido dentro de un panel */
+    .cs-stack { display:flex; flex-direction:column; gap:14px; }
+
+    /* Decks de tarjetas (requerimientos / casos de uso / historias) */
+    .cs-cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(282px,1fr)); gap:12px; }
+    .cs-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px; display:flex; flex-direction:column; gap:7px; transition: border-color .2s, box-shadow .25s var(--ease), transform .25s var(--ease); }
+    .cs-card:hover { border-color:var(--line-2); box-shadow:var(--shadow-sm); transform:translateY(-2px); }
+    .cs-card .cs-code { font-family:var(--font-mono); font-size:var(--t-xs); color:var(--electric-ink); letter-spacing:.04em; }
+    .cs-card h4 { font-family:var(--font-display); font-weight:var(--display-weight); font-size:var(--t-base); letter-spacing:-0.01em; line-height:1.25; }
+    .cs-card p { color:var(--ink-2); font-size:var(--t-sm); line-height:1.55; margin:0; }
+    .cs-card .cs-accept { color:var(--ink-3); font-size:var(--t-xs); line-height:1.5; }
+    .cs-card .cs-foot { margin-top:auto; padding-top:8px; display:flex; gap:7px; align-items:center; flex-wrap:wrap; }
+    .cs-prio { font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:2px 9px; border-radius:var(--r-pill); }
+    .cs-prio-esencial { background:var(--electric-soft); color:var(--electric-ink); }
+    .cs-prio-alta { background:var(--warn-soft); color:var(--warn); }
+    .cs-prio-media { background:var(--paper-2); color:var(--ink-3); }
+    .cs-meta-tag { font-family:var(--font-mono); font-size:10px; letter-spacing:.03em; color:var(--ink-3); }
+    .cs-actor { font-size:var(--t-xs); font-weight:500; color:var(--ink-2); background:var(--paper-2); border:1px solid var(--line); padding:2px 9px; border-radius:var(--r-pill); }
+    .cs-link { font-family:var(--font-mono); font-size:10px; color:var(--electric-ink); background:var(--electric-soft); padding:2px 7px; border-radius:var(--r-pill); }
+
+    /* Variante "bloque de contenido": misma tarjeta, sin elevación al hover, más aire */
+    .cs-card.cs-block { gap:0; padding: clamp(20px,3vw,28px); }
+    .cs-card.cs-block:hover { transform:none; box-shadow:none; border-color:var(--line); }
+    .cs-card.cs-block > :first-child { margin-top:0; }
+    .cs-card.cs-block .table-wrap { margin:0; }
+
+    /* Tira de cifras con conteo animado (sección Problema) */
+    .cs-stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(158px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; margin:0 0 14px; }
+    .cs-stat { background:var(--surface); padding:18px 20px; }
+    .cs-stat .cs-n { font-family:var(--font-display); font-weight:var(--display-weight); font-size:clamp(26px,3.2vw,40px); line-height:1; letter-spacing:-0.02em; color:var(--ink); font-variant-numeric:tabular-nums; }
+    .cs-stat .cs-n .u { color:var(--electric-ink); }
+    .cs-stat .cs-l { color:var(--ink-3); font-size:var(--t-xs); margin-top:9px; line-height:1.4; }
+
+    /* Diagrama de arquitectura — flujo por capas (sección Arquitectura) */
+    .cs-arch { margin:16px 0; display:flex; flex-direction:column; align-items:stretch; gap:0; }
+    .cs-arch-cap { font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
+    .cs-arch-row { display:grid; gap:12px; }
+    .cs-arch-arrow { justify-self:center; color:var(--electric-ink); font-size:18px; line-height:1; padding:10px 0; opacity:.7; }
+    .cs-node { background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px; transition: border-color .2s, box-shadow .25s var(--ease), transform .25s var(--ease); }
+    .cs-node:hover { border-color:var(--electric); box-shadow:var(--shadow-sm); transform:translateY(-2px); }
+    .cs-node .an-k { font-family:var(--font-mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--electric-ink); }
+    .cs-node h4 { font-size:var(--t-base); font-weight:var(--display-weight); margin:5px 0 4px; letter-spacing:-0.01em; }
+    .cs-node p { font-size:var(--t-xs); color:var(--ink-2); line-height:1.5; margin:0; }
+    .cs-node.core { border-color:var(--electric); background:linear-gradient(135deg, var(--electric-soft), transparent 60%), var(--surface); }
+
+    @media (max-width: 940px) {
+      .cs-wrap { grid-template-columns: 1fr; gap: 8px; }
+      .cs-index { position: static; top:auto; margin-bottom: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+      .cs-index ol { flex-direction:row; flex-wrap:wrap; gap:2px; }
+      .cs-index li { flex:0 0 auto; }
+      .cs-index a { border-left:0; border-radius: var(--r-pill); padding: 5px 11px; }
+      .cs-index a.active { border-left:0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cs-panel.cs-anim { animation:none; }
+      .cs-card, .cs-node { transition:none; }
+    }
+  </style>
+  <noscript><style>.cs-panel[hidden]{display:block !important;}</style></noscript>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../../index.html">Inicio</a>
+        <a href="../../proyectos/index.html">Proyectos</a>
+        <a href="../../blog/index.html">Blog</a>
+        <a href="../../dashboard/index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <section class="page-head">
+      <span class="kicker">Caso de estudio · Programación de software</span>
+      <h1>Run<em>Trash</em></h1>
+      <p>Prototipo de aplicación móvil para el reporte y la optimización de la recolección de residuos en Bogotá.</p>
+      <div class="tags" style="margin-top:20px;">
+        <span class="estado estado-prototipo">Prototipo</span>
+        <span class="tag">Bogotá D. C., Colombia · 2026</span>
+        <span class="tag">App móvil</span>
+        <span class="tag">Geolocalización</span>
+        <span class="tag">Rutas optimizadas</span>
+        <span class="tag">Participación ciudadana</span>
+      </div>
+    </section>
+
+    <div class="cs-wrap">
+
+      <!-- Índice lateral = pestañas -->
+      <aside class="cs-index">
+        <div class="cs-il-label" id="cs-tabs-label">Contenido</div>
+        <nav>
+          <ol role="tablist" aria-orientation="vertical" aria-labelledby="cs-tabs-label">
+            <li role="presentation"><a role="tab" id="tab-video" href="#video" aria-controls="video" aria-selected="true" tabindex="0">Video</a></li>
+            <li role="presentation"><a role="tab" id="tab-resumen" href="#resumen" aria-controls="resumen" aria-selected="false" tabindex="-1">Resumen</a></li>
+            <li role="presentation"><a role="tab" id="tab-problema" href="#problema" aria-controls="problema" aria-selected="false" tabindex="-1">Problema</a></li>
+            <li role="presentation"><a role="tab" id="tab-objetivos" href="#objetivos" aria-controls="objetivos" aria-selected="false" tabindex="-1">Objetivos</a></li>
+            <li role="presentation"><a role="tab" id="tab-alcance" href="#alcance" aria-controls="alcance" aria-selected="false" tabindex="-1">Alcance</a></li>
+            <li role="presentation"><a role="tab" id="tab-limitaciones" href="#limitaciones" aria-controls="limitaciones" aria-selected="false" tabindex="-1">Limitaciones</a></li>
+            <li role="presentation"><a role="tab" id="tab-stakeholders" href="#stakeholders" aria-controls="stakeholders" aria-selected="false" tabindex="-1">Stakeholders</a></li>
+            <li role="presentation"><a role="tab" id="tab-rf" href="#rf" aria-controls="rf" aria-selected="false" tabindex="-1">Req. funcionales</a></li>
+            <li role="presentation"><a role="tab" id="tab-rnf" href="#rnf" aria-controls="rnf" aria-selected="false" tabindex="-1">Req. no funcionales</a></li>
+            <li role="presentation"><a role="tab" id="tab-casos-uso" href="#casos-uso" aria-controls="casos-uso" aria-selected="false" tabindex="-1">Casos de uso</a></li>
+            <li role="presentation"><a role="tab" id="tab-arquitectura" href="#arquitectura" aria-controls="arquitectura" aria-selected="false" tabindex="-1">Arquitectura</a></li>
+            <li role="presentation"><a role="tab" id="tab-historias" href="#historias" aria-controls="historias" aria-selected="false" tabindex="-1">Historias de usuario</a></li>
+            <li role="presentation"><a role="tab" id="tab-resultados" href="#resultados" aria-controls="resultados" aria-selected="false" tabindex="-1">Resultados</a></li>
+            <li role="presentation"><a role="tab" id="tab-conclusiones" href="#conclusiones" aria-controls="conclusiones" aria-selected="false" tabindex="-1">Conclusiones</a></li>
+            <li role="presentation"><a role="tab" id="tab-referencias" href="#referencias" aria-controls="referencias" aria-selected="false" tabindex="-1">Referencias</a></li>
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="cs-content">
+
+        <section class="section cs-panel" id="video" role="tabpanel" aria-labelledby="tab-video" tabindex="0">
+          <div class="section-head"><h2>Video</h2><span class="meta">Demostración</span></div>
+          <div style="position:relative; padding-top:56.25%; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--surface);">
+            <iframe src="https://www.youtube.com/embed/swVa2syFkgo" title="RunTrash · Demostración"
+              style="position:absolute; inset:0; width:100%; height:100%; border:0;"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="resumen" role="tabpanel" aria-labelledby="tab-resumen" tabindex="0" hidden>
+          <div class="section-head"><h2>Resumen</h2></div>
+          <div class="cs-card cs-block">
+            <p class="cs-prose">RunTrash es una propuesta de prototipo funcional orientada a mejorar la gestión de reportes ciudadanos sobre acumulación de residuos en Bogotá. La solución plantea una aplicación móvil que permite registrar reportes geolocalizados con evidencia fotográfica, descripción breve y seguimiento del estado de atención. A partir de esta información, el sistema asigna reportes a operadores de recolección, genera notificaciones, calcula estadísticas por sector en periodos de 15 días y propone rutas optimizadas para reducir tiempos y recorridos. El proyecto se formula como una solución académica de apoyo a la participación ciudadana y a la toma de decisiones operativas, sin sustituir los sistemas oficiales del Distrito.</p>
+            <p class="cs-prose" style="color:var(--ink-3); font-size:var(--t-sm); margin-top:14px;"><strong>Palabras clave:</strong> residuos sólidos, geolocalización, aplicación móvil, Bogotá, rutas optimizadas, participación ciudadana.</p>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="problema" role="tabpanel" aria-labelledby="tab-problema" tabindex="0" hidden>
+          <div class="section-head"><h2>Planteamiento del <em>problema</em></h2></div>
+          <div class="cs-stats">
+            <div class="cs-stat"><div class="cs-n" data-to="36" data-suffix="%">36<span class="u">%</span></div><div class="cs-l">Aumento de quejas por aseo entre 2024 y 2025</div></div>
+            <div class="cs-stat"><div class="cs-n" data-to="80000" data-prefix="+"><span class="u">+</span>80.000</div><div class="cs-l">Reclamaciones por el servicio de aseo</div></div>
+            <div class="cs-stat"><div class="cs-n" data-to="4603893">4.603.893</div><div class="cs-l">Toneladas de residuos generadas en Bogotá (2025)</div></div>
+            <div class="cs-stat"><div class="cs-n" data-to="320374">320.374</div><div class="cs-l">Toneladas gestionadas en puntos críticos (UAESP)</div></div>
+          </div>
+          <div class="cs-stack">
+            <div class="cs-card cs-block">
+              <p class="cs-prose">La acumulación de residuos en calles, postes, callejones, esquinas y puntos críticos de Bogotá constituye un problema urbano que afecta la salubridad, la movilidad peatonal, la percepción de seguridad y la calidad del espacio público. En los últimos años, la ciudad ha enfrentado un aumento en el arrojo clandestino de residuos y en los reclamos ciudadanos relacionados con el servicio de aseo. De acuerdo con reportes del Concejo de Bogotá, entre 2024 y 2025 las quejas y reclamos por el servicio de aseo aumentaron 36 % y superaron las 80.000 reclamaciones, con mayor afectación en localidades como Suba, Kennedy, Usaquén y Engativá (Concejo de Bogotá, 2026a).</p>
+              <p class="cs-prose">El diagnóstico también evidencia una presión creciente sobre la operación de recolección. En 2025, Bogotá generó 4.603.893 toneladas de residuos, de las cuales 2.416.061 fueron dispuestas en el relleno sanitario y 2.187.831 fueron aprovechadas, según cifras presentadas en el Concejo de Bogotá (2026b). De forma complementaria, la UAESP reportó la gestión de 320.374 toneladas de residuos en puntos críticos y zonas de arrojo clandestino durante 2025, lo que refleja la magnitud operativa del problema (UAESP, 2025).</p>
+              <p class="cs-prose">Aunque existen canales ciudadanos para reportar situaciones relacionadas con el aseo, el problema persiste por la falta de integración entre reportes geolocalizados, analítica territorial, asignación automática a operadores y generación de rutas optimizadas. En consecuencia, los reportes pueden quedar dispersos, duplicados o atendidos sin priorización clara, lo que incrementa costos, tiempos de respuesta y percepción negativa de los ciudadanos.</p>
+            </div>
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Problemas identificados</h3>
+              <ul class="cs-list">
+                <li>Canales de reporte poco integrados, con baja trazabilidad para el ciudadano y limitada analítica operativa.</li>
+                <li>Ausencia de información agregada por sector en periodos cortos, como los últimos 15 días, para priorizar zonas críticas.</li>
+                <li>Asignación manual o poco automatizada de reportes a operadores de recolección según localidad o sector.</li>
+                <li>Rutas de atención subóptimas que pueden aumentar recorridos, tiempos de respuesta y costos operativos.</li>
+                <li>Impactos sanitarios y ambientales derivados de acumulaciones prolongadas de residuos en el espacio público.</li>
+                <li>Baja visibilidad del historial de reportes y del estado de atención para ciudadanos y empresas responsables.</li>
+              </ul>
+            </div>
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Justificación de la solución</h3>
+              <p class="cs-prose" style="margin-top:12px;">RunTrash propone integrar participación ciudadana, geolocalización, evidencias fotográficas, notificaciones y análisis de datos en una misma plataforma. La solución permitiría transformar reportes aislados en información útil para tomar decisiones, priorizar sectores, asignar recursos y generar recorridos más eficientes. Al tratarse de un prototipo académico, el sistema no pretende reemplazar plataformas oficiales, sino demostrar cómo una arquitectura digital puede apoyar la gestión de residuos urbanos desde un enfoque de datos y optimización.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="objetivos" role="tabpanel" aria-labelledby="tab-objetivos" tabindex="0" hidden>
+          <div class="section-head"><h2>Objetivos</h2></div>
+          <div class="cs-stack">
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Objetivo general</h3>
+              <p class="cs-prose" style="margin-top:12px;">Diseñar e implementar un prototipo funcional de aplicación móvil que permita a los ciudadanos reportar acumulación de residuos en Bogotá mediante geolocalización, imágenes y descripciones, integrando notificaciones automáticas a operadores de recolección, generación de rutas optimizadas y análisis de datos por sectores, con el fin de mejorar la eficiencia en la recolección, reducir impactos sanitarios y fomentar la participación ciudadana.</p>
+            </div>
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Objetivos específicos</h3>
+              <ul class="cs-list">
+                <li><strong>Identificar necesidades:</strong> de ciudadanos, operadores de recolección y entidades distritales en la gestión de residuos, definiendo funcionalidades clave como registro de reportes, seguimiento, notificaciones, estadísticas y optimización de rutas.</li>
+                <li><strong>Diseñar la solución:</strong> los flujos de usuario para el registro de reportes, visualización en mapa, gestión de estados, consulta de historial y generación de rutas óptimas, apoyados en prototipos funcionales.</li>
+                <li><strong>Desarrollar el prototipo:</strong> una aplicación móvil inicial que incorpore reportes con fotografía y GPS, notificaciones en tiempo real, visualización en mapa, estadísticas por sector y rutas optimizadas.</li>
+                <li><strong>Validar la utilidad operativa:</strong> evaluar el prototipo mediante escenarios simulados para verificar tiempos de respuesta, trazabilidad de reportes, asignación de operadores y generación de recorridos eficientes.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="alcance" role="tabpanel" aria-labelledby="tab-alcance" tabindex="0" hidden>
+          <div class="section-head"><h2>Alcance del <em>sistema</em></h2></div>
+          <div class="cs-stack">
+            <div class="cs-card cs-block">
+              <p class="cs-prose">El alcance de RunTrash se concentra en el desarrollo de un prototipo académico con funcionalidades esenciales para reportar, visualizar, asignar y analizar acumulaciones de residuos en Bogotá. La primera versión se enfoca en una aplicación móvil para Android, con posibilidad de adaptación posterior a iOS, y en una arquitectura backend capaz de gestionar reportes geolocalizados.</p>
+            </div>
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Funcionalidades principales</h3>
+              <ul class="cs-list">
+                <li>Registro de reportes con fotografía, ubicación GPS y descripción corta.</li>
+                <li>Visualización de reportes en un mapa interactivo.</li>
+                <li>Gestión de estados: pendiente, en proceso y resuelto.</li>
+                <li>Notificaciones automáticas a operadores o responsables de recolección.</li>
+                <li>Generación de rutas óptimas para la atención de reportes cercanos.</li>
+                <li>Estadísticas por sector en periodos de 15 días.</li>
+                <li>Historial de reportes por usuario.</li>
+                <li>Exportación de reportes en formatos PDF o Excel.</li>
+                <li>Base de datos para almacenar reportes, estados, evidencia y métricas agregadas.</li>
+              </ul>
+            </div>
+            <div class="cs-card cs-block">
+              <h3 style="margin-top:0;">Arquitectura incluida en el alcance</h3>
+              <ul class="cs-list">
+                <li>Frontend móvil para ciudadanos y operarios.</li>
+                <li>Backend mediante API para gestión de reportes, asignaciones y estados.</li>
+                <li>Base de datos para almacenamiento de reportes geolocalizados.</li>
+                <li>Integración con GPS y servicios de mapas.</li>
+                <li>Panel administrativo para consulta, supervisión y exportación de información.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="limitaciones" role="tabpanel" aria-labelledby="tab-limitaciones" tabindex="0" hidden>
+          <div class="section-head"><h2>Limitaciones</h2></div>
+          <div class="cs-card cs-block">
+            <ul class="cs-list" style="margin-top:0;">
+              <li>El prototipo no incluye pagos, multas ni sanciones automáticas.</li>
+              <li>La aplicación depende de conexión a internet, aunque se contempla un modo offline limitado para sincronización posterior.</li>
+              <li>La precisión del GPS puede variar según el dispositivo, la zona urbana y las condiciones de señal.</li>
+              <li>La primera versión no se integra con sistemas oficiales del Distrito ni con bases de datos reales de operadores.</li>
+              <li>La optimización de rutas se limita inicialmente a un número controlado de puntos, por ejemplo, hasta 50 reportes por cálculo.</li>
+              <li>La retención de datos se define en 90 días para efectos del prototipo.</li>
+              <li>Cada usuario se limita a cinco registros diarios con el fin de evitar saturación, duplicidad o uso indebido del sistema.</li>
+              <li>El sistema se desarrollará con fines académicos y demostrativos; por tanto, no constituye una plataforma oficial de atención ciudadana.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="stakeholders" role="tabpanel" aria-labelledby="tab-stakeholders" tabindex="0" hidden>
+          <div class="section-head"><h2>Stakeholders</h2><span class="meta">Tabla 1 · Mapa de stakeholders</span></div>
+          <div class="cs-card cs-block">
+            <div class="table-wrap">
+              <table class="dt">
+                <thead><tr><th>Stakeholder</th><th>Influencia</th><th>Interés</th><th>Necesidad o expectativa principal</th></tr></thead>
+                <tbody>
+                  <tr><td class="strong">Ciudadanos</td><td>Alta</td><td>Alta</td><td>Reportar puntos críticos, consultar estado de reportes y participar en la mejora del entorno urbano.</td></tr>
+                  <tr><td class="strong">Operarios de recolección</td><td>Alta</td><td>Alta</td><td>Recibir asignaciones, atender reportes y actualizar estados de servicio.</td></tr>
+                  <tr><td class="strong">Empresas de aseo</td><td>Alta</td><td>Alta</td><td>Gestionar cargas operativas, asignar cuadrillas y mejorar la trazabilidad de atención.</td></tr>
+                  <tr><td class="strong">Entidades distritales</td><td>Media</td><td>Alta</td><td>Analizar información agregada para priorizar zonas y fortalecer control institucional.</td></tr>
+                  <tr><td class="strong">Desarrolladores del sistema</td><td>Media</td><td>Media</td><td>Implementar, mantener y optimizar la aplicación y la plataforma de datos.</td></tr>
+                  <tr><td class="strong">Comunidad en general</td><td>Baja</td><td>Alta</td><td>Beneficiarse de una ciudad más limpia y de canales de participación más eficientes.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="rf" role="tabpanel" aria-labelledby="tab-rf" tabindex="0" hidden>
+          <div class="section-head"><h2>Requerimientos <em>funcionales</em></h2><span class="meta">10 requerimientos</span></div>
+          <div class="cs-cards">
+            <div class="cs-card"><span class="cs-code">RF-001</span><h4>Registrar reporte de basura</h4><p>Permitir que el ciudadano registre un reporte con fotografía, ubicación GPS y descripción textual de máximo 100 caracteres.</p><p class="cs-accept"><strong>Aceptación:</strong> el reporte queda almacenado con fecha, hora, estado inicial y evidencia fotográfica.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-002</span><h4>Geolocalización automática</h4><p>Capturar automáticamente la ubicación del reporte mediante el GPS del dispositivo móvil.</p><p class="cs-accept"><strong>Aceptación:</strong> la ubicación se guarda con coordenadas y precisión estimada.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-003</span><h4>Asignación por sector</h4><p>Asignar automáticamente cada reporte al operador correspondiente según localidad, zona o sector operativo.</p><p class="cs-accept"><strong>Aceptación:</strong> el operador responsable recibe el reporte asignado sin intervención manual.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-004</span><h4>Notificaciones inmediatas</h4><p>Enviar notificaciones a los operadores o responsables cuando se genere un nuevo reporte.</p><p class="cs-accept"><strong>Aceptación:</strong> la notificación se emite y queda registrada en el sistema.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-005</span><h4>Gestión de estado</h4><p>Permitir el cambio de estado del reporte: pendiente, en proceso o resuelto.</p><p class="cs-accept"><strong>Aceptación:</strong> el estado actualizado es visible para el ciudadano y el operador.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-006</span><h4>Estadísticas por sector</h4><p>Calcular promedios y estadísticas de reportes por localidad o sector en periodos de 15 días.</p><p class="cs-accept"><strong>Aceptación:</strong> el sistema muestra métricas agregadas por zona y rango de fechas.</p><div class="cs-foot"><span class="cs-prio cs-prio-media">Media</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-007</span><h4>Visualización en mapa</h4><p>Mostrar reportes registrados en un mapa interactivo con marcadores georreferenciados.</p><p class="cs-accept"><strong>Aceptación:</strong> los reportes aparecen filtrados por estado, fecha y sector.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-008</span><h4>Optimización de rutas</h4><p>Generar rutas óptimas agrupando reportes cercanos para reducir distancia y tiempos de recolección.</p><p class="cs-accept"><strong>Aceptación:</strong> la ruta sugerida ordena los puntos de atención de forma operativa.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-009</span><h4>Historial de reportes</h4><p>Permitir al usuario consultar los reportes enviados previamente y su estado actual.</p><p class="cs-accept"><strong>Aceptación:</strong> el historial muestra fecha, ubicación, descripción y estado.</p><div class="cs-foot"><span class="cs-prio cs-prio-media">Media</span></div></div>
+            <div class="cs-card"><span class="cs-code">RF-010</span><h4>Exportación de reportes</h4><p>Exportar reportes y estadísticas en formatos como PDF o Excel.</p><p class="cs-accept"><strong>Aceptación:</strong> el archivo exportado conserva filtros de fecha, sector y estado.</p><div class="cs-foot"><span class="cs-prio cs-prio-media">Media</span></div></div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="rnf" role="tabpanel" aria-labelledby="tab-rnf" tabindex="0" hidden>
+          <div class="section-head"><h2>Requerimientos <em>no funcionales</em></h2><span class="meta">10 requerimientos</span></div>
+          <div class="cs-cards">
+            <div class="cs-card"><span class="cs-code">RNF-001</span><h4>Tiempo de respuesta</h4><p>La aplicación debe responder en menos de 2 segundos por clic en condiciones normales de red.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Rendimiento</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-002</span><h4>Capacidad de reportes</h4><p>El sistema debe soportar 10.000 reportes mensuales sin degradación perceptible del servicio.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Escalabilidad</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-003</span><h4>Tiempo de notificación</h4><p>Las notificaciones deben entregarse en máximo 30 segundos desde la creación del reporte.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Disponibilidad</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-004</span><h4>Precisión GPS</h4><p>La precisión esperada de la ubicación debe ser menor a 20 metros en zonas urbanas.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-meta-tag">Exactitud</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-005</span><h4>Modo offline</h4><p>La aplicación debe permitir registrar reportes sin conexión y sincronizarlos al recuperar internet.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Continuidad</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-006</span><h4>Cálculo de rutas</h4><p>El cálculo de rutas debe completarse en menos de 10 segundos para un máximo inicial de 50 puntos.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-meta-tag">Rendimiento</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-007</span><h4>Retención de datos</h4><p>Los datos de reportes deben conservarse por 90 días y eliminarse automáticamente según la política definida.</p><div class="cs-foot"><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-meta-tag">Gobierno de datos</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-008</span><h4>Usabilidad</h4><p>La interfaz debe ser clara, accesible e intuitiva para usuarios sin alta experiencia tecnológica.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Experiencia de usuario</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-009</span><h4>Protección de datos</h4><p>El tratamiento de datos personales debe ajustarse a la Ley 1581 de 2012 y a principios de autorización, finalidad, seguridad y confidencialidad.</p><div class="cs-foot"><span class="cs-prio cs-prio-esencial">Esencial</span><span class="cs-meta-tag">Seguridad</span></div></div>
+            <div class="cs-card"><span class="cs-code">RNF-010</span><h4>Consumo de datos</h4><p>La aplicación debe consumir menos de 100 MB por cada 100 reportes con fotografías comprimidas.</p><div class="cs-foot"><span class="cs-prio cs-prio-media">Media</span><span class="cs-meta-tag">Eficiencia</span></div></div>
+          </div>
+          <p class="cs-prose" style="font-size:var(--t-sm); color:var(--ink-3); margin-top:14px;">Nota. El requerimiento RNF-009 se ajustó a la Ley 1581 de 2012, norma colombiana de protección de datos personales (Función Pública, s. f.).</p>
+        </section>
+
+        <section class="section cs-panel" id="casos-uso" role="tabpanel" aria-labelledby="tab-casos-uso" tabindex="0" hidden>
+          <div class="section-head"><h2>Actores y <em>casos de uso</em></h2></div>
+          <ul class="cs-list">
+            <li><strong>Ciudadano:</strong> registra reportes, consulta estados e historial, y visualiza información en el mapa.</li>
+            <li><strong>Operario:</strong> recibe reportes asignados, consulta rutas, atiende puntos y actualiza estados.</li>
+            <li><strong>Administrador:</strong> gestiona usuarios, supervisa indicadores, configura parámetros y exporta reportes.</li>
+            <li><strong>Empresa de recolección:</strong> coordina operarios, analiza reportes y toma decisiones operativas.</li>
+            <li><strong>Sistema:</strong> ejecuta geolocalización, asignación automática, notificaciones, estadísticas y rutas optimizadas.</li>
+          </ul>
+          <div class="cs-cards" style="margin-top:22px;">
+            <div class="cs-card"><span class="cs-code">CU-01</span><h4>Registrar reporte</h4><p>El usuario crea un reporte con foto, ubicación y descripción.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-02</span><h4>Consultar estado</h4><p>El usuario revisa si el reporte está pendiente, en proceso o resuelto.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-03</span><h4>Visualizar mapa</h4><p>El sistema muestra reportes georreferenciados y filtros de consulta.</p><div class="cs-foot"><span class="cs-actor">Ciudadano / Operario</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-04</span><h4>Asignar reporte</h4><p>El backend asigna automáticamente el reporte al operador correspondiente.</p><div class="cs-foot"><span class="cs-actor">Sistema</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-05</span><h4>Notificar operador</h4><p>El sistema envía una alerta al responsable de atención.</p><div class="cs-foot"><span class="cs-actor">Sistema</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-06</span><h4>Actualizar estado</h4><p>El operario registra el avance de la atención.</p><div class="cs-foot"><span class="cs-actor">Operario</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-07</span><h4>Generar ruta</h4><p>El sistema propone una ruta optimizada con varios puntos de recolección.</p><div class="cs-foot"><span class="cs-actor">Operario / Empresa</span></div></div>
+            <div class="cs-card"><span class="cs-code">CU-08</span><h4>Exportar informe</h4><p>El usuario autorizado descarga reportes en PDF o Excel.</p><div class="cs-foot"><span class="cs-actor">Administrador / Empresa</span></div></div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="arquitectura" role="tabpanel" aria-labelledby="tab-arquitectura" tabindex="0" hidden>
+          <div class="section-head"><h2>Arquitectura <em>propuesta</em></h2></div>
+          <div class="cs-card cs-block">
+            <p class="cs-prose">La arquitectura propuesta se basa en una aplicación móvil conectada a un backend centralizado. Este backend administra reportes, usuarios, operadores, estados, estadísticas y rutas. El sistema se complementa con servicios de geolocalización, mapas y notificaciones para ofrecer una experiencia de seguimiento en tiempo real.</p>
+            <div class="cs-arch">
+              <div class="cs-arch-cap">Capa de entrada</div>
+              <div class="cs-arch-row" style="grid-template-columns:1fr;">
+                <div class="cs-node"><span class="an-k">Cliente</span><h4>Aplicación móvil</h4><p>Interfaz para ciudadanos y operarios. Permite crear reportes, tomar fotografías, capturar GPS y consultar estados.</p></div>
+              </div>
+              <div class="cs-arch-arrow">↓</div>
+              <div class="cs-arch-cap">Núcleo</div>
+              <div class="cs-arch-row" style="grid-template-columns:1fr;">
+                <div class="cs-node core"><span class="an-k">Servidor</span><h4>Backend / API</h4><p>Recibe reportes, valida datos, administra estados, asigna operadores y expone servicios para la app.</p></div>
+              </div>
+              <div class="cs-arch-arrow">↓</div>
+              <div class="cs-arch-cap">Servicios</div>
+              <div class="cs-arch-row" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
+                <div class="cs-node"><span class="an-k">Persistencia</span><h4>Base de datos</h4><p>Almacena usuarios, reportes, fotos comprimidas, coordenadas, estados, historial y métricas por sector.</p></div>
+                <div class="cs-node"><span class="an-k">Geo</span><h4>Módulo de mapas</h4><p>Representa reportes georreferenciados y apoya la visualización de zonas críticas.</p></div>
+                <div class="cs-node"><span class="an-k">Optimización</span><h4>Motor de rutas</h4><p>Agrupa reportes cercanos y genera una secuencia sugerida de atención para reducir recorridos.</p></div>
+                <div class="cs-node"><span class="an-k">Mensajería</span><h4>Módulo de notificaciones</h4><p>Envía alertas a operadores y actualizaciones de estado al ciudadano.</p></div>
+              </div>
+              <div class="cs-arch-arrow">↓</div>
+              <div class="cs-arch-cap">Supervisión</div>
+              <div class="cs-arch-row" style="grid-template-columns:1fr;">
+                <div class="cs-node"><span class="an-k">Salida</span><h4>Panel administrativo</h4><p>Permite consultar indicadores, descargar informes y supervisar la operación por sector.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="cs-card cs-block" style="margin-top:14px;">
+            <h3 style="margin-top:0;">Flujo general de operación</h3>
+            <ol class="cs-list">
+              <li>El ciudadano registra el reporte desde la aplicación móvil, adjuntando foto, ubicación y descripción.</li>
+              <li>El sistema valida la información, almacena el reporte y asigna un estado inicial pendiente.</li>
+              <li>El backend identifica la localidad o sector y asigna el reporte al operador correspondiente.</li>
+              <li>El operador recibe una notificación y visualiza el punto en el mapa junto con otros reportes pendientes.</li>
+              <li>El motor de rutas propone una secuencia de atención para reducir desplazamientos.</li>
+              <li>Durante la atención, el operador cambia el estado del reporte a en proceso y luego a resuelto.</li>
+              <li>El ciudadano puede consultar el avance y el administrador puede revisar estadísticas por sector.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="historias" role="tabpanel" aria-labelledby="tab-historias" tabindex="0" hidden>
+          <div class="section-head"><h2>Historias de <em>usuario</em></h2><span class="meta">14 historias</span></div>
+          <div class="cs-cards">
+            <div class="cs-card"><span class="cs-code">HU-01</span><p>Como usuario, quiero reportar basura con foto y ubicación para informar puntos críticos.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-001</span><span class="cs-link">RF-002</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-02</span><p>Como usuario, quiero ver el estado de mis reportes para hacer seguimiento.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-005</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-03</span><p>Como usuario, quiero consultar el historial de reportes para revisar mis actividades.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RF-009</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-04</span><p>Como usuario, quiero ver reportes en un mapa para identificar zonas afectadas.</p><div class="cs-foot"><span class="cs-actor">Ciudadano</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RF-007</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-05</span><p>Como operario, quiero ver reportes asignados en un mapa para planificar la recolección.</p><div class="cs-foot"><span class="cs-actor">Operario</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-007</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-06</span><p>Como operario, quiero cambiar el estado del reporte para actualizar el progreso.</p><div class="cs-foot"><span class="cs-actor">Operario</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-005</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-07</span><p>Como operario, quiero recibir notificaciones para atender nuevos reportes rápidamente.</p><div class="cs-foot"><span class="cs-actor">Operario</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-004</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-08</span><p>Como operario, quiero generar rutas óptimas para reducir tiempo y costos.</p><div class="cs-foot"><span class="cs-actor">Operario</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RF-008</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-09</span><p>Como administrador, quiero gestionar usuarios para controlar accesos.</p><div class="cs-foot"><span class="cs-actor">Administrador</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-001</span><span class="cs-link">RNF-009</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-10</span><p>Como administrador, quiero configurar parámetros del sistema para mejorar su funcionamiento.</p><div class="cs-foot"><span class="cs-actor">Administrador</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RNF</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-11</span><p>Como administrador, quiero ver estadísticas por sector para tomar decisiones.</p><div class="cs-foot"><span class="cs-actor">Administrador</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RF-006</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-12</span><p>Como empresa, quiero recibir reportes automáticamente para gestionarlos.</p><div class="cs-foot"><span class="cs-actor">Empresa de recolección</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-003</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-13</span><p>Como empresa, quiero asignar tareas a operarios para organizar la recolección.</p><div class="cs-foot"><span class="cs-actor">Empresa de recolección</span><span class="cs-prio cs-prio-alta">Alta</span><span class="cs-link">RF-003</span><span class="cs-link">RF-005</span></div></div>
+            <div class="cs-card"><span class="cs-code">HU-14</span><p>Como empresa, quiero exportar reportes para análisis externo.</p><div class="cs-foot"><span class="cs-actor">Empresa de recolección</span><span class="cs-prio cs-prio-media">Media</span><span class="cs-link">RF-010</span></div></div>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="resultados" role="tabpanel" aria-labelledby="tab-resultados" tabindex="0" hidden>
+          <div class="section-head"><h2>Resultados <em>esperados</em></h2></div>
+          <div class="cs-card cs-block">
+            <p class="cs-prose">Con la implementación del prototipo RunTrash se espera obtener una solución demostrativa capaz de mejorar la trazabilidad de los reportes ciudadanos, facilitar la priorización de zonas con mayor acumulación de residuos y apoyar la toma de decisiones operativas mediante datos agregados. La generación de rutas optimizadas busca disminuir recorridos innecesarios y aumentar la eficiencia de atención, especialmente cuando existen múltiples reportes cercanos.</p>
+            <p class="cs-prose">Asimismo, se espera fortalecer la participación ciudadana mediante una interfaz sencilla que permita reportar puntos críticos de forma rápida y verificar el estado de atención. Desde el punto de vista académico, el proyecto permite integrar conceptos de ingeniería de software, geolocalización, bases de datos, análisis de información, experiencia de usuario y optimización de rutas.</p>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="conclusiones" role="tabpanel" aria-labelledby="tab-conclusiones" tabindex="0" hidden>
+          <div class="section-head"><h2>Conclusiones</h2></div>
+          <div class="cs-card cs-block">
+            <ul class="cs-list" style="margin-top:0;">
+              <li>RunTrash responde a una problemática urbana real mediante una solución digital centrada en reportes geolocalizados, trazabilidad y datos para la toma de decisiones.</li>
+              <li>El prototipo permite articular a ciudadanos, operarios, empresas de aseo y administradores en un flujo común de atención, reduciendo la dispersión de información.</li>
+              <li>La consolidación de requerimientos funcionales y no funcionales facilita el desarrollo ordenado del sistema y define criterios claros de validación.</li>
+              <li>La corrección del componente normativo hacia la Ley 1581 de 2012 fortalece la coherencia legal del proyecto en materia de protección de datos personales.</li>
+              <li>Aunque el sistema tiene alcance académico, su diseño puede servir como base para propuestas futuras de integración con plataformas distritales o empresas operadoras.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section cs-panel" id="referencias" role="tabpanel" aria-labelledby="tab-referencias" tabindex="0" hidden>
+          <div class="section-head"><h2>Referencias</h2></div>
+          <div class="cs-card cs-block">
+            <ul class="cs-list" style="margin-top:0; max-width:88ch; font-size:var(--t-sm); line-height:1.7;">
+              <li>Alcaldía Mayor de Bogotá. (2026, 26 de abril). <em>Aumenta la producción de residuos sólidos en Bogotá según UAESP.</em> https://bogota.gov.co/mi-ciudad/habitat/aumenta-la-produccion-de-residuos-solidos-en-bogota-segun-uaesp</li>
+              <li>Concejo de Bogotá. (2026a, 18 de febrero). <em>Más de 80 mil quejas y reclamos: Bogotá camina entre la basura mientras operadores incumplen indicadores de calidad.</em> https://concejodebogota.gov.co/mas-de-80-mil-quejas-y-reclamos-bogota-camina-entre-la-basura-mientras/cbogota/2026-02-18/162130.php</li>
+              <li>Concejo de Bogotá. (2026b, 18 de febrero). <em>Bogotá arroja 968 toneladas de residuos ilegales diariamente.</em> https://concejodebogota.gov.co/bogota-arroja-968-toneladas-de-residuos-ilegales-diariamente-alerta-el/cbogota/2026-02-18/165331.php</li>
+              <li>Función Pública. (s. f.). <em>Ley 1581 de 2012.</em> Gestor Normativo. https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981</li>
+              <li>Unidad Administrativa Especial de Servicios Públicos. (2025, 30 de diciembre). <em>UAESP logra récord histórico de recolección de residuos en Bogotá durante 2025.</em> https://www.uaesp.gov.co/noticias/uaesp-logra-record-historico-recoleccion-residuos-bogota-2025</li>
+            </ul>
+          </div>
+          <p style="margin-top:24px;"><a href="index.html" class="card-link">← Volver a Programación de software</a></p>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../../index.html">Inicio</a><a href="../../blog/index.html">Blog</a><a href="../../proyectos/index.html">Proyectos</a><a href="../../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../../training/index.html">Capacitación</a><a href="../../cv/index.html">Currículum</a><a href="../../forms/index.html">Formularios</a><a href="../../data.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Caso de estudio · interacción: pestañas accesibles (tablist) + conteo animado. Vanilla, respeta reduced-motion. -->
+  <script>
+    (function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.cs-index [role="tab"]'));
+      if (!tabs.length) return;
+      var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+
+      // Conteo animado de cifras (se dispara al mostrar su panel)
+      var fmt = function (n) { return new Intl.NumberFormat('es-CO').format(Math.round(n)); };
+      var render = function (el, v) {
+        var pre = el.getAttribute('data-prefix') || '';
+        var suf = el.getAttribute('data-suffix') || '';
+        el.innerHTML = (pre ? '<span class="u">' + pre + '</span>' : '') + fmt(v) + (suf ? '<span class="u">' + suf + '</span>' : '');
+      };
+      var runCount = function (el) {
+        if (el.getAttribute('data-done')) return;
+        el.setAttribute('data-done', '1');
+        var to = parseFloat(el.getAttribute('data-to'));
+        if (reduce) { render(el, to); return; }
+        var dur = 1100, t0 = null;
+        var tick = function (ts) {
+          if (!t0) t0 = ts;
+          var p = Math.min((ts - t0) / dur, 1);
+          render(el, to * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(tick); else render(el, to);
+        };
+        requestAnimationFrame(tick);
+      };
+
+      function select(i, focus) {
+        tabs.forEach(function (t, j) {
+          var sel = j === i;
+          t.classList.toggle('active', sel);
+          t.setAttribute('aria-selected', sel ? 'true' : 'false');
+          t.tabIndex = sel ? 0 : -1;
+          var p = panels[j];
+          if (!p) return;
+          if (sel) {
+            p.hidden = false;
+            p.classList.remove('cs-anim');
+            if (!reduce) { void p.offsetWidth; p.classList.add('cs-anim'); }
+            Array.prototype.forEach.call(p.querySelectorAll('.cs-n[data-to]'), runCount);
+          } else {
+            p.hidden = true;
+          }
+        });
+        if (focus) tabs[i].focus();
+      }
+
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function (e) { e.preventDefault(); select(i, false); });
+        t.addEventListener('keydown', function (e) {
+          var n = tabs.length, ni = null, k = e.key;
+          if (k === 'ArrowDown' || k === 'ArrowRight') ni = (i + 1) % n;
+          else if (k === 'ArrowUp' || k === 'ArrowLeft') ni = (i - 1 + n) % n;
+          else if (k === 'Home') ni = 0;
+          else if (k === 'End') ni = n - 1;
+          if (ni !== null) { e.preventDefault(); select(ni, true); }
+        });
+      });
+
+      // Pestaña inicial: Video
+      select(0, false);
+    })();
+  </script>
+
+</body>
+</html>
