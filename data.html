@@ -1,195 +1,106 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-type="grotesk">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Towers Ing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Connection - Towers Ing</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/towers.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-    }
-    header {
-      background: #1a2a6c;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center;
-      background-size: cover;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      margin-bottom: 30px;
-    }
+    /* ===== Data Connection · sistema v3 "Papel & Voltaje" =====
+       Solo presentación. Se conservan los selectores que genera el
+       módulo Firebase (.btn-delete, table, etc.) y todos los IDs. */
+
+    body { background: var(--paper); min-height: 100vh; }
+
+    main { max-width: 1240px; margin: 0 auto; padding: 24px clamp(20px, 5vw, 56px) 64px; }
+
+    .data-head { padding: 8px 0 4px; }
+    .data-head h1 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(28px, 4vw, 46px); letter-spacing: var(--display-spacing); color: var(--ink); line-height: 1.02; }
+    .data-head h1 i { color: var(--electric); font-size: .7em; }
+    .data-head h1 em { color: var(--electric-ink); font-style: normal; }
+    .data-head p { color: var(--ink-2); margin-top: 10px; max-width: 62ch; }
+
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 28px 0 16px; }
     .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md);
+      padding: 22px 20px; box-shadow: var(--shadow-sm); text-align: left;
+      position: relative; overflow: hidden; transition: transform .2s var(--ease), box-shadow .2s;
     }
-    .stat-card:hover {
-      transform: translateY(-5px);
-    }
-    .stat-card i {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #3498db;
-    }
-    .stat-card h3 {
-      font-size: 2.5rem;
-      color: #1a2a6c;
-      margin-bottom: 5px;
-    }
-    .stat-card p {
-      color: #7f8c8d;
-      font-weight: 500;
-    }
+    .stat-card::before { content:""; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--electric); }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-card i { font-size: 1.3rem; margin-bottom: 10px; color: var(--electric); display: block; }
+    .stat-card h3 { font-family: var(--font-display); font-size: 2rem; color: var(--ink); margin-bottom: 4px; line-height: 1; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .stat-card p { color: var(--ink-3); font-weight: 500; font-size: var(--t-sm); }
+
     .section {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md);
+      padding: 24px; margin-bottom: 14px; box-shadow: var(--shadow-sm);
     }
-    .section h2 {
-      color: #1a2a6c;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.5rem;
-    }
-    .section h2 i {
-      color: #3498db;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    th {
-      background: #f8f9fa;
-      color: #1a2a6c;
-      font-weight: 600;
-    }
-    tr:hover {
-      background: #f1f1f1;
-    }
-    .btn-group {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .btn-refresh {
-      background: #27ae60;
-      color: white;
-    }
-    .btn-refresh:hover {
-      background: #229954;
-    }
-    .btn-update-groups {
-      background: #e67e22;
-      color: white;
-    }
-    .btn-update-groups:hover {
-      background: #d35400;
-    }
-    .btn-delete {
-      background: #e74c3c;
-      color: white;
-      font-size: 0.8rem;
-      padding: 5px 10px;
-    }
-    .btn-delete:hover {
-      background: #c0392b;
-    }
+    .section h2 { font-family: var(--font-display); color: var(--ink); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 600; }
+    .section h2 i { color: var(--electric); }
+
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 0; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { background: transparent; color: var(--ink-3); font-family: var(--font-mono); font-weight: 400; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .04em; }
+    td { color: var(--ink-2); font-size: var(--t-sm); }
+    tr:hover td { background: var(--paper-2); }
+
+    .btn-group { display: flex; gap: 12px; justify-content: flex-start; margin: 0 0 8px; flex-wrap: wrap; }
+    button { padding: 10px 18px; font-size: var(--t-sm); border: 1px solid transparent; border-radius: var(--r-pill); cursor: pointer; font-weight: 600; font-family: var(--font-body); transition: .2s; }
+    .btn-refresh { background: var(--electric); color: white; }
+    .btn-refresh:hover { background: var(--electric-2); }
+    .btn-update-groups { background: transparent; color: var(--ink); border-color: var(--line-2); }
+    .btn-update-groups:hover { background: var(--paper-2); border-color: var(--line-strong); }
+    .btn-delete { background: var(--neg-soft); color: var(--neg); font-size: var(--t-xs); padding: 5px 11px; border-radius: var(--r-pill); }
+    .btn-delete:hover { background: var(--neg); color: white; }
+
     .back-home {
-      display: inline-block;
-      margin: 30px auto;
-      padding: 10px 25px;
-      background: #3498db;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
+      display: inline-block; margin: 24px 0; padding: 10px 18px;
+      background: transparent; color: var(--ink); border: 1px solid var(--line-2); border-radius: var(--r-pill);
+      text-decoration: none; font-weight: 600; font-size: var(--t-sm); transition: .2s;
     }
-    .back-home:hover {
-      background: #2980b9;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #7f8c8d;
-      font-size: 0.9rem;
+    .back-home:hover { background: var(--paper-2); border-color: var(--line-strong); }
+
+    footer { text-align: center; padding: 24px; color: var(--ink-3); font-size: var(--t-sm); border-top: 1px solid var(--line); }
+
+    /* La tabla de Firebase (7 columnas) puede desbordar en móvil: la
+       hacemos desplazable horizontalmente en vez de romper el layout. */
+    .section table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+
+    @media (max-width: 720px) {
+      main { padding-left: 18px; padding-right: 18px; }
+      .btn-group { gap: 8px; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="content">
-      <h1><i class="fas fa-chart-line"></i> Dashboard de Roles Colaborativos</h1>
-      <p>Visualización, edición y gestión de registros y grupos.</p>
+  <!-- TOP BAR (sistema v3) -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Data · tiempo real</span>
+      </div>
+      <nav class="top-nav">
+        <a href="index.html">Inicio</a>
+        <a href="proyectos/index.html">Proyectos</a>
+        <a href="blog/index.html">Blog</a>
+        <a href="dashboard/index.html">Dashboard</a>
+      </nav>
     </div>
   </header>
 
   <main>
+
+    <div class="data-head">
+      <h1><i class="fas fa-chart-line"></i> Roles colaborativos · <em>en vivo</em></h1>
+      <p>Visualización, edición y gestión de registros y grupos — en tiempo real desde Firebase.</p>
+    </div>
 
     <div class="dashboard-grid" id="stats-container">
       <div class="stat-card">
