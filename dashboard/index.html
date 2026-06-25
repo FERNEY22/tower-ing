@@ -605,35 +605,34 @@
     </div>
   </div>
 
-  <!-- APRECIACIÓN OBSERVATORIO -->
+  <!-- REVISIÓN TÉCNICA · OBSERVATORIO -->
 <div class="vista" id="vista-percepcion">
   <div class="kpi-grid">
-    <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="pc-total">0</h3><p>Total respuestas</p></div>
-    <div class="kpi-card"><i class="fas fa-star" style="color:#3498db"></i><h3 id="pc-avg">—</h3><p>Valoración promedio /10</p></div>
-    <div class="kpi-card"><i class="fas fa-sliders-h" style="color:#9b59b6"></i><h3 id="pc-likert">—</h3><p>Promedio dimensiones /5</p></div>
-    <div class="kpi-card green"><i class="fas fa-thumbs-up"></i><h3 id="pc-sat">0</h3><p>🟢 Satisfechos ≥8</p></div>
-    <div class="kpi-card red"><i class="fas fa-thumbs-down"></i><h3 id="pc-insat">0</h3><p>🔴 Insatisfechos ≤5</p></div>
+    <div class="kpi-card"><i class="fas fa-user-check"></i><h3 id="pc-total">0</h3><p>Revisores</p></div>
+    <div class="kpi-card"><i class="fas fa-star-half-alt" style="color:#3498db"></i><h3 id="pc-avg">—</h3><p>Promedio global /5</p></div>
+    <div class="kpi-card green"><i class="fas fa-check-circle"></i><h3 id="pc-aprob">0</h3><p>🟢 Aprobado</p></div>
+    <div class="kpi-card orange"><i class="fas fa-exclamation-circle"></i><h3 id="pc-obs">0</h3><p>🟡 Con observaciones</p></div>
+    <div class="kpi-card red"><i class="fas fa-times-circle"></i><h3 id="pc-noaprob">0</h3><p>🔴 No aprobado</p></div>
   </div>
   <div class="charts-row">
-    <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución por estamento</h2><div class="chart-wrap"><canvas id="chart-pc-estamento"></canvas></div></div>
-    <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de valoración</h2><div class="chart-wrap"><canvas id="chart-pc-hist"></canvas></div></div>
+    <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Veredicto global</h2><div class="chart-wrap"><canvas id="chart-pc-veredicto"></canvas></div></div>
+    <div class="seccion"><h2><i class="fas fa-layer-group"></i> Promedio por bloque</h2><div class="chart-wrap"><canvas id="chart-pc-bloques"></canvas></div></div>
   </div>
   <div class="seccion">
-    <h2><i class="fas fa-sliders-h"></i> Promedio por dimensión</h2>
-    <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Promedio grupal por dimensión (1 = muy bajo · 5 = muy alto). Barras rojas (&lt;3) señalan los aspectos peor valorados.</p>
-    <div class="chart-wrap" style="height:300px"><canvas id="chart-pc-dim"></canvas></div>
+    <h2><i class="fas fa-tasks"></i> Promedio por ítem</h2>
+    <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Promedio del equipo por ítem (1–5). Barras rojas (&lt;3) = aspectos que el equipo señala para corregir.</p>
+    <div class="chart-wrap" style="height:460px"><canvas id="chart-pc-items"></canvas></div>
   </div>
   <div class="seccion">
-    <h2><i class="fas fa-users"></i> Valoración por estamento</h2>
-    <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Valoración global promedio (1–10) según el grupo de interés.</p>
-    <div class="chart-wrap" style="height:260px"><canvas id="chart-pc-est-val"></canvas></div>
-  </div>
-  <div class="seccion">
-    <h2><i class="fas fa-comments"></i> Comentarios y aspectos de mejora</h2>
+    <h2><i class="fas fa-list"></i> Detalle por revisor</h2>
     <div style="overflow-x:auto"><table>
-      <thead><tr><th>Estamento</th><th style="text-align:center">Valoración</th><th style="text-align:center">Dim. /5</th><th>Comentarios</th><th>Aspectos de mejora</th><th>Fecha</th></tr></thead>
+      <thead><tr><th>Revisor</th><th style="text-align:center">Téc. /5</th><th style="text-align:center">Uso /5</th><th style="text-align:center">Metod. /5</th><th style="text-align:center">Global /5</th><th style="text-align:center">Veredicto</th></tr></thead>
       <tbody id="pc-tabla"></tbody>
     </table></div>
+  </div>
+  <div class="seccion">
+    <h2><i class="fas fa-comments"></i> Observaciones y correcciones</h2>
+    <div id="pc-obs-list"></div>
   </div>
 </div>
 
