@@ -1,0 +1,294 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  GenRep · Generador de reportes · Observatorio Institucional ETITC        ║
+  ║                                                                           ║
+  ║  Paso 0 (prueba de concepto): opera sobre el Cap. 7 (Graduados).          ║
+  ║  Escanea los bloques marcados con [data-report-block] en los capítulos,   ║
+  ║  permite seleccionarlos, previsualizar el reporte y exportarlo a PDF      ║
+  ║  vía la impresión del navegador. Sin backend.                             ║
+  ║                                                                           ║
+  ║  Para añadir capítulos: marcar sus bloques con los atributos data-rb-* y  ║
+  ║  agregar el archivo al arreglo CHAPTERS en genrep.js.                      ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GenRep · Generador de reportes · Observatorio Institucional ETITC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ---------- GenRep · estilos locales (POC) ---------- */
+/* Ancho compartido del generador, centrado en la página */
+.genrep .chapter-header .shell,
+.genrep-controls,
+.genrep-workspace{ max-width:1080px; margin-left:auto; margin-right:auto; }
+
+.genrep-controls{ padding-top:8px; padding-bottom:8px; }
+
+.genrep-templates{ display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 4px; }
+.genrep-templates button{
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  border:0.5px solid var(--rule-strong); color:var(--ink-2);
+  padding:7px 13px; border-radius:2px; background:var(--paper);
+}
+.genrep-templates button:hover{ border-color:var(--ink); }
+.genrep-templates button.is-active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.tpl-hint{ font-size:12.5px; color:var(--ink-3); margin:6px 0 0; }
+
+.genrep-cover-form{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 20px;
+  margin:22px 0 6px; padding-top:18px; border-top:0.5px solid var(--rule-soft);
+}
+.genrep-cover-form label{ display:flex; flex-direction:column; gap:5px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-4); }
+.genrep-cover-form input{
+  font-family:var(--sans); font-size:14px; color:var(--ink);
+  border:0.5px solid var(--rule); background:var(--paper); padding:9px 11px; border-radius:2px;
+}
+.genrep-cover-form input:focus{ outline:none; border-color:var(--ink); }
+
+/* ---------- WORKSPACE: dos paneles de altura fija, scroll propio ---------- */
+.genrep-workspace{
+  display:grid; grid-template-columns:320px minmax(0,1fr); gap:24px;
+  margin:24px auto 44px; height:min(80vh, 860px);
+}
+
+/* catálogo (izquierda) — acordeón con scroll interno */
+.genrep-catalog{
+  display:flex; flex-direction:column; min-height:0;
+  border:0.5px solid var(--rule); border-radius:3px; background:var(--paper);
+}
+.genrep-catalog .cat-head{
+  flex:0 0 auto; margin:0; padding:13px 16px; border-bottom:0.5px solid var(--rule);
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); display:flex; justify-content:space-between; align-items:baseline;
+}
+.cat-scroll{ flex:1 1 auto; min-height:0; overflow:auto; padding:4px 12px 14px; }
+
+.cat-group{ border-bottom:0.5px solid var(--rule-soft); }
+.cat-group:last-child{ border-bottom:none; }
+.cat-group__head{ display:flex; align-items:center; gap:9px; width:100%; padding:11px 4px; text-align:left; }
+.cat-group__head:hover .cat-group__ttl{ color:var(--ink); }
+.cat-group__chev{ font-size:9px; color:var(--ink-4); transition:transform .15s ease; }
+.cat-group.is-open .cat-group__chev{ transform:rotate(90deg); }
+.cat-group__ttl{ flex:1 1 auto; font-size:12.5px; line-height:1.3; color:var(--ink-2); }
+.cat-group__meta{ font-family:var(--mono); font-size:10px; letter-spacing:.04em; color:var(--ink-4); }
+.cat-group__meta.has-sel{ color:var(--ink); }
+.cat-group__body{ display:none; padding:0 0 8px 22px; }
+.cat-group.is-open .cat-group__body{ display:block; }
+
+.cat-item{ display:flex; gap:9px; align-items:flex-start; padding:7px 2px; cursor:pointer; }
+.cat-item:hover{ background:var(--bg); }
+.cat-item input{ margin-top:2px; accent-color:var(--ink); flex:0 0 auto; }
+.cat-item .ci-body{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+.cat-item .ci-ttl{ font-size:12.5px; line-height:1.3; color:var(--ink); }
+.cat-item .ci-badge{ font-family:var(--mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+.ci-badge.t-chart{ color:var(--ok); }
+.ci-badge.t-kpi{ color:var(--wip); }
+.ci-badge.t-table{ color:var(--pending); }
+.cat-msg{ font-size:13px; line-height:1.6; color:var(--ink-2); padding:16px 10px; }
+.cat-msg code{ font-family:var(--mono); font-size:11.5px; background:var(--bg); padding:2px 6px; border:0.5px solid var(--rule-soft); border-radius:2px; display:inline-block; margin-top:4px; }
+
+/* preview (derecha) — visor con frame propio y scroll interno */
+.genrep-preview{ display:flex; flex-direction:column; min-height:0; }
+.prev-toolbar{ flex:0 0 auto; display:flex; align-items:center; gap:16px; padding:0 2px 12px; }
+.prev-toolbar #sel-count, .prev-toolbar #page-est{ font-family:var(--mono); font-size:11.5px; color:var(--ink-3); }
+.prev-toolbar #page-est{ color:var(--ink-2); }
+.prev-toolbar .tb-actions{ margin-left:auto; display:flex; gap:10px; }
+.prev-toolbar button{
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  border:0.5px solid var(--ink); padding:9px 16px; border-radius:2px;
+}
+#btn-print{ background:var(--ink); color:var(--bg); }
+#btn-print:hover{ background:var(--ink-2); }
+#btn-print:disabled{ background:var(--ink-4); border-color:var(--ink-4); cursor:not-allowed; }
+#btn-clear{ background:none; color:var(--ink-2); border-color:var(--rule-strong); }
+#btn-clear:hover{ border-color:var(--ink); }
+
+.doc-viewer{
+  flex:1 1 auto; min-height:0; overflow:auto;
+  background:#55534e; border:0.5px solid var(--rule-strong); border-radius:3px;
+  padding:24px 0;
+}
+.doc-paper{
+  width:210mm; max-width:calc(100% - 36px); margin:0 auto;
+  background:#fff; color:var(--ink); box-shadow:0 3px 16px rgba(0,0,0,.30);
+  padding:20mm 18mm; min-height:297mm;
+}
+
+/* documento (contenido clonado) */
+.report-cover{ border-bottom:1px solid var(--rule-strong); padding-bottom:24px; margin-bottom:4px; }
+.report-cover .rc-crest{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-3); border:0.5px solid var(--rule-strong); padding:2px 7px; display:inline-block; }
+.report-cover h1{ font-family:var(--serif); font-weight:500; font-size:28px; line-height:1.15; margin:18px 0 6px; }
+.report-cover .rc-sub{ font-size:15px; color:var(--ink-2); margin:0 0 18px; max-width:60ch; }
+.report-cover .rc-meta{ display:flex; flex-wrap:wrap; gap:6px 28px; font-family:var(--mono); font-size:11.5px; color:var(--ink-3); }
+.report-cover .rc-meta b{ color:var(--ink); font-weight:500; }
+
+.report-empty{ color:var(--ink-3); font-size:14px; text-align:center; padding:90px 20px; font-style:italic; }
+
+.report-block{ padding:24px 0; border-bottom:0.5px solid var(--rule-soft); break-inside:avoid; }
+.report-block:last-child{ border-bottom:none; }
+.report-block .rb-head{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; margin-bottom:14px; }
+.report-block .rb-ttl{ font-family:var(--serif); font-weight:600; font-size:17px; color:var(--ink); margin:0; }
+.report-block .rb-num{ font-family:var(--mono); font-size:11px; color:var(--ink-4); white-space:nowrap; }
+.report-block .rb-src{ font-family:var(--mono); font-size:10.5px; color:var(--ink-3); margin-top:12px; }
+.report-block .statline{ margin:0; }
+
+@media (max-width:900px){
+  .genrep-workspace{ grid-template-columns:1fr; height:auto; }
+  .genrep-catalog{ height:320px; }
+  .doc-viewer{ height:60vh; }
+  .genrep-cover-form{ grid-template-columns:1fr; }
+}
+
+/* ---------- IMPRESIÓN: solo el documento, paginado por el navegador ---------- */
+@media print{
+  .topbar, .site-foot, .chapter-header, .genrep-controls, .genrep-catalog, .prev-toolbar{ display:none !important; }
+  body{ background:#fff; }
+  .genrep-workspace{ display:block; height:auto; margin:0; }
+  .genrep-preview{ display:block; }
+  .doc-viewer{ overflow:visible; background:#fff; border:none; padding:0; }
+  .doc-paper{ width:auto; max-width:none; margin:0; box-shadow:none; padding:0; min-height:0; }
+  .report-cover{ break-after:page; }
+  .report-block{ break-inside:avoid; padding:18px 0; }
+  @page{ margin:18mm 16mm; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="brand" aria-label="Observatorio Institucional ETITC">
+      <span class="crest">ETITC</span>
+      <span class="titles">
+        <span class="l1">Observatorio Institucional</span>
+        <span class="l2">Escuela Tecnológica · Instituto Técnico Central</span>
+      </span>
+    </div>
+    <nav class="topnav" aria-label="Navegación principal">
+      <a href="index.html" data-nav="cover">Portada</a>
+      <a href="index.html#capitulos" data-nav="capitulos">Capítulos</a>
+      <a href="index.html#/acerca" data-nav="about">Acerca</a>
+    </nav>
+  </div>
+</header>
+
+<main id="stage">
+  <section class="page is-active genrep">
+
+    <div class="chapter-header">
+      <div class="shell">
+        <div class="breadcrumb">
+          <a href="index.html">Observatorio</a>
+          <span class="sep">/</span>
+          <span>GenRep</span>
+        </div>
+        <div class="row">
+          <div>
+            <h1 class="ttl">GenRep — Generador de reportes</h1>
+            <p class="sub">Arma un documento con los bloques del observatorio (gráficas, indicadores y tablas) de los ocho capítulos y expórtalo a PDF.</p>
+          </div>
+          <div class="right-meta">
+            GENERADOR<br>
+            FASE 1 · Producción<br>
+            EXPORTA A PDF
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles: plantilla + portada -->
+    <div class="shell genrep-controls">
+      <div class="genrep-templates" role="group" aria-label="Plantilla de reporte">
+        <button data-tpl="medida">A la medida</button>
+        <button data-tpl="capitulo">Por capítulo</button>
+        <button data-tpl="ejecutivo" class="is-active">Ejecutivo</button>
+        <button data-tpl="ficha">Ficha individual</button>
+      </div>
+      <p class="tpl-hint" id="tpl-hint">Te sugerimos un reporte ejecutivo de entrada — ajústalo marcando o desmarcando bloques, o elige otra plantilla.</p>
+
+      <div class="genrep-cover-form">
+        <label>Título del reporte
+          <input type="text" id="cov-title" value="Reporte — Observatorio Institucional ETITC">
+        </label>
+        <label>Subtítulo
+          <input type="text" id="cov-sub" value="Indicadores y resultados por dominio institucional">
+        </label>
+        <label>Dependencia
+          <input type="text" id="cov-dep" value="Vicerrectoría Académica">
+        </label>
+        <label>Elaborado por
+          <input type="text" id="cov-author" value="">
+        </label>
+      </div>
+    </div>
+
+    <!-- Workspace: dos frames de altura fija con scroll propio -->
+    <div class="shell genrep-workspace">
+      <aside class="genrep-catalog" aria-label="Catálogo de bloques">
+        <div class="cat-head"><span>Bloques · <span id="cat-count">…</span></span></div>
+        <div class="cat-scroll" id="catalog"></div>
+      </aside>
+
+      <div class="genrep-preview">
+        <div class="prev-toolbar">
+          <span id="sel-count">0 bloques</span>
+          <span id="page-est"></span>
+          <span class="tb-actions">
+            <button id="btn-clear">Limpiar</button>
+            <button id="btn-print" disabled>Exportar PDF</button>
+          </span>
+        </div>
+        <div class="doc-viewer" id="doc-viewer" aria-label="Vista del documento">
+          <div class="doc-paper" id="report-output">
+            <div class="report-cover" id="report-cover"></div>
+            <div class="report-body" id="report-body">
+              <p class="report-empty">Selecciona bloques en el panel izquierdo para armar el reporte.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-foot">
+  <div class="shell">
+    <div class="cols">
+      <div>
+        <p class="t">Observatorio Institucional</p>
+        <p class="s">Escuela Tecnológica · Instituto Técnico Central</p>
+      </div>
+      <div>
+        <p class="t">Capítulos</p>
+        <ul id="footer-chapters"></ul>
+      </div>
+      <div>
+        <p class="t">Acerca</p>
+        <ul>
+          <li><a href="index.html#/acerca">Sobre el observatorio</a></li>
+          <li><a href="index.html">Portada</a></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em;">
+      ETITC · Observatorio Institucional · Fase 1 — Junio 2026  ·  <a href="genrep.html">GenRep · Generar reporte →</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script src="genrep.js"></script>
+
+</body>
+</html>
