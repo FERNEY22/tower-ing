@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisión Técnica · Observatorio Institucional ETITC</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+  :root{--ink:#1a1a1a;--ink-3:#777;--line:#e5e5e5;--electric:#2563eb;--paper:#faf9f7;--green:#27ae60;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;padding:32px 16px;}
+  .wrap{max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(24px,5vw,40px);}
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(22px,4vw,28px);margin-bottom:6px;}
+  .sub{color:var(--ink-3);font-size:.92rem;margin-bottom:26px;}
+  h2.bloque{font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;margin:30px 0 4px;padding-top:22px;border-top:2px solid var(--line);}
+  h2.bloque:first-of-type{border-top:none;padding-top:6px;}
+  label{display:block;font-weight:600;font-size:.9rem;margin:18px 0 8px;}
+  .opt{font-weight:400;color:var(--ink-3);font-size:.82rem;}
+  select,textarea,input[type=text]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:.92rem;background:#fff;}
+  textarea{resize:vertical;min-height:70px;}
+  select:focus,textarea:focus,input:focus{outline:none;border-color:var(--electric);}
+  .scale-hint{font-size:.78rem;color:var(--ink-3);margin:14px 0 4px;}
+  .lk-block{border:1px solid var(--line);border-radius:11px;overflow:hidden;}
+  .lk-item{border-bottom:1px solid var(--line);transition:background .15s;}
+  .lk-item:last-child{border-bottom:none;}
+  .lk-item.warn{background:#fffaf2;}
+  .lk-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;flex-wrap:wrap;}
+  .lk-row .dim{font-size:.88rem;flex:1 1 220px;}
+  .lk-obs{padding:0 14px 14px;}
+  .lk-obs .req-hint{font-size:.76rem;color:#e67e22;font-weight:600;margin-bottom:5px;}
+  .lk-obs textarea{width:100%;min-height:58px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:inherit;font-size:.86rem;background:#fff;resize:vertical;}
+  .lk-obs textarea:focus{outline:none;border-color:var(--electric);}
+  .lk-scale{display:flex;gap:4px;}
+  .lk-scale label{margin:0;cursor:pointer;}
+  .lk-scale input{position:absolute;opacity:0;width:0;height:0;}
+  .lk-scale .dot{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;font-size:.82rem;font-weight:600;color:var(--ink-3);transition:.15s;}
+  .lk-scale input:checked + .dot{background:var(--electric);border-color:var(--electric);color:#fff;}
+  .ver-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+  .ver-grid label{position:relative;margin:0;cursor:pointer;}
+  .ver-grid input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .ver-grid .card{display:flex;align-items:center;justify-content:center;text-align:center;min-height:64px;padding:12px 10px;border:1px solid var(--line);border-radius:10px;font-size:.86rem;font-weight:600;line-height:1.25;color:var(--ink-3);transition:.15s;}
+  .ver-grid input:checked + .card{border-color:var(--electric);background:#eff4ff;color:var(--electric);}
+  @media(max-width:520px){.ver-grid{grid-template-columns:1fr;}}
+  button{margin-top:30px;width:100%;padding:14px;background:var(--ink);color:#fff;border:none;border-radius:10px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer;transition:.2s;}
+  button:hover{background:var(--electric);}
+  button:disabled{opacity:.6;cursor:not-allowed;}
+  .estado{margin-top:16px;text-align:center;font-size:.9rem;min-height:20px;}
+  .ok{color:var(--green);font-weight:600;}
+  .err{color:#e74c3c;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Revisión Técnica del Observatorio Institucional</h1>
+  <p class="sub">Dirigido al equipo técnico de autoevaluación. Valora cada ítem (1–5) y registra tus observaciones y correcciones por bloque.</p>
+
+  <div id="form">
+    <label>Nombre del revisor</label>
+    <input type="text" id="nombre" placeholder="Nombre completo">
+
+    <label>Rol / cargo <span class="opt">(opcional)</span></label>
+    <input type="text" id="rol" placeholder="Ej: Profesional de autoevaluación">
+
+    <p class="scale-hint">Escala de valoración: <strong>1 = muy deficiente · 5 = excelente</strong></p>
+    <div id="bloques"></div>
+
+    <label>Corrección o recomendación general <span class="opt">(opcional)</span></label>
+    <textarea id="correccionGeneral" maxlength="2000" placeholder="Recomendación transversal para el observatorio…"></textarea>
+
+    <label>Veredicto global</label>
+    <div class="ver-grid">
+      <label><input type="radio" name="veredicto" value="Aprobado"><span class="card">🟢 Aprobado</span></label>
+      <label><input type="radio" name="veredicto" value="Aprobado con observaciones"><span class="card">🟡 Aprobado con observaciones</span></label>
+      <label><input type="radio" name="veredicto" value="No aprobado"><span class="card">🔴 No aprobado</span></label>
+    </div>
+
+    <button id="btn-enviar">Enviar revisión</button>
+    <p class="estado" id="estado"></p>
+  </div>
+</div>
+
+<script>
+  firebase.initializeApp({
+    apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+    authDomain:        "tower-ing.firebaseapp.com",
+    databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+    projectId:         "tower-ing",
+    storageBucket:     "tower-ing.firebasestorage.app",
+    messagingSenderId: "440636238988",
+    appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+  });
+  const db = firebase.database();
+
+  // ⬇️ Los ítems van numerados 1..15 en este orden; debe coincidir con PC_ITEMS / PC_BLOQUES en render-percepcion.js
+  const BLOQUES = [
+    { titulo:'Calidad técnica y de datos', obsKey:'obsTecnica', items:[
+      'Exactitud de los datos frente a las fuentes oficiales',
+      'Trazabilidad de cada indicador (se puede verificar el origen)',
+      'Cálculos y ponderaciones correctos según el modelo SIACET',
+      'Consistencia de los datos entre módulos/vistas',
+      'Vigencia y actualización de la información',
+      'Cobertura completa de factores y características'
+    ]},
+    { titulo:'Uso del instrumento', obsKey:'obsUso', items:[
+      'Facilidad de navegación',
+      'Claridad de gráficas y tablas',
+      'Comprensión de los indicadores sin apoyo externo',
+      'Utilidad para la toma de decisiones de autoevaluación',
+      'Velocidad y rendimiento',
+      'Visualización correcta en distintos dispositivos'
+    ]},
+    { titulo:'Pertinencia metodológica', obsKey:'obsMetodologia', items:[
+      'Alineación con el modelo SIACET (12 factores)',
+      'Reflejo adecuado de los instrumentos ENC1–ENC6',
+      'Valor agregado frente al manejo actual (Excel/Power BI)'
+    ]}
+  ];
+
+  let g = 0; // contador global de ítems
+  document.getElementById('bloques').innerHTML = BLOQUES.map(b=>{
+    const filas = b.items.map(d=>{
+      g++;
+      return `<div class="lk-item" data-i="${g}">
+        <div class="lk-row">
+          <span class="dim">${d}</span>
+          <div class="lk-scale">
+            ${[1,2,3,4,5].map(n=>`<label><input type="radio" name="lk${g}" value="${n}"><span class="dot">${n}</span></label>`).join('')}
+          </div>
+        </div>
+        <div class="lk-obs" style="display:none">
+          <p class="req-hint">Puntaje ≤3 · indica qué falla y qué propondrías para mejorarlo</p>
+          <textarea data-itemobs="${g}" maxlength="600" placeholder="Aporte objetivo de mejora para este ítem…"></textarea>
+        </div>
+      </div>`;
+    }).join('');
+    return `
+      <h2 class="bloque">${b.titulo}</h2>
+      <div class="lk-block">${filas}</div>
+      <label>Observaciones / correcciones de este bloque <span class="opt">(opcional)</span></label>
+      <textarea data-obs="${b.obsKey}" maxlength="2000" placeholder="Observaciones sobre ${b.titulo.toLowerCase()}…"></textarea>`;
+  }).join('');
+
+  const estado = document.getElementById('estado');
+  const btn    = document.getElementById('btn-enviar');
+
+  // Mostrar el campo de mejora cuando el puntaje del ítem sea ≤3
+  document.getElementById('bloques').addEventListener('change', e=>{
+    if (!e.target.matches('input[type="radio"][name^="lk"]')) return;
+    const item = e.target.closest('.lk-item');
+    const wrap = item.querySelector('.lk-obs');
+    if (Number(e.target.value) <= 3) { wrap.style.display='block'; item.classList.add('warn'); }
+    else { wrap.style.display='none'; item.classList.remove('warn'); }
+  });
+
+  btn.addEventListener('click', async () => {
+    estado.className = 'estado';
+    const nombre = document.getElementById('nombre').value.trim();
+    if (!nombre) { estado.textContent='Ingresa el nombre del revisor.'; estado.classList.add('err'); return; }
+
+    const items = {};
+    let faltan = 0;
+    for (let i=1;i<=15;i++){
+      const sel = document.querySelector(`input[name="lk${i}"]:checked`);
+      if (sel) items[i] = Number(sel.value); else faltan++;
+    }
+    if (faltan) { estado.textContent=`Faltan ${faltan} ítem(s) por valorar.`; estado.classList.add('err'); return; }
+
+    // Ítems con puntaje ≤3 requieren comentario de mejora
+    const itemObs = {};
+    let faltanObs = 0;
+    for (let i=1;i<=15;i++){
+      if (items[i] <= 3){
+        const t = document.querySelector(`textarea[data-itemobs="${i}"]`);
+        const txt = t ? t.value.trim() : '';
+        if (txt) itemObs[i] = txt; else faltanObs++;
+      }
+    }
+    if (faltanObs) { estado.textContent=`${faltanObs} ítem(s) con puntaje ≤3 requieren un comentario de mejora.`; estado.classList.add('err'); return; }
+
+    const ver = document.querySelector('input[name="veredicto"]:checked');
+    if (!ver) { estado.textContent='Selecciona un veredicto global.'; estado.classList.add('err'); return; }
+
+    const obs = {};
+    document.querySelectorAll('textarea[data-obs]').forEach(t=>{ obs[t.dataset.obs] = t.value.trim(); });
+
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    try {
+      await db.ref('percepcion_observatorio').push({
+        nombre,
+        rol:               document.getElementById('rol').value.trim(),
+        items,
+        itemObs,
+        obsTecnica:        obs.obsTecnica || '',
+        obsUso:            obs.obsUso || '',
+        obsMetodologia:    obs.obsMetodologia || '',
+        correccionGeneral: document.getElementById('correccionGeneral').value.trim(),
+        veredicto:         ver.value,
+        fechaRegistro:     new Date().toLocaleDateString('es-CO'),
+        createdAt:         firebase.database.ServerValue.TIMESTAMP
+      });
+      document.getElementById('form').innerHTML =
+        '<p class="ok" style="text-align:center;padding:44px 0;font-size:1.05rem">✓ ¡Gracias! Tu revisión fue registrada.</p>';
+    } catch (err) {
+      console.error(err);
+      estado.textContent = 'Hubo un error al enviar. Intenta de nuevo.';
+      estado.classList.add('err');
+      btn.disabled = false; btn.textContent = 'Enviar revisión';
+    }
+  });
+</script>
+</body>
+</html>

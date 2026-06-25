@@ -24,6 +24,7 @@
   <script src="render-taller.js"></script>
   <script src="render-taller10.js"></script>
   <script src="render-coordenadas-geo.js"></script> 
+  <script src="render-percepcion.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -247,6 +248,7 @@
     <option value="taller">Taller Integral · Matemáticas Básicas</option>
     <option value="taller10">Taller R2 · Matemáticas Básicas</option>
     <option value="coordenadasGeo">Quiz Sistemas de Coordenadas — Tec. Geoespaciales</option>
+    <option value="percepcion">Apreciación · Observatorio Institucional</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -603,6 +605,39 @@
     </div>
   </div>
 
+  <!-- APRECIACIÓN OBSERVATORIO -->
+<div class="vista" id="vista-percepcion">
+  <div class="kpi-grid">
+    <div class="kpi-card"><i class="fas fa-poll"></i><h3 id="pc-total">0</h3><p>Total respuestas</p></div>
+    <div class="kpi-card"><i class="fas fa-star" style="color:#3498db"></i><h3 id="pc-avg">—</h3><p>Valoración promedio /10</p></div>
+    <div class="kpi-card"><i class="fas fa-sliders-h" style="color:#9b59b6"></i><h3 id="pc-likert">—</h3><p>Promedio dimensiones /5</p></div>
+    <div class="kpi-card green"><i class="fas fa-thumbs-up"></i><h3 id="pc-sat">0</h3><p>🟢 Satisfechos ≥8</p></div>
+    <div class="kpi-card red"><i class="fas fa-thumbs-down"></i><h3 id="pc-insat">0</h3><p>🔴 Insatisfechos ≤5</p></div>
+  </div>
+  <div class="charts-row">
+    <div class="seccion"><h2><i class="fas fa-chart-pie"></i> Distribución por estamento</h2><div class="chart-wrap"><canvas id="chart-pc-estamento"></canvas></div></div>
+    <div class="seccion"><h2><i class="fas fa-chart-bar"></i> Histograma de valoración</h2><div class="chart-wrap"><canvas id="chart-pc-hist"></canvas></div></div>
+  </div>
+  <div class="seccion">
+    <h2><i class="fas fa-sliders-h"></i> Promedio por dimensión</h2>
+    <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Promedio grupal por dimensión (1 = muy bajo · 5 = muy alto). Barras rojas (&lt;3) señalan los aspectos peor valorados.</p>
+    <div class="chart-wrap" style="height:300px"><canvas id="chart-pc-dim"></canvas></div>
+  </div>
+  <div class="seccion">
+    <h2><i class="fas fa-users"></i> Valoración por estamento</h2>
+    <p style="color:#7f8c8d;font-size:.85rem;margin-bottom:16px">Valoración global promedio (1–10) según el grupo de interés.</p>
+    <div class="chart-wrap" style="height:260px"><canvas id="chart-pc-est-val"></canvas></div>
+  </div>
+  <div class="seccion">
+    <h2><i class="fas fa-comments"></i> Comentarios y aspectos de mejora</h2>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>Estamento</th><th style="text-align:center">Valoración</th><th style="text-align:center">Dim. /5</th><th>Comentarios</th><th>Aspectos de mejora</th><th>Fecha</th></tr></thead>
+      <tbody id="pc-tabla"></tbody>
+    </table></div>
+  </div>
+</div>
+
+
 </main>
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
@@ -627,7 +662,7 @@
   let DATA = {
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
-    flipflopsSD: {}, coordenadasGeo: {},
+    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -695,7 +730,8 @@
   db.ref('evaluaciones/tallerMatematicas').on('value',  snap => { DATA.taller    = snap.val()||{}; if(vistaActiva==='taller')    renderTaller();    });
   db.ref('evaluaciones/tallerMate10').on('value',       snap => { DATA.taller10  = snap.val()||{}; if(vistaActiva==='taller10')  renderTaller10();  });
   db.ref('quizzes/coordenadas_geo').on('value', snap => { DATA.coordenadasGeo = snap.val() || {}; if (vistaActiva === 'coordenadasGeo') renderCoordenadasGeo(); });
-  
+  db.ref('percepcion_observatorio').on('value', snap => { DATA.percepcion = snap.val()||{}; if(vistaActiva==='percepcion') renderPercepcion(); });
+
   }
 
 
@@ -720,7 +756,9 @@
       flipflopsSD: [renderFlipflopsSD, DATA.flipflopsSD],
       taller:    [renderTaller,    DATA.taller],
       taller10:  [renderTaller10,  DATA.taller10],
-      coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo]
+      coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo],
+      percepcion: [renderPercepcion, DATA.percepcion]
+
     };
     if (MAP[sel]) {
       MAP[sel][0]();
