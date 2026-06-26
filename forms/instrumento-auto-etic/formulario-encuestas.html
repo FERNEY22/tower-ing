@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuesta · Autoevaluación ETITC</title>
+<style>
+  :root{
+    --bg:#eef2f6;--surface:#fff;--ink:#172033;--muted:#5b6b82;--line:#dde4ec;
+    --primary:#13476b;--accent:#c98a1a;--soft:#f4f7fa;--ok:#1f7a4d;
+    --shadow:0 8px 30px rgba(16,38,64,.10);--radius:16px;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;padding:24px 16px}
+  .wrap{max-width:780px;margin:0 auto}
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .head{padding:26px 30px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff,#fff)}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .title{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.25;margin:6px 0 0;font-weight:700;color:var(--primary)}
+  .sub{font-size:13px;color:var(--muted);margin-top:8px}
+  .progress{height:6px;background:var(--soft)}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#2a6e9c);transition:width .35s ease}
+  .body{padding:30px}
+  .step-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px}
+  .intro-p{font-size:14.5px;color:var(--muted);margin:0 0 22px}
+  .est-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:560px){.est-grid{grid-template-columns:1fr}}
+  .est{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit}
+  .est:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 18px rgba(19,71,107,.12)}
+  .est:focus-visible{outline:3px solid #9cc4dd;outline-offset:2px}
+  .est-name{font-weight:700;font-size:15.5px;color:var(--primary)}
+  .est-meta{font-size:12.5px;color:var(--muted)}
+  .qcode{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#42688a;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:6px;padding:2px 8px;margin-bottom:12px}
+  .qcontext{font-size:13px;color:var(--muted);font-style:italic;margin:0 0 8px}
+  .qtext{font-size:17px;line-height:1.5;font-weight:600;margin:0 0 22px;color:var(--ink)}
+  .opts{display:grid;gap:9px}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.13s;background:var(--surface)}
+  .opt:hover{border-color:#9db9d0;background:#fafdff}
+  .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #b9c6d6;display:grid;place-items:center;transition:.13s}
+  .opt-num{font-weight:700;color:var(--muted);min-width:14px}
+  .opt-txt{font-size:14.5px;font-weight:500}
+  .opt.sel{border-color:var(--primary);background:#eef6fb;box-shadow:inset 0 0 0 1px var(--primary)}
+  .opt.sel .dot{border-color:var(--primary);background:var(--primary)}
+  .opt.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .opt.sel .opt-num{color:var(--primary)}
+  /* matriz */
+  .subrow{border:1.5px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:12px;background:var(--soft)}
+  .subrow .lbl{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--ink)}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  @media(max-width:560px){.scale{grid-template-columns:repeat(2,1fr)}}
+  .sopt{border:1.4px solid var(--line);border-radius:9px;padding:8px 4px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);background:#fff;transition:.12s;line-height:1.2}
+  .sopt:hover{border-color:#9db9d0}
+  .sopt.sel{border-color:var(--primary);background:#eef6fb;color:var(--primary)}
+  .nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px}
+  .btn{font:inherit;font-weight:600;border-radius:11px;padding:11px 22px;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover:not(:disabled){background:#0f3a58}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+  .btn-ghost:hover:not(:disabled){border-color:#b9c6d6;color:var(--ink)}
+  .btn-ghost:disabled{opacity:.35;cursor:not-allowed}
+  label.field{display:block;font-weight:600;font-size:15px;margin-bottom:10px}
+  select.txt,input.txt{width:100%;font:inherit;font-size:15px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--soft)}
+  select.txt:focus,input.txt:focus{outline:none;border-color:var(--primary);background:#fff}
+  .review{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:14px;color:var(--muted)}
+  .review b{color:var(--ink)}
+  .done{text-align:center;padding:20px 10px}
+  .done .check{width:64px;height:64px;border-radius:50%;background:#e6f4ec;display:grid;place-items:center;margin:0 auto 18px}
+  .done .check svg{width:32px;height:32px}
+  .done h2{font-family:Georgia,serif;color:var(--primary);margin:0 0 8px}
+  .foot{text-align:center;font-size:11.5px;color:var(--muted);padding:16px;border-top:1px solid var(--line)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="head">
+      <div class="eyebrow">Encuesta</div>
+      <h1 class="title">Autoevaluación de Acreditación de Programas e Institucional</h1>
+      <p class="sub" id="headSub">Escuela Tecnológica Instituto Técnico Central — ETITC</p>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="body" id="body"></div>
+    <div class="foot">Encuesta anónima · JUNTOS POR LA ACREDITACIÓN INSTITUCIONAL · Sus respuestas se usan de forma agregada.</div>
+  </div>
+</div>
+
+<script>
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// Compat SDK — usa la MISMA config de los demás formularios del sitio.
+// Si firebase ya está inicializado globalmente, omite este bloque.
+;(function(){
+  if(window.firebase && firebase.apps && firebase.apps.length) return;
+  var firebaseConfig = { /* apiKey, authDomain, databaseURL, projectId, ... */ };
+  if(firebaseConfig.databaseURL){ try{ firebase.initializeApp(firebaseConfig); }catch(e){ console.warn(e);} }
+})();
+</script>
+<script>
+const DATA = {"estamentos": [{"id": "directivos", "nombre": "Directivos"}, {"id": "profesores", "nombre": "Profesores"}, {"id": "estudiantes", "nombre": "Estudiantes"}, {"id": "administrativos", "nombre": "Administrativos"}, {"id": "egresados", "nombre": "Egresados"}, {"id": "empleadores", "nombre": "Empleadores de egresados"}], "programas": ["Técnica Profesional en Mantenimiento Industrial", "Tecnología en Montajes Industriales", "Ingeniería Electromecánica", "Técnica Profesional en Computación", "Tecnología en Desarrollo de Software", "Ingeniería de Sistemas", "Técnica Profesional en Dibujo Mecánico y de Herramientas Industriales", "Tecnología en Gestión de Fabricación Mecánica", "Ingeniería Mecánica", "Técnica Profesional en Procesos de Manufactura", "Tecnología en Producción Industrial", "Ingeniería de Procesos Industriales", "Técnica Profesional en Electrónica Industrial", "Tecnología en Automatización Industrial", "Ingeniería Mecatrónica", "Especialización Tecnológica en Diseño y Gestión de Sistemas y Dispositivos para Internet de las Cosas", "Especialización en Seguridad y Salud en el Trabajo"], "programasEmpExtra": ["Especialización en Mantenimiento", "Especialización en Instrumentación Industrial", "Licenciatura en Tecnología", "Todos"], "banco": [{"codigos": ["I-F1C2A6"], "texto": "Califique según su apreciación los estudios orientados a evaluar la pertinencia del proyecto educativo institucional con las dinámicas y prácticas para la organización, toma de decisiones, administración, evaluación y autorregulación de las labores académicas, formativas, docentes, científicas, culturales y de extensión, así como del bienestar, la internacionalización y los recursos físicos, tecnológicos y financieros.", "estamentos": ["directivos", "profesores", "administrativos"], "tipo": "single", "id": "it001"}, {"codigos": ["I-F1C2A7", "I-F1C3A7"], "texto": "Califique la existencia de orientaciones y estrategias para el fomento de la formación integral de los estudiantes y el fortalecimiento de la comunidad académica en un ambiente institucional adecuado, incluyente, de responsabilidad social y con valores éticos.", "estamentos": ["directivos", "profesores"], "tipo": "single", "id": "it002"}, {"codigos": ["I-F1C2A8"], "texto": "Califique basado en evidencias que los egresados reciben una formación integral y desarrollo de su pensamiento crítico.", "estamentos": ["profesores"], "tipo": "single", "id": "it003"}, {"codigos": ["I-F1C3A9", "P-F1C2A12"], "texto": "Según su criterio califique las estrategias y programas que la institución implementa para propiciar la formación integral de los estudiantes, la consolidación de su identidad y el reconocimiento social.", "estamentos": ["profesores", "estudiantes", "egresados"], "tipo": "single", "id": "it004"}, {"codigos": ["P-F2C3A18"], "texto": "Indique su apreciación sobre las actividades de formación integral.", "estamentos": ["profesores", "estudiantes"], "tipo": "single", "id": "it005"}, {"codigos": ["P-F2C6A26"], "texto": "Pertinencia, vigencia y aplicación del reglamento estudiantil y las políticas académicas.", "estamentos": ["profesores", "estudiantes"], "tipo": "matriz", "subitems": [{"codigos": ["P-F2C6A26", "I-F11C33A170"], "etiqueta": "A) Aplicación de los criterios de ingreso y permanencia de los estudiantes."}, {"codigos": ["P-F2C6A26", "I-F11C33A171"], "etiqueta": "B) Aplicación de los criterios de promoción, transferencia y grado."}, {"codigos": ["P-F2C6A26", "I-F11C33A172"], "etiqueta": "C) Participación de los estudiantes en los organismos de decisión de la institución."}, {"codigos": ["P-F2C6A26", "I-F11C33A173"], "etiqueta": "D) Transparencia en la aplicación de mecanismos predeterminados para la elección de representantes estudiantiles."}, {"codigos": ["P-F2C6A26", "I-F11C33A174"], "etiqueta": "E) Existencia de políticas sobre equidad de género y su implementación."}], "id": "it006"}, {"codigos": ["P-F2C7A30"], "texto": "Aplicación, por parte del programa o la institución, de los estímulos académicos y apoyos socioeconómicos.", "estamentos": ["estudiantes"], "tipo": "matriz", "subitems": [{"codigos": ["P-F2C7A30", "I-F11C35A186"], "etiqueta": "A) Existencia y aplicación, con transparencia, de los criterios para asignación de apoyos estudiantiles."}, {"codigos": ["P-F2C7A30", "I-F11C35A187"], "etiqueta": "B) Existencia de convenios interinstitucionales activos para facilitar el ingreso y permanencia."}, {"codigos": ["P-F2C7A30", "I-F11C35A188"], "etiqueta": "C) Existencia de mecanismos de divulgación de créditos, becas, subsidios, apoyos y estímulos."}, {"codigos": ["P-F2C7A30", "I-F11C35A189"], "etiqueta": "D) Procedimientos de control para el buen uso de los apoyos en los tiempos previstos para la graduación."}], "id": "it007"}, {"codigos": ["I-F2C4A12"], "texto": "Califique los mecanismos y formas de convocatoria, selección y participación de la representación democrática en el máximo órgano de gobierno de la institución.", "estamentos": ["profesores", "estudiantes", "egresados"], "tipo": "single", "id": "it008"}, {"codigos": ["I-F2C4A15"], "texto": "De acuerdo a su criterio, califique la eficiencia, transparencia y buenas prácticas de los órganos de gobierno institucional y sus integrantes.", "estamentos": ["profesores", "estudiantes", "administrativos"], "tipo": "single", "id": "it009"}, {"codigos": ["I-F3C9A34", "I-F3C8A34"], "texto": "Califique la estructura organizacional y administrativa coherente con las características institucionales y su proyecto educativo institucional.", "estamentos": ["administrativos", "directivos"], "tipo": "single", "id": "it010"}, {"codigos": ["I-F3C9A35", "I-F3C8A35"], "texto": "Califique el liderazgo, integridad e idoneidad de los responsables de la dirección de la institución y sus dependencias.", "estamentos": ["administrativos", "estudiantes", "profesores", "directivos"], "tipo": "single", "id": "it011"}, {"codigos": ["I-F3C9A37", "I-F3C8A37"], "texto": "Califique los mecanismos transparentes para la designación de los cargos de dirección y asignación de responsabilidades, funciones, roles y de los procedimientos que deben seguirse dentro de la institución.", "estamentos": ["administrativos", "directivos"], "tipo": "single", "id": "it012"}, {"codigos": ["I-F10C28A145", "P-F3C8A34"], "texto": "Califique la aplicación, pertinencia y vigencia de las políticas, normas y criterios académicos establecidos por la institución para la selección, vinculación y permanencia de los profesores, así como los estímulos aplicados al desempeño y producción investigativa.", "estamentos": ["directivos", "estudiantes", "profesores"], "tipo": "single", "id": "it013"}, {"codigos": ["I-F10C29A154", "P-F3C9A37"], "texto": "Califique la pertinencia, vigencia y aplicación del estatuto profesoral, en relación con la existencia de criterios para definir responsabilidades del profesorado frente al desarrollo de funciones sustantivas y gestiones académico-administrativas.", "estamentos": ["directivos", "profesores"], "tipo": "single", "id": "it014"}, {"codigos": ["I-F10C29A152", "P-F3C10A40"], "texto": "Califique la calidad y la suficiencia del número y de la dedicación de los profesores al servicio del programa, con un núcleo de profesores a término indefinido y otros con al menos contratación anual, adecuado para el desarrollo de las labores formativas, académicas, docentes, científicas, culturales y de extensión.", "estamentos": ["directivos", "estudiantes", "profesores"], "tipo": "single", "id": "it015"}, {"codigos": ["I-F10C29A153", "P-F3C10A40"], "texto": "Califique la existencia y aplicación de mecanismos de selección, vinculación y contratación de profesores que propendan por una comunidad académica diversa e inclusiva, comprometida con las labores formativas, académicas, docentes, científicas, culturales y de extensión.", "estamentos": ["directivos", "estudiantes", "profesores"], "tipo": "single", "id": "it016"}, {"codigos": ["I-F10C31A161", "P-F3C11A45"], "texto": "Califique el impacto de las acciones orientadas al desarrollo integral de los profesores, y la cobertura, calidad y pertinencia de los programas de desarrollo profesoral.", "estamentos": ["directivos", "profesores"], "tipo": "single", "id": "it017"}, {"codigos": ["I-F10C31A162", "P-F3C12A49"], "texto": "Califique el impacto que, para el enriquecimiento de la calidad del programa, ha tenido el régimen de reconocimiento y estímulos al profesorado por el ejercicio calificado de la docencia, la investigación, la innovación, la creación artística y cultural y la extensión o proyección social.", "estamentos": ["directivos", "profesores"], "tipo": "single", "id": "it018"}, {"codigos": ["I-F3C10A39", "P-F3C13A51"], "texto": "Califique la pertinencia y calidad del material docente producido y utilizado por los profesores, colecciones bibliográficas, bases de datos y revistas suficientes para la capacidad de la institución, pertinentes y actualizadas.", "estamentos": ["directivos", "estudiantes", "profesores"], "tipo": "single", "id": "it019"}, {"codigos": ["P-F12C48A206"], "texto": "Califique la pertinencia, correspondencia y suficiencia de los recursos informáticos y de comunicación con que cuentan los programas académicos.", "estamentos": ["directivos", "estudiantes", "profesores"], "tipo": "single", "id": "it020"}, {"codigos": ["I-F3C8A31"], "texto": "Califique la pertinencia, accesibilidad y usabilidad de la plataforma tecnológica adecuada para garantizar la conectividad a todos los miembros de la comunidad académica.", "estamentos": ["directivos"], "tipo": "single", "id": "it021"}, {"codigos": ["I-F3C8A33"], "texto": "Califique la existencia de políticas, mecanismos, plataformas, medios de comunicación y recursos humanos que permitan mantener interconexión y a los agentes externos acceder a información pertinente, actualizada y veraz sobre las políticas, servicios, actores y dinámicas institucionales.", "estamentos": ["directivos", "administrativos"], "tipo": "single", "id": "it022"}, {"codigos": ["I-F3C10A40"], "texto": "Accesibilidad, disponibilidad, pertinencia y calidad de los laboratorios y sitios de práctica para las labores académicas de la institución.", "estamentos": ["estudiantes", "profesores"], "tipo": "matriz", "subitems": [{"codigos": ["I-F3C10A40"], "etiqueta": "Docencia"}, {"codigos": ["I-F3C10A40"], "etiqueta": "Investigación"}, {"codigos": ["I-F3C10A40"], "etiqueta": "Proyección social"}], "id": "it023"}, {"codigos": ["I-F3C10A41"], "texto": "Existencia de mecanismos para la gestión de equipos, mobiliario, plataformas tecnológicas, sistemas informáticos, recursos bibliográficos físicos y/o digitales, bases de datos y recursos de aprendizaje, acordes con los niveles y modalidades de los programas.", "estamentos": ["estudiantes", "profesores"], "tipo": "matriz", "subitems": [{"codigos": ["I-F3C10A41"], "etiqueta": "Compra"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Mantenimiento"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Renovación"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Acceso"}], "id": "it024"}, {"codigos": ["I-F3C11A46"], "texto": "Califique la calidad, disponibilidad y accesibilidad de los distintos ambientes de aprendizaje propios de las modalidades de oferta académica, para el desarrollo de las actividades curriculares y extracurriculares y las asociadas con el bienestar en ambientes institucionales.", "estamentos": ["estudiantes", "profesores"], "tipo": "single", "id": "it025"}, {"codigos": ["I-F3C7A26", "P-F11C41A170"], "texto": "Eficiencia, eficacia y orientación de los procesos administrativos hacia el desarrollo de la docencia, investigación, internacionalización, extensión y proyección social.", "estamentos": ["estudiantes", "profesores"], "tipo": "matriz", "subitems": [{"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Eficiencia"}, {"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Eficacia"}, {"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Orientación a los procesos administrativos"}], "id": "it026"}, {"codigos": ["I-F3C12A49", "P-F11C42A179"], "texto": "Califique la calidad del apoyo administrativo en relación con las políticas y estrategias para la asignación, ejecución y evaluación presupuestal y de administración financiera.", "estamentos": ["estudiantes", "profesores"], "tipo": "single", "id": "it027"}, {"codigos": ["P-F11C44A188"], "texto": "Califique la relación entre el número de admitidos, el número de profesores asociados a los distintos componentes de formación, y los demás recursos necesarios en la modalidad que se oferta.", "estamentos": ["estudiantes", "profesores"], "tipo": "single", "id": "it028"}, {"codigos": ["I-F4C15A61", "P-F5C25A102"], "texto": "Calidad y pertinencia del programa, y políticas y estrategias de la institución para la gestión de la calidad, la autoevaluación y la planeación en las distintas áreas, unidades académicas y administrativas.", "estamentos": ["estudiantes", "profesores"], "tipo": "matriz", "subitems": [{"codigos": ["I-F4C15A61", "P-F5C25A102"], "etiqueta": "Pertinencia"}, {"codigos": ["I-F4C15A61", "P-F5C25A102"], "etiqueta": "Calidad"}], "id": "it029"}, {"codigos": ["I-F4C13A52"], "texto": "Califique la definición, construcción y seguimiento de indicadores de gestión coherentes con las proyecciones institucionales, expresadas en sus planes de desarrollo y de mejora.", "estamentos": ["directivos", "profesores"], "tipo": "single", "id": "it030"}, {"codigos": ["I-F4C13A53"], "texto": "Califique la articulación de los programas de mejoramiento con la planeación y el presupuesto general de la institución.", "estamentos": ["directivos", "administrativos"], "tipo": "single", "id": "it031"}, {"codigos": ["I-F4C16A64"], "texto": "Califique la implementación y eficiencia de políticas, mecanismos y estrategias institucionales que garanticen la transparencia en la designación del personal académico, administrativo y de apoyo; en la asignación de responsabilidades y funciones y en los procedimientos institucionales.", "estamentos": ["administrativos"], "tipo": "single", "id": "it032"}, {"codigos": ["I-F5C20A78"], "texto": "Califique la eficiencia de las políticas, estrategias y apoyos institucionales para la creación, modificación, extensión y cierre de programas académicos y sus modalidades.", "estamentos": ["directivos", "administrativos"], "tipo": "single", "id": "it033"}, {"codigos": ["I-F5C20A79"], "texto": "Califique la eficiencia de las políticas, mecanismos y participación de cuerpos colegiados en la evaluación de los procedimientos orientados a la creación, modificación y extensión de programas, así como en su cierre.", "estamentos": ["directivos", "administrativos"], "tipo": "single", "id": "it034"}, {"codigos": ["I-F5C18A70"], "texto": "Califique la eficiencia del sistema institucional de evaluación estudiantil con miras al logro de los perfiles de egreso.", "estamentos": ["estudiantes", "profesores"], "tipo": "single", "id": "it035"}, {"codigos": ["I-F5C18A71"], "texto": "Califique el seguimiento, evaluación y ajuste a las políticas, criterios y mecanismos de evaluación estudiantil, en favor del logro de los resultados de aprendizaje.", "estamentos": ["estudiantes", "profesores"], "tipo": "single", "id": "it036"}, {"codigos": ["I-F6C21A81"], "texto": "Califique las políticas y estrategias institucionales para favorecer la formación investigativa de los estudiantes, concordantes con los diferentes niveles de formación (pregrado y posgrado).", "estamentos": ["estudiantes"], "tipo": "single", "id": "it037"}, {"codigos": ["I-F7C23A103"], "texto": "Califique los aportes de la institución al estudio y a la solución de problemas regionales, nacionales e internacionales, en coherencia con la naturaleza, tipología, identidad y misión institucional.", "estamentos": ["directivos"], "tipo": "single", "id": "it038"}, {"codigos": ["P-F10C38A153"], "texto": "Califique la efectividad de las estrategias y recursos de apoyo brindados por el programa académico para el desarrollo de las prácticas de enseñanza-aprendizaje.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it039"}, {"codigos": ["P-F10C39A159"], "texto": "Califique la utilidad y pertinencia de las estrategias y recursos de apoyo brindados por la institución para el desarrollo de su proceso formativo en diferentes contextos.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it040"}, {"codigos": ["I-F11C34A179"], "texto": "Califique la aplicación de políticas y estrategias para la admisión y permanencia de los estudiantes.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it041"}, {"codigos": ["I-F11C34A180"], "texto": "Califique las estrategias para garantizar la integración de los estudiantes a la institución, en consideración a su heterogeneidad social y cultural.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it042"}, {"codigos": ["I-F11C34A181"], "texto": "Califique la existencia de programas orientados a la disminución de la deserción de estudiantes, análisis de causas y estrategias de permanencia.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it043"}, {"codigos": ["I-F11C34A183"], "texto": "Califique la aplicación de las políticas y estrategias para la admisión y permanencia de los estudiantes.", "estamentos": ["estudiantes"], "tipo": "single", "id": "it044"}, {"codigos": ["I-F11C34A182"], "texto": "Califique la existencia y aplicación de criterios y estrategias para admitir estudiantes procedentes de otras instituciones nacionales e internacionales, y reglas claras para el intercambio estudiantil.", "estamentos": ["directivos"], "tipo": "single", "id": "it045"}, {"codigos": ["I-F9C27"], "texto": "Califique los siguientes aspectos relacionados con el Bienestar Institucional.", "estamentos": ["directivos", "profesores", "estudiantes", "administrativos", "egresados"], "tipo": "matriz", "subitems": [{"codigos": ["I-F9C27A132"], "etiqueta": "Existencia y aplicación de políticas de bienestar institucional para beneficio de toda la comunidad."}, {"codigos": ["I-F9C27A133"], "etiqueta": "Campos de acción, utilización y cobertura de los programas del bienestar, sus usuarios y su impacto."}, {"codigos": ["I-F9C27A134"], "etiqueta": "Recursos humanos con dedicación al bienestar y asignación/ejecución de recursos económicos, técnicos, tecnológicos y de infraestructura."}, {"codigos": ["I-F9C27A135"], "etiqueta": "Existencia de estrategias de divulgación de los servicios de bienestar."}, {"codigos": ["I-F9C27A138"], "etiqueta": "Aplicación del protocolo para la prevención, detección y atención de violencias y cualquier discriminación basada en género."}], "id": "it046"}, {"codigos": ["I-F12C37A199"], "texto": "Califique la aplicación de políticas y mecanismos disponibles para la relación e interacción de los egresados.", "estamentos": ["egresados"], "tipo": "single", "id": "it047"}, {"codigos": ["I-F12C37A201"], "texto": "Califique la existencia y aplicación de un portafolio de servicios que presta la institución para facilitar la incorporación de los egresados al ámbito laboral.", "estamentos": ["egresados"], "tipo": "single", "id": "it048"}, {"codigos": ["I-F12C37A202"], "texto": "Califique la participación, apoyo y cooperación voluntaria de los egresados en actividades docentes e investigativas.", "estamentos": ["egresados"], "tipo": "single", "id": "it049"}, {"codigos": ["I-F12C37A203"], "texto": "Califique las evidencias sobre la existencia y eficacia de los sistemas de información y seguimiento a los egresados.", "estamentos": ["egresados"], "tipo": "single", "id": "it050"}, {"codigos": ["I-F12C37A204"], "texto": "Califique la existencia de canales activos y oportunos de comunicación con los egresados para apoyar el desarrollo institucional y fomentar procesos de cooperación mutua.", "estamentos": ["egresados"], "tipo": "single", "id": "it051"}, {"codigos": ["I-F12C37A205"], "texto": "Califique la aplicación de mecanismos disponibles para la relación e interacción con los egresados, su contribución a las funciones sustantivas y su participación en las dinámicas institucionales.", "estamentos": ["egresados"], "tipo": "single", "id": "it052"}, {"codigos": ["I-F1C3A8", "P-F4C17A41"], "texto": "¿Cómo evalúa el desempeño de los egresados de la ETITC en la solución de problemas académicos, ambientales, tecnológicos, sociales o culturales en su organización?", "estamentos": ["empleadores"], "tipo": "single", "id": "it053"}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "texto": "En relación con los órganos de gobierno de la ETITC, ¿cómo evalúa que los procesos de eficiencia, transparencia y buenas prácticas facilitan su participación como empleadores para mejorar la calidad del ejercicio profesional del egresado?", "estamentos": ["empleadores"], "tipo": "matriz", "subitems": [{"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Eficiencia en procesos que permiten nuestra participación."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Transparencia en la comunicación sobre oportunidades de colaboración."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Buenas prácticas que fomentan nuestra intervención en mejoras curriculares."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Acciones concretas implementadas a partir de nuestras sugerencias."}], "id": "it054"}]};
+const ESTAMENTOS=DATA.estamentos, BANCO=DATA.banco, PROGRAMAS=DATA.programas, PROG_EMP=DATA.programasEmpExtra;
+const ESCALA=[{v:1,label:"Alta"},{v:2,label:"Media"},{v:3,label:"Baja"},{v:4,label:"No responde"},{v:5,label:"No aplica"}];
+const NODO="autoevaluacion_estamentos";
+const body=document.getElementById('body'),bar=document.getElementById('bar'),headSub=document.getElementById('headSub');
+let st={est:null,estName:null,programa:"",items:[],idx:0,resp:{}};
+function setBar(p){bar.style.width=Math.max(0,Math.min(100,p))+"%"}
+function countItems(id){return BANCO.filter(it=>it.estamentos.includes(id)).length}
+
+function vSelector(){
+  setBar(0);headSub.textContent="Seleccione el estamento al que pertenece para iniciar.";
+  const cards=ESTAMENTOS.map(e=>`<button class="est" data-est="${e.id}">
+    <span class="est-name">${e.nombre}</span><span class="est-meta">${countItems(e.id)} preguntas</span></button>`).join("");
+  body.innerHTML=`<p class="intro-p">A través de esta encuesta la ETITC recoge información para los procesos de
+    autoevaluación de sus programas. Es <b>anónima</b>; le pedimos responder todas las preguntas con detenimiento y objetividad.</p>
+    <div class="step-label">¿A qué estamento pertenece?</div><div class="est-grid">${cards}</div>`;
+  body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
+    const e=ESTAMENTOS.find(x=>x.id===b.dataset.est);
+    st.est=e.id;st.estName=e.nombre;st.items=BANCO.filter(it=>it.estamentos.includes(e.id));st.idx=0;st.resp={};
+    vPrograma();
+  });
+}
+function vPrograma(){
+  setBar(4);headSub.textContent=st.estName;
+  const lista=st.est==="empleadores"?PROGRAMAS.concat(PROG_EMP):PROGRAMAS;
+  const opts=lista.map(p=>`<option value="${p}" ${st.programa===p?"selected":""}>${p}</option>`).join("");
+  const etq=st.est==="empleadores"?"Programa académico del cual proviene el egresado que evalúa":"Programa académico al que pertenece";
+  body.innerHTML=`<div class="step-label">${st.estName} · Antes de empezar</div>
+    <label class="field" for="prog">${etq}</label>
+    <select class="txt" id="prog"><option value="" disabled ${st.programa?"":"selected"}>Seleccione un programa…</option>${opts}</select>
+    <div class="nav"><button class="btn btn-ghost" id="atras">Cambiar estamento</button>
+    <button class="btn btn-primary" id="ir" disabled>Comenzar</button></div>`;
+  const sel=document.getElementById('prog'),ir=document.getElementById('ir');
+  if(st.programa)ir.disabled=false;
+  sel.onchange=()=>{st.programa=sel.value;ir.disabled=!sel.value};
+  document.getElementById('atras').onclick=vSelector;
+  ir.onclick=()=>{st.idx=0;vPregunta()};
+}
+function answered(it){
+  if(it.tipo==="matriz"){const r=st.resp[it.id]||{};return it.subitems.every((_,i)=>r[i])}
+  return !!st.resp[it.id];
+}
+function vPregunta(){
+  const total=st.items.length,it=st.items[st.idx];
+  setBar(6+(st.idx/total)*88);headSub.textContent=`${st.estName} · ${st.programa||"—"}`;
+  const ctx=it.contexto?`<p class="qcontext">${it.contexto}</p>`:"";
+  let cuerpo;
+  if(it.tipo==="matriz"){
+    const r=st.resp[it.id]||{};
+    cuerpo=`<div>`+it.subitems.map((s,i)=>{
+      const cells=ESCALA.map(o=>`<div class="sopt ${r[i]===o.v?'sel':''}" data-i="${i}" data-v="${o.v}">${o.label}</div>`).join("");
+      return `<div class="subrow"><div class="lbl">${s.etiqueta}</div><div class="scale">${cells}</div></div>`;
+    }).join("")+`</div>`;
+  } else {
+    const v=st.resp[it.id];
+    cuerpo=`<div class="opts">`+ESCALA.map(o=>`<div class="opt ${v===o.v?'sel':''}" data-v="${o.v}">
+      <span class="dot"></span><span class="opt-num">${o.v}.</span><span class="opt-txt">${o.label}</span></div>`).join("")+`</div>`;
+  }
+  body.innerHTML=`<div class="step-label">Pregunta ${st.idx+1} de ${total}</div>
+    <span class="qcode">${it.codigos.join(" · ")}</span>${ctx}
+    <p class="qtext">${it.texto}</p>${cuerpo}
+    <div class="nav"><button class="btn btn-ghost" id="prev" ${st.idx===0?"disabled":""}>Anterior</button>
+    <button class="btn btn-primary" id="next" ${answered(it)?"":"disabled"}>${st.idx===total-1?"Revisar":"Siguiente"}</button></div>`;
+  const next=document.getElementById('next');
+  if(it.tipo==="matriz"){
+    body.querySelectorAll('.sopt').forEach(c=>c.onclick=()=>{
+      const i=+c.dataset.i;st.resp[it.id]=st.resp[it.id]||{};st.resp[it.id][i]=+c.dataset.v;
+      body.querySelectorAll(`.sopt[data-i="${i}"]`).forEach(x=>x.classList.remove('sel'));c.classList.add('sel');
+      next.disabled=!answered(it);
+    });
+  } else {
+    body.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      st.resp[it.id]=+o.dataset.v;
+      body.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');
+      next.disabled=false;
+    });
+  }
+  document.getElementById('prev').onclick=()=>{if(st.idx>0){st.idx--;vPregunta()}};
+  next.onclick=()=>{if(!answered(it))return;if(st.idx<total-1){st.idx++;vPregunta()}else vRevisar()};
+}
+function vRevisar(){
+  setBar(96);const total=st.items.length;const cont=st.items.filter(answered).length;
+  body.innerHTML=`<div class="step-label">Revisión final</div>
+    <div class="review">Estamento: <b>${st.estName}</b><br>Programa: <b>${st.programa||"—"}</b><br>
+    Preguntas respondidas: <b>${cont} de ${total}</b></div>
+    <div class="nav"><button class="btn btn-ghost" id="volver">Volver</button>
+    <button class="btn btn-primary" id="enviar">Enviar respuestas</button></div>`;
+  document.getElementById('volver').onclick=()=>{st.idx=total-1;vPregunta()};
+  document.getElementById('enviar').onclick=enviar;
+}
+function lbl(v){return (ESCALA.find(o=>o.v===v)||{}).label||null}
+function payload(){
+  return{estamento:st.est,programa:st.programa||null,enviadoEn:new Date().toISOString(),
+    respuestas:st.items.map(it=>{
+      if(it.tipo==="matriz"){const r=st.resp[it.id]||{};
+        return{id:it.id,codigos:it.codigos,tipo:"matriz",
+          sub:it.subitems.map((s,i)=>({codigos:s.codigos,etiqueta:s.etiqueta,valor:r[i]||null,nivel:lbl(r[i])}))};}
+      return{id:it.id,codigos:it.codigos,valor:st.resp[it.id]||null,nivel:lbl(st.resp[it.id])};
+    })};
+}
+async function enviar(){
+  const b=document.getElementById('enviar');b.disabled=true;b.textContent="Enviando…";
+  const d=payload();
+  try{
+    if(window.firebase&&firebase.apps&&firebase.apps.length){await firebase.database().ref(NODO).push(d);}
+    else{console.log("[preview] Firebase no inicializado. Payload:",d);await new Promise(r=>setTimeout(r,600));}
+    vGracias();
+  }catch(e){console.error(e);b.disabled=false;b.textContent="Reintentar envío";alert("No se pudo enviar. Revise su conexión e intente de nuevo.");}
+}
+function vGracias(){
+  setBar(100);headSub.textContent="Registro completado";
+  body.innerHTML=`<div class="done"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2>¡Gracias!</h2><p class="intro-p" style="margin:0">Sus respuestas se registraron de forma anónima.</p></div>`;
+}
+vSelector();
+</script>
+</body>
+</html>

@@ -25,6 +25,7 @@
   <script src="render-taller10.js"></script>
   <script src="render-coordenadas-geo.js"></script> 
   <script src="render-percepcion.js"></script>
+  <script src="render-encuestas.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -249,6 +250,7 @@
     <option value="taller10">Taller R2 · Matemáticas Básicas</option>
     <option value="coordenadasGeo">Quiz Sistemas de Coordenadas — Tec. Geoespaciales</option>
     <option value="percepcion">Apreciación · Observatorio Institucional</option>
+    <option value="encuestas">Encuesta de Autoevaluación</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -636,6 +638,7 @@
   </div>
 </div>
 
+<div class="vista" id="vista-encuestas"></div>
 
 </main>
 
@@ -661,7 +664,7 @@
   let DATA = {
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
-    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}
+    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: []
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -730,6 +733,8 @@
   db.ref('evaluaciones/tallerMate10').on('value',       snap => { DATA.taller10  = snap.val()||{}; if(vistaActiva==='taller10')  renderTaller10();  });
   db.ref('quizzes/coordenadas_geo').on('value', snap => { DATA.coordenadasGeo = snap.val() || {}; if (vistaActiva === 'coordenadasGeo') renderCoordenadasGeo(); });
   db.ref('percepcion_observatorio').on('value', snap => { DATA.percepcion = snap.val()||{}; if(vistaActiva==='percepcion') renderPercepcion(); });
+  db.ref('autoevaluacion_estamentos').on('value', s => { DATA.encuestas = s.val() ? Object.values(s.val()) : []; if (vistaActiva === 'encuestas') renderEncuestas();});
+
 
   }
 
@@ -756,8 +761,8 @@
       taller:    [renderTaller,    DATA.taller],
       taller10:  [renderTaller10,  DATA.taller10],
       coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo],
-      percepcion: [renderPercepcion, DATA.percepcion]
-
+      percepcion: [renderPercepcion, DATA.percepcion],
+      encuestas: [renderEncuestas, DATA.encuestas]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
