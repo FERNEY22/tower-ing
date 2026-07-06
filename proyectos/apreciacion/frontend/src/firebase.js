@@ -1,6 +1,12 @@
 // Firebase (mismo proyecto que towers: los usuarios se crean allá).
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  initializeAuth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
@@ -13,4 +19,18 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+
+// Usamos initializeAuth con una CADENA de persistencia en lugar de getAuth().
+// Motivo: getAuth() usa IndexedDB por defecto y, si el navegador lo bloquea
+// (modo incógnito, restricciones de almacenamiento, algunas extensiones), la
+// inicialización de Auth puede QUEDARSE COLGADA y onAuthStateChanged nunca
+// dispara → toda la UI se congela. Con esta lista, Firebase prueba cada método
+// en orden y usa el primero que funcione, cayendo hasta memoria si es preciso.
+export const auth = initializeAuth(app, {
+  persistence: [
+    indexedDBLocalPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
+    inMemoryPersistence,
+  ],
+});
