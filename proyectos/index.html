@@ -161,6 +161,29 @@
         </article>`;
     }
 
+    // APRECIACIÓN — hero verde claro→oscuro (autoevaluación institucional)
+    function renderApreciacion(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      const cta = (p.link && p.link !== '#')
+        ? `<a href="${p.link}"${ext} class="btn-apreciacion">Ver proyecto <span class="arrow">→</span></a>`
+        : `<span class="fa-soon">◷ Próximamente · en preparación</span>`;
+      const stats = (p.stats || [])
+        .map(s => `<div class="fa-stat"><div class="fa-n">${s.n}</div><div class="fa-l">${s.l}</div></div>`)
+        .join('');
+      return `
+        <article class="feat-apreciacion">
+          <div class="fa-head">
+            <span class="fa-kicker">◆ Autoevaluación · ETITC</span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          ${stats ? `<div class="fa-stats">${stats}</div>` : ''}
+          <div class="tags">${tagsDe(p)}</div>
+          ${cta}
+        </article>`;
+    }
+
     function renderCard(p) {
       const linkHtml = p.link !== '#'
         ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
@@ -176,7 +199,7 @@
     }
 
     // Cada destacado elige su plantilla según 'variante'
-    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar };
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion };
 
     const destacados = proyectos.filter(p => p.destacado);
     const resto      = proyectos.filter(p => !p.destacado);
