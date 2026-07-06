@@ -392,10 +392,41 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
   100% { box-shadow: 0 0 0 0 rgba(232, 80, 10, 0); }
 }
 
+/* APRECIACIÓN — hero verde claro→oscuro (autoevaluación institucional) */
+.feat-apreciacion {
+  position: relative; overflow: hidden; margin-bottom: 24px;
+  border-radius: var(--r-lg); box-shadow: var(--shadow-md);
+  background: linear-gradient(145deg, #2FA36B 0%, #17724A 42%, #0B3826 100%);
+  color: #e9fbf1; padding: clamp(28px, 4vw, 44px);
+}
+.feat-apreciacion::before { content: ""; position: absolute; top: -55%; right: -10%; width: 62%; height: 190%; background: radial-gradient(circle, rgba(134, 239, 172, .22), transparent 62%); pointer-events: none; }
+.feat-apreciacion::after { content: ""; position: absolute; left: -12%; bottom: -60%; width: 48%; height: 150%; background: radial-gradient(circle, rgba(16, 185, 129, .18), transparent 60%); pointer-events: none; }
+.feat-apreciacion > * { position: relative; z-index: 1; }
+.feat-apreciacion .fa-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-apreciacion .fa-kicker { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: #6EE7A8; }
+.feat-apreciacion h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(26px, 3.4vw, 40px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; color: #fff; max-width: 22ch; }
+.feat-apreciacion .desc { color: #c3e6d3; line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-apreciacion .fa-stats { display: flex; flex-wrap: wrap; border: 1px solid rgba(255, 255, 255, .14); border-radius: var(--r-md); overflow: hidden; margin: 4px 0 22px; background: rgba(255, 255, 255, .04); }
+.feat-apreciacion .fa-stat { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid rgba(255, 255, 255, .12); }
+.feat-apreciacion .fa-stat:last-child { border-right: none; }
+.feat-apreciacion .fa-n { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; color: #eafff3; line-height: 1; }
+.feat-apreciacion .fa-l { font-size: var(--t-xs); color: #9fd4b7; margin-top: 5px; text-transform: uppercase; letter-spacing: .06em; }
+.feat-apreciacion .tags { margin-bottom: 22px; }
+.feat-apreciacion .tag { background: rgba(255, 255, 255, .10); border-color: rgba(255, 255, 255, .18); color: #d5f2e2; }
+.feat-apreciacion .periodo { color: #9fd4b7; }
+.feat-apreciacion .estado { background: rgba(255, 255, 255, .14); color: #eafff3; }
+.feat-apreciacion .btn-apreciacion { display: inline-flex; align-items: center; gap: 9px; background: #34D399; color: #06301F; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 700; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-apreciacion .btn-apreciacion:hover { background: #56e6b0; }
+.feat-apreciacion .btn-apreciacion:active { transform: translateY(1px); }
+.feat-apreciacion .btn-apreciacion .arrow { transition: transform .25s var(--ease); }
+.feat-apreciacion .btn-apreciacion:hover .arrow { transform: translateX(4px); }
+.feat-apreciacion .fa-soon { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: var(--t-sm); color: #bfe8d1; border: 1px dashed rgba(255, 255, 255, .30); border-radius: var(--r-pill); padding: 11px 18px; }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
   .feat-obs .fo-stat { min-width: 100px; }
+  .feat-apreciacion .fa-stat { min-width: 100px; }
 }
 
 /* Chips / tags / estados */
