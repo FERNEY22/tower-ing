@@ -23,3 +23,8 @@ venv/
 # Node / frontend
 node_modules/
 dist/
+
+# Fuentes pesadas de apreciación — regenerables/locales
+proyectos/apreciacion/Fuente/
+
+Fuente/
