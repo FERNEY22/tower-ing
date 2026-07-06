@@ -1,20 +1,25 @@
 /* render-encuestas.js — Observatorio ETITC · Encuesta unificada de Autoevaluación
-   Uniforme con el dashboard: usa .kpi-card / .seccion / .charts-row / .chart-wrap,
-   la tabla global y el helper crearChart(). Lee de DATA.encuestas (forma del payload
-   del formulario); cualquier fuente que respete ese contrato (p.ej. ETL del Excel de
-   Egresados) se integra sin tocar este render.
-   Índice 0–100 · pooled · modelos Institucional y Programa separados. */
+   Índice 0–100 · pooled · Institucional/Programa separados. Uniforme con el dashboard.
+   Analítica para directivos: drill por característica, fortalezas/debilidades, brecha entre estamentos.
+   Bloque Empleadores (descriptivo, fuera del rollup). */
 (function(){
   const BANCO = [{"id": "it001", "codigos": ["I-F1C2A6"], "texto": "Califique según su apreciación los estudios orientados a evaluar la pertinencia del proyecto educativo institucional con las dinámicas y prácticas para la organización, toma de decisiones, administración, evaluación y autorregulación de las labores académicas, formativas, docentes, científicas, culturales y de extensión, así como del bienestar, la internacionalización y los recursos físicos, tecnológicos y financieros.", "tipo": "single", "estamentos": ["directivos", "profesores", "administrativos"]}, {"id": "it002", "codigos": ["I-F1C2A7", "I-F1C3A7"], "texto": "Califique la existencia de orientaciones y estrategias para el fomento de la formación integral de los estudiantes y el fortalecimiento de la comunidad académica en un ambiente institucional adecuado, incluyente, de responsabilidad social y con valores éticos.", "tipo": "single", "estamentos": ["directivos", "profesores"]}, {"id": "it003", "codigos": ["I-F1C2A8"], "texto": "Califique basado en evidencias que los egresados reciben una formación integral y desarrollo de su pensamiento crítico.", "tipo": "single", "estamentos": ["profesores"]}, {"id": "it004", "codigos": ["I-F1C3A9", "P-F1C2A12"], "texto": "Según su criterio califique las estrategias y programas que la institución implementa para propiciar la formación integral de los estudiantes, la consolidación de su identidad y el reconocimiento social.", "tipo": "single", "estamentos": ["profesores", "estudiantes", "egresados"]}, {"id": "it005", "codigos": ["P-F2C3A18"], "texto": "Indique su apreciación sobre las actividades de formación integral.", "tipo": "single", "estamentos": ["profesores", "estudiantes"]}, {"id": "it006", "codigos": ["P-F2C6A26"], "texto": "Pertinencia, vigencia y aplicación del reglamento estudiantil y las políticas académicas.", "tipo": "matriz", "estamentos": ["profesores", "estudiantes"], "subs": [{"codigos": ["P-F2C6A26", "I-F11C33A170"], "etiqueta": "A) Aplicación de los criterios de ingreso y permanencia de los estudiantes."}, {"codigos": ["P-F2C6A26", "I-F11C33A171"], "etiqueta": "B) Aplicación de los criterios de promoción, transferencia y grado."}, {"codigos": ["P-F2C6A26", "I-F11C33A172"], "etiqueta": "C) Participación de los estudiantes en los organismos de decisión de la institución."}, {"codigos": ["P-F2C6A26", "I-F11C33A173"], "etiqueta": "D) Transparencia en la aplicación de mecanismos predeterminados para la elección de representantes estudiantiles."}, {"codigos": ["P-F2C6A26", "I-F11C33A174"], "etiqueta": "E) Existencia de políticas sobre equidad de género y su implementación."}]}, {"id": "it007", "codigos": ["P-F2C7A30"], "texto": "Aplicación, por parte del programa o la institución, de los estímulos académicos y apoyos socioeconómicos.", "tipo": "matriz", "estamentos": ["estudiantes"], "subs": [{"codigos": ["P-F2C7A30", "I-F11C35A186"], "etiqueta": "A) Existencia y aplicación, con transparencia, de los criterios para asignación de apoyos estudiantiles."}, {"codigos": ["P-F2C7A30", "I-F11C35A187"], "etiqueta": "B) Existencia de convenios interinstitucionales activos para facilitar el ingreso y permanencia."}, {"codigos": ["P-F2C7A30", "I-F11C35A188"], "etiqueta": "C) Existencia de mecanismos de divulgación de créditos, becas, subsidios, apoyos y estímulos."}, {"codigos": ["P-F2C7A30", "I-F11C35A189"], "etiqueta": "D) Procedimientos de control para el buen uso de los apoyos en los tiempos previstos para la graduación."}]}, {"id": "it008", "codigos": ["I-F2C4A12"], "texto": "Califique los mecanismos y formas de convocatoria, selección y participación de la representación democrática en el máximo órgano de gobierno de la institución.", "tipo": "single", "estamentos": ["profesores", "estudiantes", "egresados"]}, {"id": "it009", "codigos": ["I-F2C4A15"], "texto": "De acuerdo a su criterio, califique la eficiencia, transparencia y buenas prácticas de los órganos de gobierno institucional y sus integrantes.", "tipo": "single", "estamentos": ["profesores", "estudiantes", "administrativos"]}, {"id": "it010", "codigos": ["I-F3C9A34", "I-F3C8A34"], "texto": "Califique la estructura organizacional y administrativa coherente con las características institucionales y su proyecto educativo institucional.", "tipo": "single", "estamentos": ["administrativos", "directivos"]}, {"id": "it011", "codigos": ["I-F3C9A35", "I-F3C8A35"], "texto": "Califique el liderazgo, integridad e idoneidad de los responsables de la dirección de la institución y sus dependencias.", "tipo": "single", "estamentos": ["administrativos", "estudiantes", "profesores", "directivos"]}, {"id": "it012", "codigos": ["I-F3C9A37", "I-F3C8A37"], "texto": "Califique los mecanismos transparentes para la designación de los cargos de dirección y asignación de responsabilidades, funciones, roles y de los procedimientos que deben seguirse dentro de la institución.", "tipo": "single", "estamentos": ["administrativos", "directivos"]}, {"id": "it013", "codigos": ["I-F10C28A145", "P-F3C8A34"], "texto": "Califique la aplicación, pertinencia y vigencia de las políticas, normas y criterios académicos establecidos por la institución para la selección, vinculación y permanencia de los profesores, así como los estímulos aplicados al desempeño y producción investigativa.", "tipo": "single", "estamentos": ["directivos", "estudiantes", "profesores"]}, {"id": "it014", "codigos": ["I-F10C29A154", "P-F3C9A37"], "texto": "Califique la pertinencia, vigencia y aplicación del estatuto profesoral, en relación con la existencia de criterios para definir responsabilidades del profesorado frente al desarrollo de funciones sustantivas y gestiones académico-administrativas.", "tipo": "single", "estamentos": ["directivos", "profesores"]}, {"id": "it015", "codigos": ["I-F10C29A152", "P-F3C10A40"], "texto": "Califique la calidad y la suficiencia del número y de la dedicación de los profesores al servicio del programa, con un núcleo de profesores a término indefinido y otros con al menos contratación anual, adecuado para el desarrollo de las labores formativas, académicas, docentes, científicas, culturales y de extensión.", "tipo": "single", "estamentos": ["directivos", "estudiantes", "profesores"]}, {"id": "it016", "codigos": ["I-F10C29A153", "P-F3C10A40"], "texto": "Califique la existencia y aplicación de mecanismos de selección, vinculación y contratación de profesores que propendan por una comunidad académica diversa e inclusiva, comprometida con las labores formativas, académicas, docentes, científicas, culturales y de extensión.", "tipo": "single", "estamentos": ["directivos", "estudiantes", "profesores"]}, {"id": "it017", "codigos": ["I-F10C31A161", "P-F3C11A45"], "texto": "Califique el impacto de las acciones orientadas al desarrollo integral de los profesores, y la cobertura, calidad y pertinencia de los programas de desarrollo profesoral.", "tipo": "single", "estamentos": ["directivos", "profesores"]}, {"id": "it018", "codigos": ["I-F10C31A162", "P-F3C12A49"], "texto": "Califique el impacto que, para el enriquecimiento de la calidad del programa, ha tenido el régimen de reconocimiento y estímulos al profesorado por el ejercicio calificado de la docencia, la investigación, la innovación, la creación artística y cultural y la extensión o proyección social.", "tipo": "single", "estamentos": ["directivos", "profesores"]}, {"id": "it019", "codigos": ["I-F3C10A39", "P-F3C13A51"], "texto": "Califique la pertinencia y calidad del material docente producido y utilizado por los profesores, colecciones bibliográficas, bases de datos y revistas suficientes para la capacidad de la institución, pertinentes y actualizadas.", "tipo": "single", "estamentos": ["directivos", "estudiantes", "profesores"]}, {"id": "it020", "codigos": ["P-F12C48A206"], "texto": "Califique la pertinencia, correspondencia y suficiencia de los recursos informáticos y de comunicación con que cuentan los programas académicos.", "tipo": "single", "estamentos": ["directivos", "estudiantes", "profesores"]}, {"id": "it021", "codigos": ["I-F3C8A31"], "texto": "Califique la pertinencia, accesibilidad y usabilidad de la plataforma tecnológica adecuada para garantizar la conectividad a todos los miembros de la comunidad académica.", "tipo": "single", "estamentos": ["directivos"]}, {"id": "it022", "codigos": ["I-F3C8A33"], "texto": "Califique la existencia de políticas, mecanismos, plataformas, medios de comunicación y recursos humanos que permitan mantener interconexión y a los agentes externos acceder a información pertinente, actualizada y veraz sobre las políticas, servicios, actores y dinámicas institucionales.", "tipo": "single", "estamentos": ["directivos", "administrativos"]}, {"id": "it023", "codigos": ["I-F3C10A40"], "texto": "Accesibilidad, disponibilidad, pertinencia y calidad de los laboratorios y sitios de práctica para las labores académicas de la institución.", "tipo": "matriz", "estamentos": ["estudiantes", "profesores"], "subs": [{"codigos": ["I-F3C10A40"], "etiqueta": "Docencia"}, {"codigos": ["I-F3C10A40"], "etiqueta": "Investigación"}, {"codigos": ["I-F3C10A40"], "etiqueta": "Proyección social"}]}, {"id": "it024", "codigos": ["I-F3C10A41"], "texto": "Existencia de mecanismos para la gestión de equipos, mobiliario, plataformas tecnológicas, sistemas informáticos, recursos bibliográficos físicos y/o digitales, bases de datos y recursos de aprendizaje, acordes con los niveles y modalidades de los programas.", "tipo": "matriz", "estamentos": ["estudiantes", "profesores"], "subs": [{"codigos": ["I-F3C10A41"], "etiqueta": "Compra"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Mantenimiento"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Renovación"}, {"codigos": ["I-F3C10A41"], "etiqueta": "Acceso"}]}, {"id": "it025", "codigos": ["I-F3C11A46"], "texto": "Califique la calidad, disponibilidad y accesibilidad de los distintos ambientes de aprendizaje propios de las modalidades de oferta académica, para el desarrollo de las actividades curriculares y extracurriculares y las asociadas con el bienestar en ambientes institucionales.", "tipo": "single", "estamentos": ["estudiantes", "profesores"]}, {"id": "it026", "codigos": ["I-F3C7A26", "P-F11C41A170"], "texto": "Eficiencia, eficacia y orientación de los procesos administrativos hacia el desarrollo de la docencia, investigación, internacionalización, extensión y proyección social.", "tipo": "matriz", "estamentos": ["estudiantes", "profesores"], "subs": [{"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Eficiencia"}, {"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Eficacia"}, {"codigos": ["I-F3C7A26", "P-F11C41A170"], "etiqueta": "Orientación a los procesos administrativos"}]}, {"id": "it027", "codigos": ["I-F3C12A49", "P-F11C42A179"], "texto": "Califique la calidad del apoyo administrativo en relación con las políticas y estrategias para la asignación, ejecución y evaluación presupuestal y de administración financiera.", "tipo": "single", "estamentos": ["estudiantes", "profesores"]}, {"id": "it028", "codigos": ["P-F11C44A188"], "texto": "Califique la relación entre el número de admitidos, el número de profesores asociados a los distintos componentes de formación, y los demás recursos necesarios en la modalidad que se oferta.", "tipo": "single", "estamentos": ["estudiantes", "profesores"]}, {"id": "it029", "codigos": ["I-F4C15A61", "P-F5C25A102"], "texto": "Calidad y pertinencia del programa, y políticas y estrategias de la institución para la gestión de la calidad, la autoevaluación y la planeación en las distintas áreas, unidades académicas y administrativas.", "tipo": "matriz", "estamentos": ["estudiantes", "profesores"], "subs": [{"codigos": ["I-F4C15A61", "P-F5C25A102"], "etiqueta": "Pertinencia"}, {"codigos": ["I-F4C15A61", "P-F5C25A102"], "etiqueta": "Calidad"}]}, {"id": "it030", "codigos": ["I-F4C13A52"], "texto": "Califique la definición, construcción y seguimiento de indicadores de gestión coherentes con las proyecciones institucionales, expresadas en sus planes de desarrollo y de mejora.", "tipo": "single", "estamentos": ["directivos", "profesores"]}, {"id": "it031", "codigos": ["I-F4C13A53"], "texto": "Califique la articulación de los programas de mejoramiento con la planeación y el presupuesto general de la institución.", "tipo": "single", "estamentos": ["directivos", "administrativos"]}, {"id": "it032", "codigos": ["I-F4C16A64"], "texto": "Califique la implementación y eficiencia de políticas, mecanismos y estrategias institucionales que garanticen la transparencia en la designación del personal académico, administrativo y de apoyo; en la asignación de responsabilidades y funciones y en los procedimientos institucionales.", "tipo": "single", "estamentos": ["administrativos"]}, {"id": "it033", "codigos": ["I-F5C20A78"], "texto": "Califique la eficiencia de las políticas, estrategias y apoyos institucionales para la creación, modificación, extensión y cierre de programas académicos y sus modalidades.", "tipo": "single", "estamentos": ["directivos", "administrativos"]}, {"id": "it034", "codigos": ["I-F5C20A79"], "texto": "Califique la eficiencia de las políticas, mecanismos y participación de cuerpos colegiados en la evaluación de los procedimientos orientados a la creación, modificación y extensión de programas, así como en su cierre.", "tipo": "single", "estamentos": ["directivos", "administrativos"]}, {"id": "it035", "codigos": ["I-F5C18A70"], "texto": "Califique la eficiencia del sistema institucional de evaluación estudiantil con miras al logro de los perfiles de egreso.", "tipo": "single", "estamentos": ["estudiantes", "profesores"]}, {"id": "it036", "codigos": ["I-F5C18A71"], "texto": "Califique el seguimiento, evaluación y ajuste a las políticas, criterios y mecanismos de evaluación estudiantil, en favor del logro de los resultados de aprendizaje.", "tipo": "single", "estamentos": ["estudiantes", "profesores"]}, {"id": "it037", "codigos": ["I-F6C21A81"], "texto": "Califique las políticas y estrategias institucionales para favorecer la formación investigativa de los estudiantes, concordantes con los diferentes niveles de formación (pregrado y posgrado).", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it038", "codigos": ["I-F7C23A103"], "texto": "Califique los aportes de la institución al estudio y a la solución de problemas regionales, nacionales e internacionales, en coherencia con la naturaleza, tipología, identidad y misión institucional.", "tipo": "single", "estamentos": ["directivos"]}, {"id": "it039", "codigos": ["P-F10C38A153"], "texto": "Califique la efectividad de las estrategias y recursos de apoyo brindados por el programa académico para el desarrollo de las prácticas de enseñanza-aprendizaje.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it040", "codigos": ["P-F10C39A159"], "texto": "Califique la utilidad y pertinencia de las estrategias y recursos de apoyo brindados por la institución para el desarrollo de su proceso formativo en diferentes contextos.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it041", "codigos": ["I-F11C34A179"], "texto": "Califique la aplicación de políticas y estrategias para la admisión y permanencia de los estudiantes.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it042", "codigos": ["I-F11C34A180"], "texto": "Califique las estrategias para garantizar la integración de los estudiantes a la institución, en consideración a su heterogeneidad social y cultural.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it043", "codigos": ["I-F11C34A181"], "texto": "Califique la existencia de programas orientados a la disminución de la deserción de estudiantes, análisis de causas y estrategias de permanencia.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it044", "codigos": ["I-F11C34A183"], "texto": "Califique la aplicación de las políticas y estrategias para la admisión y permanencia de los estudiantes.", "tipo": "single", "estamentos": ["estudiantes"]}, {"id": "it045", "codigos": ["I-F11C34A182"], "texto": "Califique la existencia y aplicación de criterios y estrategias para admitir estudiantes procedentes de otras instituciones nacionales e internacionales, y reglas claras para el intercambio estudiantil.", "tipo": "single", "estamentos": ["directivos"]}, {"id": "it046", "codigos": ["I-F9C27"], "texto": "Califique los siguientes aspectos relacionados con el Bienestar Institucional.", "tipo": "matriz", "estamentos": ["directivos", "profesores", "estudiantes", "administrativos", "egresados"], "subs": [{"codigos": ["I-F9C27A132"], "etiqueta": "Existencia y aplicación de políticas de bienestar institucional para beneficio de toda la comunidad."}, {"codigos": ["I-F9C27A133"], "etiqueta": "Campos de acción, utilización y cobertura de los programas del bienestar, sus usuarios y su impacto."}, {"codigos": ["I-F9C27A134"], "etiqueta": "Recursos humanos con dedicación al bienestar y asignación/ejecución de recursos económicos, técnicos, tecnológicos y de infraestructura."}, {"codigos": ["I-F9C27A135"], "etiqueta": "Existencia de estrategias de divulgación de los servicios de bienestar."}, {"codigos": ["I-F9C27A138"], "etiqueta": "Aplicación del protocolo para la prevención, detección y atención de violencias y cualquier discriminación basada en género."}]}, {"id": "it047", "codigos": ["I-F12C37A199"], "texto": "Califique la aplicación de políticas y mecanismos disponibles para la relación e interacción de los egresados.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it048", "codigos": ["I-F12C37A201"], "texto": "Califique la existencia y aplicación de un portafolio de servicios que presta la institución para facilitar la incorporación de los egresados al ámbito laboral.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it049", "codigos": ["I-F12C37A202"], "texto": "Califique la participación, apoyo y cooperación voluntaria de los egresados en actividades docentes e investigativas.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it050", "codigos": ["I-F12C37A203"], "texto": "Califique las evidencias sobre la existencia y eficacia de los sistemas de información y seguimiento a los egresados.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it051", "codigos": ["I-F12C37A204"], "texto": "Califique la existencia de canales activos y oportunos de comunicación con los egresados para apoyar el desarrollo institucional y fomentar procesos de cooperación mutua.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it052", "codigos": ["I-F12C37A205"], "texto": "Califique la aplicación de mecanismos disponibles para la relación e interacción con los egresados, su contribución a las funciones sustantivas y su participación en las dinámicas institucionales.", "tipo": "single", "estamentos": ["egresados"]}, {"id": "it053", "codigos": ["I-F1C3A8", "P-F4C17A41"], "texto": "¿Cómo evalúa el desempeño de los egresados de la ETITC en la solución de problemas académicos, ambientales, tecnológicos, sociales o culturales en su organización?", "tipo": "single", "estamentos": ["empleadores"]}, {"id": "it054", "codigos": ["I-F2C4A10", "P-F11C41A89"], "texto": "En relación con los órganos de gobierno de la ETITC, ¿cómo evalúa que los procesos de eficiencia, transparencia y buenas prácticas facilitan su participación como empleadores para mejorar la calidad del ejercicio profesional del egresado?", "tipo": "matriz", "estamentos": ["empleadores"], "subs": [{"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Eficiencia en procesos que permiten nuestra participación."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Transparencia en la comunicación sobre oportunidades de colaboración."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Buenas prácticas que fomentan nuestra intervención en mejoras curriculares."}, {"codigos": ["I-F2C4A10", "P-F11C41A89"], "etiqueta": "Acciones concretas implementadas a partir de nuestras sugerencias."}]}];
   const ESTAMENTOS = [{"id": "directivos", "nombre": "Directivos"}, {"id": "profesores", "nombre": "Profesores"}, {"id": "estudiantes", "nombre": "Estudiantes"}, {"id": "administrativos", "nombre": "Administrativos"}, {"id": "egresados", "nombre": "Egresados"}, {"id": "empleadores", "nombre": "Empleadores de egresados"}];
-  const VAL2IDX = {1:100,2:50,3:0};                 // Alta/Media/Baja ; 4=NR 5=NA => sin dato
-  const NOMBRE_FACTOR = {};                         // opcional: {1:"Misión y PEI", ...} si no, "Factor N"
+  const VAL2IDX = {1:100,2:50,3:0};
+  const NOMBRE_FACTOR = {};
+  const NOMBRE_CARAC = {};
 
   let seg = "general";
+  let drillFac = "";
   function tok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#4d66ff"; }
+  function esc(s){ return (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+  function colIdx(v){ return v>=66?"var(--pos)":v>=33?"var(--warn)":"var(--neg)"; }
+  function tokIdx(v){ return v>=66?tok("--pos"):v>=33?tok("--warn"):tok("--neg"); }
 
   function parse(c){ const m=c.match(/([IP])-?F(\d+)C(\d+)/); return m?{modelo:m[1],factor:+m[2],car:+m[3]}:null; }
   function facLabel(n){ return NOMBRE_FACTOR[n] ? ("F"+n+" · "+NOMBRE_FACTOR[n]) : ("F"+n); }
+  function carLabel(modelo,f,c){ const k=modelo+"-"+f+"-"+c; return NOMBRE_CARAC[k] ? ("C"+c+" "+NOMBRE_CARAC[k]) : ("C"+c); }
   function itemById(id){ return BANCO.find(b=>b.id===id); }
   function estName(id){ const e=ESTAMENTOS.find(x=>x.id===id); return e?e.nombre:id; }
   function todos(){ return (typeof DATA!=="undefined" && DATA.encuestas) ? DATA.encuestas : []; }
@@ -22,25 +27,38 @@
 
   function hojas(records){
     const out=[];
-    (records||[]).forEach(r=>{
-      (r.respuestas||[]).forEach(q=>{
-        if(q.tipo==="matriz"){ (q.sub||[]).forEach(s=> out.push({id:q.id,codigos:s.codigos,valor:s.valor,etiqueta:s.etiqueta})); }
-        else out.push({id:q.id,codigos:q.codigos,valor:q.valor});
-      });
-    });
+    (records||[]).forEach(r=>{ (r.respuestas||[]).forEach(q=>{
+      if(q.tipo==="matriz"){ (q.sub||[]).forEach(s=> out.push({id:q.id,codigos:s.codigos,valor:s.valor,etiqueta:s.etiqueta})); }
+      else out.push({id:q.id,codigos:q.codigos,valor:q.valor});
+    }); });
     return out;
   }
-  function idx(vals){ const v=vals.filter(x=>x in VAL2IDX); return v.length? Math.round(v.reduce((a,x)=>a+VAL2IDX[x],0)/v.length):null; }
+  function idx(vals){ const v=(vals||[]).filter(x=>x in VAL2IDX); return v.length? Math.round(v.reduce((a,x)=>a+VAL2IDX[x],0)/v.length):null; }
   function porFactor(hs,modelo){
     const acc={};
     hs.forEach(h=> (h.codigos||[]).forEach(c=>{ const p=parse(c); if(p&&p.modelo===modelo) (acc[p.factor]=acc[p.factor]||[]).push(h.valor); }));
     const res={}; Object.keys(acc).forEach(f=>{ const i=idx(acc[f]); if(i!==null) res[f]=i; }); return res;
   }
+  // característica: lista [{key, combo, modelo, factor, car, label, idx, n}]
+  function porCaract(hs){
+    const acc={};
+    hs.forEach(h=> (h.codigos||[]).forEach(c=>{ const p=parse(c); if(p){ const key=p.modelo+"-"+p.factor+"-"+p.car; (acc[key]=acc[key]||{modelo:p.modelo,factor:p.factor,car:p.car,vals:[]}).vals.push(h.valor);} }));
+    return Object.entries(acc).map(([key,o])=>({key,combo:o.modelo+"-"+o.factor,modelo:o.modelo,factor:o.factor,car:o.car,
+      label:o.modelo+"·F"+o.factor+"C"+o.car, idx:idx(o.vals), n:o.vals.filter(v=>v in VAL2IDX).length})).filter(o=>o.idx!==null);
+  }
+  function comboLabel(c){ const a=c.split("-"); return (a[0]==="I"?"Institucional":"Programa")+" · F"+a[1]; }
+  function brechas(){
+    const data=todos(), ests=[...new Set(data.map(r=>r.estamento))], perFac={};
+    ests.forEach(e=>{ const f=porFactor(hojas(data.filter(r=>r.estamento===e)),"I"); Object.entries(f).forEach(([fac,iv])=>{ (perFac[fac]=perFac[fac]||{})[e]=iv; }); });
+    return Object.entries(perFac).map(([fac,m])=>{ const ent=Object.entries(m); if(ent.length<2) return null;
+      ent.sort((a,b)=>b[1]-a[1]); return {factor:+fac,alto:{est:ent[0][0],idx:ent[0][1]},bajo:{est:ent[ent.length-1][0],idx:ent[ent.length-1][1]},brecha:ent[0][1]-ent[ent.length-1][1]}; })
+      .filter(Boolean).sort((a,b)=>b.brecha-a.brecha);
+  }
+
   function kpis(all){
     const hs=hojas(all), calif=hs.filter(h=>h.valor in VAL2IDX).map(h=>h.valor);
     const sd=hs.filter(h=>h.valor===4||h.valor===5).length;
-    return { respuestas:all.length, estamentos:new Set(all.map(r=>r.estamento)).size,
-             indice:idx(calif), pctSinDato: hs.length?Math.round(100*sd/hs.length):0 };
+    return { respuestas:all.length, estamentos:new Set(all.map(r=>r.estamento)).size, indice:idx(calif), pctSinDato: hs.length?Math.round(100*sd/hs.length):0 };
   }
   function detalle(all){
     const hs=hojas(all), map={};
@@ -52,29 +70,91 @@
     });
     return Object.values(map).map(o=>({...o,n:o.vals.length,idx:idx(o.vals)})).sort((a,b)=>(a.idx??999)-(b.idx??999));
   }
-  function participacion(all){
-    const m={}; all.forEach(r=>{ const k=r.programa||"—"; m[k]=(m[k]||0)+1; });
-    return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+  function participacion(all){ const m={}; all.forEach(r=>{ const k=r.programa||"—"; m[k]=(m[k]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
+
+  // ---- Empleadores ----
+  function empleadores(all){ return all.filter(r=> r.necesidades || (r.meta && (r.meta.sector||r.meta.razonSocial))); }
+  function sectores(recs){ const m={}; recs.forEach(r=>{ let s=(r.meta&&r.meta.sector)||"Sin dato"; if(s==="Otro" && r.meta.sectorOtro) s="Otro · "+r.meta.sectorOtro; m[s]=(m[s]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
+  function empValoracion(emp){
+    const des=[],g=[[],[],[],[]];
+    emp.forEach(r=>(r.respuestas||[]).forEach(q=>{ if((q.codigos||[]).includes("I-F1C3A8")&&q.valor) des.push(q.valor);
+      if((q.codigos||[]).includes("I-F2C4A10")&&q.sub) q.sub.forEach((s,i)=>{ if(s.valor&&i<4) g[i].push(s.valor); }); }));
+    return { labels:["Desempeño","Eficiencia","Transparencia","Buenas prácticas","Acciones concretas"], data:[idx(des),idx(g[0]),idx(g[1]),idx(g[2]),idx(g[3])] };
   }
+  const TEMAS=[
+    ["Inteligencia Artificial", /\b(ia|inteligencia artificial)\b/],["Ciberseguridad", /ciberseguridad|seguridad de la informaci|seguridad informatica|iso 27001/],
+    ["Industria 4.0 / IoT", /industria 4\.?0|internet de las cosas|\biot\b|cobotica|manufactura digital/],["Analítica / Big Data", /analitic|big data|business intelligence|ciencia de datos|power bi|analisis de datos|\bdatos\b/],
+    ["Gestión de proyectos", /gestion de proyectos|gerencia de proyectos|direccion de proyectos|\bscrum\b|\bpmi\b|agiles|\bkanban\b/],["MBA / Administración", /\bmba\b|administracion de empresas|gerencia estrategica|liderazgo/],
+    ["Manufactura / CNC", /\bcnc\b|mecanizad|manufactura|metalmecanic|\bcam\b|fabricacion/],["Mantenimiento", /mantenimiento/],
+    ["Calidad / ISO", /\bcalidad\b|iso 9001|iso 14001|iso 45001|auditor/],["Transformación digital", /transformacion digital|innovacion/],
+    ["Cloud / Nube", /\bcloud\b|\bnube\b/],["SST / Ambiental", /\bsst\b|seguridad y salud|ambiental|45001/],["Automatización", /automatizacion/],
+  ];
+  function temas(emp){ const cnt={}; emp.forEach(r=>{ const n=r.necesidades||{}; const t=norm([n.educacionContinua,n.especializacion,n.maestria].join(" ")); TEMAS.forEach(([lab,re])=>{ if(re.test(t)) cnt[lab]=(cnt[lab]||0)+1; }); }); return Object.entries(cnt).sort((a,b)=>b[1]-a[1]); }
+  function temasTipo(emp){ const cnt={},niv=[["c","educacionContinua"],["e","especializacion"],["m","maestria"]];
+    emp.forEach(r=>{ const n=r.necesidades||{}; niv.forEach(([k,campo])=>{ const t=norm(n[campo]||""); TEMAS.forEach(([lab,re])=>{ if(re.test(t)){ (cnt[lab]=cnt[lab]||{c:0,e:0,m:0})[k]++; } }); }); }); return cnt; }
 
   function render(){
     const cont=document.getElementById("vista-encuestas"); if(!cont) return;
     const all=registros(), data=todos();
     const estDisp=[...new Set(data.map(r=>r.estamento))];
     const selSty="padding:9px 14px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--surface-2);color:var(--ink);font-family:var(--font-body);font-size:var(--t-sm);font-weight:500;cursor:pointer;outline:none";
-    const head=`<div class="seccion-head">
-        <h2><i class="fa-solid fa-clipboard-check"></i> Encuesta de Autoevaluación</h2>
-        <select id="enc-seg" style="${selSty}">
-          <option value="general">General · todos los estamentos</option>
-          ${ESTAMENTOS.filter(e=>estDisp.includes(e.id)).map(e=>`<option value="${e.id}">${e.nombre}</option>`).join("")}
-        </select></div>`;
+    const head=`<div class="seccion-head"><h2><i class="fa-solid fa-clipboard-check"></i> Encuesta de Autoevaluación</h2>
+        <select id="enc-seg" style="${selSty}"><option value="general">General · todos los estamentos</option>
+          ${ESTAMENTOS.filter(e=>estDisp.includes(e.id)).map(e=>`<option value="${e.id}">${e.nombre}</option>`).join("")}</select></div>`;
 
-    if(!all.length){
-      cont.innerHTML=`<div class="seccion">${head}<p class="empty-td">Aún no hay respuestas registradas${seg!=="general"?" para "+estName(seg):""}.</p></div>`;
-      bindSeg(); return;
-    }
+    if(!all.length){ cont.innerHTML=`<div class="seccion">${head}<p class="empty-td">Aún no hay respuestas registradas${seg!=="general"?" para "+estName(seg):""}.</p></div>`; bindSel(); return; }
+
     const k=kpis(all), fi=porFactor(hojas(all),"I"), fp=porFactor(hojas(all),"P");
-    const det=detalle(all), part=participacion(all);
+    const det=detalle(all), part=participacion(all), emp=empleadores(all);
+
+    // --- analítica directivos ---
+    const car=porCaract(hojas(all));
+    const combos=[...new Set(car.map(c=>c.combo))].sort();
+    if(!combos.includes(drillFac)) drillFac=combos[0]||"";
+    const carDrill=car.filter(c=>c.combo===drillFac).sort((a,b)=>a.idx-b.idx);
+    const ranking=[...car].sort((a,b)=>a.idx-b.idx);
+    const debiles=ranking.slice(0,5), fuertes=ranking.slice(-5).reverse();
+    const brechaRows=(seg==="general")?brechas():[];
+
+    const bloqueAnalitica = car.length ? `
+      <div class="seccion">
+        <div class="seccion-head"><h2><i class="fa-solid fa-magnifying-glass-chart"></i> Detalle por característica</h2>
+          <select id="enc-drill" style="${selSty}">${combos.map(c=>`<option value="${c}">${comboLabel(c)}</option>`).join("")}</select></div>
+        <div class="chart-wrap" style="height:${Math.max(200,carDrill.length*32)}px"><canvas id="enc-car"></canvas></div></div>
+      <div class="charts-row">
+        <div class="seccion"><h2 style="color:var(--neg)"><i class="fa-solid fa-arrow-trend-down"></i> Debilidades · 5 más bajas</h2><div class="chart-wrap"><canvas id="enc-deb"></canvas></div></div>
+        <div class="seccion"><h2 style="color:var(--pos)"><i class="fa-solid fa-arrow-trend-up"></i> Fortalezas · 5 más altas</h2><div class="chart-wrap"><canvas id="enc-for"></canvas></div></div>
+      </div>
+      ${(seg==="general"&&brechaRows.length)?`
+      <div class="seccion"><h2><i class="fa-solid fa-arrows-left-right"></i> Brecha entre estamentos · Institucional</h2>
+        <p style="color:var(--ink-3);font-size:var(--t-sm);margin:-6px 0 12px">Diferencia entre el estamento que califica más alto y el que califica más bajo cada factor.</p>
+        <div class="chart-wrap" style="height:${Math.max(200,brechaRows.length*30)}px"><canvas id="enc-brecha"></canvas></div>
+        <div style="overflow-x:auto;margin-top:14px"><table>
+          <thead><tr><th>Factor</th><th>Más alto</th><th>Más bajo</th><th>Brecha</th></tr></thead>
+          <tbody>${brechaRows.map(r=>`<tr><td>${facLabel(r.factor)}</td><td>${estName(r.alto.est)} (${r.alto.idx})</td><td>${estName(r.bajo.est)} (${r.bajo.idx})</td><td><b>${r.brecha}</b></td></tr>`).join("")}</tbody>
+        </table></div></div>`:""}` : "";
+
+    const bloqueEmp = emp.length ? `
+      <div class="charts-row">
+        <div class="seccion"><h2><i class="fa-solid fa-briefcase"></i> Valoración de empleadores</h2><div class="chart-wrap"><canvas id="enc-emp-val"></canvas></div></div>
+        <div class="seccion"><h2><i class="fa-solid fa-industry"></i> Sector económico</h2><div class="chart-wrap"><canvas id="enc-emp-sec"></canvas></div></div></div>
+      <div class="seccion"><h2><i class="fa-solid fa-graduation-cap"></i> Temas de formación más solicitados</h2>
+        <p style="color:var(--ink-3);font-size:var(--t-sm);margin:-6px 0 12px">N.º de empleadores que mencionan cada tema en sus respuestas abiertas.</p>
+        <div class="chart-wrap" style="height:300px"><canvas id="enc-emp-tem"></canvas></div></div>
+      <div class="charts-row">
+        <div class="seccion"><h2><i class="fa-solid fa-layer-group"></i> Tipo de formación demandada</h2>
+          <p style="color:var(--ink-3);font-size:var(--t-sm);margin:-6px 0 12px">Menciones por nivel: continua, especialización y maestría.</p>
+          <div class="chart-wrap"><canvas id="enc-emp-tipo"></canvas></div></div>
+        <div class="seccion"><h2><i class="fa-solid fa-chart-column"></i> Top 5 temas · % por nivel</h2>
+          <p style="color:var(--ink-3);font-size:var(--t-sm);margin:-6px 0 12px">Para cada tema, en qué nivel de formación se pide.</p>
+          <div class="chart-wrap"><canvas id="enc-emp-mix"></canvas></div></div></div>
+      <div class="seccion"><h2><i class="fa-solid fa-list"></i> Detalle de demanda por organización</h2>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th>Organización</th><th>Educación continua</th><th>Especialización</th><th>Maestría</th></tr></thead>
+          <tbody>${emp.map(r=>{const m=r.meta||{},n=r.necesidades||{};return `<tr>
+            <td style="font-weight:600;max-width:150px">${esc(m.razonSocial)||"—"}</td><td style="max-width:240px">${esc(n.educacionContinua)||"—"}</td>
+            <td style="max-width:240px">${esc(n.especializacion)||"—"}</td><td style="max-width:240px">${esc(n.maestria)||"—"}</td></tr>`;}).join("")}</tbody>
+        </table></div></div>` : "";
 
     cont.innerHTML=`
       <div class="seccion" style="padding-bottom:14px">${head}</div>
@@ -86,24 +166,26 @@
       </div>
       <div class="charts-row">
         <div class="seccion"><h2><i class="fa-solid fa-building-columns"></i> Índice por factor · Institucional</h2><div class="chart-wrap"><canvas id="enc-fi"></canvas></div></div>
-        <div class="seccion"><h2><i class="fa-solid fa-graduation-cap"></i> Índice por factor · Programa</h2><div class="chart-wrap"><canvas id="enc-fp"></canvas></div></div>
-      </div>
+        <div class="seccion"><h2><i class="fa-solid fa-graduation-cap"></i> Índice por factor · Programa</h2><div class="chart-wrap"><canvas id="enc-fp"></canvas></div></div></div>
       <div class="seccion"><h2><i class="fa-solid fa-chart-area"></i> Comparativo entre estamentos · Institucional</h2><div class="chart-wrap" style="height:320px"><canvas id="enc-radar"></canvas></div></div>
+      ${bloqueAnalitica}
+      ${bloqueEmp}
       <div class="seccion"><h2><i class="fa-solid fa-list-check"></i> Detalle por ítem ${seg!=="general"?"· "+estName(seg):""}</h2>
         <div style="overflow-x:auto"><table>
           <thead><tr><th>Código</th><th>Ítem</th><th>n</th><th>Alta</th><th>Media</th><th>Baja</th><th>NR/NA</th><th>Índice</th></tr></thead>
-          <tbody>${det.map(d=>{const col=d.idx>=66?"var(--pos)":d.idx>=33?"var(--warn)":"var(--neg)";
+          <tbody>${det.map(d=>{const col=colIdx(d.idx);
             return `<tr><td style="font-family:var(--font-mono);font-size:var(--t-xs);white-space:nowrap">${d.cod}</td>
-            <td style="max-width:430px">${d.texto}</td><td>${d.n}</td><td>${d.d[1]}</td><td>${d.d[2]}</td><td>${d.d[3]}</td><td>${d.d[4]+d.d[5]}</td>
+            <td style="max-width:430px">${esc(d.texto)}</td><td>${d.n}</td><td>${d.d[1]}</td><td>${d.d[2]}</td><td>${d.d[3]}</td><td>${d.d[4]+d.d[5]}</td>
             <td><b style="color:${col}">${d.idx??"—"}</b></td></tr>`;}).join("")}</tbody>
         </table></div></div>
       <div class="seccion"><h2><i class="fa-solid fa-people-group"></i> Participación por programa</h2>
         <table><thead><tr><th>Programa</th><th>Respuestas</th></tr></thead>
-        <tbody>${part.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`).join("")}</tbody></table></div>`;
+        <tbody>${part.map(p=>`<tr><td>${esc(p[0])}</td><td>${p[1]}</td></tr>`).join("")}</tbody></table></div>`;
 
-    bindSeg();
+    bindSel();
 
     const barOpts={plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,ticks:{stepSize:25}}}};
+    const hbar={indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100,ticks:{stepSize:25}}}};
     const fiK=Object.keys(fi).sort((a,b)=>a-b), fpK=Object.keys(fp).sort((a,b)=>a-b);
     crearChart("enc-fi","bar",{labels:fiK.map(facLabel),datasets:[{data:fiK.map(f=>fi[f]),backgroundColor:tok("--electric")}]},barOpts);
     crearChart("enc-fp","bar",{labels:fpK.map(facLabel),datasets:[{data:fpK.map(f=>fp[f]),backgroundColor:tok("--spark")}]},barOpts);
@@ -111,12 +193,41 @@
     const ests=[...new Set(data.map(r=>r.estamento))], facs=new Set(), tabla={};
     ests.forEach(e=>{ const f=porFactor(hojas(data.filter(r=>r.estamento===e)),"I"); tabla[e]=f; Object.keys(f).forEach(x=>facs.add(+x)); });
     const fs=[...facs].sort((a,b)=>a-b);
-    const pal=[tok("--electric"),tok("--spark"),tok("--pos"),tok("--electric-2"),tok("--warn"),tok("--neg")];
+    const pal=[tok("--electric"),tok("--spark"),tok("--pos"),tok("--electric-2"),tok("--warn"),tok("--neg"),"#8a5cb0","#16a085"];
     crearChart("enc-radar","radar",
       {labels:fs.map(facLabel),datasets:ests.map((e,i)=>({label:estName(e),data:fs.map(f=>tabla[e][f]??null),borderColor:pal[i%pal.length],backgroundColor:"transparent",pointBackgroundColor:pal[i%pal.length]}))},
       {scales:{r:{min:0,max:100,ticks:{stepSize:25}}}});
-  }
-  function bindSeg(){ const s=document.getElementById("enc-seg"); if(s){ s.value=seg; s.onchange=e=>{seg=e.target.value;render();}; } }
 
+    if(car.length){
+      crearChart("enc-car","bar",{labels:carDrill.map(c=>carLabel(c.modelo,c.factor,c.car)),datasets:[{data:carDrill.map(c=>c.idx),backgroundColor:carDrill.map(c=>tokIdx(c.idx))}]},hbar);
+      crearChart("enc-deb","bar",{labels:debiles.map(c=>c.label),datasets:[{data:debiles.map(c=>c.idx),backgroundColor:debiles.map(c=>tokIdx(c.idx))}]},hbar);
+      crearChart("enc-for","bar",{labels:fuertes.map(c=>c.label),datasets:[{data:fuertes.map(c=>c.idx),backgroundColor:fuertes.map(c=>tokIdx(c.idx))}]},hbar);
+      if(seg==="general"&&brechaRows.length)
+        crearChart("enc-brecha","bar",{labels:brechaRows.map(r=>facLabel(r.factor)),datasets:[{data:brechaRows.map(r=>r.brecha),backgroundColor:tok("--electric")}]},
+          {indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
+    }
+
+    if(emp.length){
+      const ev=empValoracion(emp);
+      crearChart("enc-emp-val","bar",{labels:ev.labels,datasets:[{data:ev.data,backgroundColor:tok("--electric")}]},{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,ticks:{stepSize:25}}}});
+      const sec=sectores(emp);
+      crearChart("enc-emp-sec","doughnut",{labels:sec.map(s=>s[0]),datasets:[{data:sec.map(s=>s[1]),backgroundColor:pal}]},{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}}});
+      const tm=temas(emp);
+      crearChart("enc-emp-tem","bar",{labels:tm.map(t=>t[0]),datasets:[{data:tm.map(t=>t[1]),backgroundColor:tok("--spark")}]},{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1,precision:0}}}});
+      const tt=temasTipo(emp); let sc=0,se=0,sm=0; Object.values(tt).forEach(o=>{sc+=o.c;se+=o.e;sm+=o.m;});
+      crearChart("enc-emp-tipo","doughnut",{labels:["Educación continua","Especialización","Maestría"],datasets:[{data:[sc,se,sm],backgroundColor:[tok("--electric"),tok("--spark"),tok("--pos")]}]},{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}}});
+      const top5=Object.entries(tt).map(([l,o])=>[l,o.c+o.e+o.m,o]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const pct=(o,kk)=>{const z=o.c+o.e+o.m;return z?Math.round(100*o[kk]/z):0;};
+      crearChart("enc-emp-mix","bar",{labels:top5.map(t=>t[0]),datasets:[
+        {label:"Educación continua",data:top5.map(t=>pct(t[2],"c")),backgroundColor:tok("--electric")},
+        {label:"Especialización",data:top5.map(t=>pct(t[2],"e")),backgroundColor:tok("--spark")},
+        {label:"Maestría",data:top5.map(t=>pct(t[2],"m")),backgroundColor:tok("--pos")}]},
+        {indexAxis:"y",plugins:{legend:{position:"top",labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,max:100,ticks:{callback:v=>v+"%"}},y:{stacked:true}}});
+    }
+  }
+  function bindSel(){
+    const s=document.getElementById("enc-seg"); if(s){ s.value=seg; s.onchange=e=>{seg=e.target.value;render();}; }
+    const d=document.getElementById("enc-drill"); if(d){ d.value=drillFac; d.onchange=e=>{drillFac=e.target.value;render();}; }
+  }
   window.renderEncuestas = render;
 })();

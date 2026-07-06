@@ -1,0 +1,25 @@
+# Secretos — NUNCA subir la cadena de conexion
+.env
+db/.env
+backend/.env
+
+# Artefactos generados por el ETL
+salida/*.parquet
+
+# Bases LOCALES generadas (regenerables con etl/, NO subir — pesan mucho)
+*.db
+data_local.db
+main_local.db
+
+# Temporales de Office
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+dist/
