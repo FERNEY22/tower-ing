@@ -5,7 +5,7 @@
 const _cache = {};
 function jload(name) {
   if (!_cache[name]) {
-    _cache[name] = fetch(`/datos/${name}.json`).then((r) => {
+    _cache[name] = fetch(`./datos/${name}.json`).then((r) => {
       if (!r.ok) throw new Error(`No se pudo cargar ${name}.json`);
       return r.json();
     });
