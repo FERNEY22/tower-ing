@@ -6,6 +6,12 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   base: "./",
+  // El build se publica como estatico dentro del sitio (proyectos/apreciacion/publicado),
+  // servido junto al resto de proyectos. NO requiere backend ni dev server.
+  build: {
+    outDir: "../publicado",
+    emptyOutDir: true,
+  },
   server: {
     port: 5173,
     proxy: {

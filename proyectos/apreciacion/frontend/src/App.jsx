@@ -87,18 +87,18 @@ export default function App() {
         </div>
       </div>
 
-      {error && <div className="error">⚠ {error}<br /><span className="muted">¿Backend arriba en :8000?</span></div>}
+      {error && <div className="error">⚠ {error}<br /><span className="muted">No se pudieron cargar los datos de /datos. Sirve la carpeta dist con un servidor estático (no abras index.html con doble clic).</span></div>}
       {/* Se valida la FORMA de `data` contra la pestaña: al cambiar de pestaña,
           `data` conserva un instante la forma anterior (el reset vive en un
           useEffect posterior). Sin esta guarda, el componente recibiría datos
           de otra vista y reventaría (pantalla en blanco). */}
       {!error && tab === "tablero" && (
         cargando || !data?.por_factor
-          ? <div className="loading">Cargando datos desde la nube…</div>
+          ? <div className="loading">Cargando datos…</div>
           : <Tablero data={data} />)}
       {!error && tab === "comparativo" && (
         cargando || !data?.factores
-          ? <div className="loading">Cargando datos desde la nube…</div>
+          ? <div className="loading">Cargando datos…</div>
           : <Comparativo data={data} />)}
       {!error && esInstr && <Instrumento />}
     </div>
