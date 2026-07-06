@@ -86,8 +86,8 @@ const proyectos = [
       { n: "8", l: "Factores" },
       { n: "ETL → API", l: "Arquitectura" }
     ],
-    link: "http://localhost:5173",
-    externo: true,
+    link: "apreciacion/publicado/index.html",
+    externo: false,
     destacado: true,
     variante: "apreciacion"
   }
