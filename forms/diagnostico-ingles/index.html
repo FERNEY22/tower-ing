@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Diagnóstico de Inglés · Ingeniería</title>
+<style>
+  :root{
+    --bg:#eef2f6;--surface:#fff;--ink:#172033;--muted:#5b6b82;--line:#dde4ec;
+    --primary:#13476b;--accent:#c98a1a;--soft:#f4f7fa;--ok:#1f7a4d;--danger:#c0392b;
+    --shadow:0 8px 30px rgba(16,38,64,.10);--radius:16px;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;padding:24px 16px;
+    -webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:780px;margin:0 auto}
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .head{padding:26px 30px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff,#fff)}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .title{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.25;margin:6px 0 0;font-weight:700;color:var(--primary)}
+  .sub{font-size:13px;color:var(--muted);margin-top:8px}
+  .progress{height:6px;background:var(--soft)}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#2a6e9c);transition:width .35s ease}
+  /* Temporizador por pregunta */
+  .timer{height:5px;background:#f0d9d9}
+  .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#1f7a4d,#c98a1a);transition:width 1s linear}
+  .timer-fill.warn{background:linear-gradient(90deg,#c98a1a,#c0392b)}
+  .body{padding:30px}
+  .step-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .time-chip{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#b3541e;background:#fdf1e3;border:1px solid #f0d9bd;border-radius:20px;padding:3px 11px}
+  .time-chip.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
+  .intro-p{font-size:14.5px;color:var(--muted);margin:0 0 22px}
+  .est-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:560px){.est-grid{grid-template-columns:1fr}}
+  .est{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit}
+  .est:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 18px rgba(19,71,107,.12)}
+  .est:focus-visible{outline:3px solid #9cc4dd;outline-offset:2px}
+  .est-name{font-weight:700;font-size:15.5px;color:var(--primary)}
+  .est-meta{font-size:12.5px;color:var(--muted)}
+  .badge-sec{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#42688a;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:6px;padding:2px 8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+  .passage{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--primary);border-radius:10px;padding:15px 17px;font-size:14px;line-height:1.65;color:#2a3a4d;margin:0 0 18px;max-height:220px;overflow:auto}
+  .passage h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .qtext{font-size:17px;line-height:1.5;font-weight:600;margin:0 0 22px;color:var(--ink)}
+  .opts{display:grid;gap:9px}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.13s;background:var(--surface)}
+  .opt:hover{border-color:#9db9d0;background:#fafdff}
+  .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #b9c6d6;display:grid;place-items:center;transition:.13s}
+  .opt-num{font-weight:700;color:var(--muted);min-width:16px}
+  .opt-txt{font-size:14.5px;font-weight:500}
+  .opt.sel{border-color:var(--primary);background:#eef6fb;box-shadow:inset 0 0 0 1px var(--primary)}
+  .opt.sel .dot{border-color:var(--primary);background:var(--primary)}
+  .opt.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .opt.sel .opt-num{color:var(--primary)}
+  .nav{display:flex;justify-content:flex-end;gap:12px;margin-top:28px}
+  .btn{font:inherit;font-weight:600;border-radius:11px;padding:11px 22px;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover:not(:disabled){background:#0f3a58}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-block{width:100%;display:block}
+  label.field{display:block;font-weight:600;font-size:14.5px;margin:0 0 8px}
+  .field-wrap{margin-bottom:16px}
+  select.txt,input.txt{width:100%;font:inherit;font-size:15px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--soft);-webkit-user-select:text;user-select:text}
+  select.txt:focus,input.txt:focus{outline:none;border-color:var(--primary);background:#fff}
+  .hint{font-size:12px;color:var(--muted);margin:4px 2px 0}
+  .err{font-size:12px;color:var(--danger);margin:5px 2px 0;min-height:15px}
+  .consent{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:12.8px;color:var(--muted);line-height:1.6;max-height:280px;overflow:auto;margin-bottom:16px}
+  .consent b{color:var(--ink)}
+  .check-row{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:14px;padding:6px 2px}
+  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--primary)}
+  .rules{list-style:none;padding:0;margin:0 0 8px}
+  .rules li{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink)}
+  .rules li:last-child{border-bottom:none}
+  .rules .ic{flex:none;width:26px;height:26px;border-radius:8px;background:#eef6fb;color:var(--primary);display:grid;place-items:center;font-weight:800}
+  .warn-box{background:#fdf3ea;border:1px solid #f0d9bd;border-radius:12px;padding:14px 16px;font-size:13.2px;color:#8a5a12;margin:16px 0 0;line-height:1.55}
+  .review{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:14px;color:var(--muted)}
+  .review b{color:var(--ink)}
+  .done{text-align:center;padding:14px 6px}
+  .done .check{width:64px;height:64px;border-radius:50%;background:#e6f4ec;display:grid;place-items:center;margin:0 auto 18px}
+  .done .check svg{width:32px;height:32px}
+  .done h2{font-family:Georgia,serif;color:var(--primary);margin:0 0 8px}
+  .level-badge{display:inline-block;font-family:Georgia,serif;font-size:40px;font-weight:800;color:#fff;background:var(--primary);border-radius:16px;padding:10px 26px;margin:6px 0 4px;letter-spacing:.03em}
+  .sec-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 4px}
+  @media(max-width:560px){.sec-mini{grid-template-columns:1fr}}
+  .sec-card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .sec-card .n{font-size:22px;font-weight:800;color:var(--primary)}
+  .sec-card .l{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .lock{text-align:center;padding:20px 6px}
+  .lock .ic{width:64px;height:64px;border-radius:50%;background:#fdecea;display:grid;place-items:center;margin:0 auto 18px;font-size:30px}
+  .lock h2{font-family:Georgia,serif;color:var(--danger);margin:0 0 8px}
+  .foot{text-align:center;font-size:11.5px;color:var(--muted);padding:16px;border-top:1px solid var(--line)}
+  /* Overlay de bloqueo al salir de pantalla */
+  #shield{position:fixed;inset:0;background:rgba(19,71,107,.97);color:#fff;display:none;place-items:center;text-align:center;padding:30px;z-index:9999}
+  #shield .box{max-width:360px}
+  #shield h3{font-family:Georgia,serif;font-size:22px;margin:0 0 10px}
+  #shield p{font-size:14px;opacity:.9;margin:0}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body oncontextmenu="return false">
+<div class="wrap">
+  <div class="frame">
+    <div class="head">
+      <div class="eyebrow">Diagnóstico de nivel</div>
+      <h1 class="title">English Placement · Ingeniería</h1>
+      <p class="sub" id="headSub">Gramática · Vocabulario · Reading aplicado a la ingeniería</p>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="timer" id="timerWrap" style="display:none"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="body" id="body"></div>
+    <div class="foot">Diagnóstico con fines pedagógicos · Sus datos se tratan conforme a la Ley 1581 de 2012.</div>
+  </div>
+</div>
+
+<!-- Escudo de bloqueo -->
+<div id="shield"><div class="box"><h3>Sesión bloqueada</h3><p>Saliste de la pantalla del examen. Por seguridad, tu intento se cerró automáticamente.</p></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+<script>
+"use strict";
+const NODO = "diagnostico_ingles";
+
+const PROGRAMAS = ["Ingeniería Mecatrónica","Ingeniería de Software","Ingeniería Electrónica"];
+
+const DIVISIONES = [
+  {id:"electronica",   nombre:"Electrónica",                    meta:"Reading sobre circuitos y sensores"},
+  {id:"automatizacion",nombre:"Automatización",                 meta:"Reading sobre PLC y líneas de proceso"},
+  {id:"digitales",     nombre:"Digitales",                      meta:"Reading sobre lógica digital y FPGA"},
+  {id:"software_ia",   nombre:"Software e Inteligencia Artificial", meta:"Reading sobre visión por computador e IA"}
+];
+
+/* ===== BANCO ===== opts + correcta (índice 0-based). t = segundos por pregunta. ===== */
+const GRAMMAR = [
+  {id:"g01",sec:"grammar",nivel:"A1",tema:"Verbo to be",t:35,q:"The sensor ___ connected to the microcontroller.",opts:["are","is","be","am"],correcta:1},
+  {id:"g02",sec:"grammar",nivel:"A1",tema:"Plurales",t:35,q:"A modern robot has many ___.",opts:["sensor","sensors","sensores","sensor's"],correcta:1},
+  {id:"g03",sec:"grammar",nivel:"A2",tema:"Presente continuo",t:35,q:"The motor ___ right now because the program is running.",opts:["turn","turns","is turning","turned"],correcta:2},
+  {id:"g04",sec:"grammar",nivel:"A2",tema:"Comparativos",t:35,q:"This battery lasts ___ than the old one.",opts:["long","longer","longest","more long"],correcta:1},
+  {id:"g05",sec:"grammar",nivel:"B1",tema:"Pasado simple",t:35,q:"We ___ the prototype last week.",opts:["have finished","finished","finish","are finishing"],correcta:1},
+  {id:"g06",sec:"grammar",nivel:"B1",tema:"Primer condicional",t:35,q:"If you press the red button, the system ___ the alarm.",opts:["will activate","activated","would activate","has activated"],correcta:0},
+  {id:"g07",sec:"grammar",nivel:"B1",tema:"Voz pasiva",t:35,q:"Most of these circuit boards ___ in Asia.",opts:["are manufactured","manufacture","manufacturing","is manufacturing"],correcta:0},
+  {id:"g08",sec:"grammar",nivel:"B2",tema:"Modales de deducción",t:35,q:"The device won't start at all. The battery ___ be dead.",opts:["must","can","should","would"],correcta:0},
+  {id:"g09",sec:"grammar",nivel:"B2",tema:"Pronombres relativos",t:35,q:"The engineer ___ designed the controller won an award.",opts:["which","who","whom","whose"],correcta:1},
+  {id:"g10",sec:"grammar",nivel:"C1",tema:"Tercer condicional",t:40,q:"Had we calibrated the sensor earlier, the readings ___ accurate.",opts:["would have been","will be","would be","had been"],correcta:0}
+];
+
+const VOCAB = [
+  {id:"v01",sec:"vocab",nivel:"A1",tema:"Herramientas",t:30,q:"You use a ___ to measure the length of a part.",opts:["hammer","ruler","screwdriver","wire"],correcta:1},
+  {id:"v02",sec:"vocab",nivel:"A2",tema:"Materiales y conductores",t:30,q:"Electricity flows easily through a copper ___.",opts:["wire","glass","wood","rubber"],correcta:0},
+  {id:"v03",sec:"vocab",nivel:"A2",tema:"Phrasal verbs",t:30,q:"The opposite of 'to switch on' is to switch ___.",opts:["off","down","out","away"],correcta:0},
+  {id:"v04",sec:"vocab",nivel:"B1",tema:"Términos técnicos",t:30,q:"A device that turns a physical quantity into an electrical signal is a ___.",opts:["sensor","screen","button","speaker"],correcta:0},
+  {id:"v05",sec:"vocab",nivel:"B1",tema:"Verbos de computación",t:30,q:"Please ___ the software so it installs the latest security patch.",opts:["update","upset","upload","undo"],correcta:0},
+  {id:"v06",sec:"vocab",nivel:"B1",tema:"Verbos de acción",t:30,q:"The robotic arm can ___ objects that weigh up to five kilograms.",opts:["lift","leave","lose","let"],correcta:0},
+  {id:"v07",sec:"vocab",nivel:"B2",tema:"Vocabulario de programación",t:30,q:"In programming, a ___ executes the same block of code repeatedly.",opts:["loop","knot","chain","ring"],correcta:0},
+  {id:"v08",sec:"vocab",nivel:"B2",tema:"Términos de fiabilidad",t:30,q:"The system is ___: it keeps working even if one component fails.",opts:["redundant","fragile","obsolete","minimal"],correcta:0},
+  {id:"v09",sec:"vocab",nivel:"B2",tema:"Verbos técnicos",t:30,q:"We need to ___ the algorithm so that it runs faster and uses less memory.",opts:["optimize","organize","apologize","memorize"],correcta:0},
+  {id:"v10",sec:"vocab",nivel:"C1",tema:"Precisión y manufactura",t:35,q:"The ___ is the maximum acceptable deviation of a machined part from its ideal size.",opts:["tolerance","failure","feature","surplus"],correcta:0}
+];
+
+const READING = {
+  electronica:{
+    titulo:"A temperature-monitoring circuit",
+    texto:"A temperature-monitoring circuit protects electronic devices from overheating. The circuit uses a thermistor, a small component whose resistance changes with temperature. As the device gets hotter, the resistance of the thermistor drops. A microcontroller reads this value several times per second and compares it with a safety limit stored in its memory. If the temperature goes above the limit, the microcontroller sends a signal to a small fan, which starts cooling the board. When the temperature falls again, the fan switches off to save energy. Engineers can change the safety limit in the software without modifying the hardware, which makes the design flexible and easy to maintain.",
+    items:[
+      {id:"r1",sec:"reading",nivel:"B1",tema:"Idea principal",t:70,q:"What is the main purpose of the circuit?",opts:["To measure the size of a device","To protect devices from overheating","To increase the speed of a fan","To store photos in memory"],correcta:1},
+      {id:"r2",sec:"reading",nivel:"A2",tema:"Detalle",t:60,q:"What happens to the thermistor's resistance when the device gets hotter?",opts:["It drops","It rises","It stays the same","It disappears"],correcta:0},
+      {id:"r3",sec:"reading",nivel:"B1",tema:"Vocabulario en contexto",t:60,q:"In the text, the word “limit” is closest in meaning to:",opts:["button","maximum value","battery","screen"],correcta:1},
+      {id:"r4",sec:"reading",nivel:"B2",tema:"Inferencia",t:70,q:"Why is the design described as “flexible”?",opts:["Because the fan is small","Because the safety limit can be changed in software","Because the board is cheap","Because it uses many wires"],correcta:1},
+      {id:"r5",sec:"reading",nivel:"B1",tema:"Detalle",t:60,q:"When does the fan switch off?",opts:["When the device is turned on","When the temperature falls again","When the resistance rises to the limit","It never switches off"],correcta:1}
+    ]
+  },
+  automatizacion:{
+    titulo:"A PLC-controlled bottling line",
+    texto:"In a modern bottling plant, a Programmable Logic Controller (PLC) manages the whole production line. Sensors along the conveyor belt detect when a bottle arrives at each station. The PLC receives these signals and decides what to do next: fill the bottle, place a cap, or print a label. If a sensor reports that a bottle is missing or broken, the PLC stops that station immediately and sends an alert to the operator's screen. Because every step follows a fixed sequence, the line can run for hours without human help. Technicians only need to load empty bottles and remove the finished ones. This automation increases speed, reduces waste, and keeps product quality consistent.",
+    items:[
+      {id:"r1",sec:"reading",nivel:"B1",tema:"Idea principal",t:70,q:"What does the text mainly describe?",opts:["How to design a glass bottle","How a PLC controls a bottling line","How to clean a conveyor belt","How operators take breaks"],correcta:1},
+      {id:"r2",sec:"reading",nivel:"A2",tema:"Detalle",t:60,q:"What do the sensors detect?",opts:["The colour of the label","When a bottle arrives at a station","The temperature of the room","The price of the product"],correcta:1},
+      {id:"r3",sec:"reading",nivel:"B1",tema:"Detalle",t:60,q:"What does the PLC do if a bottle is broken?",opts:["It fills the bottle anyway","It stops the station and alerts the operator","It prints two labels","It speeds the line up"],correcta:1},
+      {id:"r4",sec:"reading",nivel:"B2",tema:"Vocabulario en contexto",t:60,q:"In the text, “consistent” is closest in meaning to:",opts:["always the same","very cheap","extremely fast","completely broken"],correcta:0},
+      {id:"r5",sec:"reading",nivel:"B2",tema:"Inferencia",t:70,q:"Why can the line run for hours without help?",opts:["Because operators work quickly","Because every step follows a fixed sequence","Because the bottles are small","Because there are no sensors"],correcta:1}
+    ]
+  },
+  digitales:{
+    titulo:"Field-Programmable Gate Arrays (FPGAs)",
+    texto:"Digital systems represent information using only two states: 0 and 1. A Field-Programmable Gate Array, or FPGA, is a chip that engineers can configure to build custom digital circuits. Unlike a normal processor, which runs instructions one after another, an FPGA can perform many operations at the same time. This parallelism makes FPGAs very useful for tasks such as processing video or filtering signals in real time. To program an FPGA, engineers describe the behaviour of the circuit in a hardware description language. The design is first tested in a simulator before it is loaded onto the chip. If a mistake is found later, the same chip can be reconfigured, so there is no need to buy new hardware.",
+    items:[
+      {id:"r1",sec:"reading",nivel:"B1",tema:"Idea principal",t:70,q:"The text is mainly about:",opts:["how to write a novel","what an FPGA is and why it is useful","how to sell computer chips","the history of the internet"],correcta:1},
+      {id:"r2",sec:"reading",nivel:"A2",tema:"Detalle",t:60,q:"How many states do digital systems use to represent information?",opts:["One","Two","Ten","Sixteen"],correcta:1},
+      {id:"r3",sec:"reading",nivel:"B1",tema:"Detalle",t:60,q:"How is an FPGA different from a normal processor?",opts:["It is always cheaper","It can perform many operations at the same time","It cannot be programmed","It uses no electricity"],correcta:1},
+      {id:"r4",sec:"reading",nivel:"B2",tema:"Vocabulario en contexto",t:60,q:"In the text, “reconfigured” is closest in meaning to:",opts:["set up again","turned off forever","sold to a client","physically broken"],correcta:0},
+      {id:"r5",sec:"reading",nivel:"B2",tema:"Inferencia",t:70,q:"Why do engineers test the design in a simulator first?",opts:["To make the chip larger","To find mistakes before loading it onto the chip","To reduce the electricity bill","To change the programming language"],correcta:1}
+    ]
+  },
+  software_ia:{
+    titulo:"Computer vision for quality control",
+    texto:"Many factories now use computer vision to check the quality of their products. A camera takes a photo of each item as it moves along the line. The image is sent to a program that has been trained with thousands of examples of good and defective parts. Using this training, the artificial-intelligence model decides whether the new item is acceptable or not. If it finds a defect, such as a scratch or a missing screw, the system removes the item automatically. One advantage of this method is that the model can inspect parts much faster than a person and never gets tired. However, the model is only as good as the data used to train it, so engineers must choose their examples carefully.",
+    items:[
+      {id:"r1",sec:"reading",nivel:"B1",tema:"Idea principal",t:70,q:"What is the text mainly about?",opts:["How to build a camera","Using computer vision to check product quality","How to train new employees","How to sell software licences"],correcta:1},
+      {id:"r2",sec:"reading",nivel:"A2",tema:"Detalle",t:60,q:"What does the camera do?",opts:["It removes defective items","It takes a photo of each item","It trains the AI model","It repairs the defects"],correcta:1},
+      {id:"r3",sec:"reading",nivel:"B1",tema:"Detalle",t:60,q:"What happens when the system finds a defect?",opts:["It ignores the item","It removes the item automatically","It calls a supervisor","It takes a second photo"],correcta:1},
+      {id:"r4",sec:"reading",nivel:"B1",tema:"Vocabulario en contexto",t:60,q:"In the text, “defective” is closest in meaning to:",opts:["faulty","expensive","heavy","brand new"],correcta:0},
+      {id:"r5",sec:"reading",nivel:"B2",tema:"Inferencia",t:70,q:"Why must engineers choose the training examples carefully?",opts:["Because cameras are expensive","Because the model is only as good as its data","Because workers get tired","Because photos load slowly"],correcta:1}
+    ]
+  }
+};
+
+const TOTAL_ITEMS = GRAMMAR.length + VOCAB.length + 5; // 5 reading por división
+
+/* ===== Nivel MCER ===== */
+function nivelMCER(pct){
+  if(pct>=85) return "C1";
+  if(pct>=70) return "B2";
+  if(pct>=50) return "B1";
+  if(pct>=30) return "A2";
+  return "A1";
+}
+function descMCER(n){
+  return ({A1:"Principiante",A2:"Básico",B1:"Intermedio",B2:"Intermedio alto",C1:"Avanzado"})[n]||"";
+}
+
+/* ===== Elementos ===== */
+const body=document.getElementById('body'), bar=document.getElementById('bar'), headSub=document.getElementById('headSub');
+const timerWrap=document.getElementById('timerWrap'), timerFill=document.getElementById('timerFill'), shield=document.getElementById('shield');
+function setBar(p){ bar.style.width=Math.max(0,Math.min(100,p))+"%"; }
+function esc(s){ return (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+/* ===== Estado ===== */
+let st = { datos:null, division:null, divNombre:null, items:[], idx:0, resp:{}, inicio:0, examActivo:false, cerrado:false, tick:null };
+
+/* ============ 1) CONSENTIMIENTO ============ */
+function vConsent(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(0);
+  headSub.textContent="Autorización de tratamiento de datos personales";
+  body.innerHTML=`
+    <div class="step-label"><span>Antes de empezar · Autorización de datos</span></div>
+    <p class="intro-p">Este diagnóstico mide tu nivel de inglés (gramática, vocabulario y comprensión de lectura) aplicado a la ingeniería. Para entregarte tus resultados y orientación necesitamos tus datos personales.</p>
+    <div class="consent">
+      <p style="margin:0 0 10px"><b>Autorización para el tratamiento de datos personales</b></p>
+      <p style="margin:0 0 10px">De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo, número de identificación, correo electrónico y programa académico</b>.</p>
+      <p style="margin:0 0 10px"><b>Finalidad:</b> estimar su nivel de inglés, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
+      <p style="margin:0 0 10px"><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
+      <p style="margin:0"><b>Carácter voluntario:</b> otorgar esta autorización es libre y voluntario. Al marcar la casilla y continuar, usted declara que ha leído esta autorización y otorga su consentimiento libre, previo, expreso e informado.</p>
+    </div>
+    <label class="check-row"><input type="checkbox" id="chkConsent">
+      <span>He leído y <b>autorizo</b> el tratamiento de mis datos personales conforme a la Ley 1581 de 2012.</span></label>
+    <div class="nav"><button class="btn btn-primary" id="cont" disabled>Acepto y continúo</button></div>`;
+  const chk=document.getElementById('chkConsent'), cont=document.getElementById('cont');
+  chk.onchange=()=>{ cont.disabled=!chk.checked; };
+  cont.onclick=()=>{ if(chk.checked) vDatos(); };
+}
+
+/* ============ 2) DATOS PERSONALES ============ */
+function vDatos(){
+  setBar(6); headSub.textContent="Datos del estudiante";
+  const d=st.datos||{};
+  const progOpts=PROGRAMAS.map(p=>`<option value="${esc(p)}" ${d.programa===p?"selected":""}>${esc(p)}</option>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Tus datos</span></div>
+    <div class="field-wrap">
+      <label class="field" for="f-nombre">Nombre completo</label>
+      <input class="txt" id="f-nombre" type="text" autocomplete="name" placeholder="Nombres y apellidos" value="${esc(d.nombre||"")}">
+      <div class="err" id="e-nombre"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-id">Número de identificación</label>
+      <input class="txt" id="f-id" type="text" inputmode="numeric" autocomplete="off" placeholder="Documento" value="${esc(d.identificacion||"")}">
+      <div class="hint">Se usa para registrar tu intento. Solo se permite un intento por documento.</div>
+      <div class="err" id="e-id"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-correo">Correo electrónico</label>
+      <input class="txt" id="f-correo" type="email" autocomplete="email" placeholder="correo@ejemplo.com" value="${esc(d.correo||"")}">
+      <div class="err" id="e-correo"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-prog">Programa académico</label>
+      <select class="txt" id="f-prog"><option value="" disabled ${d.programa?"":"selected"}>Selecciona tu programa…</option>${progOpts}</select>
+      <div class="err" id="e-prog"></div>
+    </div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="ir">Continuar</button></div>`;
+  document.getElementById('ir').onclick=validarDatos;
+}
+function validarDatos(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  const identificacion=document.getElementById('f-id').value.trim();
+  const correo=document.getElementById('f-correo').value.trim();
+  const programa=document.getElementById('f-prog').value;
+  let ok=true;
+  const set=(id,msg)=>{ document.getElementById(id).textContent=msg; if(msg)ok=false; };
+  set('e-nombre', (nombre.length>=5 && nombre.includes(" ")) ? "" : "Escribe tus nombres y apellidos completos.");
+  set('e-id', /^[0-9]{6,15}$/.test(identificacion) ? "" : "Ingresa un documento válido (solo números, 6 a 15 dígitos).");
+  set('e-correo', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "" : "Ingresa un correo electrónico válido.");
+  set('e-prog', programa ? "" : "Selecciona tu programa académico.");
+  if(!ok) return;
+  st.datos={nombre,identificacion,correo,programa};
+  vDivision();
+}
+
+/* ============ 3) DIVISIÓN / ÉNFASIS ============ */
+function vDivision(){
+  setBar(12); headSub.textContent=st.datos.nombre;
+  const cards=DIVISIONES.map(dv=>`<button class="est" data-id="${dv.id}">
+    <span class="est-name">${dv.nombre}</span><span class="est-meta">${dv.meta}</span></button>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Elige tu énfasis de lectura</span></div>
+    <p class="intro-p">La sección de <b>reading</b> usará un texto relacionado con el área que elijas. Las secciones de gramática y vocabulario son iguales para todos.</p>
+    <div class="est-grid">${cards}</div>`;
+  body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
+    const dv=DIVISIONES.find(x=>x.id===b.dataset.id);
+    st.division=dv.id; st.divNombre=dv.nombre;
+    vInstrucciones();
+  });
+}
+
+/* ============ 4) INSTRUCCIONES ============ */
+function vInstrucciones(){
+  setBar(16); headSub.textContent=`${st.divNombre} · ${st.datos.programa}`;
+  body.innerHTML=`
+    <div class="step-label"><span>Reglas del examen</span></div>
+    <ul class="rules">
+      <li><span class="ic">⏱</span><span><b>Tiempo por pregunta.</b> Cada pregunta tiene su propio contador. Cuando se agota, el examen avanza solo a la siguiente.</span></li>
+      <li><span class="ic">→</span><span><b>Sin retroceder.</b> No podrás volver ni cambiar una respuesta ya enviada. Responde con seguridad.</span></li>
+      <li><span class="ic">🔒</span><span><b>No salgas de la pantalla.</b> Si cambias de pestaña, minimizas o abres otra app, el examen <b>se cierra automáticamente</b> y quedará como abandonado.</span></li>
+      <li><span class="ic">1</span><span><b>Un solo intento</b> por número de identificación.</span></li>
+      <li><span class="ic">📝</span><span><b>${TOTAL_ITEMS} preguntas:</b> ${GRAMMAR.length} de gramática, ${VOCAB.length} de vocabulario y 5 de comprensión de lectura.</span></li>
+    </ul>
+    <div class="warn-box">Consejo: cierra otras aplicaciones y notificaciones antes de empezar. Una vez inicies, el contador corre para cada pregunta y no se puede pausar.</div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="start">Verificar y comenzar</button></div>`;
+  document.getElementById('start').onclick=iniciarExamen;
+}
+
+async function iniciarExamen(){
+  const b=document.getElementById('start'); b.disabled=true; b.textContent="Verificando…";
+  // Un intento por identificación
+  try{
+    const snap=await firebase.database().ref(NODO).orderByChild('identificacion').equalTo(st.datos.identificacion).once('value');
+    if(snap.exists()){ vYaRegistrado(); return; }
+  }catch(e){ /* si el índice no existe o falla la consulta, se continúa (se registra igual) */ console.warn("Chequeo de intento:",e); }
+
+  // Construir secuencia de ítems
+  const rd = READING[st.division];
+  st.items = [ ...GRAMMAR, ...VOCAB, ...rd.items.map(it=>({...it, _passage:rd.texto, _passageT:rd.titulo})) ];
+  st.idx=0; st.resp={}; st.inicio=Date.now(); st.examActivo=true; st.cerrado=false;
+  // Pantalla completa (best-effort) para reducir distracciones
+  try{ if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); }catch(e){}
+  vPregunta();
+}
+
+function vYaRegistrado(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(100);
+  headSub.textContent="Intento no disponible";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Ya tienes un intento registrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">El documento <b>${esc(st.datos.identificacion)}</b> ya realizó este diagnóstico. Solo se permite un intento por identificación. Si crees que es un error, avisa a tu docente.</p></div>`;
+}
+
+/* ============ 5) PREGUNTAS ============ */
+function detenerTick(){ if(st.tick){ clearInterval(st.tick); st.tick=null; } }
+
+function vPregunta(){
+  if(!st.examActivo) return;
+  detenerTick();
+  const total=st.items.length, it=st.items[st.idx];
+  setBar(18 + (st.idx/total)*80);
+  headSub.textContent=`${st.divNombre} · ${st.datos.programa}`;
+  timerWrap.style.display="block";
+
+  const secLabel = it.sec==="grammar"?"Grammar":it.sec==="vocab"?"Vocabulary":"Reading";
+  const passage = it._passage ? `<div class="passage"><h4>Reading — ${esc(it._passageT)}</h4>${esc(it._passage)}</div>` : "";
+  const opts = it.opts.map((o,oi)=>`<div class="opt" data-o="${oi}">
+      <span class="dot"></span><span class="opt-num">${String.fromCharCode(65+oi)}.</span><span class="opt-txt">${esc(o)}</span></div>`).join("");
+
+  body.innerHTML=`
+    <div class="step-label"><span>Question ${st.idx+1} of ${total} · ${secLabel}</span>
+      <span class="time-chip" id="chip">${it.t}s</span></div>
+    <span class="badge-sec">${secLabel} · ${it.nivel}</span>
+    ${passage}
+    <p class="qtext">${esc(it.q)}</p>
+    <div class="opts">${opts}</div>
+    <div class="nav"><button class="btn btn-primary" id="next" disabled>${st.idx===total-1?"Finalizar":"Siguiente →"}</button></div>`;
+
+  const next=document.getElementById('next');
+  body.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+    const oi=+o.dataset.o;
+    st.resp[it.id+"_"+st.idx]=oi;
+    body.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    o.classList.add('sel'); next.disabled=false;
+  });
+  next.onclick=avanzar;
+
+  // Temporizador por pregunta
+  let queda=it.t;
+  const chip=document.getElementById('chip');
+  timerFill.classList.remove('warn'); timerFill.style.transition="none"; timerFill.style.width="100%";
+  requestAnimationFrame(()=>{ timerFill.style.transition="width 1s linear"; timerFill.style.width="0%"; });
+  st.tick=setInterval(()=>{
+    queda--;
+    if(chip){ chip.textContent=queda+"s"; if(queda<=5){ chip.classList.add('danger'); timerFill.classList.add('warn'); } }
+    if(queda<=0){ detenerTick(); avanzar(true); }
+  },1000);
+}
+
+function avanzar(porTiempo){
+  if(!st.examActivo) return;
+  detenerTick();
+  const it=st.items[st.idx];
+  if(porTiempo && !(it.id+"_"+st.idx in st.resp)){ st.resp[it.id+"_"+st.idx]=null; } // sin responder
+  if(st.idx < st.items.length-1){ st.idx++; vPregunta(); }
+  else finalizar(false);
+}
+
+/* ============ 6) RESULTADO / ENVÍO ============ */
+function construirPayload(abandonado){
+  const secAcc={grammar:{c:0,t:0},vocab:{c:0,t:0},reading:{c:0,t:0}};
+  const nivAcc={A1:{c:0,t:0},A2:{c:0,t:0},B1:{c:0,t:0},B2:{c:0,t:0},C1:{c:0,t:0}};
+  const respuestas=[]; let correctas=0, respondidas=0;
+  st.items.forEach((it,i)=>{
+    const sel = (it.id+"_"+i in st.resp) ? st.resp[it.id+"_"+i] : null;
+    const ok = sel!==null && sel===it.correcta;
+    if(sel!==null) respondidas++;
+    if(ok) correctas++;
+    secAcc[it.sec].t++; if(ok) secAcc[it.sec].c++;
+    nivAcc[it.nivel].t++; if(ok) nivAcc[it.nivel].c++;
+    respuestas.push({id:it.id, sec:it.sec, nivel:it.nivel, tema:it.tema, etiqueta:it.q,
+      sel:sel, correcta:ok, agotado:(sel===null)});
+  });
+  const total=st.items.length;
+  const pct = total? Math.round(100*correctas/total) : 0;
+  const pctSec=(o)=> o.t? Math.round(100*o.c/o.t):0;
+  return {
+    nombre:st.datos.nombre, identificacion:st.datos.identificacion, correo:st.datos.correo, programa:st.datos.programa,
+    division:st.division, divisionNombre:st.divNombre,
+    enviadoEn:new Date().toISOString(),
+    abandonado:!!abandonado,
+    duracionSeg: st.inicio? Math.round((Date.now()-st.inicio)/1000):0,
+    correctas, respondidas, total, pct, nivel: nivelMCER(pct),
+    secciones:{
+      grammar:{...secAcc.grammar,pct:pctSec(secAcc.grammar)},
+      vocab:{...secAcc.vocab,pct:pctSec(secAcc.vocab)},
+      reading:{...secAcc.reading,pct:pctSec(secAcc.reading)}
+    },
+    porNivel:nivAcc,
+    respuestas
+  };
+}
+
+async function finalizar(abandonado){
+  if(st.cerrado) return; st.cerrado=true; st.examActivo=false;
+  detenerTick(); timerWrap.style.display="none";
+  try{ if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+  const payload=construirPayload(abandonado);
+  setBar(99);
+  if(!abandonado){ body.innerHTML=`<div class="done" style="padding-top:40px"><p class="intro-p" style="margin:0">Enviando tus respuestas…</p></div>`; }
+  try{
+    await firebase.database().ref(NODO).push(payload);
+  }catch(e){ console.error("Error al enviar:",e); }
+  if(abandonado) vBloqueado(); else vGracias(payload);
+}
+
+function vGracias(p){
+  setBar(100); headSub.textContent="Diagnóstico completado";
+  body.innerHTML=`
+    <div class="done">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>¡Gracias, ${esc(p.nombre.split(" ")[0])}!</h2>
+      <p class="intro-p" style="margin:0 auto 6px;max-width:440px">Tu diagnóstico se registró correctamente. Tu nivel estimado según el Marco Común Europeo (MCER) es:</p>
+      <div class="level-badge">${p.nivel}</div>
+      <p class="intro-p" style="margin:2px 0 0"><b>${descMCER(p.nivel)}</b> · ${p.pct}% de aciertos (${p.correctas}/${p.total})</p>
+      <div class="sec-mini">
+        <div class="sec-card"><div class="n">${p.secciones.grammar.pct}%</div><div class="l">Grammar</div></div>
+        <div class="sec-card"><div class="n">${p.secciones.vocab.pct}%</div><div class="l">Vocabulary</div></div>
+        <div class="sec-card"><div class="n">${p.secciones.reading.pct}%</div><div class="l">Reading</div></div>
+      </div>
+      <p class="intro-p" style="margin:16px auto 0;max-width:440px;font-size:13px">Tu docente recibirá el detalle y te orientará sobre cómo reforzar tu inglés técnico. Ya puedes cerrar esta ventana.</p>
+    </div>`;
+}
+
+function vBloqueado(){
+  setBar(100); headSub.textContent="Intento cerrado";
+  shield.style.display="grid";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Examen cerrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">Saliste de la pantalla durante el examen, por lo que tu intento se cerró automáticamente y quedó registrado como <b>abandonado</b>. Si fue un error, comunícate con tu docente.</p></div>`;
+}
+
+/* ============ ANTI-TRAMPA: cierre al salir de pantalla ============ */
+function cerrarPorAbandono(){
+  if(!st.examActivo || st.cerrado) return;
+  finalizar(true);
+}
+// Salir de pestaña / minimizar / cambiar de app (móvil y PC)
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) cerrarPorAbandono(); });
+// Perder el foco de la ventana en PC (durante el examen no hay campos de texto, así que no hay falsos positivos)
+window.addEventListener('blur', cerrarPorAbandono);
+window.addEventListener('pagehide', cerrarPorAbandono);
+// Disuadir copia / selección / guardar imagen
+['copy','cut','selectstart','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{ if(st.examActivo) e.preventDefault(); }));
+// Aviso al recargar/cerrar durante el examen
+window.addEventListener('beforeunload', e=>{ if(st.examActivo && !st.cerrado){ e.preventDefault(); e.returnValue=""; } });
+
+/* ===== Inicio ===== */
+vConsent();
+</script>
+</body>
+</html>
