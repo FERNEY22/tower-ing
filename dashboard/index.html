@@ -26,6 +26,7 @@
   <script src="render-coordenadas-geo.js"></script> 
   <script src="render-percepcion.js"></script>
   <script src="render-encuestas.js"></script>
+  <script src="render-ingles.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -251,6 +252,7 @@
     <option value="coordenadasGeo">Quiz Sistemas de Coordenadas — Tec. Geoespaciales</option>
     <option value="percepcion">Apreciación · Observatorio Institucional</option>
     <option value="encuestas">Encuesta de Autoevaluación</option>
+    <option value="ingles">Diagnóstico de Inglés · Ingeniería</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -640,6 +642,8 @@
 
 <div class="vista" id="vista-encuestas"></div>
 
+<div class="vista" id="vista-ingles"></div>
+
 </main>
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
@@ -664,7 +668,7 @@
   let DATA = {
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
-    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: []
+    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: [], ingles: {}
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -734,6 +738,7 @@
   db.ref('quizzes/coordenadas_geo').on('value', snap => { DATA.coordenadasGeo = snap.val() || {}; if (vistaActiva === 'coordenadasGeo') renderCoordenadasGeo(); });
   db.ref('percepcion_observatorio').on('value', snap => { DATA.percepcion = snap.val()||{}; if(vistaActiva==='percepcion') renderPercepcion(); });
   db.ref('autoevaluacion_estamentos').on('value', s => { DATA.encuestas = s.val() ? Object.values(s.val()) : []; if (vistaActiva === 'encuestas') renderEncuestas();});
+  db.ref('diagnostico_ingles').on('value', snap => { DATA.ingles = snap.val()||{}; if(vistaActiva==='ingles') renderIngles(); });
 
 
   }
@@ -762,7 +767,8 @@
       taller10:  [renderTaller10,  DATA.taller10],
       coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo],
       percepcion: [renderPercepcion, DATA.percepcion],
-      encuestas: [renderEncuestas, DATA.encuestas]
+      encuestas: [renderEncuestas, DATA.encuestas],
+      ingles: [renderIngles, DATA.ingles]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
