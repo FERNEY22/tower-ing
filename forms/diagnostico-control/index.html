@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirigiendo…</title>
+<meta http-equiv="refresh" content="3; url=panel_actividades.html">
+<style>
+  body{font-family:system-ui,sans-serif;color:#23272E;background:#F7F8FA;
+       display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center;text-align:center;padding:20px}
+  .box{max-width:360px}
+  p{font-size:15px;margin:0 0 10px}
+  a{color:#2F6FB0;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .doc{margin-top:28px;font-size:12px;color:#8a919c}
+  .doc a{color:#8a919c}
+  .doc .note{display:block;margin-top:2px;font-size:11px;color:#a7adb6}
+</style>
+</head>
+<body>
+  <div class="box">
+    <p>Redirigiendo al panel de actividades…<br>
+       <a href="panel_actividades.html" id="goStudent">Entrar ahora</a></p>
+    <div class="doc">
+      <a href="dashboard_docente.html" id="goDocente">Acceso docente</a>
+      <span class="note">(requiere credenciales)</span>
+    </div>
+  </div>
+<script>
+  var _t = setTimeout(function(){ location.replace("panel_actividades.html"); }, 3000);
+  // Si el usuario navega manualmente (estudiante o docente), cancela la redirección automática.
+  document.getElementById("goStudent").addEventListener("click", function(){ clearTimeout(_t); });
+  document.getElementById("goDocente").addEventListener("click", function(){ clearTimeout(_t); });
+</script>
+</body>
+</html>

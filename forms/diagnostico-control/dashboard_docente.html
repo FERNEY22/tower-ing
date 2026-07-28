@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard docente — IFA00117</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:"tower-ing.firebaseapp.com",
+  databaseURL:"https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:"tower-ing",
+  storageBucket:"tower-ing.firebasestorage.app",
+  messagingSenderId:"440636238988",
+  appId:"1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+<script src="tower_control.js"></script>
+<style>
+  :root{--ink:#23272E;--ink-soft:#5A626E;--paper:#FFFFFF;--panel:#F4F5F7;--line:#E1E4E9;
+    --a1:#2F6FB0;--a2:#1E8A7A;--a3:#C0722A;--a4:#6B4E9E;--ok:#2E8B6F;--mid:#C57B1E;--bad:#C6493B;--sel:#E6A817;
+    --shadow:0 1px 2px rgba(20,25,35,.06),0 8px 24px rgba(20,25,35,.07);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:#F7F8FA;line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh;padding:clamp(14px,3vw,30px)}
+  .wrap{max-width:1180px;margin:0 auto}
+  .screen{display:none}.screen.on{display:block}
+  h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(24px,4vw,38px);margin:.1em 0}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px;max-width:420px;margin:8vh auto 0}
+  label.f{display:block;font-weight:600;font-size:13.5px;margin:12px 0 6px}
+  input.t{width:100%;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:10px}
+  input.t:focus{outline:none;border-color:var(--a2);box-shadow:0 0 0 3px rgba(30,138,122,.15)}
+  button.btn{font-family:inherit;font-weight:600;font-size:14px;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff}
+  button.btn:hover{opacity:.9}button.btn.ghost{background:transparent;color:var(--ink)}button.btn.wide{width:100%}
+  .msg{font-size:12.5px;color:var(--bad);margin-top:8px;min-height:16px}
+  .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+  .kpi .n{font-family:"Fraunces",serif;font-weight:700;font-size:26px;line-height:1}
+  .kpi .l{font-size:11.5px;color:var(--ink-soft);letter-spacing:.03em;margin-top:4px}
+  .tablewrap{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:820px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{background:var(--panel);font-weight:700;font-size:11.5px;letter-spacing:.03em;color:var(--ink-soft);position:sticky;top:0}
+  td.num{font-variant-numeric:tabular-nums;text-align:right}
+  .acc{font-family:"Fraunces",serif;font-weight:700}
+  .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
+  .tag.ok{background:#EDF7F3;color:var(--ok)}.tag.no{background:#FBEEEC;color:var(--bad)}
+  .cellact{display:flex;flex-direction:column;gap:1px}.cellact .s{font-weight:700}.cellact .m{font-size:11px;color:var(--ink-soft)}.cellact .when{color:#8a919c;white-space:nowrap}
+  tr.rowx{cursor:pointer}tr.rowx:hover td{background:#FAFBFC}
+  tr.detail td{background:#FBFCFD;font-size:12px;color:var(--ink-soft);white-space:normal}
+  .medal{font-weight:700}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .hint{font-size:12px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="screen on" id="s-login">
+    <div class="card">
+      <div class="eyebrow">IFA00117 · Docente</div>
+      <h1>Dashboard</h1>
+      <p class="hint">Acceso solo para el docente (correo autorizado en Firebase).</p>
+      <label class="f" for="email">Correo</label>
+      <input class="t" id="email" type="email" placeholder="tu-correo@ejemplo.com">
+      <label class="f" for="pass">Contraseña</label>
+      <input class="t" id="pass" type="password" placeholder="••••••••">
+      <div class="msg" id="loginMsg"></div>
+      <button class="btn wide" id="btnLogin" style="margin-top:6px">Ingresar</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-dash">
+    <div class="top">
+      <div><div class="eyebrow">IFA00117 · Panel de resultados</div><h1>Resultados del grupo</h1></div>
+      <div class="controls">
+        <span class="hint" id="userlbl"></span>
+        <button class="btn ghost" id="btnRefresh" style="border-color:var(--line)">Actualizar</button>
+        <button class="btn ghost" id="btnCsv" style="border-color:var(--line)">Exportar CSV</button>
+        <button class="btn ghost" id="btnLogout" style="border-color:var(--line)">Salir</button>
+      </div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="tablewrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+  TowerDB.init();
+  var ACTKEYS=["act1","act2","act3","act4"];
+  var ACTNAMES={act1:"Act 1 · Radiografía",act2:"Act 2 · Transmisor",act3:"Act 3 · Lazo",act4:"Act 4 · Pirámide"};
+  var $=function(s){return document.querySelector(s);};
+  function show(id){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("on");});$("#"+id).classList.add("on");}
+  var rows=[]; // datos aplanados
+
+  function login(){
+    var email=$("#email").value.trim(), pass=$("#pass").value, msg=$("#loginMsg"); msg.textContent="";
+    firebase.auth().signInWithEmailAndPassword(email,pass)
+      .then(function(){ /* onAuthStateChanged carga */ })
+      .catch(function(e){ msg.textContent = e.code==="auth/invalid-credential"||e.code==="auth/wrong-password"||e.code==="auth/user-not-found" ? "Correo o contraseña incorrectos." : ("Error: "+e.message); });
+  }
+  firebase.auth().onAuthStateChanged(function(u){
+    if(u){ $("#userlbl").textContent=u.email; show("s-dash"); loadData(); }
+    else { show("s-login"); }
+  });
+
+  function loadData(){
+    TowerDB.loadAll().then(function(data){
+      var intentos=data.intentos||{}, parts=data.participantes||{};
+      rows=Object.keys(intentos).map(function(cc){
+        var it=intentos[cc], acc=0, aprob=0, dur=0, nombre=(parts[cc]&&parts[cc].nombre)|| (it.act1&&it.act1.nombre) || (it.act2&&it.act2.nombre) || "—";
+        ACTKEYS.forEach(function(k){ if(it[k]){ acc+=it[k].mejorPuntaje||0; if(it[k].aprobado)aprob++; if(it[k].ultimo&&it[k].ultimo.duracionSeg) dur+=it[k].ultimo.duracionSeg; }});
+        return {cc:cc,nombre:nombre,it:it,acc:acc,aprob:aprob,dur:dur};
+      }).sort(function(a,b){return b.acc-a.acc;});
+      renderKpis(); renderTable();
+    }).catch(function(e){ alert("No se pudo leer la base: "+e.message); });
+  }
+
+  function renderKpis(){
+    var box=$("#kpis"); box.innerHTML="";
+    var total=rows.length;
+    var apr={};ACTKEYS.forEach(function(k){apr[k]=0;});
+    var anul=0;
+    rows.forEach(function(r){ACTKEYS.forEach(function(k){var a=r.it[k];if(a){if(a.aprobado)apr[k]++;anul+=(a.anulados||0);}});});
+    function kpi(n,l){var d=document.createElement("div");d.className="kpi";d.innerHTML='<div class="n">'+n+'</div><div class="l">'+l+'</div>';box.appendChild(d);}
+    kpi(total,"PARTICIPANTES");
+    ACTKEYS.forEach(function(k){kpi(apr[k]+" / "+total, (ACTNAMES[k].split(" · ")[0]).toUpperCase()+" APROBADAS");});
+    kpi(anul,"INTENTOS ANULADOS (TRAMPA)");
+  }
+
+  function fmt(n){return (n||0).toLocaleString("es-CO");}
+  function fmtDur(sec){ if(!sec) return "—"; var m=Math.floor(sec/60), s=sec%60; return m>0 ? (m+"m "+s+"s") : (s+"s"); }
+  function cellAct(a){
+    if(!a) return '<span class="m">—</span>';
+    var t=a.aprobado?'<span class="tag ok">✓</span>':'<span class="tag no">✗</span>';
+    var when=(a.ultimo&&a.ultimo.ts)?'<span class="m when">🕒 '+new Date(a.ultimo.ts).toLocaleString('es-CO')+'</span>':'';
+    return '<div class="cellact"><span class="s">'+fmt(a.mejorPuntaje)+' '+t+'</span><span class="m">logro '+(a.logro||0)+'% · int '+(a.intentos||0)+(a.anulados?' · anul '+a.anulados:'')+'</span>'+when+'</div>';
+  }
+  function renderTable(){
+    var th=$("#tbl thead"), tb=$("#tbl tbody");
+    th.innerHTML='<tr><th>#</th><th>Estudiante</th><th>Cédula</th>'+ACTKEYS.map(function(k){return '<th>'+ACTNAMES[k]+'</th>';}).join('')+'<th>Acumulado</th><th>Aprob.</th><th>Duración total</th></tr>';
+    tb.innerHTML="";
+    rows.forEach(function(r,i){
+      var medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1);
+      var tr=document.createElement("tr"); tr.className="rowx";
+      tr.innerHTML='<td class="medal">'+medal+'</td><td>'+r.nombre+'</td><td>••••'+String(r.cc).slice(-3)+'</td>'+
+        ACTKEYS.map(function(k){return '<td>'+cellAct(r.it[k])+'</td>';}).join('')+
+        '<td class="num acc">'+fmt(r.acc)+'</td><td class="num">'+r.aprob+'/4</td><td class="num">⏱ '+fmtDur(r.dur)+'</td>';
+      var det=document.createElement("tr"); det.className="detail"; det.style.display="none";
+      det.innerHTML='<td colspan="'+(6+ACTKEYS.length)+'">'+detailHtml(r)+'</td>';
+      tr.addEventListener("click",function(){det.style.display=det.style.display==="none"?"":"none";});
+      tb.appendChild(tr); tb.appendChild(det);
+    });
+  }
+  function detailHtml(r){
+    return ACTKEYS.map(function(k){
+      var a=r.it[k]; if(!a) return '<b>'+ACTNAMES[k]+':</b> sin intentos.';
+      var u=a.ultimo||{};
+      var d = u.detalle ? ' · detalle último intento: '+JSON.stringify(u.detalle) : '';
+      return '<b>'+ACTNAMES[k]+':</b> mejor '+fmt(a.mejorPuntaje)+' · logro '+(a.logro||0)+'% · intentos '+(a.intentos||0)+' · anulados '+(a.anulados||0)+(u.ts?' · último '+new Date(u.ts).toLocaleString('es-CO'):'')+d;
+    }).join('<br>');
+  }
+  function toCsv(){
+    var head=["cedula","nombre"].concat(ACTKEYS.map(function(k){return k+"_puntaje";})).concat(ACTKEYS.map(function(k){return k+"_logro";})).concat(["acumulado","aprobadas","duracion_total_seg"]);
+    var lines=[head.join(",")];
+    rows.forEach(function(r){
+      var row=[r.cc,'"'+r.nombre+'"'];
+      ACTKEYS.forEach(function(k){row.push(r.it[k]?(r.it[k].mejorPuntaje||0):0);});
+      ACTKEYS.forEach(function(k){row.push(r.it[k]?(r.it[k].logro||0):0);});
+      row.push(r.acc,r.aprob,r.dur);
+      lines.push(row.join(","));
+    });
+    var blob=new Blob([lines.join("\n")],{type:"text/csv"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="resultados_IFA00117.csv";a.click();
+  }
+
+  $("#btnLogin").addEventListener("click",login);
+  $("#pass").addEventListener("keydown",function(e){if(e.key==="Enter")login();});
+  $("#btnRefresh").addEventListener("click",loadData);
+  $("#btnCsv").addEventListener("click",toCsv);
+  $("#btnLogout").addEventListener("click",function(){firebase.auth().signOut();});
+})();
+</script>
+</body>
+</html>

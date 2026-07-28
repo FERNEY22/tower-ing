@@ -1,0 +1,280 @@
+/* =========================================================================
+   docente.css — Panel de resultados del grupo.
+   ========================================================================= */
+
+.docente-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.docente-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.docente-acciones .btn {
+  font-size: 12.5px;
+  padding: 8px 13px;
+}
+
+.aviso-simulada {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  background: #fcf8ef;
+  border: 1px solid var(--mid);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.aviso-simulada code {
+  background: var(--panel);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------------- indicadores */
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.indicador {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+
+.indicador .n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.indicador .l {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+/* -------------------------------------------------------------- tabla */
+
+.tablawrap {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.tabla-grupo {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 760px;
+}
+
+.tabla-grupo th,
+.tabla-grupo td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.tabla-grupo thead th {
+  background: var(--panel);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  position: sticky;
+  top: 0;
+}
+
+.tabla-grupo .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabla-grupo .mono {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+.tabla-grupo .destacado {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.fila-estudiante {
+  cursor: pointer;
+}
+
+.fila-estudiante:hover td {
+  background: #fafbfc;
+}
+
+.desplegador {
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+.nota {
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+}
+
+.nota.ok {
+  background: #edf7f3;
+  color: var(--ok);
+}
+
+.nota.no {
+  background: #fbeeec;
+  color: var(--bad);
+}
+
+.nota sup {
+  font-size: 9px;
+  margin-left: 1px;
+  opacity: 0.7;
+}
+
+.sin-datos {
+  color: var(--ink-faint);
+}
+
+/* ------------------------------------------------------------ detalle */
+
+.fila-detalle td {
+  background: #fbfcfd;
+  white-space: normal;
+  padding: 0;
+}
+
+.detalle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+  padding: 16px;
+}
+
+.detalle-leccion {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px 15px;
+}
+
+.detalle-leccion h4 {
+  font-family: var(--font-display);
+  font-size: 14px;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.detalle-leccion .banda {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.detalle-leccion .banda.ok {
+  background: #edf7f3;
+  color: var(--ok);
+}
+
+.detalle-leccion .banda.no {
+  background: #fbeeec;
+  color: var(--bad);
+}
+
+.detalle-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 14px;
+  margin: 0 0 10px;
+}
+
+.detalle-datos > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 3px;
+}
+
+.detalle-datos dt {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.detalle-datos dd {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.detalle-quemados {
+  font-size: 12.5px;
+  margin: 0 0 10px;
+  color: var(--bad);
+}
+
+.detalle-diagnosticos {
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+
+.detalle-diagnosticos ol {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detalle-diagnosticos li.fallo {
+  color: var(--bad);
+}
+
+.detalle-diagnosticos li.acierto {
+  color: var(--ok);
+}
+
+.detalle-bitacora {
+  font-size: 12.5px;
+}
+
+.detalle-bitacora blockquote {
+  margin: 6px 0 0;
+  padding: 8px 11px;
+  background: var(--panel);
+  border-left: 3px solid var(--l4);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  line-height: 1.45;
+}

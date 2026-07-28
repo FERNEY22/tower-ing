@@ -1,0 +1,507 @@
+/* =========================================================================
+   lienzo.css — Editor de circuitos.
+   ========================================================================= */
+
+.practica-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+/* =========================================================================
+   El reparto: el lienzo se queda con todo el ancho que sobre, y lo demás
+   comparte una sola columna de ancho fijo. Antes había tres columnas y el
+   dibujo se quedaba con 330 px de 1180.
+   ========================================================================= */
+
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--ancho-panel, 520px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .editor {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tarjeta-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.titulo-panel {
+  font-family: var(--font-display);
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+.acciones-lienzo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.acciones-lienzo .btn {
+  flex: 1 1 auto;
+  font-size: 12.5px;
+  padding: 9px 12px;
+}
+
+/* --------------------------------------------------------------- paleta */
+
+.paleta-lista {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 1000px) {
+  .paleta-lista {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+}
+
+.paleta-item {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.paleta-item:hover {
+  background: #fff;
+  border-color: var(--l1);
+  color: var(--ink);
+}
+
+.miniatura {
+  width: 56px;
+  height: 42px;
+  color: var(--ink);
+}
+
+.miniatura .simbolo {
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* --------------------------------------------------------------- lienzo */
+
+.lienzo {
+  min-width: 0;
+}
+
+.lienzo-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  min-height: 22px;
+}
+
+.lienzo-aviso {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--bad);
+  background: #fbeeec;
+  border-radius: var(--r-pill);
+  padding: 3px 12px;
+}
+
+/* El marco mide el hueco; el SVG dentro toma el tamaño que le calcula
+   LienzoSVG y se queda centrado. */
+.lienzo-marco {
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.lienzo-svg {
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.punto-rejilla {
+  fill: #d7dbe2;
+}
+
+/* En la vista fisica la rejilla estorba: no hay rejilla en una mesa. */
+.vista-fisica .punto-rejilla {
+  fill: #eceef1;
+}
+
+/* ------------------------------------------------------------- simbolos */
+
+.componente .simbolo {
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.componente.seleccionado .simbolo {
+  stroke: var(--l1);
+}
+
+.componente.quemado .simbolo {
+  stroke: var(--ink-faint);
+  stroke-dasharray: 4 3;
+}
+
+.componente .marca {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--ink);
+  stroke: none;
+}
+
+/* ---------------------------------------------------------- vista fisica
+
+   Los sprites traen su propio relleno: aqui se anula el trazo heredado del
+   esquematico para que no repinte los contornos.                          */
+
+.vista-fisica .componente .simbolo {
+  stroke: none;
+  stroke-width: 0;
+}
+
+.vista-fisica .componente.seleccionado .simbolo {
+  filter: drop-shadow(0 0 0 var(--l1)) drop-shadow(0 0 3px var(--l1));
+}
+
+.vista-fisica .componente.quemado .simbolo {
+  filter: grayscale(1) brightness(0.45);
+}
+
+.marca-fisica {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  stroke: none;
+  fill: var(--ink);
+}
+
+.marca-fisica.clara {
+  fill: #f2f4f6;
+}
+
+.marca-fisica.pequena {
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* El color del LED encendido es informacion tecnica, no decoracion. */
+.halo {
+  stroke: none;
+}
+.halo-rojo {
+  fill: #e23b2e;
+}
+.halo-verde {
+  fill: #27a353;
+}
+.halo-azul {
+  fill: #2f6fb0;
+}
+.halo-blanco {
+  fill: #f2f0e4;
+}
+
+/* ---------------------------------------------------- cables y terminales */
+
+.cable {
+  stroke: var(--ink);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  cursor: pointer;
+}
+
+.cable:hover {
+  stroke: var(--bad);
+}
+
+.cable.en-curso {
+  stroke: var(--l1);
+  stroke-dasharray: 5 4;
+  pointer-events: none;
+}
+
+/* Con el amperimetro en la mano, los cables invitan a pincharlos. */
+.cable.medible {
+  stroke-dasharray: 7 3;
+}
+
+.cable.medible:hover {
+  stroke: var(--l1);
+  stroke-width: 3;
+}
+
+/* -------------------------------------------------------------- quemados */
+
+.humo .voluta {
+  fill: none;
+  stroke: #9aa1a8;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0.75;
+  animation: subir 3s ease-in-out infinite;
+}
+
+.humo .voluta.lenta {
+  opacity: 0.45;
+  animation-duration: 4.2s;
+  animation-delay: 0.6s;
+}
+
+@keyframes subir {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  30% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .humo .voluta {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+.union {
+  fill: var(--ink);
+}
+
+.terminal {
+  fill: var(--paper);
+  stroke: var(--ink-soft);
+  stroke-width: 1.4;
+  cursor: crosshair;
+}
+
+.terminal.apuntado {
+  stroke: var(--l1);
+  stroke-width: 2.4;
+  fill: #eaf1f9;
+}
+
+.terminal.origen {
+  fill: var(--l1);
+  stroke: var(--l1);
+}
+
+/* ------------------------------------------------------------ etiquetas */
+
+.etiqueta {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.etiqueta .ref {
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+.etiqueta .medida {
+  fill: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------- avisos de quemado */
+
+.quemados {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quemado-aviso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--bad);
+  background: #fbeeec;
+  border-radius: 12px;
+  padding: 10px 13px;
+  font-size: 13px;
+}
+
+.quemado-aviso strong {
+  display: block;
+  color: var(--bad);
+  margin-bottom: 2px;
+}
+
+.quemado-aviso .btn {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  background: var(--paper);
+}
+
+/* --------------------------------------------------------- diagnosticos */
+
+.diagnosticos {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag {
+  border-radius: 12px;
+  padding: 10px 13px;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.diag strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.diag.error {
+  border-color: var(--bad);
+  background: #fbeeec;
+}
+
+.diag.error strong {
+  color: var(--bad);
+}
+
+.diag.aviso {
+  border-color: #e4d6b4;
+  background: #fcf8ef;
+}
+
+.diag.aviso strong {
+  color: var(--mid);
+}
+
+/* ------------------------------------------------------------ inspector */
+
+.inspector-caja h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+
+.inspector .f {
+  margin-top: 12px;
+}
+
+.inspector input[type="range"] {
+  width: 100%;
+}
+
+.f.interruptor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.medidas {
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.medidas > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 4px;
+}
+
+.medidas dt {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.medidas dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.inspector-acciones {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.inspector-acciones .btn {
+  flex: 1;
+  font-size: 13px;
+  padding: 9px 8px;
+}
+
+.resumen {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.resumen h3 {
+  font-family: var(--font-display);
+  font-size: 14px;
+  margin: 0 0 4px;
+}

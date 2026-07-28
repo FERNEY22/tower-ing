@@ -1,0 +1,45 @@
+/* =========================================================================
+   tokens.css — Sistema visual.
+
+   Hereda la familia del proyecto de control (Fraunces + Inter, mismos
+   grises, mismos radios) para que los dos juegos se sientan del mismo
+   curso, con acentos propios.
+
+   Los colores tecnicos —bandas de resistencia, LED encendido— NO viven
+   aqui: son dato, no estilo, y los define el motor.
+   ========================================================================= */
+
+:root {
+  /* tinta y superficies */
+  --ink: #23272e;
+  --ink-soft: #5a626e;
+  --ink-faint: #8a919c;
+  --paper: #ffffff;
+  --panel: #f4f5f7;
+  --line: #e1e4e9;
+
+  /* acentos: uno por leccion */
+  --l1: #2f6fb0;
+  --l2: #c0722a;
+  --l3: #1e8a7a;
+  --l4: #6b4e9e;
+  --l5: #b0453a;
+
+  /* semaforo */
+  --ok: #2e8b6f;
+  --mid: #c57b1e;
+  --bad: #c6493b;
+  --sel: #e6a817;
+
+  /* forma */
+  --r-card: 18px;
+  --r-ctl: 12px;
+  --r-pill: 99px;
+  --shadow: 0 1px 2px rgba(20, 25, 35, 0.06),
+    0 8px 24px rgba(20, 25, 35, 0.07);
+
+  /* tipografia */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+}

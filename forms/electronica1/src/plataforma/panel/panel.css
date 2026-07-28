@@ -1,0 +1,164 @@
+/* =========================================================================
+   panel.css — Panel de lecciones del estudiante.
+   ========================================================================= */
+
+.panel-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.panel-nombre {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 3vw, 26px);
+}
+
+.panel-marcador {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow);
+}
+
+.panel-marcador .n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.panel-marcador .l {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  letter-spacing: 0.03em;
+}
+
+.panel-marcador .sep {
+  width: 1px;
+  height: 34px;
+  background: var(--line);
+}
+
+/* -------------------------------------------------------------- tarjetas */
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--ink-faint);
+}
+
+.tarjeta.l1::before { background: var(--l1); }
+.tarjeta.l2::before { background: var(--l2); }
+.tarjeta.l3::before { background: var(--l3); }
+.tarjeta.l4::before { background: var(--l4); }
+.tarjeta.l5::before { background: var(--l5); }
+
+.tarjeta.bloqueada {
+  opacity: 0.72;
+}
+
+.tarjeta-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tarjeta .num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+}
+
+.tarjeta.l1 .num { background: var(--l1); }
+.tarjeta.l2 .num { background: var(--l2); }
+.tarjeta.l3 .num { background: var(--l3); }
+.tarjeta.l4 .num { background: var(--l4); }
+.tarjeta.l5 .num { background: var(--l5); }
+
+.tarjeta .tema {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.tarjeta h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+
+.tarjeta .desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.tarjeta .nota {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tarjeta .nota .v {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.tarjeta .nota .b {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.tarjeta .motivo {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+
+.tarjeta .cta {
+  margin-top: auto;
+}

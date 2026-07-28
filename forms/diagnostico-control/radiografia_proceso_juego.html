@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radiografía de un proceso — IFA00117</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#23272E; --ink-soft:#5A626E; --paper:#FFFFFF; --panel:#F4F5F7; --line:#E1E4E9;
+    --es:#2F6FB0;      /* nivel español (azul) */
+    --en:#6B4E9E;      /* nivel inglés (morado) */
+    --ok:#2E8B6F; --mid:#C57B1E; --bad:#C6493B; --sel:#E6A817;
+    --shadow:0 1px 2px rgba(20,25,35,.06),0 8px 24px rgba(20,25,35,.07);
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+    background:radial-gradient(1100px 460px at 82% -12%,#F6F8FA 0%,rgba(246,248,250,0) 60%),var(--paper);
+    line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh;
+    padding:clamp(14px,3vw,30px);
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  .screen{display:none;animation:fade .3s ease}
+  .screen.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--es)}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(28px,5vw,46px);line-height:1.02;letter-spacing:-.01em;margin:.14em 0 .1em}
+  .lead{color:var(--ink-soft);font-size:clamp(14px,1.7vw,16px);max-width:56ch}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:clamp(18px,3.5vw,30px)}
+
+  label.f{display:block;font-weight:600;font-size:13.5px;margin:14px 0 6px}
+  input.t{
+    width:100%;font-family:inherit;font-size:16px;padding:13px 15px;border:1px solid var(--line);
+    border-radius:12px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s
+  }
+  input.t:focus{outline:none;border-color:var(--es);box-shadow:0 0 0 3px rgba(47,111,176,.16)}
+  .hintline{font-size:12.5px;color:var(--ink-soft);margin-top:6px}
+
+  button.btn{font-family:inherit;font-weight:600;font-size:15px;border-radius:12px;padding:13px 22px;cursor:pointer;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;transition:transform .1s,box-shadow .18s,opacity .15s}
+  button.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+  button.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  button.btn.ghost{background:transparent;color:var(--ink)}
+  button.btn.wide{width:100%;justify-content:center;display:flex}
+
+  .concept{background:linear-gradient(0deg,rgba(47,111,176,.045),rgba(47,111,176,.045)),var(--paper)}
+  .concept .ctitle{font-family:"Fraunces",serif;font-weight:600;font-size:18px;margin:0 0 8px}
+  .concept p{font-size:14px;color:var(--ink);margin:8px 0}
+  .concept p b{color:var(--es)}
+
+  .qprompt{font-size:12.5px;font-weight:700;letter-spacing:.01em;margin-bottom:11px}
+  .qprompt.es{color:var(--es)} .qprompt.en{color:var(--en)}
+
+  .fb .why{font-size:13px;color:var(--ink-soft);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.12)}
+  .fb .why b{color:var(--ink)}
+
+  .rules{display:flex;flex-direction:column;gap:9px;margin:18px 0 6px}
+  .rule{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--ink)}
+  .rule .ic{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--panel);display:grid;place-items:center;font-size:14px}
+
+  .blocked{border-color:var(--bad);background:#FBEEEC}
+  .blocked h3{color:var(--bad);font-family:"Fraunces",serif;margin:0 0 4px}
+
+  /* PLAY */
+  .playtop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .levelbadge{font-weight:700;font-size:13px;letter-spacing:.03em;color:#fff;padding:6px 13px;border-radius:99px}
+  .levelbadge.es{background:var(--es)} .levelbadge.en{background:var(--en)}
+  .progress{font-size:13px;color:var(--ink-soft);font-weight:600}
+  .pts{font-family:"Fraunces",serif;font-weight:700;font-size:20px}
+  .pts small{font-size:12px;color:var(--ink-soft);font-weight:500;font-family:"Inter"}
+
+  .timerbar{height:8px;border-radius:99px;background:var(--panel);overflow:hidden;margin-bottom:18px}
+  .timerbar > i{display:block;height:100%;width:100%;background:var(--ok);border-radius:99px;transition:width .1s linear,background .3s}
+
+  .ctx{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border-radius:99px;padding:5px 12px;margin-bottom:12px}
+  .def{font-size:clamp(17px,2.5vw,21px);font-weight:500;line-height:1.4;margin:2px 0 12px}
+  .clue{font-size:14px;color:var(--ink-soft);font-style:italic;border-left:3px solid var(--line);padding-left:12px;margin:0 0 6px}
+  .lenhint{font-size:12px;color:var(--ink-soft);margin:10px 0 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .lenhint .boxes{letter-spacing:3px;font-weight:700;color:#aab0ba}
+
+  .answerrow{display:flex;gap:10px;margin-top:6px}
+  .answerrow input{flex:1}
+
+  /* FEEDBACK overlay inside play */
+  .fb{margin-top:16px;border-radius:14px;border:1px solid var(--line);padding:14px 16px;display:none}
+  .fb.on{display:block;animation:fade .25s ease}
+  .fb.full{border-color:var(--ok);background:#F1FAF6}
+  .fb.part{border-color:var(--mid);background:#FCF5EA}
+  .fb.none{border-color:var(--bad);background:#FBEEEC}
+  .fb .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .fb .verdict{font-weight:700;font-size:15px}
+  .fb.full .verdict{color:var(--ok)} .fb.part .verdict{color:var(--mid)} .fb.none .verdict{color:var(--bad)}
+  .fb .gain{font-family:"Fraunces",serif;font-weight:700;font-size:19px}
+  .fb .canon{font-size:13.5px;color:var(--ink-soft);margin-top:6px}
+  .fb .canon b{color:var(--ink)}
+
+  /* LEVEL BREAK */
+  .break{text-align:center}
+  .break .big{font-family:"Fraunces",serif;font-size:clamp(30px,6vw,52px);font-weight:600;color:var(--en);margin:6px 0}
+
+  /* RESULTS */
+  .totalcard{text-align:center;margin-bottom:20px}
+  .totalcard .score{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(48px,11vw,86px);line-height:1;letter-spacing:-.02em}
+  .totalcard .of{color:var(--ink-soft);font-size:15px}
+  .split{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .split .chip{background:var(--panel);border-radius:12px;padding:9px 15px;font-size:13px;font-weight:600}
+  .split .chip .v{font-family:"Fraunces",serif;font-size:17px;display:block}
+  .split .chip.es{box-shadow:inset 0 0 0 2px rgba(47,111,176,.25)}
+  .split .chip.en{box-shadow:inset 0 0 0 2px rgba(107,78,158,.25)}
+
+  .rankwrap h2{font-family:"Fraunces",serif;font-weight:600;font-size:20px;margin:22px 0 4px}
+  .ranksub{font-size:13px;color:var(--ink-soft);margin:0 0 14px}
+  .row{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff}
+  .row.me{border-color:var(--sel);box-shadow:0 0 0 3px rgba(230,168,23,.2);background:#FFFDF6}
+  .row .pos{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--panel);display:grid;place-items:center;font-weight:700;font-size:14px}
+  .row.m1 .pos{background:#F4D06F} .row.m2 .pos{background:#D9DCE1} .row.m3 .pos{background:#E7B98C}
+  .row .who{flex:1;min-width:0}
+  .row .who .nm{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .who .cc{font-size:11.5px;color:var(--ink-soft)}
+  .row .sc{font-family:"Fraunces",serif;font-weight:700;font-size:17px}
+  .yourpos{text-align:center;font-size:14px;color:var(--ink-soft);margin:6px 0 0}
+  .yourpos b{color:var(--ink);font-size:16px}
+
+  .foot{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  footer.legal{margin-top:24px;color:#9aa1ab;font-size:11.5px;text-align:center}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>firebase.initializeApp({apiKey:"AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",authDomain:"tower-ing.firebaseapp.com",databaseURL:"https://tower-ing-default-rtdb.firebaseio.com",projectId:"tower-ing",storageBucket:"tower-ing.firebasestorage.app",messagingSenderId:"440636238988",appId:"1:440636238988:web:cb8f3252c3ffd7195b1fa9"});</script>
+<script src="tower_control.js"></script>
+<style>.shield{position:fixed;inset:0;z-index:9999;background:rgba(20,25,35,.97);color:#fff;display:none;align-items:center;justify-content:center;padding:24px;text-align:center}.shield.on{display:flex}.shield .sbox{max-width:440px}.shield .ic{font-size:44px}.shield h3{font-family:"Fraunces",serif;font-size:24px;margin:10px 0 6px}.shield p{color:#cfd4db;font-size:15px;margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== INTRO ===== -->
+  <section class="screen on" id="s-intro">
+    <div class="eyebrow"><span class="dot"></span> IFA00117 · Tema 1 · El proceso industrial</div>
+    <h1>Radiografía de un proceso</h1>
+    <p class="lead">Diez dispositivos, diez variables por descubrir. Te damos la definición y una pista; tú escribes la palabra. Cuenta lo que aciertas <strong>y</strong> lo rápido que respondes.</p>
+
+    <div class="card concept" style="margin-top:18px">
+      <h3 class="ctitle">¿Qué vas a hacer y para qué?</h3>
+      <p>En el <b>Tema 1</b> vimos que todo proceso automatizado gira en torno a una <b>variable de proceso (PV)</b>: la magnitud que se <b>mide</b> y que el control mantiene en un valor deseado —el <b>set-point (SP)</b>— actuando sobre la <b>variable manipulada (MV)</b>.</p>
+      <p>Tu misión: para cada dispositivo, <b>nombrar su PV</b>, la variable que se controla. Por eso las respuestas son <i>temperatura, nivel, presión, caudal…</i> Reconocer la PV al vuelo es el <b>paso 0 de toda automatización</b> y lo que harás en el laboratorio.</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="rules">
+        <div class="rule"><span class="ic">🎯</span><span><strong>Dos niveles:</strong> Nivel 1 en español (5 dispositivos) y Nivel 2 en inglés (5 dispositivos, más difíciles).</span></div>
+        <div class="rule"><span class="ic">⏱️</span><span><strong>30 s por pregunta.</strong> Mientras más rápido respondas, más puntos sumas.</span></div>
+        <div class="rule"><span class="ic">◑</span><span><strong>Puntaje ponderado:</strong> hay respuestas parcialmente válidas. La palabra exacta vale 100 %; las aproximadas, menos.</span></div>
+        <div class="rule"><span class="ic">🔒</span><span><strong>2 intentos</strong> por cédula. Al final verás tu posición en el grupo.</span></div>
+      </div>
+
+      <div id="introForm">
+        <label class="f" for="nm">Nombre completo</label>
+        <input class="t" id="nm" type="text" autocomplete="name" placeholder="Ej.: María Fernanda Gómez">
+        <label class="f" for="cc">Cédula</label>
+        <input class="t" id="cc" type="text" inputmode="numeric" autocomplete="off" placeholder="Ej.: 1012345678">
+        <p class="hintline" id="introMsg"></p>
+        <button class="btn wide" id="btnStart" style="margin-top:8px">Entrar al juego</button>
+      </div>
+    </div>
+    <footer class="legal">Automatización de Procesos y Control Distribuido · Universidad EAN</footer>
+  </section>
+
+  <!-- ===== PLAY ===== -->
+  <section class="screen" id="s-play">
+    <div class="playtop">
+      <span class="levelbadge es" id="lvlBadge">Nivel 1 · Español</span>
+      <span class="progress" id="prog">1 / 5</span>
+      <span class="pts"><span id="ptsNow">0</span> <small>pts</small></span>
+    </div>
+    <div class="timerbar"><i id="timerFill"></i></div>
+
+    <div class="card">
+      <div class="qprompt es" id="qprompt">¿Cuál es la variable de proceso (PV) de este dispositivo?</div>
+      <span class="ctx" id="ctx">🔧 —</span>
+      <p class="def" id="def">—</p>
+      <p class="clue"><b>Pista:</b> <span id="clue">—</span></p>
+      <div class="lenhint">La palabra tiene <span id="len">—</span> · <span class="boxes" id="boxes"></span></div>
+
+      <div class="answerrow">
+        <input class="t" id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Escribe la variable…">
+        <button class="btn" id="btnAns">Responder</button>
+      </div>
+
+      <div class="fb" id="fb">
+        <div class="head"><span class="verdict" id="fbVerdict"></span><span class="gain" id="fbGain"></span></div>
+        <div class="canon" id="fbCanon"></div>
+        <div class="why" id="fbWhy"></div>
+        <button class="btn wide ghost" id="btnNext" style="margin-top:12px;border-color:var(--line)">Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL BREAK ===== -->
+  <section class="screen" id="s-break">
+    <div class="card break">
+      <div class="eyebrow" style="justify-content:center"><span class="dot" style="background:var(--en)"></span> Cambio de nivel</div>
+      <p style="margin:8px 0 0;color:var(--ink-soft)">Terminaste el nivel en español con <b id="breakScore">0</b> pts.</p>
+      <div class="big">Level 2 · English</div>
+      <p class="lead" style="margin:0 auto 6px">Same game, harder devices — and now the answers are in English. Ready?</p>
+      <button class="btn" id="btnLvl2" style="margin-top:10px">Start Level 2</button>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="screen" id="s-results">
+    <div class="eyebrow"><span class="dot" style="background:var(--ok)"></span> Resultados</div>
+    <h1 style="font-size:clamp(24px,4.4vw,38px)">¿Cómo te fue?</h1>
+
+    <div class="card totalcard">
+      <div class="score"><span id="rTotal">0</span></div>
+      <div class="of">puntos · rapidez y precisión</div>
+      <div class="split">
+        <div class="chip es">Nivel 1 · ES<span class="v"><span id="rES">0</span></span></div>
+        <div class="chip en">Nivel 2 · EN<span class="v"><span id="rEN">0</span></span></div>
+      </div>
+    </div>
+
+    <div class="rankwrap">
+      <h2>Posiciones del grupo</h2>
+      <p class="ranksub">Mejor puntaje por participante. Tu fila está resaltada.</p>
+      <div id="rankList"></div>
+      <p class="yourpos" id="yourPos"></p>
+    </div>
+
+    <div class="foot">
+      <button class="btn ghost" id="btnAgain" style="border-color:var(--line)">Jugar de nuevo</button>
+      <button class="btn ghost" id="btnFinish" style="border-color:var(--line)">Salir</button>
+    </div>
+    <footer class="legal">Automatización de Procesos y Control Distribuido · Universidad EAN</footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================================
+   ALMACENAMIENTO  —  IMPORTANTE
+   Este archivo trae un store EN MEMORIA con compañeros de ejemplo, para que
+   veas el ranking y los intentos funcionando ya. Un ranking REAL compartido
+   entre teléfonos y el límite de 2 intentos por cédula a nivel de todo el
+   grupo requieren un backend gratuito (Firebase / Supabase / Apps Script).
+   Toda la lógica del juego habla con este objeto `Store`: para conectarlo a
+   un backend solo hay que reemplazar sus 3 métodos (count / record / board).
+   ========================================================================= */
+  var ACT="act1"; var _cache={attempts:0,board:[]};
+  var Store={ count:function(){return _cache.attempts;}, board:function(){return _cache.board;} };
+  function prime(name,cc,next){ TowerDB.registerParticipant(cc,name);
+    TowerDB.loadActivity(cc,ACT).then(function(r){_cache={attempts:r.attempts,board:r.board};next(r);})
+      .catch(function(e){var m=$("#introMsg");if(m){m.style.color="var(--bad)";m.textContent="No se pudo conectar a la base. Revisa tu conexión.";}}); }
+  function blockAttempts(){ show("s-intro"); var m=$("#introMsg"); if(m){m.style.color="var(--bad)";m.textContent="Esta cédula ya usó sus 2 intentos.";} }
+  function armShield(){ TowerShield.arm(function(motivo){ if(tHandle)clearInterval(tHandle);
+    TowerDB.saveResult(player.cc,ACT,{nombre:player.name,score:0,logro:0,aprobado:false,anulado:true,detalle:{motivo:motivo}});
+    var sh=document.getElementById("shield"); if(sh) sh.classList.add("on"); }); }
+  function boot(){ TowerDB.init(); var p=new URLSearchParams(location.search); var n=p.get("n")||p.get("nombre"), c=(p.get("c")||p.get("cedula")||"").replace(/\D/g,"");
+    if(n && c.length>=4){ player={name:n,cc:c}; prime(n,c,function(r){ if(r.attempts>=2){blockAttempts();} else beginGame(); }); return; } show("s-intro"); if($("#nm"))$("#nm").focus(); }
+
+/* ============================ CONTENIDO ============================ */
+  var LEVEL1 = [
+    { device:"La plancha", def:"Magnitud que indica qué tan caliente está un cuerpo; sube cuando se le entrega energía.",
+      clue:"En la plancha, el dial (algodón / seda) fija el valor que el termostato debe mantener.",
+      why:"La <b>temperatura</b> es la PV: el termostato la mide y la mantiene en el valor del dial actuando sobre la resistencia (la MV).",
+      answers:[["temperatura",100],["temperaturas",100],["temp",80],["sensacion termica",50],["calor",40],["grados",50]] },
+    { device:"El tanque de agua", def:"Qué tan lleno está un recipiente, medido entre vacío y lleno.",
+      clue:"El flotador de la cisterna corta el agua cuando esta variable llega a su tope.",
+      why:"El <b>nivel</b> es la PV: el flotador lo mide y la válvula de entrada (la MV) lo lleva al valor deseado.",
+      answers:[["nivel",100],["altura",60],["volumen",40],["llenado",50]] },
+    { device:"La olla a presión", def:"Fuerza que ejerce un fluido sobre las paredes de un recipiente cerrado, por unidad de área.",
+      clue:"La válvula de la olla libera vapor cuando esta variable supera lo seguro.",
+      why:"La <b>presión</b> es la PV: sube al calentar; la válvula de alivio actúa cuando supera el set-point seguro.",
+      answers:[["presion",100],["fuerza",30]] },
+    { device:"La banda transportadora", def:"Qué tan rápido avanza la banda o gira el eje del motor.",
+      clue:"Un variador de frecuencia sube o baja esta variable cambiando la frecuencia eléctrica.",
+      why:"La <b>velocidad</b> es la PV: el variador (la MV) la ajusta cambiando la frecuencia del motor.",
+      answers:[["velocidad",100],["rapidez",60],["rpm",70],["revoluciones",60]] },
+    { device:"El grifo de agua", def:"Cantidad de líquido que atraviesa una tubería por unidad de tiempo.",
+      clue:"Abrir más la llave aumenta esta variable; suele medirse en litros por minuto.",
+      why:"El <b>caudal</b> es la PV: la apertura de la llave (la MV) regula cuánto líquido pasa por unidad de tiempo.",
+      answers:[["caudal",100],["flujo",80],["gasto",60]] }
+  ];
+  var LEVEL2 = [
+    { device:"The 3D-printer hotend", def:"The quantity a thermistor reads at the nozzle so the filament melts at the right point.",
+      clue:"If this variable falls below 200 °C, the hotend can't extrude plastic.",
+      why:"<b>Temperature</b> is the PV: the thermistor measures it and the heater (the MV) holds it at the set-point.",
+      answers:[["temperature",100],["temp",85],["heat",40]] },
+    { device:"The hydraulic cylinder", def:"Where a moving part sits along its travel, read by an encoder or a limit switch.",
+      clue:"A robot needs this variable to know how far the actuator has extended.",
+      why:"<b>Position</b> is the PV: an encoder measures it and the valve flow (the MV) drives the actuator to the target.",
+      answers:[["position",100],["displacement",70],["travel",55],["location",60]] },
+    { device:"The steam boiler", def:"Force per unit area of the steam trapped inside a closed vessel.",
+      clue:"A relief valve opens when this variable passes the boiler's rated limit.",
+      why:"<b>Pressure</b> is the PV: it rises with heat; the relief valve acts when it passes the safe set-point.",
+      answers:[["pressure",100]] },
+    { device:"The process storage tank", def:"How full a tank is, from empty to full, reported by a hydrostatic transmitter.",
+      clue:"A float or pressure sensor tells the inlet valve to close when this variable is high.",
+      why:"<b>Level</b> is the PV: a hydrostatic sensor measures it and the inlet valve (the MV) keeps it at target.",
+      answers:[["level",100],["height",60],["fill",50]] },
+    { device:"The VFD-driven conveyor", def:"How fast a shaft rotates or a belt runs.",
+      clue:"A variable-frequency drive sets this quantity by changing the supply frequency; often given in rpm.",
+      why:"<b>Speed</b> is the PV: the VFD (the MV) sets it by changing the motor's supply frequency.",
+      answers:[["speed",100],["velocity",80],["rotational speed",90],["rpm",70]] }
+  ];
+
+/* ============================ ESTADO ============================ */
+  var TIME_LIMIT = 30000, ITEM_MAX = 1000;
+  var player={name:"",cc:""}, items=[], idx=0, results=[], tHandle=null, tStart=0, answered=false;
+  var _inicioIntento = 0;
+
+  var $=function(s){return document.querySelector(s);};
+  function show(id){ document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("on");}); $("#"+id).classList.add("on"); }
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();}
+  function canon(it){return it.answers[0][0];}
+  function letters(w){return w.replace(/[^a-záéíóúüñ]/gi,"").length;}
+
+  function scoreAnswer(it, typed){
+    var n=norm(typed); if(!n) return 0;
+    var best=0;
+    it.answers.forEach(function(a){ if(norm(a[0])===n) best=Math.max(best,a[1]); });
+    return best;
+  }
+
+/* ============================ INTRO ============================ */
+  function tryStart(){
+    var name=$("#nm").value.trim(), cc=$("#cc").value.replace(/\D/g,"");
+    var msg=$("#introMsg");
+    if(name.length<3){ msg.style.color="var(--bad)"; msg.textContent="Escribe tu nombre completo."; return; }
+    if(cc.length<4){ msg.style.color="var(--bad)"; msg.textContent="Escribe una cédula válida (solo números)."; return; }
+    msg.style.color="var(--ink-soft)"; msg.textContent="Conectando…";
+    player={name:name,cc:cc};
+    prime(name,cc,function(r){ if(r.attempts>=2){ msg.style.color="var(--bad)"; msg.textContent="Esta cédula ya usó sus 2 intentos. El mejor puntaje queda en el ranking."; return; } msg.textContent="Intento "+(r.attempts+1)+" de 2."; beginGame(); });
+  }
+
+  function beginGame(){
+    _inicioIntento = Date.now();
+    items = shuffle(LEVEL1).map(function(it){return {it:it,lvl:1};})
+              .concat(shuffle(LEVEL2).map(function(it){return {it:it,lvl:2};}));
+    idx=0; results=[];
+    armShield();
+    renderItem();
+    show("s-play");
+  }
+
+/* ============================ JUGAR ============================ */
+  function renderItem(){
+    answered=false;
+    var cur=items[idx], it=cur.it, lvl=cur.lvl;
+    var badge=$("#lvlBadge");
+    badge.className="levelbadge "+(lvl===1?"es":"en");
+    badge.textContent=lvl===1?"Nivel 1 · Español":"Level 2 · English";
+    $("#prog").textContent=((idx%5)+1)+" / 5";
+    $("#ptsNow").textContent=totalSoFar();
+    var qp=$("#qprompt");
+    qp.className="qprompt "+(lvl===1?"es":"en");
+    qp.textContent=lvl===1?"¿Cuál es la variable de proceso (PV) de este dispositivo?":"Which process variable (PV) does this device control?";
+    $("#ctx").textContent="🔧 "+it.device;
+    $("#def").textContent=it.def;
+    $("#clue").textContent=it.clue;
+    var L=letters(canon(it));
+    $("#len").textContent=L+" letra"+(L===1?"":"s");
+    $("#boxes").textContent=Array(L+1).join("▁ ");
+    var ans=$("#ans"); ans.value=""; ans.disabled=false; ans.placeholder=lvl===1?"Escribe la variable…":"Type the variable…";
+    $("#btnAns").disabled=false;
+    $("#fb").className="fb";
+    setTimeout(function(){ans.focus();},60);
+    startTimer();
+  }
+
+  function startTimer(){
+    clearInterval(tHandle); tStart=Date.now();
+    var fill=$("#timerFill"); fill.style.width="100%"; fill.style.background="var(--ok)";
+    tHandle=setInterval(function(){
+      var elapsed=Date.now()-tStart, left=Math.max(0,TIME_LIMIT-elapsed), frac=left/TIME_LIMIT;
+      fill.style.width=(frac*100)+"%";
+      fill.style.background = frac>0.5?"var(--ok)":frac>0.2?"var(--mid)":"var(--bad)";
+      if(left<=0){ clearInterval(tHandle); submit(true); }
+    },100);
+  }
+
+  function submit(timedOut){
+    if(answered) return; answered=true;
+    clearInterval(tHandle);
+    var cur=items[idx], it=cur.it;
+    var elapsed=Date.now()-tStart, leftFrac=Math.max(0,(TIME_LIMIT-elapsed)/TIME_LIMIT);
+    var typed=timedOut?"":$("#ans").value;
+    var weight=scoreAnswer(it,typed);            // 0..100
+    var leftMs=Math.max(0,TIME_LIMIT-elapsed);
+    var gain=Math.round(weight*10 + (weight/100)*(leftMs/20));   // misma escala que Act 2/3/4
+    results.push({lvl:cur.lvl,gain:gain,weight:weight});
+
+    $("#ans").disabled=true; $("#btnAns").disabled=true;
+    var fb=$("#fb");
+    var verdict,cls;
+    if(weight>=100){verdict="✔ ¡Exacto! (100%)";cls="full";}
+    else if(weight>0){verdict="◑ Parcial ("+weight+"%)";cls="part";}
+    else {verdict=timedOut?"⏱ Se acabó el tiempo":"✘ Sin coincidencia";cls="none";}
+    fb.className="fb on "+cls;
+    $("#fbVerdict").textContent=verdict;
+    $("#fbGain").textContent="+"+gain+" pts";
+    $("#fbCanon").innerHTML = weight>=100 ? "Respuesta óptima confirmada."
+        : "La respuesta de mayor puntaje era <b>"+canon(it)+"</b>.";
+    $("#fbWhy").innerHTML = it.why || "";
+    $("#ptsNow").textContent=totalSoFar();
+    $("#btnNext").textContent = (idx===9)?"Ver resultados" : (idx===4)?"Terminar nivel 1" : "Siguiente";
+    $("#btnNext").focus();
+  }
+
+  function next(){
+    if(idx===4){ $("#breakScore").textContent=totalSoFar(); show("s-break"); idx=5; return; }
+    if(idx===9){ finish(); return; }
+    idx++; renderItem();
+  }
+  function afterBreak(){ renderItem(); show("s-play"); }
+
+  function totalSoFar(){ return results.reduce(function(s,r){return s+r.gain;},0); }
+  function levelSum(l){ return results.filter(function(r){return r.lvl===l;}).reduce(function(s,r){return s+r.gain;},0); }
+
+/* ============================ RESULTADOS ============================ */
+  function finish(){
+    TowerShield.disarm();
+    var total=totalSoFar();
+    var pct=Math.round(results.reduce(function(s,r){return s+(r.weight/100);},0)/results.length*100);
+    var approved=pct>=60;
+    $("#rTotal").textContent=total.toLocaleString("es-CO");
+    $("#rES").textContent=levelSum(1); $("#rEN").textContent=levelSum(2);
+    $("#rankList").innerHTML='<p style="color:var(--ink-soft);font-size:13px">Guardando y cargando ranking…</p>';
+    $("#yourPos").textContent=""; $("#btnAgain").style.display="none"; show("s-results");
+    TowerDB.saveResult(player.cc,ACT,{nombre:player.name,score:total,logro:pct,aprobado:approved,detalle:results,inicio:_inicioIntento,duracionSeg:Math.max(0,Math.round((Date.now()-_inicioIntento)/1000))}).then(function(res){
+      _cache={attempts:res.attempts,board:res.board}; renderRankingA1(res.board);
+      $("#btnAgain").style.display=(res.attempts<2)?"":"none";
+    }).catch(function(e){ $("#rankList").innerHTML='<p style="color:var(--bad);font-size:13px">No se pudo guardar. Revisa tu conexión.</p>'; });
+  }
+  function renderRankingA1(board){
+    var myRank=board.findIndex(function(r){return r.cc===player.cc;});
+    var list=$("#rankList"); list.innerHTML="";
+    board.slice(0,8).forEach(function(r,i){
+      var me=(r.cc===player.cc); var row=document.createElement("div");
+      row.className="row"+(me?" me":"")+(i===0?" m1":i===1?" m2":i===2?" m3":"");
+      var medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1);
+      row.innerHTML='<div class="pos">'+medal+'</div><div class="who"><div class="nm">'+(me?"Tú · ":"")+r.name+'</div><div class="cc">C.C. ••••'+String(r.cc).slice(-3)+'</div></div><div class="sc">'+r.score.toLocaleString("es-CO")+'</div>';
+      list.appendChild(row);
+    });
+    $("#yourPos").innerHTML = myRank>=0 ? ("Tu posición: <b>#"+(myRank+1)+"</b> de "+board.length+" participantes.") : "";
+  }
+
+/* ============================ EVENTOS ============================ */
+  $("#btnStart").addEventListener("click",tryStart);
+  $("#cc").addEventListener("keydown",function(e){if(e.key==="Enter")tryStart();});
+  $("#nm").addEventListener("keydown",function(e){if(e.key==="Enter")$("#cc").focus();});
+  $("#btnAns").addEventListener("click",function(){submit(false);});
+  $("#ans").addEventListener("keydown",function(e){if(e.key==="Enter"&&!answered)submit(false);});
+  $("#btnNext").addEventListener("click",next);
+  $("#btnLvl2").addEventListener("click",afterBreak);
+  $("#btnAgain").addEventListener("click",function(){
+    // nuevo intento con la misma identidad (si quedan intentos)
+    if(Store.count(player.cc)>=2){ show("s-intro"); return; }
+    beginGame();
+  });
+  $("#btnFinish").addEventListener("click",function(){
+    $("#nm").value="";$("#cc").value="";$("#introMsg").textContent="";
+    show("s-intro");
+  });
+
+  boot();
+})();
+</script>
+<div id="shield" class="shield"><div class="sbox"><div class="ic">🚫</div><h3>Intento cerrado</h3><p>Saliste de la pantalla de la actividad. Por seguridad, tu intento se cerró y quedó anulado.</p></div></div>
+</body>
+</html>

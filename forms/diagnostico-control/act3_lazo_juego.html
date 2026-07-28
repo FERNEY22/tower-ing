@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El lazo bajo control — IFA00117 · Actividad 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#23272E; --ink-soft:#5A626E; --paper:#FFFFFF; --panel:#F4F5F7; --line:#E1E4E9;
+    --a3:#C0722A; --a3d:#9A5A1F;         /* identidad Actividad 3 (el lazo · ámbar) */
+    --ok:#2E8B6F; --mid:#C57B1E; --bad:#C6493B; --sel:#E6A817;
+    --shadow:0 1px 2px rgba(20,25,35,.06),0 8px 24px rgba(20,25,35,.07);
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+    background:radial-gradient(1100px 460px at 82% -12%,#FBF3EA 0%,rgba(251,243,234,0) 60%),var(--paper);
+    line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh;padding:clamp(14px,3vw,30px)}
+  .wrap{max-width:760px;margin:0 auto}
+  .screen{display:none;animation:fade .3s ease} .screen.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--a3)}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(26px,4.6vw,44px);line-height:1.03;letter-spacing:-.01em;margin:.14em 0 .1em}
+  .lead{color:var(--ink-soft);font-size:clamp(14px,1.7vw,16px);max-width:58ch}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:clamp(18px,3.5vw,28px)}
+  .concept{background:linear-gradient(0deg,rgba(192,114,42,.05),rgba(192,114,42,.05)),var(--paper)}
+  .concept .ctitle{font-family:"Fraunces",serif;font-weight:600;font-size:18px;margin:0 0 8px}
+  .concept p{font-size:14px;margin:8px 0} .concept p b{color:var(--a3d)}
+  label.f{display:block;font-weight:600;font-size:13.5px;margin:14px 0 6px}
+  input.t{width:100%;font-family:inherit;font-size:16px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  input.t:focus{outline:none;border-color:var(--a3);box-shadow:0 0 0 3px rgba(192,114,42,.16)}
+  .hintline{font-size:12.5px;color:var(--ink-soft);margin-top:6px}
+  button.btn{font-family:inherit;font-weight:600;font-size:15px;border-radius:12px;padding:13px 22px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff;transition:transform .1s,box-shadow .18s,opacity .15s}
+  button.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)} button.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  button.btn.a3{background:var(--a3);border-color:var(--a3)} button.btn.ghost{background:transparent;color:var(--ink)}
+  button.btn.wide{width:100%;display:flex;justify-content:center}
+  .rules{display:flex;flex-direction:column;gap:9px;margin:16px 0 4px}
+  .rule{display:flex;gap:11px;align-items:flex-start;font-size:13.5px}
+  .rule .ic{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--panel);display:grid;place-items:center;font-size:14px}
+  .playtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .roundbadge{font-weight:700;font-size:13px;color:#fff;background:var(--a3);padding:6px 13px;border-radius:99px}
+  .progress{font-size:13px;color:var(--ink-soft);font-weight:600}
+  .pts{font-family:"Fraunces",serif;font-weight:700;font-size:19px} .pts small{font-size:12px;color:var(--ink-soft);font-weight:500;font-family:"Inter"}
+  .timerbar{height:8px;border-radius:99px;background:var(--panel);overflow:hidden;margin-bottom:18px}
+  .timerbar>i{display:block;height:100%;width:100%;background:var(--ok);border-radius:99px;transition:width .1s linear,background .3s}
+  .qprompt{font-size:12.5px;font-weight:700;color:var(--a3d);margin-bottom:10px}
+  .q{font-size:clamp(17px,2.5vw,21px);font-weight:500;line-height:1.4;margin:2px 0 14px}
+  .riddle{font-style:italic;color:var(--ink);background:var(--panel);border-radius:12px;padding:14px 16px;margin:0 0 14px;font-size:15.5px;line-height:1.5}
+  .lenhint{font-size:12px;color:var(--ink-soft);margin:0 0 12px}
+  .answerrow{display:flex;gap:10px}.answerrow input{flex:1}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{font-family:inherit;text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:13px 15px;font-size:14.5px;font-weight:500;cursor:pointer;transition:transform .1s,box-shadow .18s,border-color .18s;display:flex;align-items:center;gap:11px}
+  .opt:hover{transform:translateY(-1px);box-shadow:var(--shadow)} .opt .k{flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:var(--panel);display:grid;place-items:center;font-weight:700;font-size:13px}
+  .opt.correct{border-color:var(--ok);background:#EDF7F3}.opt.correct .k{background:var(--ok);color:#fff}
+  .opt.wrong{border-color:var(--bad);background:#FBEEEC}.opt.wrong .k{background:var(--bad);color:#fff}
+  .opt:disabled{cursor:default}
+  /* loop builder */
+  .loop{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;margin:6px 0 4px}
+  .loop .lab{font-weight:700;color:var(--ink-soft);font-size:13px}
+  .loop .node{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:700}
+  .arrow{color:var(--ink-soft);font-weight:700}
+  .slotL{min-width:104px;height:52px;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:13px;color:#9aa1ab;cursor:pointer;padding:0 8px;text-align:center;transition:border-color .15s,background .15s}
+  .slotL.armed{border-color:var(--sel);background:#FFFBF0}
+  .slotL.filled{border-style:solid;border-color:var(--a3);color:var(--ink);font-weight:600;background:#fff}
+  .slotL.ok{border-color:var(--ok);background:#EDF7F3}.slotL.bad{border-color:var(--bad);background:#FBEEEC}
+  .fbk{font-size:12.5px;color:var(--ink-soft);text-align:center;margin:8px 0 2px}
+  .fbk b{color:var(--a3d)}
+  .bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:14px}
+  .block{font-family:inherit;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:11px 15px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 1px 1px rgba(20,25,35,.04);transition:transform .1s,box-shadow .18s,border-color .18s}
+  .block:hover{transform:translateY(-1px);box-shadow:var(--shadow)} .block.selected{border-color:var(--sel);box-shadow:0 0 0 3px rgba(230,168,23,.25);background:#FFFBF0}
+  /* figure for spot-the-error */
+  .fig{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;background:var(--panel);border-radius:12px;padding:16px 12px;margin:0 0 14px}
+  .fbox{border:2px solid var(--ink);border-radius:10px;padding:9px 12px;font-weight:600;font-size:13px;background:#fff}
+  .fbox.bad{border-color:var(--bad);color:var(--bad)} .ferr{color:var(--bad);font-weight:700}
+  .fb{margin-top:16px;border-radius:14px;border:1px solid var(--line);padding:14px 16px;display:none}.fb.on{display:block;animation:fade .25s ease}
+  .fb.full{border-color:var(--ok);background:#F1FAF6}.fb.part{border-color:var(--mid);background:#FCF5EA}.fb.none{border-color:var(--bad);background:#FBEEEC}
+  .fb .head{display:flex;align-items:center;justify-content:space-between;gap:10px}.fb .verdict{font-weight:700;font-size:15px}
+  .fb.full .verdict{color:var(--ok)}.fb.part .verdict{color:var(--mid)}.fb.none .verdict{color:var(--bad)}
+  .fb .gain{font-family:"Fraunces",serif;font-weight:700;font-size:19px}
+  .fb .why{font-size:13px;color:var(--ink-soft);margin-top:8px}.fb .why b{color:var(--ink)}
+  .fb .brk{font-size:12px;color:var(--ink-soft);margin-top:6px}
+  .actions{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+  .break{text-align:center}.break .big{font-family:"Fraunces",serif;font-size:clamp(26px,5vw,40px);font-weight:600;color:var(--a3d);margin:6px 0}
+  .actlabel{font-weight:700;color:#fff;background:var(--a3);display:inline-block;padding:5px 13px;border-radius:99px;font-size:12.5px;margin-bottom:12px}
+  .qual{text-align:center}.qual .band{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(30px,7vw,52px);line-height:1;margin:2px 0}
+  .qual .pct{color:var(--ink-soft);font-size:14px}.qual .who{font-size:15px;margin-top:8px}.qual .who b{color:var(--ink)}
+  .qual .sc{margin-top:14px;font-size:13px;color:var(--ink-soft)}.qual .sc b{font-family:"Fraunces",serif;font-size:22px;color:var(--ink);display:block}
+  .approved{color:var(--ok);font-weight:700}.notyet{color:var(--bad);font-weight:700}
+  .rankwrap h2{font-family:"Fraunces",serif;font-weight:600;font-size:19px;margin:22px 0 4px}.ranksub{font-size:13px;color:var(--ink-soft);margin:0 0 14px}
+  .row{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff}
+  .row.me{border-color:var(--sel);box-shadow:0 0 0 3px rgba(230,168,23,.2);background:#FFFDF6}
+  .row .pos{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--panel);display:grid;place-items:center;font-weight:700;font-size:14px}
+  .row.m1 .pos{background:#F4D06F}.row.m2 .pos{background:#D9DCE1}.row.m3 .pos{background:#E7B98C}
+  .row .who{flex:1;min-width:0}.row .who .nm{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row .who .cc{font-size:11.5px;color:var(--ink-soft)}
+  .row .sc{font-family:"Fraunces",serif;font-weight:700;font-size:16px}
+  .yourpos{text-align:center;font-size:14px;color:var(--ink-soft);margin:6px 0 0}.yourpos b{color:var(--ink);font-size:16px}
+  .foot{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+  footer.legal{margin-top:24px;color:#9aa1ab;font-size:11.5px;text-align:center}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>firebase.initializeApp({apiKey:"AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",authDomain:"tower-ing.firebaseapp.com",databaseURL:"https://tower-ing-default-rtdb.firebaseio.com",projectId:"tower-ing",storageBucket:"tower-ing.firebasestorage.app",messagingSenderId:"440636238988",appId:"1:440636238988:web:cb8f3252c3ffd7195b1fa9"});</script>
+<script src="tower_control.js"></script>
+<style>.shield{position:fixed;inset:0;z-index:9999;background:rgba(20,25,35,.97);color:#fff;display:none;align-items:center;justify-content:center;padding:24px;text-align:center}.shield.on{display:flex}.shield .sbox{max-width:440px}.shield .ic{font-size:44px}.shield h3{font-family:"Fraunces",serif;font-size:24px;margin:10px 0 6px}.shield p{color:#cfd4db;font-size:15px;margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="screen on" id="s-intro">
+    <div class="eyebrow"><span class="dot"></span> IFA00117 · Tema 3 · El lazo · Actividad 3</div>
+    <h1>El lazo bajo control</h1>
+    <p class="lead">Dos partes para dominar el lazo de control: primero resuelves acertijos de conceptos, luego armas el lazo con figuras y cazas la falla.</p>
+    <div class="card concept" style="margin-top:18px">
+      <h3 class="ctitle">¿Qué vas a hacer y para qué?</h3>
+      <p>En el <b>Tema 3</b> cerramos el lazo: los <b>cuatro elementos</b> (sensor → controlador → actuador → proceso), el <b>error</b> como motor del lazo cerrado, y la diferencia entre <b>realimentación</b> y <b>prealimentación</b>.</p>
+      <p><b>Parte A:</b> acertijos "¿Quién soy?" sobre esos conceptos. <b>Parte B:</b> armas el diagrama del lazo y detectas el cableado con error. Cada intento fallado al comprobar resta puntos.</p>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="rules">
+        <div class="rule"><span class="ic">🧠</span><span><b>Logro</b> (para aprobar): solo cuenta lo que aciertas. Con <b>≥ 60 %</b> apruebas y avanzas.</span></div>
+        <div class="rule"><span class="ic">🏁</span><span><b>Ranking</b>: premia rapidez, penaliza fallos y no tiene tope — sin empates.</span></div>
+        <div class="rule"><span class="ic">🔒</span><span><b>2 intentos</b> por cédula.</span></div>
+      </div>
+      <div id="introForm">
+        <label class="f" for="nm">Nombre completo</label>
+        <input class="t" id="nm" type="text" autocomplete="name" placeholder="Ej.: María Fernanda Gómez">
+        <label class="f" for="cc">Cédula</label>
+        <input class="t" id="cc" type="text" inputmode="numeric" placeholder="Ej.: 1012345678">
+        <p class="hintline" id="introMsg"></p>
+        <button class="btn a3 wide" id="btnStart" style="margin-top:8px">Entrar a la actividad</button>
+      </div>
+    </div>
+    <footer class="legal">Automatización de Procesos y Control Distribuido · Universidad EAN</footer>
+  </section>
+
+  <section class="screen" id="s-play">
+    <div class="playtop">
+      <span class="roundbadge" id="roundBadge">Parte A · ¿Quién soy?</span>
+      <span class="progress" id="prog">1 / 6</span>
+      <span class="pts"><span id="ptsNow">0</span> <small>pts</small></span>
+    </div>
+    <div class="timerbar"><i id="timerFill"></i></div>
+    <div class="card">
+      <div class="qprompt" id="qprompt">Lee el acertijo y escribe el concepto</div>
+
+      <div id="riddleBlock">
+        <div class="riddle" id="riddle">—</div>
+        <div class="lenhint" id="len"></div>
+        <div class="answerrow"><input class="t" id="ans" type="text" autocomplete="off" spellcheck="false" placeholder="Escribe el concepto…"><button class="btn a3" id="btnAns">Responder</button></div>
+      </div>
+
+      <div id="arrangeBlock" style="display:none">
+        <p class="q" style="margin-bottom:6px">Coloca cada bloque en su lugar para cerrar el lazo (empieza en el comparador Σ).</p>
+        <div class="loop">
+          <span class="lab">SP</span><span class="arrow">→</span><span class="node">Σ</span><span class="arrow">→</span>
+          <div class="slotL" data-slot="0">bloque 1</div><span class="arrow">→</span>
+          <div class="slotL" data-slot="1">bloque 2</div><span class="arrow">→</span>
+          <div class="slotL" data-slot="2">bloque 3</div><span class="arrow">→</span><span class="lab">PV</span>
+        </div>
+        <div class="fbk">↑ realimentación: la <b>PV medida</b> regresa al comparador a través de <span class="arrow">←</span></div>
+        <div class="loop"><div class="slotL" data-slot="3">bloque 4 (realimentación)</div></div>
+        <div class="bank" id="bank"></div>
+        <div class="actions"><button class="btn a3" id="btnCheck">Comprobar</button></div>
+      </div>
+
+      <div id="figBlock" style="display:none">
+        <p class="q" style="margin-bottom:6px">Observa el diagrama. ¿Cuál es la falla?</p>
+        <div class="fig" id="fig"></div>
+        <div class="opts" id="opts"></div>
+      </div>
+
+      <div class="fb" id="fb">
+        <div class="head"><span class="verdict" id="fbVerdict"></span><span class="gain" id="fbGain"></span></div>
+        <div class="why" id="fbWhy"></div><div class="brk" id="fbBrk"></div>
+        <button class="btn wide ghost" id="btnNext" style="margin-top:12px;border-color:var(--line)">Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="s-break">
+    <div class="card break">
+      <div class="eyebrow" style="justify-content:center"><span class="dot"></span> Cambio de parte</div>
+      <p style="margin:8px 0 0;color:var(--ink-soft)">Cerraste la Parte A con <b id="breakScore">0</b> pts.</p>
+      <div class="big">Parte B · Figuras</div>
+      <p class="lead" style="margin:0 auto 6px">Ahora armas el lazo y cazas la falla en el diagrama.</p>
+      <button class="btn a3" id="btnPB" style="margin-top:10px">Empezar Parte B</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-results">
+    <div class="eyebrow"><span class="dot"></span> Resultado</div>
+    <span class="actlabel">Actividad 3 · El lazo bajo control</span>
+    <div class="card qual">
+      <div class="band" id="rBand">—</div>
+      <div class="pct">Logro: <b id="rPct">0</b>% · <span id="rApproved"></span></div>
+      <div class="who">Jugador: <b id="rWho">—</b></div>
+      <div class="sc">Puntaje de esta actividad<b id="rScore">0</b></div>
+    </div>
+    <div class="rankwrap">
+      <h2>Posiciones del grupo — Actividad 3</h2>
+      <p class="ranksub">Mejor puntaje por participante en esta actividad. Tu fila está resaltada.</p>
+      <div id="rankList"></div>
+      <p class="yourpos" id="yourPos"></p>
+    </div>
+    <div class="foot">
+      <button class="btn ghost" id="btnAgain" style="border-color:var(--line)">Jugar de nuevo</button>
+      <button class="btn ghost" id="btnFinish" style="border-color:var(--line)">Salir</button>
+    </div>
+    <footer class="legal">Tu puntaje total del curso se acumula en el panel de actividades.</footer>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+  var ACT="act3";
+  var _cache={attempts:0,board:[]};
+  var Store={ count:function(){return _cache.attempts;}, board:function(){return _cache.board;} };
+  function prime(name,cc,next){ TowerDB.registerParticipant(cc,name);
+    TowerDB.loadActivity(cc,ACT).then(function(r){_cache={attempts:r.attempts,board:r.board};next(r);})
+      .catch(function(e){var m=$("#introMsg");if(m){m.style.color="var(--bad)";m.textContent="No se pudo conectar a la base. Revisa tu conexión.";}}); }
+  function blockAttempts(){ show("s-intro"); var m=$("#introMsg"); if(m){m.style.color="var(--bad)";m.textContent="Esta cédula ya usó sus 2 intentos.";} }
+  function armShield(){ TowerShield.arm(function(motivo){ if(tHandle)clearInterval(tHandle);
+    TowerDB.saveResult(player.cc,ACT,{nombre:player.name,score:0,logro:0,aprobado:false,anulado:true,detalle:{motivo:motivo}});
+    var sh=document.getElementById("shield"); if(sh) sh.classList.add("on"); }); }
+  function renderRanking(b){ var myRank=b.findIndex(function(r){return r.cc===player.cc;}); var list=$("#rankList"); list.innerHTML="";
+    b.slice(0,8).forEach(function(r,i){ var me=r.cc===player.cc,medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1); var row=document.createElement("div");
+      row.className="row"+(me?" me":"")+(i===0?" m1":i===1?" m2":i===2?" m3":""); row.innerHTML='<div class="pos">'+medal+'</div><div class="who"><div class="nm">'+(me?"Tú · ":"")+r.name+'</div><div class="cc">C.C. ••••'+String(r.cc).slice(-3)+'</div></div><div class="sc">'+r.score.toLocaleString("es-CO")+'</div>'; list.appendChild(row); });
+    $("#yourPos").innerHTML = myRank>=0 ? ("Tu posición en la Actividad 3: <b>#"+(myRank+1)+"</b> de "+b.length+".") : ""; }
+
+  var RIDDLES=[
+    { r:"Corrijo solo después de que el error ya movió la PV; no necesito medir la perturbación. ¿Quién soy?",
+      why:"La <b>realimentación (feedback)</b> es reactiva: corrige tras la perturbación y es universal.",
+      answers:[["realimentacion",100],["retroalimentacion",90],["feedback",100]] },
+    { r:"Me adelanto: mido la perturbación antes de que afecte a la PV y me anticipo a compensarla. ¿Quién soy?",
+      why:"La <b>prealimentación (feedforward)</b> es anticipativa; exige conocer bien el proceso y suele combinarse con feedback.",
+      answers:[["prealimentacion",100],["feedforward",100],["anticipativo",60]] },
+    { r:"Soy la diferencia entre lo que quieres y lo que hay; el controlador vive para llevarme a cero. ¿Quién soy?",
+      why:"El <b>error</b> (e = SP − PV) es el motor del lazo cerrado.",
+      answers:[["error",100],["senal de error",90],["e",70]] },
+    { r:"Actúo por tiempo o por programa y no me entero del resultado; soy simple y barato. ¿Qué lazo soy?",
+      why:"El <b>lazo abierto</b> no mide la PV, por eso no corrige perturbaciones.",
+      answers:[["lazo abierto",100],["abierto",90],["open loop",80]] }
+  ];
+  var BLOCKS=["Controlador","Actuador","Proceso","Sensor"]; // orden correcto por slot 0..3
+  var FIG={
+    why:"En un lazo cerrado la <b>medición del sensor</b> debe volver al comparador (Σ) para calcular el error; en la figura se conectó al actuador, rompiendo la realimentación.",
+    opts:[["El sensor realimenta al actuador en vez de al comparador (Σ)",100],
+          ["Falta el set-point (SP)",0],["El controlador está después del proceso",0],["No hay ninguna falla",0]]
+  };
+
+  var T_RID=30000,T_ARR=90000,T_FIG=30000,PEN=150;
+  function rankItem(weight,leftMs){return Math.round(weight*10 + (weight/100)*(leftMs/20));}
+  function band(p){return p>=90?{t:"Experto",c:"var(--ok)"}:p>=75?{t:"Competente",c:"var(--a3d)"}:p>=60?{t:"Aprobado",c:"var(--mid)"}:{t:"En proceso",c:"var(--bad)"};}
+  function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();}
+  function weightOf(ans,typed){var n=norm(typed),best=0;if(!n)return 0;ans.forEach(function(a){if(norm(a[0])===n)best=Math.max(best,a[1]);});return best;}
+
+  var player={name:"",cc:""},steps=[],idx=0,tHandle=null,tStart=0,answered=false;
+  var _inicioIntento = 0;
+  var rankScore=0,achParts=[],records=[],arr=null;
+  var $=function(s){return document.querySelector(s);};
+  function show(id){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("on");});$("#"+id).classList.add("on");}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  function boot(){var p=new URLSearchParams(location.search);var n=p.get("n")||p.get("nombre"),c=(p.get("c")||p.get("cedula")||"").replace(/\D/g,"");
+    TowerDB.init();if(n&&c.length>=4){player={name:n,cc:c};prime(n,c,function(r){if(r.attempts>=2){blockAttempts();}else beginGame();});return;}show("s-intro");$("#nm").focus();}
+  function tryStart(){var name=$("#nm").value.trim(),cc=$("#cc").value.replace(/\D/g,""),msg=$("#introMsg");
+    if(name.length<3){msg.style.color="var(--bad)";msg.textContent="Escribe tu nombre completo.";return;}
+    if(cc.length<4){msg.style.color="var(--bad)";msg.textContent="Escribe una cédula válida.";return;}
+    msg.style.color="var(--ink-soft)";msg.textContent="Conectando…";player={name:name,cc:cc};prime(name,cc,function(r){if(r.attempts>=2){msg.style.color="var(--bad)";msg.textContent="Esta cédula ya usó sus 2 intentos.";return;}beginGame();});}
+  function beginGame(){_inicioIntento=Date.now();rankScore=0;achParts=[];records=[];idx=0;
+    var a=shuffle(RIDDLES).map(function(d){return {type:"riddle",data:d};});
+    var b=[{type:"arrange"},{type:"fig",data:FIG}];
+    steps=a.concat(b);armShield();renderStep();show("s-play");}
+
+  function startTimer(limit,onEnd){clearInterval(tHandle);tStart=Date.now();var fill=$("#timerFill");fill.style.width="100%";fill.style.background="var(--ok)";
+    tHandle=setInterval(function(){var left=Math.max(0,limit-(Date.now()-tStart)),f=left/limit;fill.style.width=(f*100)+"%";fill.style.background=f>0.5?"var(--ok)":f>0.2?"var(--mid)":"var(--bad)";if(left<=0){clearInterval(tHandle);onEnd();}},100);}
+  function leftMs(limit){return Math.max(0,limit-(Date.now()-tStart));}
+
+  function renderStep(){answered=false;var st=steps[idx];$("#prog").textContent=(idx+1)+" / "+steps.length;$("#ptsNow").textContent=rankScore;$("#fb").className="fb";
+    $("#riddleBlock").style.display="none";$("#arrangeBlock").style.display="none";$("#figBlock").style.display="none";
+    if(st.type==="riddle"){$("#roundBadge").textContent="Parte A · ¿Quién soy?";$("#qprompt").textContent="Lee el acertijo y escribe el concepto";$("#riddleBlock").style.display="";renderRiddle(st.data);startTimer(T_RID,function(){lockRiddle(true);});}
+    else if(st.type==="arrange"){$("#roundBadge").textContent="Parte B · Arma el lazo";$("#qprompt").textContent="Cierra el lazo colocando los 4 bloques";$("#arrangeBlock").style.display="";renderArrange();startTimer(T_ARR,function(){finishArrange(true);});}
+    else{$("#roundBadge").textContent="Parte B · Caza la falla";$("#qprompt").textContent="Detecta el error de cableado";$("#figBlock").style.display="";renderFig(st.data);startTimer(T_FIG,function(){lockFig(-1,true);});}
+  }
+
+  /* riddle */
+  function renderRiddle(d){$("#riddle").textContent=d.r;var L=d.answers[0][0].replace(/\s/g,"").length;$("#len").textContent="Pista: la respuesta principal tiene "+L+" letras.";var a=$("#ans");a.value="";a.disabled=false;$("#btnAns").disabled=false;setTimeout(function(){a.focus();},50);}
+  function lockRiddle(timedOut){if(answered)return;answered=true;clearInterval(tHandle);var st=steps[idx];var left=timedOut?0:leftMs(T_RID);var w=timedOut?0:weightOf(st.data.answers,$("#ans").value);var gain=timedOut?0:rankItem(w,left);
+    rankScore+=gain;achParts.push(w/100);records.push({part:"A",type:"riddle",weight:w,ms:T_RID-left,gain:gain});
+    $("#ans").disabled=true;$("#btnAns").disabled=true;
+    var cls=w>=100?"full":w>0?"part":"none",v=w>=100?"✔ ¡Exacto!":w>0?"◑ Aproximado ("+w+"%)":(timedOut?"⏱ Sin tiempo":"✘ No es");
+    var canon=w>=100?"":" La mejor respuesta era <b>"+st.data.answers[0][0]+"</b>.";
+    showFb(cls,v,gain,st.data.why+canon,"");}
+
+  /* arrange */
+  function renderArrange(){arr={place:[null,null,null,null],sel:null,tries:0,done:false};
+    document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){s.className="slotL";s.textContent="bloque "+(parseInt(s.dataset.slot)+1)+(s.dataset.slot==="3"?" (realimentación)":"");});
+    var bank=$("#bank");bank.innerHTML="";shuffle(BLOCKS).forEach(function(b){var el=document.createElement("button");el.className="block";el.textContent=b;el.dataset.name=b;el.addEventListener("click",function(){selectBlock(b,el);});bank.appendChild(el);});
+    $("#btnCheck").disabled=false;
+    document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){s.addEventListener("click",function(){placeInSlot(parseInt(s.dataset.slot));});});
+  }
+  function selectBlock(name,el){if(arr.done)return;arr.sel=(arr.sel===name)?null:name;
+    document.querySelectorAll("#bank .block").forEach(function(b){b.classList.toggle("selected",b.dataset.name===arr.sel && arr.place.indexOf(arr.sel)<0);});
+    document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){s.classList.toggle("armed",arr.sel!==null);});}
+  function placeInSlot(i){if(arr.done||arr.sel===null)return;
+    // quitar sel de donde estuviera
+    var prev=arr.place.indexOf(arr.sel);if(prev>=0)arr.place[prev]=null;
+    arr.place[i]=arr.sel;arr.sel=null;renderSlots();}
+  function renderSlots(){document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){var i=parseInt(s.dataset.slot);s.classList.remove("armed","ok","bad");if(arr.place[i]){s.classList.add("filled");s.textContent=arr.place[i];}else{s.classList.remove("filled");s.textContent="bloque "+(i+1)+(i===3?" (realimentación)":"");}});
+    document.querySelectorAll("#bank .block").forEach(function(b){b.classList.remove("selected");b.style.opacity=arr.place.indexOf(b.dataset.name)>=0?".35":"1";});}
+  function checkArrange(){if(arr.done)return;var correct=0;arr.place.forEach(function(p,i){if(p===BLOCKS[i])correct++;});
+    if(correct===4){finishArrange(false);return;}
+    arr.tries++;rankScore-=PEN;$("#ptsNow").textContent=rankScore;
+    document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){var i=parseInt(s.dataset.slot);if(arr.place[i])s.classList.add(arr.place[i]===BLOCKS[i]?"ok":"bad");});
+    setTimeout(function(){document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){s.classList.remove("ok","bad");});},900);}
+  function finishArrange(timedOut){if(arr.done)return;arr.done=true;clearInterval(tHandle);var left=leftMs(T_ARR);
+    var correct=0;arr.place.forEach(function(p,i){if(p===BLOCKS[i])correct++;});var frac=correct/4;var solved=correct===4;
+    var precision=Math.round(frac*1000);var speed=solved?Math.round(left/20):0;var gain=Math.max(0,precision+speed-arr.tries*PEN);
+    rankScore+=gain;achParts.push(frac);records.push({part:"B",type:"arrange",correct:correct,tries:arr.tries,ms:T_ARR-left,gain:gain});
+    document.querySelectorAll("#arrangeBlock .slotL").forEach(function(s){var i=parseInt(s.dataset.slot);s.classList.add(arr.place[i]===BLOCKS[i]?"ok":"bad");});
+    $("#btnCheck").disabled=true;
+    var cls=solved?"full":frac>0?"part":"none",v=solved?"✔ ¡Lazo cerrado!":(timedOut?"⏱ Se acabó el tiempo":"◑ Parcial ("+correct+"/4)");
+    showFb(cls,v,gain,"Orden correcto: <b>Controlador → Actuador → Proceso → Sensor</b> (realimentación al comparador).","Intentos fallidos: "+arr.tries+" (−"+(arr.tries*PEN)+" pts)");}
+
+  /* fig MCQ */
+  function renderFig(d){var fig=$("#fig");
+    fig.innerHTML='<div class="fbox">Σ</div><span class="arrow">→</span><div class="fbox">Controlador</div><span class="arrow">→</span><div class="fbox">Actuador</div><span class="arrow">→</span><div class="fbox">Proceso</div><span class="arrow">→ PV</span><div style="flex-basis:100%;height:0"></div><div class="fbox bad">Sensor</div><span class="ferr">──✗──▶ Actuador (¡mal!)</span>';
+    var box=$("#opts");box.innerHTML="";shuffle(d.opts.map(function(o){return {t:o[0],w:o[1]};})).forEach(function(o,i){var b=document.createElement("button");b.className="opt";b.innerHTML='<span class="k">'+String.fromCharCode(65+i)+'</span><span>'+o.t+'</span>';b.addEventListener("click",function(){lockFig(o.w,false,b);});box.appendChild(b);});}
+  function lockFig(weight,timedOut,btn){if(answered)return;answered=true;clearInterval(tHandle);var st=steps[idx];var left=timedOut?0:leftMs(T_FIG);var w=timedOut?0:weight;var gain=timedOut?0:rankItem(w,left);
+    rankScore+=gain;achParts.push(w/100);records.push({part:"B",type:"fig",weight:w,ms:T_FIG-left,gain:gain});
+    document.querySelectorAll("#opts .opt").forEach(function(o){o.disabled=true;});if(btn)btn.classList.add(w>=100?"correct":"wrong");
+    var cls=w>=100?"full":"none",v=w>=100?"✔ Correcto":(timedOut?"⏱ Sin tiempo":"✘ Incorrecto");
+    showFb(cls,v,gain,st.data.why,"");}
+
+  function showFb(cls,verdict,gain,why,brk){var fb=$("#fb");fb.className="fb on "+cls;$("#fbVerdict").textContent=verdict;$("#fbGain").textContent=(gain>=0?"+":"")+gain+" pts";$("#fbWhy").innerHTML=why||"";$("#fbBrk").textContent=brk||"";$("#ptsNow").textContent=rankScore;
+    $("#btnNext").textContent=(idx===steps.length-1)?"Ver resultado":(idx===3?"Ir a la Parte B":"Siguiente");$("#btnNext").focus();}
+  function next(){if(idx===3){$("#breakScore").textContent=rankScore;idx=4;show("s-break");return;}if(idx===steps.length-1){finish();return;}idx++;renderStep();}
+
+  function finish(){ TowerShield.disarm(); var pct=Math.round(achParts.reduce(function(s,x){return s+x;},0)/achParts.length*100);var approved=pct>=60,bd=band(pct);
+    $("#rBand").textContent=bd.t;$("#rBand").style.color=bd.c;$("#rPct").textContent=pct;$("#rApproved").innerHTML=approved?'<span class="approved">Aprobó ✓</span>':'<span class="notyet">Aún no aprueba</span>';$("#rWho").textContent=player.name;$("#rScore").textContent=rankScore.toLocaleString("es-CO");
+    $("#rankList").innerHTML='<p style="color:var(--ink-soft);font-size:13px">Guardando y cargando ranking…</p>';$("#yourPos").textContent="";$("#btnAgain").style.display="none";show("s-results");
+    TowerDB.saveResult(player.cc,ACT,{nombre:player.name,score:rankScore,logro:pct,aprobado:approved,detalle:records,inicio:_inicioIntento,duracionSeg:Math.max(0,Math.round((Date.now()-_inicioIntento)/1000))}).then(function(res){_cache={attempts:res.attempts,board:res.board};renderRanking(res.board);$("#btnAgain").style.display=(res.attempts<2)?"":"none";}).catch(function(e){$("#rankList").innerHTML='<p style="color:var(--bad);font-size:13px">No se pudo guardar. Revisa tu conexión.</p>';}); }
+
+  $("#btnStart").addEventListener("click",tryStart);
+  $("#nm").addEventListener("keydown",function(e){if(e.key==="Enter")$("#cc").focus();});
+  $("#cc").addEventListener("keydown",function(e){if(e.key==="Enter")tryStart();});
+  $("#btnAns").addEventListener("click",function(){lockRiddle(false);});
+  $("#ans").addEventListener("keydown",function(e){if(e.key==="Enter"&&!answered)lockRiddle(false);});
+  $("#btnCheck").addEventListener("click",checkArrange);
+  $("#btnNext").addEventListener("click",next);
+  $("#btnPB").addEventListener("click",function(){renderStep();show("s-play");});
+  $("#btnAgain").addEventListener("click",function(){if(Store.count(player.cc,"act3")>=2){show("s-intro");return;}beginGame();});
+  $("#btnFinish").addEventListener("click",function(){location.search="";});
+  boot();
+})();
+</script>
+<div id="shield" class="shield"><div class="sbox"><div class="ic">🚫</div><h3>Intento cerrado</h3><p>Saliste de la pantalla de la actividad. Por seguridad, tu intento se cerró y quedó anulado.</p></div></div>
+</body>
+</html>

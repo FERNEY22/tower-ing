@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# La aplicacion usa rutas del navegador (/panel, /leccion/l1). Sin esta
+# reescritura, entrar directo a cualquier ruta distinta de / da 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
