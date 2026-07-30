@@ -27,6 +27,8 @@
   <script src="render-percepcion.js"></script>
   <script src="render-encuestas.js"></script>
   <script src="render-ingles.js"></script>
+  <script src="render-lab-automa.js"></script>
+  <script src="render-lab-electro.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -253,6 +255,8 @@
     <option value="percepcion">Apreciación · Observatorio Institucional</option>
     <option value="encuestas">Encuesta de Autoevaluación</option>
     <option value="ingles">Diagnóstico de Inglés · Ingeniería</option>
+    <option value="labAutoma">Quiz Laboratorio · Automatización de Procesos</option>
+    <option value="labElectro">Quiz Laboratorio · Electrónica</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -644,6 +648,10 @@
 
 <div class="vista" id="vista-ingles"></div>
 
+<div class="vista" id="vista-labAutoma"></div>
+
+<div class="vista" id="vista-labElectro"></div>
+
 </main>
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
@@ -668,7 +676,8 @@
   let DATA = {
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
-    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: [], ingles: {}
+    flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: [], ingles: {},
+    labAutoma: {}, labElectro: {}
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -739,6 +748,8 @@
   db.ref('percepcion_observatorio').on('value', snap => { DATA.percepcion = snap.val()||{}; if(vistaActiva==='percepcion') renderPercepcion(); });
   db.ref('autoevaluacion_estamentos').on('value', s => { DATA.encuestas = s.val() ? Object.values(s.val()) : []; if (vistaActiva === 'encuestas') renderEncuestas();});
   db.ref('diagnostico_ingles').on('value', snap => { DATA.ingles = snap.val()||{}; if(vistaActiva==='ingles') renderIngles(); });
+  db.ref('quiz_lab_automa').on('value', snap => { DATA.labAutoma = snap.val()||{}; if(vistaActiva==='labAutoma') renderLabAutoma(); });
+  db.ref('quiz_lab_electro').on('value', snap => { DATA.labElectro = snap.val()||{}; if(vistaActiva==='labElectro') renderLabElectro(); });
 
 
   }
@@ -768,7 +779,9 @@
       coordenadasGeo: [renderCoordenadasGeo, DATA.coordenadasGeo],
       percepcion: [renderPercepcion, DATA.percepcion],
       encuestas: [renderEncuestas, DATA.encuestas],
-      ingles: [renderIngles, DATA.ingles]
+      ingles: [renderIngles, DATA.ingles],
+      labAutoma: [renderLabAutoma, DATA.labAutoma],
+      labElectro: [renderLabElectro, DATA.labElectro]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
