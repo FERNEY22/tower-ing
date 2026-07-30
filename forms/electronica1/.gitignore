@@ -1,6 +1,14 @@
 node_modules/
-dist/
 docs/
+
+# dist/ NO se ignora, a proposito. El sitio que lo publica (tower-ing.com) sirve
+# archivos estaticos desde la raiz del repositorio y no ejecuta ningun build, asi
+# que la carpeta construida tiene que viajar en el commit. Es lo que permite
+# publicar sin gastar minutos de build.
+#
+# Consecuencia: despues de cambiar algo en src/ hay que correr `npm run build` y
+# commitear dist/ junto con el codigo. Si no, la direccion publica sigue
+# mostrando la version anterior.
 .env
 .env.local
 *.local

@@ -21,6 +21,20 @@ import { PanelDocente } from "@/plataforma/docente/PanelDocente";
 import { useSesion } from "@/estado/sesionStore";
 import { leccionPorId } from "@/config";
 
+/**
+ * Prefijo del que cuelgan todas las rutas. El juego vive en un subdirectorio
+ * del sitio (tower-ing.com/forms/electronica1/), asi que "/panel" es en
+ * realidad "/forms/electronica1/panel".
+ *
+ * Sale de BASE_URL —el `base` de vite.config.ts— y no de una cadena escrita a
+ * mano, para que no puedan desincronizarse: si el base cambia y el basename no,
+ * ninguna ruta coincide, todo cae en el comodin "*" y la aplicacion se queda
+ * rebotando contra la raiz del dominio.
+ *
+ * En desarrollo BASE_URL vale "/" y esto queda en "", que es lo correcto.
+ */
+const RAIZ = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
 function Protegida({ children }: { children: React.ReactNode }) {
   const identidad = useSesion((s) => s.identidad);
   if (!identidad) return <Navigate to="/" replace />;
@@ -73,7 +87,7 @@ function Inicio() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={RAIZ}>
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route

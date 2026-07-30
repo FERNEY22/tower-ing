@@ -33,9 +33,43 @@ Se puede forzar en cualquier dirección con `VITE_ALMACEN=memoria|firebase`.
 
 ## Despliegue
 
-Netlify, con `netlify.toml` ya configurado: build `npm run build`, publicación
-`dist/`. La reescritura a `index.html` es obligatoria — sin ella, entrar directo
-a `/panel` o `/leccion/l1` da 404.
+**Dirección pública: `https://tower-ing.com/forms/electronica1/`.** El juego vive
+dentro del sitio principal, no en un dominio propio.
+
+Ese sitio publica archivos estáticos desde la raíz del repositorio y **no ejecuta
+ningún build**. De ahí sale todo lo demás:
+
+1. **`dist/` va commiteado.** No está en `.gitignore` a propósito. Si la carpeta
+   construida no viaja en el commit, no hay nada que servir. La contrapartida:
+   después de cambiar `src/` hay que correr `npm run build` y commitear `dist/`
+   junto con el código, o la dirección pública sigue mostrando lo anterior.
+2. **`base` en `vite.config.ts` es `/forms/electronica1/`.** Sin eso el
+   `index.html` construido pide `/assets/index-xxx.js` contra la raíz del
+   dominio, recibe un 404 y la página sale en blanco.
+3. **El `basename` del `BrowserRouter` sale de `BASE_URL`** (`App.tsx`), o sea del
+   mismo `base`. Sin él ninguna ruta coincide, todo cae en el comodín `*` y la
+   aplicación rebota contra la raíz del sitio.
+4. **Tres reglas en el `_redirects` de la raíz del repositorio** exponen `dist/`
+   en la dirección limpia y resuelven las rutas del navegador. Llevan `!` para
+   forzarse: si no, Netlify serviría el `index.html` de desarrollo que vive en
+   `forms/electronica1/` —el que pide `/src/main.tsx`— y volvería el blanco.
+
+Cambiar la dirección se hace en `vite.config.ts` y en `_redirects`, y tienen que
+coincidir. El `netlify.toml` de esta carpeta solo aplica si algún día el juego
+pasa a tener su propio sitio de Netlify; con el montaje actual no se usa.
+
+**No hay que configurar nada en el panel de Netlify.** Y en particular, el sitio
+de tower-ing debe tener *base directory*, *build command* y *publish directory*
+**vacíos**: si se le pone `forms/electronica1` como base, el dominio entero
+publica solo el juego y el resto del sitio desaparece.
+
+Antes de publicar: `npm run build && npm run preview`. Sirve `dist/` como
+archivos estáticos, que es lo que hará Netlify. Verifica que el `dist/index.html`
+generado apunte a `/forms/electronica1/assets/...`.
+
+Las variables `VITE_FB_*` no hacen falta para ver el juego: sin ellas arranca con
+el almacén en memoria y se puede recorrer todo. Lo único que se pierde es la
+persistencia al recargar.
 
 **No funciona abriendo `index.html` con doble clic.** Necesita servidor: el hash
 de la cédula usa Web Crypto, que solo existe en contexto seguro (localhost o
@@ -91,12 +125,6 @@ src/
 
   exportacion/       hashCircuito.ts (huella canónica) + pngMarcaAgua.ts
   practica/          PracticaLibre.tsx + CircuitosGuardados.tsx
-  estado/            Stores. sesionStore ahora; circuitoStore en la fase 4
-  vistas/            Lienzo, vista física y esquemática (fases 4-5)
-  instrumentos/      Multímetro (fase 6)
-  lecciones/         Motor de lección, calificación y datos de l1..l5 (fases 7-8)
-  practica/          Práctica libre (fase 9)
-  exportacion/       PNG con marca de agua (fase 9)
 
 tests/               Las pruebas de validación del motor son la puerta de cada
                      fase. No se avanza con una en rojo.
@@ -131,9 +159,14 @@ protección real de los datos son las reglas de la Realtime Database.
 
 ## Estado
 
-**El motor está terminado y validado.** Fases 0 a 3 cerradas, 237 pruebas.
-Pasan los cuatro casos de la especificación (§11), las cuatro calibraciones de
-caída y la prueba de estrés de convergencia:
+**El proyecto está completo.** Las diez fases cerradas, **620 pruebas** en
+verde y el typecheck limpio. Motor validado contra los cuatro casos de la
+especificación, las dos vistas sincronizadas, multímetro con resistencias
+internas reales, modelo de quemado, las cinco lecciones evaluadas, práctica
+libre con guardado y exportación PNG, y panel docente con CSV.
+
+El motor pasa los cuatro casos de la especificación (§11), las cuatro
+calibraciones de caída y la prueba de estrés de convergencia:
 
 | Caso | Esperado | Estado |
 |---|---|---|
@@ -143,12 +176,6 @@ caída y la prueba de estrés de convergencia:
 | D · zener 5,1 V, Rs 220 Ω, carga 1 kΩ | 5,0–5,2 V y KCL al 0,1 % | ✅ |
 | Calibración | 0,70 / 1,90 / 2,10 / 3,10 V a 20 mA | ✅ |
 | Estrés | 10 diodos a 15 V, sin escalonar gmin | ✅ |
-
-**El proyecto está completo.** Las diez fases cerradas, **603 pruebas** en
-verde. Motor validado contra los cuatro casos de la especificación, las dos
-vistas sincronizadas, multímetro con resistencias internas reales, modelo de
-quemado, las cinco lecciones evaluadas, práctica libre con guardado y
-exportación PNG, y panel docente con CSV.
 
 Lo que queda fuera es lo que la especificación dejó explícitamente para una
 fase 2: protoboard, análisis transitorio, condensadores y el rectificador.
@@ -272,9 +299,11 @@ la protección real de los datos son las reglas de la Realtime Database.
    curso. Como mínimo: lectura de `participantes` y `progreso` solo para el
    correo del docente, y escritura del propio nodo para cada estudiante.
 3. Dar de alta el correo del docente en Firebase Auth.
-4. Abrirlo en un navegador y recorrer una lección entera. **Nada de esto se ha
-   visto nunca en pantalla**: está verificado con 603 pruebas contra un DOM,
-   pero no con ojos.
+4. Recorrer una lección entera en el navegador **con la nube ya conectada**. La
+   interfaz sí se ha visto en pantalla y se corrigió sobre lo visto —el encuadre
+   del lienzo salió de ahí, ver el comentario de `LIENZO` en `config.ts`—, pero
+   siempre contra el almacén en memoria. El camino con Firebase detrás está
+   probado, no visto.
 
 ## Dos trampas del entorno
 
