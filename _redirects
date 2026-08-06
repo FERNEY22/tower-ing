@@ -1,1 +1,6 @@
 /proyectos/ferim/    /proyectos/ferim/index.html    200
+/proyectos/apreciacion/publicado/index.html      /404.html   410!
+
+/forms/electronica1               /forms/electronica1/                     301
+/forms/electronica1/assets/*      /forms/electronica1/dist/assets/:splat   200!
+/forms/electronica1/*             /forms/electronica1/dist/index.html      200!
