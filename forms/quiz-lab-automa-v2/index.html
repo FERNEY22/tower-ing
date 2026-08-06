@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Quiz de Laboratorio · Automatización de Procesos (v2)</title>
+<style>
+  :root{
+    --bg:#eef2f6;--surface:#fff;--ink:#172033;--muted:#5b6b82;--line:#dde4ec;
+    --primary:#13476b;--accent:#c98a1a;--soft:#f4f7fa;--ok:#1f7a4d;--danger:#c0392b;
+    --shadow:0 8px 30px rgba(16,38,64,.10);--radius:16px;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;padding:24px 16px;
+    -webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:780px;margin:0 auto}
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .head{padding:26px 30px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff,#fff)}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .title{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.25;margin:6px 0 0;font-weight:700;color:var(--primary)}
+  .sub{font-size:13px;color:var(--muted);margin-top:8px}
+  .progress{height:6px;background:var(--soft)}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#2a6e9c);transition:width .35s ease}
+  /* Temporizador por pregunta */
+  .timer{height:5px;background:#f0d9d9}
+  .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#1f7a4d,#c98a1a);transition:width 1s linear}
+  .timer-fill.warn{background:linear-gradient(90deg,#c98a1a,#c0392b)}
+  .body{padding:30px}
+  .step-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .time-chip{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#b3541e;background:#fdf1e3;border:1px solid #f0d9bd;border-radius:20px;padding:3px 11px}
+  .time-chip.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
+  .intro-p{font-size:14.5px;color:var(--muted);margin:0 0 22px}
+  .est-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:560px){.est-grid{grid-template-columns:1fr}}
+  .est{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit;position:relative}
+  .est:hover:not(:disabled){border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 18px rgba(19,71,107,.12)}
+  .est:focus-visible{outline:3px solid #9cc4dd;outline-offset:2px}
+  .est:disabled{opacity:.55;cursor:not-allowed;background:var(--soft)}
+  .est-name{font-weight:700;font-size:15.5px;color:var(--primary)}
+  .est-meta{font-size:12.5px;color:var(--muted)}
+  .est-tag{align-self:flex-start;margin-top:8px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:6px;padding:3px 8px}
+  .est-tag.on{color:#1f7a4d;background:#e6f4ec;border:1px solid #c6e6d5}
+  .est-tag.off{color:#7b8798;background:#eef1f5;border:1px solid #dfe5ec}
+  .badge-sec{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#42688a;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:6px;padding:2px 8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+  .qtext{font-size:17px;line-height:1.5;font-weight:600;margin:0 0 22px;color:var(--ink)}
+  .opts{display:grid;gap:9px}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.13s;background:var(--surface)}
+  .opt:hover{border-color:#9db9d0;background:#fafdff}
+  .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #b9c6d6;display:grid;place-items:center;transition:.13s}
+  .opt-num{font-weight:700;color:var(--muted);min-width:16px}
+  .opt-txt{font-size:14.5px;font-weight:500}
+  .opt.sel{border-color:var(--primary);background:#eef6fb;box-shadow:inset 0 0 0 1px var(--primary)}
+  .opt.sel .dot{border-color:var(--primary);background:var(--primary)}
+  .opt.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .opt.sel .opt-num{color:var(--primary)}
+  .nav{display:flex;justify-content:flex-end;gap:12px;margin-top:28px}
+  .btn{font:inherit;font-weight:600;border-radius:11px;padding:11px 22px;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover:not(:disabled){background:#0f3a58}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-block{width:100%;display:block}
+  label.field{display:block;font-weight:600;font-size:14.5px;margin:0 0 8px}
+  .field-wrap{margin-bottom:16px}
+  select.txt,input.txt{width:100%;font:inherit;font-size:15px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--soft);-webkit-user-select:text;user-select:text}
+  select.txt:focus,input.txt:focus{outline:none;border-color:var(--primary);background:#fff}
+  .hint{font-size:12px;color:var(--muted);margin:4px 2px 0}
+  .err{font-size:12px;color:var(--danger);margin:5px 2px 0;min-height:15px}
+  .consent{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:12.8px;color:var(--muted);line-height:1.6;max-height:280px;overflow:auto;margin-bottom:16px}
+  .consent b{color:var(--ink)}
+  .check-row{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:14px;padding:6px 2px}
+  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--primary)}
+  .rules{list-style:none;padding:0;margin:0 0 8px}
+  .rules li{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink)}
+  .rules li:last-child{border-bottom:none}
+  .rules .ic{flex:none;width:26px;height:26px;border-radius:8px;background:#eef6fb;color:var(--primary);display:grid;place-items:center;font-weight:800}
+  .warn-box{background:#fdf3ea;border:1px solid #f0d9bd;border-radius:12px;padding:14px 16px;font-size:13.2px;color:#8a5a12;margin:16px 0 0;line-height:1.55}
+  .done{text-align:center;padding:14px 6px}
+  .done .check{width:64px;height:64px;border-radius:50%;background:#e6f4ec;display:grid;place-items:center;margin:0 auto 18px}
+  .done .check svg{width:32px;height:32px}
+  .done h2{font-family:Georgia,serif;color:var(--primary);margin:0 0 8px}
+  .nota-badge{display:inline-block;font-family:Georgia,serif;font-size:40px;font-weight:800;color:#fff;background:var(--primary);border-radius:16px;padding:10px 26px;margin:6px 0 4px;letter-spacing:.03em}
+  .nota-badge.ok{background:var(--ok)}
+  .nota-badge.no{background:var(--danger)}
+  .sec-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0 4px}
+  @media(max-width:560px){.sec-mini{grid-template-columns:1fr}}
+  .sec-card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .sec-card .n{font-size:22px;font-weight:800;color:var(--primary)}
+  .sec-card .l{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .lock{text-align:center;padding:20px 6px}
+  .lock .ic{width:64px;height:64px;border-radius:50%;background:#fdecea;display:grid;place-items:center;margin:0 auto 18px;font-size:30px}
+  .lock h2{font-family:Georgia,serif;color:var(--danger);margin:0 0 8px}
+  .foot{text-align:center;font-size:11.5px;color:var(--muted);padding:16px;border-top:1px solid var(--line)}
+  /* Overlay de bloqueo al salir de pantalla */
+  #shield{position:fixed;inset:0;background:rgba(19,71,107,.97);color:#fff;display:none;place-items:center;text-align:center;padding:30px;z-index:9999}
+  #shield .box{max-width:360px}
+  #shield h3{font-family:Georgia,serif;font-size:22px;margin:0 0 10px}
+  #shield p{font-size:14px;opacity:.9;margin:0}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body oncontextmenu="return false">
+<div class="wrap">
+  <div class="frame">
+    <div class="head">
+      <div class="eyebrow">Quiz de laboratorio</div>
+      <h1 class="title">Automatización de Procesos y Control Distribuido · IFA00117</h1>
+      <p class="sub" id="headSub">Reconocimiento de equipos · Circuitos serie, paralelo y mixto</p>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="timer" id="timerWrap" style="display:none"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="body" id="body"></div>
+    <div class="foot">Evaluación con fines académicos · Sus datos se tratan conforme a la Ley 1581 de 2012.</div>
+  </div>
+</div>
+
+<!-- Escudo de bloqueo -->
+<div id="shield"><div class="box"><h3>Sesión bloqueada</h3><p>Saliste de la pantalla del quiz. Por seguridad, tu intento se cerró automáticamente.</p></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+<script>
+"use strict";
+/* Nodo raíz: la subrama "quizzes/" está cerrada a escritura anónima en las reglas
+   de la Realtime Database, por lo que los intentos se guardan en un nodo de primer nivel. */
+const NODO = "quiz_lab_automa";
+/* Candado de intento único. Las reglas de la base solo permiten CREAR una clave, nunca
+   sobrescribirla, así que un error de permiso al escribirla significa "esta cédula ya presentó".
+   Es lo que permite controlar el intento sin necesidad de permiso de lectura. */
+const NODO_LOCK = "quiz_lab_automa_intentos";
+const TIMEOUT_MS = 10000;
+const UNIDAD = "IFA00117 · Automatización de Procesos y Control Distribuido";
+
+/* Nº de preguntas que se sortean del banco y segundos por pregunta (por defecto) */
+const N_PREGUNTAS = 2;
+const T_DEFECTO   = 60;
+
+const PROGRAMAS = ["Ingeniería Mecatrónica","Ingeniería Electrónica","Ingeniería de Software","Ingeniería Industrial"];
+
+/* ===== Apartados (4 quices; solo el 1 habilitado) ===== */
+const QUICES = [
+  {id:"quiz1v2", nombre:"Quiz 1 · Práctica de laboratorio 01 (versión 2)", meta:"Reconocimiento de equipos y circuitos serie/paralelo/mixto", activo:true},
+  {id:"quiz2v2", nombre:"Quiz 2 · Práctica de laboratorio 02 (versión 2)", meta:"Se habilitará al cierre de la práctica 02",               activo:false},
+  {id:"quiz3v2", nombre:"Quiz 3 · Práctica de laboratorio 03 (versión 2)", meta:"Se habilitará al cierre de la práctica 03",               activo:false},
+  {id:"quiz4v2", nombre:"Quiz 4 · Práctica de laboratorio 04 (versión 2)", meta:"Se habilitará al cierre de la práctica 04",               activo:false}
+];
+
+const BLOQUES = {
+  A:"Objetivos y normas de seguridad",
+  B:"Banco de microneumática",
+  C:"Tablero eléctrico",
+  D:"PLC",
+  E:"Ficha de reconocimiento",
+  F:"Cableado y circuitos"
+};
+
+/* ===== BANCO DE PREGUNTAS ===== opts + correcta (índice 0-based) · t = segundos ===== */
+const BANCO = {
+quiz1v2:[
+/* Bloque A · Objetivos y normas de seguridad */
+{id:"a01",bloque:"A",tema:"Objetivos de la práctica",q:"Además de identificar los equipos del banco, el tablero y el PLC, la guía plantea como objetivo:",opts:["Diseñar el plano unifilar de la subestación del laboratorio.","Interpretar un diagrama de conexiones.","Seleccionar el calibre de los conductores por caída de tensión.","Programar el ciclo automático del cilindro en lenguaje Ladder."],correcta:1},
+{id:"a02",bloque:"A",tema:"Objetivos · registro de resultados",q:"Diligenciar la tabla de verificación al final de la Parte 2 responde al objetivo de:",opts:["Registrar y comparar el comportamiento lógico de los circuitos.","Calcular la potencia disipada por la lámpara H1.","Dimensionar la fuente de alimentación del tablero.","Documentar el consumo de aire del banco de microneumática."],correcta:0},
+{id:"a03",bloque:"A",tema:"Alimentación de los circuitos",q:"Los cuatro circuitos de la Parte 2 se alimentan desde:",opts:["La salida Q0.0 del PLC.","Una batería independiente de 48 V.","La fuente de 24 VDC del tablero.","La red de 120 VAC del laboratorio."],correcta:2},
+{id:"a04",bloque:"A",tema:"Secuencia de trabajo",q:"¿Cuál es la secuencia de trabajo que establece la guía para cada circuito?",opts:["Energizar, cablear, revisar y avisar al docente.","Cablear sin tensión, revisar, visto bueno del docente, energizar y probar.","Cablear con tensión reducida, probar y luego llamar al docente.","Probar el circuito en simulación y omitir el visto bueno del docente."],correcta:1},
+{id:"a05",bloque:"A",tema:"Cierre de la práctica",q:"Despresurizar al terminar la práctica significa:",opts:["Cerrar la alimentación de aire y liberar la presión que queda en el circuito.","Bajar la presión del regulador hasta la mitad y dejar el circuito conectado.","Desconectar la fuente de 24 VDC del tablero.","Retirar el lubricador de la unidad de aire."],correcta:0},
+{id:"a06",bloque:"A",tema:"Normas de seguridad",q:"¿Cuál de las siguientes NO figura entre las normas de seguridad de la guía?",opts:["Cablear siempre sin tensión.","Un solo responsable de energizar.","Usar guantes dieléctricos clase 0 durante todo el cableado.","Aire comprimido cerrado mientras no se use."],correcta:2},
+/* Bloque B · Banco de microneumática */
+{id:"b07",bloque:"B",tema:"Unidad FRL · filtro",q:"Dentro de la unidad de aire FRL, la función del filtro es:",opts:["Fijar la presión de trabajo del circuito.","Retener partículas y condensados presentes en el aire comprimido.","Añadir aceite al aire para lubricar los actuadores.","Indicar la presión disponible en la red."],correcta:1},
+{id:"b08",bloque:"B",tema:"Unidad FRL · manómetro",q:"En la unidad FRL, el manómetro está asociado a:",opts:["El lubricador, para medir el nivel de aceite.","El filtro, para indicar cuándo está saturado.","El regulador, para indicar la presión ajustada.","El distribuidor, para repartir el aire a las válvulas."],correcta:2},
+{id:"b09",bloque:"B",tema:"Unidad FRL · lubricador",q:"El lubricador de la unidad FRL cumple la función de:",opts:["Aportar una fina niebla de aceite al aire para los elementos móviles.","Separar el agua condensada antes del regulador.","Limitar la presión máxima de la línea.","Amortiguar el ruido de escape de las válvulas."],correcta:0},
+{id:"b10",bloque:"B",tema:"Designación de válvulas",q:"La designación 3/2 NC de una válvula distribuidora significa:",opts:["Tres posiciones, dos vías y accionamiento por leva.","Tres vías y dos posiciones, cerrada en reposo.","Tres milímetros de paso y dos salidas de escape.","Tres vías y dos posiciones, abierta en reposo."],correcta:1},
+{id:"b11",bloque:"B",tema:"Selección de válvula",q:"Para gobernar un cilindro de doble efecto se emplea la válvula:",opts:["3/2 NC, porque solo requiere una vía de trabajo.","5/2, porque dispone de dos vías de trabajo.","Antirretorno, porque bloquea el escape.","Reguladora de caudal, porque invierte el sentido del vástago."],correcta:1},
+{id:"b12",bloque:"B",tema:"Cilindro de simple efecto",q:"El cilindro de simple efecto del banco se caracteriza porque:",opts:["Recibe aire por sus dos cámaras alternativamente.","Trabaja en un solo sentido y el retorno lo realiza un muelle.","Solo puede accionarse con una válvula 5/2.","Requiere lubricación externa en cada carrera."],correcta:1},
+{id:"b13",bloque:"B",tema:"Reguladora de caudal",q:"La válvula reguladora de caudal se emplea para:",opts:["Aumentar la fuerza que entrega el cilindro.","Bloquear el paso del aire en un sentido.","Controlar la velocidad del actuador limitando el caudal.","Elevar la presión de la línea por encima de la del regulador."],correcta:2},
+{id:"b14",bloque:"B",tema:"Función O",q:"En un montaje neumático, la función O permite que haya señal de salida cuando:",opts:["Hay presión en cualquiera de sus dos entradas.","Hay presión simultáneamente en sus dos entradas.","Se pierde la presión en una de sus entradas.","El presostato alcanza su valor de consigna."],correcta:0},
+{id:"b15",bloque:"B",tema:"Finales de carrera",q:"¿Qué información entrega un final de carrera del banco?",opts:["El caudal de aire que consume el cilindro.","La presión de la línea en ese punto del circuito.","Que el vástago del actuador alcanzó una posición determinada.","El tiempo de ciclo del actuador."],correcta:2},
+/* Bloque C · Tablero eléctrico */
+{id:"c16",bloque:"C",tema:"Pulsador NA",q:"Un pulsador normalmente abierto (NA) del tablero:",opts:["Mantiene el circuito cerrado y lo abre solo mientras se pulsa.","Mantiene el circuito abierto y lo cierra solo mientras se pulsa.","Conmuta y conserva la posición hasta que se vuelve a pulsar.","Solo puede conectarse a una salida del PLC."],correcta:1},
+{id:"c17",bloque:"C",tema:"Pulsador NC",q:"Un pulsador normalmente cerrado (NC) del tablero:",opts:["Deja pasar la corriente en reposo y la interrumpe al pulsarlo.","No conduce hasta que se pulsa y se mantiene.","Necesita un relé auxiliar para funcionar.","Solo se usa en circuitos de señalización."],correcta:0},
+{id:"c18",bloque:"C",tema:"Selector y pulsador",q:"La diferencia entre un selector y un pulsador es que el selector:",opts:["Solo admite contactos NC.","Trabaja únicamente con 24 VAC.","Mantiene la posición seleccionada, mientras el pulsador vuelve a su reposo al soltarlo.","Corta la alimentación general del tablero."],correcta:2},
+{id:"c19",bloque:"C",tema:"Pulsador de emergencia",q:"El pulsador de emergencia del tablero está destinado a:",opts:["Reiniciar el programa del PLC.","Interrumpir el circuito de mando cuando se presenta una situación de riesgo.","Sustituir al seccionador general en la maniobra diaria.","Habilitar el paso de aire comprimido al banco."],correcta:1},
+{id:"c20",bloque:"C",tema:"Zumbador",q:"El zumbador del tablero corresponde a un elemento de:",opts:["Señalización acústica.","Mando manual.","Protección contra sobrecorriente.","Distribución de alimentación."],correcta:0},
+{id:"c21",bloque:"C",tema:"Relé auxiliar",q:"El funcionamiento de un relé auxiliar del tablero consiste en que:",opts:["Sus contactos cambian de estado con el nivel de presión del circuito.","Su bobina, al energizarse, conmuta sus contactos NA y NC.","Reduce la tensión de 24 VDC a la del PLC.","Protege la línea de alimentación frente a cortocircuitos."],correcta:1},
+{id:"c22",bloque:"C",tema:"Numeración de bornes",q:"La numeración de los bornes del tablero sirve para:",opts:["Indicar la corriente máxima admisible en cada punto.","Ordenar los elementos por su año de instalación.","Identificar cada conexión y facilitar la trazabilidad del cableado.","Definir la polaridad de la fuente de 24 VDC."],correcta:2},
+{id:"c23",bloque:"C",tema:"Protección de línea",q:"La protección de línea asociada al seccionador general cumple la función de:",opts:["Estabilizar la tensión de salida de la fuente.","Proteger la línea de alimentación frente a sobrecorrientes y cortocircuitos.","Señalizar que el tablero está energizado.","Conmutar entre alimentación de 24 VDC y 120 VAC."],correcta:1},
+/* Bloque D · PLC */
+{id:"d24",bloque:"D",tema:"Selector de modo",q:"El selector de modo de la CPU permite:",opts:["Cambiar la tensión de las entradas digitales.","Poner la CPU en RUN o en STOP.","Seleccionar el idioma del software de programación.","Habilitar los módulos analógicos de expansión."],correcta:1},
+{id:"d25",bloque:"D",tema:"Indicador ERROR",q:"Si el indicador ERROR de la CPU se enciende, significa que:",opts:["La CPU está ejecutando el programa con normalidad.","El programa se descargó correctamente.","La CPU presenta una falla y no está operando de forma normal.","El PLC está en modo de simulación."],correcta:2},
+{id:"d26",bloque:"D",tema:"Conexión de sensores",q:"Un final de carrera que informa la posición del vástago se conecta al PLC en:",opts:["Una entrada digital (I).","Una salida digital (Q).","El borne de alimentación de la CPU.","El puerto del cable de descarga."],correcta:0},
+{id:"d27",bloque:"D",tema:"Conexión de actuadores",q:"Una lámpara piloto gobernada por el programa se conecta al PLC en:",opts:["Una entrada digital (I).","Una salida digital (Q).","El común de las entradas.","El selector de modo de la CPU."],correcta:1},
+{id:"d28",bloque:"D",tema:"Borne común",q:"El borne común de un grupo de entradas digitales:",opts:["Es la referencia compartida por todas las entradas de ese grupo.","Alimenta la CPU cuando falla la fuente del tablero.","Sustituye al LED indicador de cada entrada.","Solo se conecta cuando se usan módulos analógicos."],correcta:0},
+{id:"d29",bloque:"D",tema:"Módulos de expansión",q:"Respecto a los módulos analógicos o de expansión, la guía indica que se reconocen:",opts:["Siempre, porque todos los PLC del laboratorio los incluyen.","Solo si el equipo los tiene.","Únicamente en la práctica 04.","Solo cuando se usa la simulación del software."],correcta:1},
+{id:"d30",bloque:"D",tema:"Cable de descarga",q:"El cable de descarga que se reconoce junto con el software sirve para:",opts:["Alimentar la CPU desde el computador.","Conectar las entradas digitales al tablero.","Transferir el programa desde el computador a la CPU.","Comunicar el PLC con el banco de microneumática."],correcta:2},
+/* Bloque E · Ficha de reconocimiento */
+{id:"e31",bloque:"E",tema:"Columna Ubicación",q:"En la ficha de reconocimiento, la columna “Ubicación” registra:",opts:["El lugar donde se encuentra el elemento dentro del sistema.","El país de fabricación del componente.","La posición de reposo de la válvula.","La dirección de la entrada del PLC asociada."],correcta:0},
+{id:"e32",bloque:"E",tema:"Columna Datos de placa",q:"¿Qué se registra en la columna “Datos de placa”?",opts:["El símbolo normalizado del elemento.","La información impresa por el fabricante: referencia, tensión, presión y similares.","La función lógica que cumple el elemento en el circuito.","El número de hilos con que se conecta."],correcta:1},
+{id:"e33",bloque:"E",tema:"Formato de la ficha",q:"¿Cuál de las siguientes columnas NO hace parte del formato de la ficha?",opts:["Símbolo.","Función que cumple.","Tiempo de ciclo.","Ubicación."],correcta:2},
+/* Bloque F · Cableado y circuitos */
+{id:"f34",bloque:"F",tema:"Ejemplo 1 · conexiones",q:"En el Ejemplo 1, el hilo 2 va conectado:",opts:["Del borne +24 V a S1(1).","De S1(2) a H1(X1).","De H1(X2) al borne 0 V.","Del nudo A al nudo B."],correcta:1},
+{id:"f35",bloque:"F",tema:"Ejemplo 2 · número de hilos",q:"¿Cuántos hilos se emplean en el montaje del Ejemplo 2?",opts:["2","3","4","6"],correcta:2},
+{id:"f36",bloque:"F",tema:"Ejemplo 3 · número de hilos",q:"El montaje del Ejemplo 3 (dos interruptores en paralelo) emplea:",opts:["3 hilos","4 hilos","5 hilos","6 hilos"],correcta:2},
+{id:"f37",bloque:"F",tema:"Ejemplo 3 · nudos",q:"En el Ejemplo 3, los hilos 2 y 3:",opts:["Van del nudo A al nudo B, uno por S1 y otro por S2.","Unen los dos extremos de la lámpara H1.","Llevan el 0 V a cada interruptor.","Conectan el nudo B directamente al borne +24 V."],correcta:0},
+{id:"f38",bloque:"F",tema:"Ejemplo 4 · número de hilos",q:"El montaje del Ejemplo 4 (conexión mixta) emplea:",opts:["4 hilos","5 hilos","6 hilos","8 hilos"],correcta:2},
+{id:"f39",bloque:"F",tema:"Ejemplo 4 · comportamiento",t:90,q:"En el Ejemplo 4, con S1 cerrado y S2 y S3 abiertos, la lámpara H1:",opts:["Permanece apagada, porque falta cerrar S2 o S3.","Enciende, porque basta con S1 cerrado.","Enciende con la mitad de su brillo.","Enciende solo si además se abre S1."],correcta:0},
+{id:"f40",bloque:"F",tema:"Ejemplo 3 · comportamiento",t:90,q:"En el Ejemplo 3, con S1 cerrado y S2 abierto, la lámpara H1:",opts:["Permanece apagada, porque el paralelo exige los dos cerrados.","Enciende, porque basta con que uno de los dos esté cerrado.","Permanece apagada, porque S2 interrumpe el retorno a 0 V.","Parpadea mientras se cierra S2."],correcta:1},
+{id:"f41",bloque:"F",tema:"Tabla de verificación",t:90,q:"Sumando las combinaciones de los cuatro ejemplos (2, 4, 4 y 8), la tabla de verificación debe tener:",opts:["14 filas","16 filas","18 filas","20 filas"],correcta:2},
+{id:"f42",bloque:"F",tema:"Discrepancia en la prueba",q:"Si el comportamiento observado no coincide con el previsto, la guía indica:",opts:["Repetir la prueba varias veces hasta que coincida.","Desenergizar y revisar el hilo.","Aumentar la tensión de la fuente hasta 48 VDC.","Cambiar la lámpara H1 por una de mayor potencia."],correcta:1},
+{id:"f43",bloque:"F",tema:"Marcado de conductores",q:"¿Por qué cada conductor se marca en sus dos extremos?",opts:["Para identificar el hilo en los dos puntos de conexión y facilitar la revisión.","Porque el color del conductor cambia a lo largo del recorrido.","Para indicar el sentido de circulación de la corriente.","Porque cada borne admite dos conductores marcados."],correcta:0}
+]
+};
+/* ===== Elementos ===== */
+const body=document.getElementById('body'), bar=document.getElementById('bar'), headSub=document.getElementById('headSub');
+const timerWrap=document.getElementById('timerWrap'), timerFill=document.getElementById('timerFill'), shield=document.getElementById('shield');
+function setBar(p){ bar.style.width=Math.max(0,Math.min(100,p))+"%"; }
+function esc(s){ return (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function barajar(a){ const x=a.slice(); for(let i=x.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=x[i]; x[i]=x[j]; x[j]=t; } return x; }
+/* Firebase deja las escrituras pendientes indefinidamente cuando no hay red: sin este
+   límite el estudiante se quedaría con el botón en "Verificando…" para siempre. */
+function conTimeout(promesa, ms){
+  return Promise.race([promesa, new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), ms))]);
+}
+
+/* ===== Estado ===== */
+let st = { datos:null, quiz:null, quizNombre:null, items:[], idx:0, resp:{}, inicio:0, examActivo:false, cerrado:false, tick:null,
+           payload:null, guardado:false };
+
+/* ============ 1) CONSENTIMIENTO ============ */
+function vConsent(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(0);
+  headSub.textContent="Autorización de tratamiento de datos personales";
+  body.innerHTML=`
+    <div class="step-label"><span>Antes de empezar · Autorización de datos</span></div>
+    <p class="intro-p">Este quiz evalúa los contenidos de la práctica de laboratorio de <b>${esc(UNIDAD)}</b>. Para registrar tu calificación necesitamos tus datos personales.</p>
+    <div class="consent">
+      <p style="margin:0 0 10px"><b>Autorización para el tratamiento de datos personales</b></p>
+      <p style="margin:0 0 10px">De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo, número de identificación, correo electrónico y programa académico</b>.</p>
+      <p style="margin:0 0 10px"><b>Finalidad:</b> registrar y calificar su quiz de laboratorio, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
+      <p style="margin:0 0 10px"><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
+      <p style="margin:0"><b>Carácter voluntario:</b> otorgar esta autorización es libre y voluntario. Al marcar la casilla y continuar, usted declara que ha leído esta autorización y otorga su consentimiento libre, previo, expreso e informado.</p>
+    </div>
+    <label class="check-row"><input type="checkbox" id="chkConsent">
+      <span>He leído y <b>autorizo</b> el tratamiento de mis datos personales conforme a la Ley 1581 de 2012.</span></label>
+    <div class="nav"><button class="btn btn-primary" id="cont" disabled>Acepto y continúo</button></div>`;
+  const chk=document.getElementById('chkConsent'), cont=document.getElementById('cont');
+  chk.onchange=()=>{ cont.disabled=!chk.checked; };
+  cont.onclick=()=>{ if(chk.checked) vDatos(); };
+}
+
+/* ============ 2) DATOS PERSONALES ============ */
+function vDatos(){
+  setBar(6); headSub.textContent="Datos del estudiante";
+  const d=st.datos||{};
+  const progOpts=PROGRAMAS.map(p=>`<option value="${esc(p)}" ${d.programa===p?"selected":""}>${esc(p)}</option>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Tus datos</span></div>
+    <div class="field-wrap">
+      <label class="field" for="f-nombre">Nombre completo</label>
+      <input class="txt" id="f-nombre" type="text" autocomplete="name" placeholder="Nombres y apellidos" value="${esc(d.nombre||"")}">
+      <div class="err" id="e-nombre"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-id">Número de identificación</label>
+      <input class="txt" id="f-id" type="text" inputmode="numeric" autocomplete="off" placeholder="Documento" value="${esc(d.identificacion||"")}">
+      <div class="hint">Se usa para registrar tu intento. Solo se permite un intento por documento en cada quiz.</div>
+      <div class="err" id="e-id"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-correo">Correo electrónico</label>
+      <input class="txt" id="f-correo" type="email" autocomplete="email" placeholder="correo@ejemplo.com" value="${esc(d.correo||"")}">
+      <div class="err" id="e-correo"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-prog">Programa académico</label>
+      <select class="txt" id="f-prog"><option value="" disabled ${d.programa?"":"selected"}>Selecciona tu programa…</option>${progOpts}</select>
+      <div class="err" id="e-prog"></div>
+    </div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="ir">Continuar</button></div>`;
+  document.getElementById('ir').onclick=validarDatos;
+}
+function validarDatos(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  const identificacion=document.getElementById('f-id').value.trim();
+  const correo=document.getElementById('f-correo').value.trim();
+  const programa=document.getElementById('f-prog').value;
+  let ok=true;
+  const set=(id,msg)=>{ document.getElementById(id).textContent=msg; if(msg)ok=false; };
+  set('e-nombre', (nombre.length>=5 && nombre.includes(" ")) ? "" : "Escribe tus nombres y apellidos completos.");
+  set('e-id', /^[0-9]{6,15}$/.test(identificacion) ? "" : "Ingresa un documento válido (solo números, 6 a 15 dígitos).");
+  set('e-correo', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "" : "Ingresa un correo electrónico válido.");
+  set('e-prog', programa ? "" : "Selecciona tu programa académico.");
+  if(!ok) return;
+  st.datos={nombre,identificacion,correo,programa};
+  vQuiz();
+}
+
+/* ============ 3) SELECCIÓN DE QUIZ (4 apartados) ============ */
+function vQuiz(){
+  setBar(12); headSub.textContent=st.datos.nombre;
+  const cards=QUICES.map(qz=>`<button class="est" data-id="${qz.id}" ${qz.activo?"":"disabled"}>
+    <span class="est-name">${esc(qz.nombre)}</span><span class="est-meta">${esc(qz.meta)}</span>
+    <span class="est-tag ${qz.activo?"on":"off"}">${qz.activo?"Habilitado":"Próximamente"}</span></button>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Selecciona el quiz</span></div>
+    <p class="intro-p">La unidad contempla cuatro quices de laboratorio. En este momento <b>solo está habilitado el Quiz 1</b>; los demás se abrirán al cierre de cada práctica.</p>
+    <div class="est-grid">${cards}</div>`;
+  body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
+    if(b.disabled) return;
+    const qz=QUICES.find(x=>x.id===b.dataset.id);
+    st.quiz=qz.id; st.quizNombre=qz.nombre;
+    vInstrucciones();
+  });
+}
+
+/* ============ 4) INSTRUCCIONES ============ */
+function vInstrucciones(){
+  setBar(16); headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
+  const banco=BANCO[st.quiz]||[];
+  body.innerHTML=`
+    <div class="step-label"><span>Reglas del quiz</span></div>
+    <ul class="rules">
+      <li><span class="ic">🎲</span><span><b>${N_PREGUNTAS} preguntas al azar</b> tomadas de un banco de ${banco.length}. Cada estudiante recibe una combinación distinta y las opciones se reordenan.</span></li>
+      <li><span class="ic">⏱</span><span><b>Tiempo por pregunta.</b> Cada pregunta tiene su propio contador. Cuando se agota, el quiz avanza solo a la siguiente y la pregunta queda sin responder.</span></li>
+      <li><span class="ic">→</span><span><b>Sin retroceder.</b> No podrás volver ni cambiar una respuesta ya enviada. Responde con seguridad.</span></li>
+      <li><span class="ic">🔒</span><span><b>No salgas de la pantalla.</b> Si cambias de pestaña, minimizas o abres otra app, el quiz <b>se cierra automáticamente</b> y quedará como abandonado.</span></li>
+      <li><span class="ic">1</span><span><b>Un solo intento</b> por número de identificación.</span></li>
+    </ul>
+    <div class="warn-box">Consejo: cierra otras aplicaciones y notificaciones antes de empezar. Una vez inicies, el contador corre para cada pregunta y no se puede pausar.</div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="start">Verificar y comenzar</button></div>`;
+  document.getElementById('start').onclick=iniciarExamen;
+}
+
+async function iniciarExamen(){
+  const b=document.getElementById('start'); b.disabled=true; b.textContent="Verificando…";
+  // Un intento por identificación (dentro del mismo quiz): se intenta crear el candado.
+  // Si las reglas rechazan la escritura, la clave ya existía → la cédula ya presentó este quiz.
+  try{
+    await conTimeout(
+      firebase.database().ref(NODO_LOCK+"/"+st.quiz+"_"+st.datos.identificacion).set(new Date().toISOString()),
+      TIMEOUT_MS);
+  }catch(e){
+    const cod=((e&&(e.code||e.message))||"").toString().toUpperCase();
+    if(cod.indexOf("PERMISSION")>=0){ vYaRegistrado(); return; }
+    // Sin conexión o servidor lento: no se puede verificar, se permite continuar.
+    console.warn("No se pudo verificar el intento:",e);
+  }
+
+  // Sortear preguntas y barajar opciones
+  const banco=BANCO[st.quiz]||[];
+  st.items = barajar(banco).slice(0,N_PREGUNTAS).map(it=>{
+    const pares = it.opts.map((txt,i)=>({txt, ok:i===it.correcta}));
+    const mez = barajar(pares);
+    return {...it, t: it.t||T_DEFECTO, opts: mez.map(p=>p.txt), correcta: mez.findIndex(p=>p.ok)};
+  });
+  st.idx=0; st.resp={}; st.inicio=Date.now(); st.examActivo=true; st.cerrado=false;
+  // Pantalla completa (best-effort) para reducir distracciones
+  try{ if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); }catch(e){}
+  vPregunta();
+}
+
+function vYaRegistrado(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(100);
+  headSub.textContent="Intento no disponible";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Ya tienes un intento registrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">El documento <b>${esc(st.datos.identificacion)}</b> ya presentó <b>${esc(st.quizNombre)}</b>. Solo se permite un intento por identificación. Si crees que es un error, avisa a tu docente.</p></div>`;
+}
+
+/* ============ 5) PREGUNTAS ============ */
+function detenerTick(){ if(st.tick){ clearInterval(st.tick); st.tick=null; } }
+
+function vPregunta(){
+  if(!st.examActivo) return;
+  detenerTick();
+  const total=st.items.length, it=st.items[st.idx];
+  setBar(18 + (st.idx/total)*80);
+  headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
+  timerWrap.style.display="block";
+
+  const opts = it.opts.map((o,oi)=>`<div class="opt" data-o="${oi}">
+      <span class="dot"></span><span class="opt-num">${String.fromCharCode(65+oi)}.</span><span class="opt-txt">${esc(o)}</span></div>`).join("");
+
+  body.innerHTML=`
+    <div class="step-label"><span>Pregunta ${st.idx+1} de ${total}</span>
+      <span class="time-chip" id="chip">${it.t}s</span></div>
+    <span class="badge-sec">Bloque ${it.bloque} · ${esc(BLOQUES[it.bloque]||"")}</span>
+    <p class="qtext">${esc(it.q)}</p>
+    <div class="opts">${opts}</div>
+    <div class="nav"><button class="btn btn-primary" id="next" disabled>${st.idx===total-1?"Finalizar":"Siguiente →"}</button></div>`;
+
+  const next=document.getElementById('next');
+  body.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+    const oi=+o.dataset.o;
+    st.resp[it.id+"_"+st.idx]=oi;
+    body.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    o.classList.add('sel'); next.disabled=false;
+  });
+  next.onclick=avanzar;
+
+  // Temporizador por pregunta
+  let queda=it.t;
+  const chip=document.getElementById('chip');
+  timerFill.classList.remove('warn'); timerFill.style.transition="none"; timerFill.style.width="100%";
+  requestAnimationFrame(()=>{ timerFill.style.transition="width 1s linear"; timerFill.style.width="0%"; });
+  st.tick=setInterval(()=>{
+    queda--;
+    if(chip){ chip.textContent=queda+"s"; if(queda<=5){ chip.classList.add('danger'); timerFill.classList.add('warn'); } }
+    if(queda<=0){ detenerTick(); avanzar(true); }
+  },1000);
+}
+
+function avanzar(porTiempo){
+  if(!st.examActivo) return;
+  detenerTick();
+  const it=st.items[st.idx];
+  if(porTiempo && !(it.id+"_"+st.idx in st.resp)){ st.resp[it.id+"_"+st.idx]=null; } // sin responder
+  if(st.idx < st.items.length-1){ st.idx++; vPregunta(); }
+  else finalizar(false);
+}
+
+/* ============ 6) RESULTADO / ENVÍO ============ */
+function construirPayload(abandonado){
+  const blqAcc={}; const respuestas=[]; let correctas=0, respondidas=0;
+  st.items.forEach((it,i)=>{
+    const sel = (it.id+"_"+i in st.resp) ? st.resp[it.id+"_"+i] : null;
+    const ok = sel!==null && sel===it.correcta;
+    if(sel!==null) respondidas++;
+    if(ok) correctas++;
+    const b=blqAcc[it.bloque]||(blqAcc[it.bloque]={c:0,t:0}); b.t++; if(ok) b.c++;
+    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:BLOQUES[it.bloque]||it.bloque, tema:it.tema,
+      etiqueta:it.q, sel:sel, selTexto:(sel===null?null:it.opts[sel]),
+      correcta:ok, agotado:(sel===null)});
+  });
+  Object.keys(blqAcc).forEach(k=>{ blqAcc[k].pct = blqAcc[k].t? Math.round(100*blqAcc[k].c/blqAcc[k].t):0; });
+  const total=st.items.length;
+  const pct = total? Math.round(100*correctas/total) : 0;
+  return {
+    nombre:st.datos.nombre, identificacion:st.datos.identificacion, correo:st.datos.correo, programa:st.datos.programa,
+    quiz:st.quiz, quizNombre:st.quizNombre, unidad:UNIDAD,
+    enviadoEn:new Date().toISOString(),
+    abandonado:!!abandonado,
+    duracionSeg: st.inicio? Math.round((Date.now()-st.inicio)/1000):0,
+    correctas, respondidas, total, pct, nota:pct, aprobado: pct>=60,
+    bloques:blqAcc,
+    respuestas
+  };
+}
+
+async function finalizar(abandonado){
+  if(st.cerrado) return; st.cerrado=true; st.examActivo=false;
+  detenerTick(); timerWrap.style.display="none";
+  try{ if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+  st.payload=construirPayload(abandonado);
+  setBar(99);
+  if(!abandonado){ body.innerHTML=`<div class="done" style="padding-top:40px"><p class="intro-p" style="margin:0">Enviando tus respuestas…</p></div>`; }
+  await enviar();
+}
+
+/* El envío nunca se da por bueno sin confirmación del servidor: si la escritura
+   falla (reglas, red, cuota) el estudiante ve la pantalla de error y puede reintentar. */
+async function enviar(){
+  const p=st.payload; if(!p) return;
+  try{
+    await firebase.database().ref(NODO).push(p);
+    st.guardado=true;
+  }catch(e){
+    console.error("Error al enviar:",e);
+    st.guardado=false;
+  }
+  if(!st.guardado){ vErrorEnvio(); return; }
+  if(p.abandonado) vBloqueado(); else vGracias(p);
+}
+
+function vErrorEnvio(){
+  setBar(100); headSub.textContent="No se pudo guardar el intento";
+  body.innerHTML=`<div class="lock"><div class="ic">⚠️</div>
+    <h2>No pudimos guardar tu intento</h2>
+    <p class="intro-p" style="margin:0 auto 18px;max-width:440px">Terminaste el quiz, pero tus respuestas <b>no llegaron al servidor</b>. Revisa tu conexión y pulsa reintentar. <b>No cierres esta ventana</b> hasta que veas la confirmación; si el problema continúa, avisa a tu docente.</p>
+    <div class="nav" style="justify-content:center;margin-top:0"><button class="btn btn-primary" id="retry">Reintentar envío</button></div></div>`;
+  document.getElementById('retry').onclick=async ()=>{
+    const b=document.getElementById('retry'); b.disabled=true; b.textContent="Enviando…";
+    await enviar();
+  };
+}
+
+function vGracias(p){
+  setBar(100); headSub.textContent="Quiz completado";
+  const cls = p.aprobado ? "ok" : "no";
+  body.innerHTML=`
+    <div class="done">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>¡Gracias, ${esc(p.nombre.split(" ")[0])}!</h2>
+      <p class="intro-p" style="margin:0 auto 6px;max-width:440px">Tu intento de <b>${esc(p.quizNombre)}</b> quedó registrado. Tu calificación es:</p>
+      <div class="nota-badge ${cls}">${p.pct}</div>
+      <p class="intro-p" style="margin:2px 0 0"><b>${p.aprobado?"Aprobado":"No aprobado"}</b> · ${p.correctas} de ${p.total} respuestas correctas</p>
+      <div class="sec-mini">
+        <div class="sec-card"><div class="n">${p.respondidas}/${p.total}</div><div class="l">Respondidas</div></div>
+        <div class="sec-card"><div class="n">${Math.floor(p.duracionSeg/60)}:${String(p.duracionSeg%60).padStart(2,"0")}</div><div class="l">Tiempo empleado</div></div>
+      </div>
+      <p class="intro-p" style="margin:16px auto 0;max-width:440px;font-size:13px">Tu docente recibirá el detalle de tus respuestas. Ya puedes cerrar esta ventana.</p>
+    </div>`;
+}
+
+function vBloqueado(){
+  setBar(100); headSub.textContent="Intento cerrado";
+  shield.style.display="grid";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Quiz cerrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">Saliste de la pantalla durante el quiz, por lo que tu intento se cerró automáticamente y quedó registrado como <b>abandonado</b>. Si fue un error, comunícate con tu docente.</p></div>`;
+}
+
+/* ============ ANTI-TRAMPA: cierre al salir de pantalla ============ */
+function cerrarPorAbandono(){
+  if(!st.examActivo || st.cerrado) return;
+  finalizar(true);
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) cerrarPorAbandono(); });
+window.addEventListener('blur', cerrarPorAbandono);
+window.addEventListener('pagehide', cerrarPorAbandono);
+['copy','cut','selectstart','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{ if(st.examActivo) e.preventDefault(); }));
+// Aviso al recargar/cerrar durante el examen o con un intento pendiente de guardar
+window.addEventListener('beforeunload', e=>{
+  if((st.examActivo && !st.cerrado) || (st.payload && !st.guardado)){ e.preventDefault(); e.returnValue=""; }
+});
+
+/* ===== Inicio ===== */
+vConsent();
+</script>
+</body>
+</html>

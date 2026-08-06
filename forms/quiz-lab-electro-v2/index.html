@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Quiz de Laboratorio · Electrónica (v2)</title>
+<style>
+  :root{
+    --bg:#eef2f6;--surface:#fff;--ink:#172033;--muted:#5b6b82;--line:#dde4ec;
+    --primary:#13476b;--accent:#c98a1a;--soft:#f4f7fa;--ok:#1f7a4d;--danger:#c0392b;
+    --shadow:0 8px 30px rgba(16,38,64,.10);--radius:16px;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;padding:24px 16px;
+    -webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:780px;margin:0 auto}
+  .frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .head{padding:26px 30px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff,#fff)}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .title{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.25;margin:6px 0 0;font-weight:700;color:var(--primary)}
+  .sub{font-size:13px;color:var(--muted);margin-top:8px}
+  .progress{height:6px;background:var(--soft)}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#2a6e9c);transition:width .35s ease}
+  /* Temporizador por pregunta */
+  .timer{height:5px;background:#f0d9d9}
+  .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#1f7a4d,#c98a1a);transition:width 1s linear}
+  .timer-fill.warn{background:linear-gradient(90deg,#c98a1a,#c0392b)}
+  .body{padding:30px}
+  .step-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .time-chip{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#b3541e;background:#fdf1e3;border:1px solid #f0d9bd;border-radius:20px;padding:3px 11px}
+  .time-chip.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
+  .intro-p{font-size:14.5px;color:var(--muted);margin:0 0 22px}
+  .est-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:560px){.est-grid{grid-template-columns:1fr}}
+  .est{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit;position:relative}
+  .est:hover:not(:disabled){border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 18px rgba(19,71,107,.12)}
+  .est:focus-visible{outline:3px solid #9cc4dd;outline-offset:2px}
+  .est:disabled{opacity:.55;cursor:not-allowed;background:var(--soft)}
+  .est-name{font-weight:700;font-size:15.5px;color:var(--primary)}
+  .est-meta{font-size:12.5px;color:var(--muted)}
+  .est-tag{align-self:flex-start;margin-top:8px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:6px;padding:3px 8px}
+  .est-tag.on{color:#1f7a4d;background:#e6f4ec;border:1px solid #c6e6d5}
+  .est-tag.off{color:#7b8798;background:#eef1f5;border:1px solid #dfe5ec}
+  .badge-sec{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#42688a;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:6px;padding:2px 8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+  .qtext{font-size:17px;line-height:1.5;font-weight:600;margin:0 0 22px;color:var(--ink)}
+  .opts{display:grid;gap:9px}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.13s;background:var(--surface)}
+  .opt:hover{border-color:#9db9d0;background:#fafdff}
+  .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #b9c6d6;display:grid;place-items:center;transition:.13s}
+  .opt-num{font-weight:700;color:var(--muted);min-width:16px}
+  .opt-txt{font-size:14.5px;font-weight:500}
+  .opt.sel{border-color:var(--primary);background:#eef6fb;box-shadow:inset 0 0 0 1px var(--primary)}
+  .opt.sel .dot{border-color:var(--primary);background:var(--primary)}
+  .opt.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .opt.sel .opt-num{color:var(--primary)}
+  .nav{display:flex;justify-content:flex-end;gap:12px;margin-top:28px}
+  .btn{font:inherit;font-weight:600;border-radius:11px;padding:11px 22px;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover:not(:disabled){background:#0f3a58}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-block{width:100%;display:block}
+  label.field{display:block;font-weight:600;font-size:14.5px;margin:0 0 8px}
+  .field-wrap{margin-bottom:16px}
+  select.txt,input.txt{width:100%;font:inherit;font-size:15px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--soft);-webkit-user-select:text;user-select:text}
+  select.txt:focus,input.txt:focus{outline:none;border-color:var(--primary);background:#fff}
+  .hint{font-size:12px;color:var(--muted);margin:4px 2px 0}
+  .err{font-size:12px;color:var(--danger);margin:5px 2px 0;min-height:15px}
+  .consent{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:12.8px;color:var(--muted);line-height:1.6;max-height:280px;overflow:auto;margin-bottom:16px}
+  .consent b{color:var(--ink)}
+  .check-row{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:14px;padding:6px 2px}
+  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--primary)}
+  .rules{list-style:none;padding:0;margin:0 0 8px}
+  .rules li{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink)}
+  .rules li:last-child{border-bottom:none}
+  .rules .ic{flex:none;width:26px;height:26px;border-radius:8px;background:#eef6fb;color:var(--primary);display:grid;place-items:center;font-weight:800}
+  .warn-box{background:#fdf3ea;border:1px solid #f0d9bd;border-radius:12px;padding:14px 16px;font-size:13.2px;color:#8a5a12;margin:16px 0 0;line-height:1.55}
+  .done{text-align:center;padding:14px 6px}
+  .done .check{width:64px;height:64px;border-radius:50%;background:#e6f4ec;display:grid;place-items:center;margin:0 auto 18px}
+  .done .check svg{width:32px;height:32px}
+  .done h2{font-family:Georgia,serif;color:var(--primary);margin:0 0 8px}
+  .nota-badge{display:inline-block;font-family:Georgia,serif;font-size:40px;font-weight:800;color:#fff;background:var(--primary);border-radius:16px;padding:10px 26px;margin:6px 0 4px;letter-spacing:.03em}
+  .nota-badge.ok{background:var(--ok)}
+  .nota-badge.no{background:var(--danger)}
+  .sec-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0 4px}
+  @media(max-width:560px){.sec-mini{grid-template-columns:1fr}}
+  .sec-card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .sec-card .n{font-size:22px;font-weight:800;color:var(--primary)}
+  .sec-card .l{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .lock{text-align:center;padding:20px 6px}
+  .lock .ic{width:64px;height:64px;border-radius:50%;background:#fdecea;display:grid;place-items:center;margin:0 auto 18px;font-size:30px}
+  .lock h2{font-family:Georgia,serif;color:var(--danger);margin:0 0 8px}
+  .foot{text-align:center;font-size:11.5px;color:var(--muted);padding:16px;border-top:1px solid var(--line)}
+  /* Overlay de bloqueo al salir de pantalla */
+  #shield{position:fixed;inset:0;background:rgba(19,71,107,.97);color:#fff;display:none;place-items:center;text-align:center;padding:30px;z-index:9999}
+  #shield .box{max-width:360px}
+  #shield h3{font-family:Georgia,serif;font-size:22px;margin:0 0 10px}
+  #shield p{font-size:14px;opacity:.9;margin:0}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body oncontextmenu="return false">
+<div class="wrap">
+  <div class="frame">
+    <div class="head">
+      <div class="eyebrow">Quiz de laboratorio</div>
+      <h1 class="title">Electrónica · IFA00112</h1>
+      <p class="sub" id="headSub">Instrumentos de laboratorio · Práctica de laboratorio No 1</p>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="timer" id="timerWrap" style="display:none"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="body" id="body"></div>
+    <div class="foot">Evaluación con fines académicos · Sus datos se tratan conforme a la Ley 1581 de 2012.</div>
+  </div>
+</div>
+
+<!-- Escudo de bloqueo -->
+<div id="shield"><div class="box"><h3>Sesión bloqueada</h3><p>Saliste de la pantalla del quiz. Por seguridad, tu intento se cerró automáticamente.</p></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+<script>
+"use strict";
+/* Nodo raíz: la subrama "quizzes/" está cerrada a escritura anónima en las reglas
+   de la Realtime Database, por lo que los intentos se guardan en un nodo de primer nivel. */
+const NODO = "quiz_lab_electro";
+/* Candado de intento único. Las reglas de la base solo permiten CREAR una clave, nunca
+   sobrescribirla, así que un error de permiso al escribirla significa "esta cédula ya presentó".
+   Es lo que permite controlar el intento sin necesidad de permiso de lectura. */
+const NODO_LOCK = "quiz_lab_electro_intentos";
+const TIMEOUT_MS = 10000;
+const UNIDAD = "IFA00112 · Electrónica";
+
+/* Nº de preguntas que se sortean del banco y segundos por pregunta (por defecto) */
+const N_PREGUNTAS = 2;
+const T_DEFECTO   = 60;
+
+const PROGRAMAS = ["Ingeniería Mecatrónica","Ingeniería Electrónica","Ingeniería de Software","Ingeniería Industrial"];
+
+/* ===== Apartados (4 quices; solo el 1 habilitado) ===== */
+const QUICES = [
+  {id:"quiz1v2", nombre:"Quiz 1 · Instrumentos y Práctica No 1 (versión 2)", meta:"Multímetro, fuente, generador, osciloscopio y protoboard", activo:true},
+  {id:"quiz2v2", nombre:"Quiz 2 · Práctica de laboratorio No 2 (versión 2)", meta:"Se habilitará al cierre de la práctica No 2",             activo:false},
+  {id:"quiz3v2", nombre:"Quiz 3 · Práctica de laboratorio No 3 (versión 2)", meta:"Se habilitará al cierre de la práctica No 3",             activo:false},
+  {id:"quiz4v2", nombre:"Quiz 4 · Práctica de laboratorio No 4 (versión 2)", meta:"Se habilitará al cierre de la práctica No 4",             activo:false}
+];
+
+const BLOQUES = {
+  "1":"Multímetro: conexión, modos y diagnóstico",
+  "2":"Fuente DC y generador de funciones",
+  "3":"Osciloscopio y acoplamiento",
+  "4":"Protoboard, montaje y buenas prácticas",
+  "5":"Práctica No 1: estaciones y cálculos"
+};
+
+/* ===== BANCO DE PREGUNTAS ===== opts + correcta (índice 0-based) · t = segundos ===== */
+const BANCO = {
+quiz1v2:[
+/* Bloque 1 · Multímetro */
+{id:"q01",bloque:"1",tema:"Ubicación de las puntas",q:"¿En qué bornes del multímetro se insertan las puntas para medir voltaje y resistencia?",opts:["La negra en V/Ω y la roja en COM.","La negra en COM y la roja en V/Ω.","Las dos en las entradas de A y mA.","La negra en COM y la roja en la entrada de mA."],correcta:1},
+{id:"q02",bloque:"1",tema:"Cambio de punta para corriente",q:"Al pasar de medir voltaje a medir corriente, además de girar el selector es necesario:",opts:["Invertir las dos puntas entre sí.","Dejar las puntas exactamente donde estaban.","Mover la punta roja a la entrada de A o mA.","Mover la punta negra a la entrada de A o mA."],correcta:2},
+{id:"q03",bloque:"1",tema:"Elección de la escala",q:"Cuando no se conoce el orden de magnitud de la medida, la guía recomienda:",opts:["Empezar en la escala mayor e ir bajando.","Empezar en la escala menor e ir subiendo.","Usar siempre la escala automática del generador.","Estimar el valor y fijar la escala exacta desde el inicio."],correcta:0},
+{id:"q04",bloque:"1",tema:"Error con las puntas de corriente",q:"Medir voltaje dejando las puntas en la entrada de corriente:",opts:["Solo produce una lectura de cero, sin más consecuencias.","Crea un corto y puede quemar el fusible del multímetro.","Obliga al multímetro a cambiar de escala automáticamente.","Es la forma correcta de medir voltajes altos."],correcta:1},
+{id:"q05",bloque:"1",tema:"Selector V y V~",q:"En el selector del multímetro, la diferencia entre V y V~ es que:",opts:["V mide valores eficaces y V~ valores pico.","V mide sobre resistencias y V~ sobre condensadores.","V se usa sin energizar y V~ con el circuito energizado.","V mide tensión continua y V~ tensión alterna."],correcta:3},
+{id:"q06",bloque:"1",tema:"Uso de la continuidad",q:"El modo de continuidad resulta útil para verificar:",opts:["La caída directa de un LED.","La frecuencia de la señal del generador.","Cables, pistas, soldaduras y fusibles.","El límite de corriente programado en la fuente."],correcta:2},
+{id:"q07",bloque:"1",tema:"Prueba de diodos · polarización inversa",q:"En la prueba de diodos, con la punta roja en el cátodo y la negra en el ánodo, un diodo en buen estado marca:",opts:["OL, porque queda polarizado en inverso y no conduce.","Entre 0,5 y 0,7 V, igual que en directo.","0 V con pitido continuo.","Un valor negativo igual a la caída directa."],correcta:0},
+{id:"q08",bloque:"1",tema:"Caída directa del LED",q:"En la función de prueba de diodo, la caída directa que se espera de un LED es del orden de:",opts:["0 V","0,5 – 0,7 V","1,8 – 2,2 V","5 V"],correcta:2},
+{id:"q09",bloque:"1",tema:"Medida de corriente sin lectura",q:"Si al intentar medir la corriente de la malla el multímetro no marca nada, lo primero es:",opts:["Aumentar el voltaje de la fuente hasta obtener lectura.","Revisar el fusible y que las puntas estén en la entrada de A/mA.","Cambiar el selector a la función de continuidad.","Medir con el osciloscopio en acople AC."],correcta:1},
+{id:"q10",bloque:"1",tema:"Resistencia medida dentro del circuito",q:"Medir una resistencia sin retirarla del circuito puede dar una lectura menor a la real porque:",opts:["El óhmetro pierde precisión con el circuito montado.","La tolerancia del ±5 % se duplica al montarla.","Otras ramas del circuito quedan en paralelo con la resistencia.","La resistencia se calienta al estar montada."],correcta:2},
+/* Bloque 2 · Fuente DC y generador de funciones */
+{id:"q11",bloque:"2",tema:"Conexión de la fuente",q:"Al conectar la fuente DC al montaje, la guía indica:",opts:["Conectar + y − y verificar la referencia (GND).","Conectar únicamente el borne + y tomar tierra del osciloscopio.","Conectar los dos bornes al mismo bus de la protoboard.","Conectar primero la carga y luego fijar el voltaje."],correcta:0},
+{id:"q12",bloque:"2",tema:"Recableado del montaje",q:"Antes de modificar el cableado de un montaje ya conectado a la fuente se debe:",opts:["Bajar el límite de corriente a cero y dejar la salida activa.","Apagar la salida de la fuente.","Pasar el osciloscopio a acople AC.","Cambiar la punta roja a la entrada de mA."],correcta:1},
+{id:"q13",bloque:"2",tema:"Buenas prácticas con la fuente",q:"¿Cuál de las siguientes prácticas prohíbe expresamente la guía?",opts:["Fijar el voltaje con la salida desconectada.","Programar el límite de corriente antes de conectar.","Cortocircuitar la salida activa de la fuente.","Verificar la referencia de tierra del montaje."],correcta:2},
+{id:"q14",bloque:"2",tema:"Modo CC",q:"Cuando la fuente entra en modo CC:",opts:["Mantiene el voltaje fijado y deja crecer la corriente.","La corriente llega al límite y la fuente baja el voltaje.","Desconecta la salida hasta que se reinicie el equipo.","Duplica el límite de corriente programado."],correcta:1},
+{id:"q15",bloque:"2",tema:"Conexión del generador",q:"El cable coaxial o las puntas con que se conecta el generador llevan:",opts:["Señal y tierra común.","Dos señales independientes.","Alimentación continua y señal.","Señal de disparo del trigger y masa."],correcta:0},
+{id:"q16",bloque:"2",tema:"Offset DC",q:"El ajuste de offset DC del generador de funciones:",opts:["Cambia la frecuencia de la señal sin alterar su forma.","Recorta los picos de la señal para protegerla.","Desplaza la señal sobre un nivel de tensión continua.","Ajusta la impedancia de salida del generador."],correcta:2},
+{id:"q17",bloque:"2",tema:"Ciclo de trabajo",q:"El ciclo de trabajo (duty) que se ajusta en el generador indica:",opts:["La proporción del periodo en que la señal permanece en nivel alto.","El número de periodos que caben en la pantalla del osciloscopio.","La relación entre amplitud y offset.","La atenuación aplicada por la sonda del osciloscopio."],correcta:0},
+/* Bloque 3 · Osciloscopio y acoplamiento */
+{id:"q18",bloque:"3",tema:"Cálculo de frecuencia",t:90,q:"Si en la pantalla se mide un periodo T = 1 ms, la frecuencia de la señal es:",opts:["1 Hz","100 Hz","1 kHz","10 kHz"],correcta:2},
+{id:"q19",bloque:"3",tema:"Cálculo de Vp",t:90,q:"Una señal senoidal de 2 Vpp tiene una tensión de pico de:",opts:["0,5 V","1 V","2 V","4 V"],correcta:1},
+{id:"q20",bloque:"3",tema:"Medida de desfase",q:"Para medir el desfase entre la entrada y la salida de un circuito se requiere:",opts:["Un solo canal y el modo de continuidad del multímetro.","Los dos canales del osciloscopio con masa común.","El generador ajustado en onda cuadrada.","La sonda ×10 en ambos extremos y acople DC."],correcta:1},
+{id:"q21",bloque:"3",tema:"Función del trigger",q:"El ajuste del trigger sirve para:",opts:["Cambiar la amplitud de la señal mostrada.","Bloquear la componente continua de la señal.","Estabilizar la onda en pantalla y evitar que se desplace.","Seleccionar la forma de onda del generador."],correcta:2},
+{id:"q22",bloque:"3",tema:"Volts/div y time/div",q:"Los mandos volts/div y time/div controlan, respectivamente:",opts:["La escala vertical y la escala horizontal de la pantalla.","La amplitud y la frecuencia entregadas por el generador.","El acoplamiento del canal y el nivel de disparo.","La atenuación de la sonda y el offset del generador."],correcta:0},
+{id:"q23",bloque:"3",tema:"Uso de la sonda ×10",q:"La sonda en posición ×10 se emplea para:",opts:["Amplificar señales muy pequeñas antes de medirlas.","Medir señales grandes, atenuándolas antes de entrar al canal.","Sustituir la masa común entre generador y osciloscopio.","Convertir el canal a acoplamiento AC."],correcta:1},
+{id:"q24",bloque:"3",tema:"Encuadre de la señal",q:"Una señal bien encuadrada en la pantalla se reconoce porque:",opts:["Se ven dos o tres periodos completos, ni comprimidos ni fuera de pantalla.","Ocupa un único periodo que llena toda la retícula horizontal.","Aparece como una línea recta estable.","Se ven al menos veinte periodos para promediar mejor."],correcta:0},
+{id:"q25",bloque:"3",tema:"Elección del acoplamiento",q:"Para observar un rizado pequeño montado sobre un nivel continuo conviene usar:",opts:["Acople DC, para conservar el nivel continuo en pantalla.","Acople AC, para eliminar el nivel continuo y poder ampliar la variación.","La sonda ×10 con acople DC.","El multímetro en la escala de voltaje continuo."],correcta:1},
+{id:"q26",bloque:"3",tema:"Estación 4 · señal comprimida",q:"En la estación 4, con acople DC la onda de 200 mVpp se ve diminuta porque:",opts:["El generador reduce la amplitud cuando se aplica offset.","El acople DC atenúa las señales pequeñas.","La escala vertical debe abarcar los 5 V de offset y la onda queda comprimida.","El trigger no logra disparar con señales de esa amplitud."],correcta:2},
+/* Bloque 4 · Protoboard, montaje y buenas prácticas */
+{id:"q27",bloque:"4",tema:"Columnas de la protoboard",q:"En la zona central de la protoboard, cada columna:",opts:["Une sus cinco agujeros entre sí.","Une los veinte agujeros de la fila.","Está aislada agujero por agujero.","Solo conduce si se energiza el bus + de la placa."],correcta:0},
+{id:"q28",bloque:"4",tema:"Buses de alimentación",q:"Los buses laterales marcados con + y − de la protoboard sirven para:",opts:["Sujetar mecánicamente los componentes grandes.","Distribuir la alimentación y la masa a lo largo de la placa.","Conectar exclusivamente las sondas del osciloscopio.","Aislar la zona central de la zona de montaje."],correcta:1},
+{id:"q29",bloque:"4",tema:"Ventaja del prototipado",q:"La protoboard permite armar y modificar circuitos rápidamente porque:",opts:["Sus contactos son de tipo tornillo y admiten cualquier calibre.","Incorpora una fuente de alimentación propia.","Es una placa de prototipado sin soldadura.","Sus pistas se imprimen a medida para cada circuito."],correcta:2},
+{id:"q30",bloque:"4",tema:"Nodo del montaje",q:"En el montaje de la estación 1, la columna 8 de la protoboard es:",opts:["El punto donde se conecta la tierra del osciloscopio.","El bus de alimentación de 10 V.","El nodo entre R1 y R2, donde se abre la malla para intercalar el amperímetro.","El extremo libre de R2 que va al bus negativo."],correcta:2},
+{id:"q31",bloque:"4",tema:"Verificación de polaridades",q:"Dentro de la lista de comprobaciones previas a energizar, la guía incluye:",opts:["Verificar la polaridad de LED, diodos y condensadores.","Ajustar el desfase entre los dos canales del osciloscopio.","Medir la corriente con las puntas en paralelo con la fuente.","Fijar el trigger en el flanco de bajada."],correcta:0},
+{id:"q32",bloque:"4",tema:"Regla de oro",q:"La regla de oro del laboratorio se resume en:",opts:["Voltaje en serie, corriente en paralelo y resistencia con el circuito energizado.","Voltaje en paralelo, corriente en serie, y resistencia y continuidad sin energizar.","Medir siempre primero en la escala menor y con acople AC.","Usar la sonda ×1 para todas las medidas y masa independiente por instrumento."],correcta:1},
+/* Bloque 5 · Práctica No 1 · estaciones y cálculos */
+{id:"q33",bloque:"5",tema:"Estación 1 · corriente en serie",t:90,q:"En la estación 1, la corriente que circula por R2 comparada con la de R1 es:",opts:["La mitad, porque R2 tiene mayor valor.","El doble, porque R2 tiene mayor valor.","La misma, porque están en serie en una sola malla.","Depende de la escala usada en el multímetro."],correcta:2},
+{id:"q34",bloque:"5",tema:"Estación 1 · error porcentual",t:90,q:"Si el valor teórico de la corriente es 3,13 mA y se mide 3,00 mA, el error porcentual es aproximadamente:",opts:["0,13 %","4,2 %","13 %","31 %"],correcta:1},
+{id:"q35",bloque:"5",tema:"Estación 1 · medida de resistencias",q:"En la estación 1, R1 y R2 se miden con el óhmetro:",opts:["Sueltas, antes de montarlas en la protoboard.","Montadas y con la fuente encendida.","Montadas y con la fuente apagada, sin retirarlas.","Solo al final, para calcular el error."],correcta:0},
+{id:"q36",bloque:"5",tema:"Estación 2 · corriente con LED azul",t:90,q:"Estación 2: fuente de 5 V, R = 330 Ω y un LED azul de 3,0 V de caída directa. La corriente resultante es aproximadamente:",opts:["3 mA","6 mA","9 mA","15 mA"],correcta:1},
+{id:"q37",bloque:"5",tema:"Estación 2 · punto de medida",q:"En el montaje de la estación 2, la unión entre R y el LED corresponde a:",opts:["El cátodo del LED y el retorno a GND.","El ánodo del LED y el punto de medida intermedio.","El bus positivo de 5 V de la protoboard.","La masa común con el generador de funciones."],correcta:1},
+{id:"q38",bloque:"5",tema:"Estación 3 · magnitudes",q:"En la estación 3 se mide sobre la señal del generador:",opts:["Resistencia, continuidad y caída directa.","Corriente de malla y voltaje sobre cada resistencia.","Vp, Vpp, periodo y frecuencia.","Amplitud de entrada y de salida de un filtro RC."],correcta:2},
+{id:"q39",bloque:"5",tema:"Estación 4 · señal de trabajo",q:"La señal empleada en la estación 4 es:",opts:["Una senoidal de 200 mVpp con offset DC de 5 V, generada por el propio generador.","Una onda cuadrada de 5 Vpp sin offset.","La salida DC de la fuente regulada a 5 V.","Una senoidal de 2 Vpp a 1 kHz sin offset."],correcta:0},
+{id:"q40",bloque:"5",tema:"Estación 5 · ubicación de las sondas",q:"En la estación 5, las sondas se ubican así:",opts:["CH1 en el nodo intermedio y CH2 en la salida del generador.","CH1 en la salida del generador y CH2 en el nodo intermedio.","Los dos canales en el nodo intermedio, uno en ×1 y otro en ×10.","CH1 en el bus de masa y CH2 en el extremo libre del condensador."],correcta:1},
+{id:"q41",bloque:"5",tema:"Estación 5 · fuera de la banda de corte",t:90,q:"En el filtro RC de la estación 5, a 160 Hz se espera una relación de amplitudes y un desfase de:",opts:["0,99 y unos −6°","0,707 y unos −45°","0,10 y unos −84°","0,50 y unos −30°"],correcta:0},
+{id:"q42",bloque:"5",tema:"Estación 5 · amplitud en la frecuencia de corte",t:90,q:"Si la entrada del filtro es de 2 Vpp, la salida esperada en la frecuencia de corte es aproximadamente:",opts:["2,0 Vpp","1,41 Vpp","1,00 Vpp","0,20 Vpp"],correcta:1},
+{id:"q43",bloque:"5",tema:"Lista de materiales · condensador",q:"El condensador cerámico de la práctica está marcado con el código 103, que corresponde a:",opts:["100 pF","1 nF","10 nF","100 nF"],correcta:2},
+{id:"q44",bloque:"5",tema:"Tolerancia de las resistencias",q:"Que el valor medido de una resistencia no coincida exactamente con el nominal se explica principalmente por:",opts:["La tolerancia de fabricación del ±5 %.","Un error de conexión del óhmetro.","El calentamiento provocado por el generador.","La escala de volts/div del osciloscopio."],correcta:0}
+]
+};
+/* ===== Elementos ===== */
+const body=document.getElementById('body'), bar=document.getElementById('bar'), headSub=document.getElementById('headSub');
+const timerWrap=document.getElementById('timerWrap'), timerFill=document.getElementById('timerFill'), shield=document.getElementById('shield');
+function setBar(p){ bar.style.width=Math.max(0,Math.min(100,p))+"%"; }
+function esc(s){ return (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function barajar(a){ const x=a.slice(); for(let i=x.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=x[i]; x[i]=x[j]; x[j]=t; } return x; }
+/* Firebase deja las escrituras pendientes indefinidamente cuando no hay red: sin este
+   límite el estudiante se quedaría con el botón en "Verificando…" para siempre. */
+function conTimeout(promesa, ms){
+  return Promise.race([promesa, new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), ms))]);
+}
+
+/* ===== Estado ===== */
+let st = { datos:null, quiz:null, quizNombre:null, items:[], idx:0, resp:{}, inicio:0, examActivo:false, cerrado:false, tick:null,
+           payload:null, guardado:false };
+
+/* ============ 1) CONSENTIMIENTO ============ */
+function vConsent(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(0);
+  headSub.textContent="Autorización de tratamiento de datos personales";
+  body.innerHTML=`
+    <div class="step-label"><span>Antes de empezar · Autorización de datos</span></div>
+    <p class="intro-p">Este quiz evalúa los contenidos de la práctica de laboratorio de <b>${esc(UNIDAD)}</b>. Para registrar tu calificación necesitamos tus datos personales.</p>
+    <div class="consent">
+      <p style="margin:0 0 10px"><b>Autorización para el tratamiento de datos personales</b></p>
+      <p style="margin:0 0 10px">De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo, número de identificación, correo electrónico y programa académico</b>.</p>
+      <p style="margin:0 0 10px"><b>Finalidad:</b> registrar y calificar su quiz de laboratorio, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
+      <p style="margin:0 0 10px"><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
+      <p style="margin:0"><b>Carácter voluntario:</b> otorgar esta autorización es libre y voluntario. Al marcar la casilla y continuar, usted declara que ha leído esta autorización y otorga su consentimiento libre, previo, expreso e informado.</p>
+    </div>
+    <label class="check-row"><input type="checkbox" id="chkConsent">
+      <span>He leído y <b>autorizo</b> el tratamiento de mis datos personales conforme a la Ley 1581 de 2012.</span></label>
+    <div class="nav"><button class="btn btn-primary" id="cont" disabled>Acepto y continúo</button></div>`;
+  const chk=document.getElementById('chkConsent'), cont=document.getElementById('cont');
+  chk.onchange=()=>{ cont.disabled=!chk.checked; };
+  cont.onclick=()=>{ if(chk.checked) vDatos(); };
+}
+
+/* ============ 2) DATOS PERSONALES ============ */
+function vDatos(){
+  setBar(6); headSub.textContent="Datos del estudiante";
+  const d=st.datos||{};
+  const progOpts=PROGRAMAS.map(p=>`<option value="${esc(p)}" ${d.programa===p?"selected":""}>${esc(p)}</option>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Tus datos</span></div>
+    <div class="field-wrap">
+      <label class="field" for="f-nombre">Nombre completo</label>
+      <input class="txt" id="f-nombre" type="text" autocomplete="name" placeholder="Nombres y apellidos" value="${esc(d.nombre||"")}">
+      <div class="err" id="e-nombre"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-id">Número de identificación</label>
+      <input class="txt" id="f-id" type="text" inputmode="numeric" autocomplete="off" placeholder="Documento" value="${esc(d.identificacion||"")}">
+      <div class="hint">Se usa para registrar tu intento. Solo se permite un intento por documento en cada quiz.</div>
+      <div class="err" id="e-id"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-correo">Correo electrónico</label>
+      <input class="txt" id="f-correo" type="email" autocomplete="email" placeholder="correo@ejemplo.com" value="${esc(d.correo||"")}">
+      <div class="err" id="e-correo"></div>
+    </div>
+    <div class="field-wrap">
+      <label class="field" for="f-prog">Programa académico</label>
+      <select class="txt" id="f-prog"><option value="" disabled ${d.programa?"":"selected"}>Selecciona tu programa…</option>${progOpts}</select>
+      <div class="err" id="e-prog"></div>
+    </div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="ir">Continuar</button></div>`;
+  document.getElementById('ir').onclick=validarDatos;
+}
+function validarDatos(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  const identificacion=document.getElementById('f-id').value.trim();
+  const correo=document.getElementById('f-correo').value.trim();
+  const programa=document.getElementById('f-prog').value;
+  let ok=true;
+  const set=(id,msg)=>{ document.getElementById(id).textContent=msg; if(msg)ok=false; };
+  set('e-nombre', (nombre.length>=5 && nombre.includes(" ")) ? "" : "Escribe tus nombres y apellidos completos.");
+  set('e-id', /^[0-9]{6,15}$/.test(identificacion) ? "" : "Ingresa un documento válido (solo números, 6 a 15 dígitos).");
+  set('e-correo', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "" : "Ingresa un correo electrónico válido.");
+  set('e-prog', programa ? "" : "Selecciona tu programa académico.");
+  if(!ok) return;
+  st.datos={nombre,identificacion,correo,programa};
+  vQuiz();
+}
+
+/* ============ 3) SELECCIÓN DE QUIZ (4 apartados) ============ */
+function vQuiz(){
+  setBar(12); headSub.textContent=st.datos.nombre;
+  const cards=QUICES.map(qz=>`<button class="est" data-id="${qz.id}" ${qz.activo?"":"disabled"}>
+    <span class="est-name">${esc(qz.nombre)}</span><span class="est-meta">${esc(qz.meta)}</span>
+    <span class="est-tag ${qz.activo?"on":"off"}">${qz.activo?"Habilitado":"Próximamente"}</span></button>`).join("");
+  body.innerHTML=`
+    <div class="step-label"><span>Selecciona el quiz</span></div>
+    <p class="intro-p">La unidad contempla cuatro quices de laboratorio. En este momento <b>solo está habilitado el Quiz 1</b>; los demás se abrirán al cierre de cada práctica.</p>
+    <div class="est-grid">${cards}</div>`;
+  body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
+    if(b.disabled) return;
+    const qz=QUICES.find(x=>x.id===b.dataset.id);
+    st.quiz=qz.id; st.quizNombre=qz.nombre;
+    vInstrucciones();
+  });
+}
+
+/* ============ 4) INSTRUCCIONES ============ */
+function vInstrucciones(){
+  setBar(16); headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
+  const banco=BANCO[st.quiz]||[];
+  body.innerHTML=`
+    <div class="step-label"><span>Reglas del quiz</span></div>
+    <ul class="rules">
+      <li><span class="ic">🎲</span><span><b>${N_PREGUNTAS} preguntas al azar</b> tomadas de un banco de ${banco.length}. Cada estudiante recibe una combinación distinta y las opciones se reordenan.</span></li>
+      <li><span class="ic">⏱</span><span><b>Tiempo por pregunta.</b> Cada pregunta tiene su propio contador. Cuando se agota, el quiz avanza solo a la siguiente y la pregunta queda sin responder.</span></li>
+      <li><span class="ic">→</span><span><b>Sin retroceder.</b> No podrás volver ni cambiar una respuesta ya enviada. Responde con seguridad.</span></li>
+      <li><span class="ic">🔒</span><span><b>No salgas de la pantalla.</b> Si cambias de pestaña, minimizas o abres otra app, el quiz <b>se cierra automáticamente</b> y quedará como abandonado.</span></li>
+      <li><span class="ic">1</span><span><b>Un solo intento</b> por número de identificación.</span></li>
+    </ul>
+    <div class="warn-box">Consejo: cierra otras aplicaciones y notificaciones antes de empezar. Una vez inicies, el contador corre para cada pregunta y no se puede pausar.</div>
+    <div class="nav"><button class="btn btn-primary btn-block" id="start">Verificar y comenzar</button></div>`;
+  document.getElementById('start').onclick=iniciarExamen;
+}
+
+async function iniciarExamen(){
+  const b=document.getElementById('start'); b.disabled=true; b.textContent="Verificando…";
+  // Un intento por identificación (dentro del mismo quiz): se intenta crear el candado.
+  // Si las reglas rechazan la escritura, la clave ya existía → la cédula ya presentó este quiz.
+  try{
+    await conTimeout(
+      firebase.database().ref(NODO_LOCK+"/"+st.quiz+"_"+st.datos.identificacion).set(new Date().toISOString()),
+      TIMEOUT_MS);
+  }catch(e){
+    const cod=((e&&(e.code||e.message))||"").toString().toUpperCase();
+    if(cod.indexOf("PERMISSION")>=0){ vYaRegistrado(); return; }
+    // Sin conexión o servidor lento: no se puede verificar, se permite continuar.
+    console.warn("No se pudo verificar el intento:",e);
+  }
+
+  // Sortear preguntas y barajar opciones
+  const banco=BANCO[st.quiz]||[];
+  st.items = barajar(banco).slice(0,N_PREGUNTAS).map(it=>{
+    const pares = it.opts.map((txt,i)=>({txt, ok:i===it.correcta}));
+    const mez = barajar(pares);
+    return {...it, t: it.t||T_DEFECTO, opts: mez.map(p=>p.txt), correcta: mez.findIndex(p=>p.ok)};
+  });
+  st.idx=0; st.resp={}; st.inicio=Date.now(); st.examActivo=true; st.cerrado=false;
+  // Pantalla completa (best-effort) para reducir distracciones
+  try{ if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); }catch(e){}
+  vPregunta();
+}
+
+function vYaRegistrado(){
+  st.examActivo=false; timerWrap.style.display="none"; setBar(100);
+  headSub.textContent="Intento no disponible";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Ya tienes un intento registrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">El documento <b>${esc(st.datos.identificacion)}</b> ya presentó <b>${esc(st.quizNombre)}</b>. Solo se permite un intento por identificación. Si crees que es un error, avisa a tu docente.</p></div>`;
+}
+
+/* ============ 5) PREGUNTAS ============ */
+function detenerTick(){ if(st.tick){ clearInterval(st.tick); st.tick=null; } }
+
+function vPregunta(){
+  if(!st.examActivo) return;
+  detenerTick();
+  const total=st.items.length, it=st.items[st.idx];
+  setBar(18 + (st.idx/total)*80);
+  headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
+  timerWrap.style.display="block";
+
+  const opts = it.opts.map((o,oi)=>`<div class="opt" data-o="${oi}">
+      <span class="dot"></span><span class="opt-num">${String.fromCharCode(65+oi)}.</span><span class="opt-txt">${esc(o)}</span></div>`).join("");
+
+  body.innerHTML=`
+    <div class="step-label"><span>Pregunta ${st.idx+1} de ${total}</span>
+      <span class="time-chip" id="chip">${it.t}s</span></div>
+    <span class="badge-sec">Bloque ${it.bloque} · ${esc(BLOQUES[it.bloque]||"")}</span>
+    <p class="qtext">${esc(it.q)}</p>
+    <div class="opts">${opts}</div>
+    <div class="nav"><button class="btn btn-primary" id="next" disabled>${st.idx===total-1?"Finalizar":"Siguiente →"}</button></div>`;
+
+  const next=document.getElementById('next');
+  body.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+    const oi=+o.dataset.o;
+    st.resp[it.id+"_"+st.idx]=oi;
+    body.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    o.classList.add('sel'); next.disabled=false;
+  });
+  next.onclick=avanzar;
+
+  // Temporizador por pregunta
+  let queda=it.t;
+  const chip=document.getElementById('chip');
+  timerFill.classList.remove('warn'); timerFill.style.transition="none"; timerFill.style.width="100%";
+  requestAnimationFrame(()=>{ timerFill.style.transition="width 1s linear"; timerFill.style.width="0%"; });
+  st.tick=setInterval(()=>{
+    queda--;
+    if(chip){ chip.textContent=queda+"s"; if(queda<=5){ chip.classList.add('danger'); timerFill.classList.add('warn'); } }
+    if(queda<=0){ detenerTick(); avanzar(true); }
+  },1000);
+}
+
+function avanzar(porTiempo){
+  if(!st.examActivo) return;
+  detenerTick();
+  const it=st.items[st.idx];
+  if(porTiempo && !(it.id+"_"+st.idx in st.resp)){ st.resp[it.id+"_"+st.idx]=null; } // sin responder
+  if(st.idx < st.items.length-1){ st.idx++; vPregunta(); }
+  else finalizar(false);
+}
+
+/* ============ 6) RESULTADO / ENVÍO ============ */
+function construirPayload(abandonado){
+  const blqAcc={}; const respuestas=[]; let correctas=0, respondidas=0;
+  st.items.forEach((it,i)=>{
+    const sel = (it.id+"_"+i in st.resp) ? st.resp[it.id+"_"+i] : null;
+    const ok = sel!==null && sel===it.correcta;
+    if(sel!==null) respondidas++;
+    if(ok) correctas++;
+    const b=blqAcc[it.bloque]||(blqAcc[it.bloque]={c:0,t:0}); b.t++; if(ok) b.c++;
+    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:BLOQUES[it.bloque]||it.bloque, tema:it.tema,
+      etiqueta:it.q, sel:sel, selTexto:(sel===null?null:it.opts[sel]),
+      correcta:ok, agotado:(sel===null)});
+  });
+  Object.keys(blqAcc).forEach(k=>{ blqAcc[k].pct = blqAcc[k].t? Math.round(100*blqAcc[k].c/blqAcc[k].t):0; });
+  const total=st.items.length;
+  const pct = total? Math.round(100*correctas/total) : 0;
+  return {
+    nombre:st.datos.nombre, identificacion:st.datos.identificacion, correo:st.datos.correo, programa:st.datos.programa,
+    quiz:st.quiz, quizNombre:st.quizNombre, unidad:UNIDAD,
+    enviadoEn:new Date().toISOString(),
+    abandonado:!!abandonado,
+    duracionSeg: st.inicio? Math.round((Date.now()-st.inicio)/1000):0,
+    correctas, respondidas, total, pct, nota:pct, aprobado: pct>=60,
+    bloques:blqAcc,
+    respuestas
+  };
+}
+
+async function finalizar(abandonado){
+  if(st.cerrado) return; st.cerrado=true; st.examActivo=false;
+  detenerTick(); timerWrap.style.display="none";
+  try{ if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+  st.payload=construirPayload(abandonado);
+  setBar(99);
+  if(!abandonado){ body.innerHTML=`<div class="done" style="padding-top:40px"><p class="intro-p" style="margin:0">Enviando tus respuestas…</p></div>`; }
+  await enviar();
+}
+
+/* El envío nunca se da por bueno sin confirmación del servidor: si la escritura
+   falla (reglas, red, cuota) el estudiante ve la pantalla de error y puede reintentar. */
+async function enviar(){
+  const p=st.payload; if(!p) return;
+  try{
+    await firebase.database().ref(NODO).push(p);
+    st.guardado=true;
+  }catch(e){
+    console.error("Error al enviar:",e);
+    st.guardado=false;
+  }
+  if(!st.guardado){ vErrorEnvio(); return; }
+  if(p.abandonado) vBloqueado(); else vGracias(p);
+}
+
+function vErrorEnvio(){
+  setBar(100); headSub.textContent="No se pudo guardar el intento";
+  body.innerHTML=`<div class="lock"><div class="ic">⚠️</div>
+    <h2>No pudimos guardar tu intento</h2>
+    <p class="intro-p" style="margin:0 auto 18px;max-width:440px">Terminaste el quiz, pero tus respuestas <b>no llegaron al servidor</b>. Revisa tu conexión y pulsa reintentar. <b>No cierres esta ventana</b> hasta que veas la confirmación; si el problema continúa, avisa a tu docente.</p>
+    <div class="nav" style="justify-content:center;margin-top:0"><button class="btn btn-primary" id="retry">Reintentar envío</button></div></div>`;
+  document.getElementById('retry').onclick=async ()=>{
+    const b=document.getElementById('retry'); b.disabled=true; b.textContent="Enviando…";
+    await enviar();
+  };
+}
+
+function vGracias(p){
+  setBar(100); headSub.textContent="Quiz completado";
+  const cls = p.aprobado ? "ok" : "no";
+  body.innerHTML=`
+    <div class="done">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>¡Gracias, ${esc(p.nombre.split(" ")[0])}!</h2>
+      <p class="intro-p" style="margin:0 auto 6px;max-width:440px">Tu intento de <b>${esc(p.quizNombre)}</b> quedó registrado. Tu calificación es:</p>
+      <div class="nota-badge ${cls}">${p.pct}</div>
+      <p class="intro-p" style="margin:2px 0 0"><b>${p.aprobado?"Aprobado":"No aprobado"}</b> · ${p.correctas} de ${p.total} respuestas correctas</p>
+      <div class="sec-mini">
+        <div class="sec-card"><div class="n">${p.respondidas}/${p.total}</div><div class="l">Respondidas</div></div>
+        <div class="sec-card"><div class="n">${Math.floor(p.duracionSeg/60)}:${String(p.duracionSeg%60).padStart(2,"0")}</div><div class="l">Tiempo empleado</div></div>
+      </div>
+      <p class="intro-p" style="margin:16px auto 0;max-width:440px;font-size:13px">Tu docente recibirá el detalle de tus respuestas. Ya puedes cerrar esta ventana.</p>
+    </div>`;
+}
+
+function vBloqueado(){
+  setBar(100); headSub.textContent="Intento cerrado";
+  shield.style.display="grid";
+  body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
+    <h2>Quiz cerrado</h2>
+    <p class="intro-p" style="margin:0 auto;max-width:420px">Saliste de la pantalla durante el quiz, por lo que tu intento se cerró automáticamente y quedó registrado como <b>abandonado</b>. Si fue un error, comunícate con tu docente.</p></div>`;
+}
+
+/* ============ ANTI-TRAMPA: cierre al salir de pantalla ============ */
+function cerrarPorAbandono(){
+  if(!st.examActivo || st.cerrado) return;
+  finalizar(true);
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) cerrarPorAbandono(); });
+window.addEventListener('blur', cerrarPorAbandono);
+window.addEventListener('pagehide', cerrarPorAbandono);
+['copy','cut','selectstart','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{ if(st.examActivo) e.preventDefault(); }));
+// Aviso al recargar/cerrar durante el examen o con un intento pendiente de guardar
+window.addEventListener('beforeunload', e=>{
+  if((st.examActivo && !st.cerrado) || (st.payload && !st.guardado)){ e.preventDefault(); e.returnValue=""; }
+});
+
+/* ===== Inicio ===== */
+vConsent();
+</script>
+</body>
+</html>

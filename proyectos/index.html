@@ -184,6 +184,52 @@
         </article>`;
     }
 
+    // ELECTRÓNICA — laboratorio de circuitos (grafito + cian, bandas de resistencia)
+    function renderElectro(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      const stats = (p.stats || [])
+        .map(s => `<div class="fe-stat"><div class="fe-n">${s.n}</div><div class="fe-l">${s.l}</div></div>`)
+        .join('');
+      return `
+        <article class="feat-electro">
+          <div class="fe-head">
+            <span class="fe-kicker">
+              <span class="fe-bands" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              Simulador · Universidad EAN
+            </span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          ${stats ? `<div class="fe-stats">${stats}</div>` : ''}
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-electro">Abrir laboratorio <span class="arrow">→</span></a>
+        </article>`;
+    }
+
+    // DIAGNÓSTICO Y CONTROL — violeta, con el lazo cerrado como firma
+    function renderControl(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      const stats = (p.stats || [])
+        .map(s => `<div class="fc-stat"><div class="fc-n">${s.n}</div><div class="fc-l">${s.l}</div></div>`)
+        .join('');
+      return `
+        <article class="feat-control">
+          <div class="fc-head">
+            <span class="fc-kicker">
+              <span class="fc-lazo" aria-hidden="true"><b>SP</b><i></i><b>C</b><i></i><b>P</b><i></i><b>PV</b><u>⟲</u></span>
+              Instrumentación · Lazo cerrado
+            </span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          ${stats ? `<div class="fc-stats">${stats}</div>` : ''}
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-control">Abrir actividades <span class="arrow">→</span></a>
+        </article>`;
+    }
+
     function renderCard(p) {
       const linkHtml = p.link !== '#'
         ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
@@ -199,7 +245,7 @@
     }
 
     // Cada destacado elige su plantilla según 'variante'
-    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion };
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl };
 
     const destacados = proyectos.filter(p => p.destacado);
     const resto      = proyectos.filter(p => !p.destacado);

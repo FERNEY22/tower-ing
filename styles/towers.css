@@ -422,11 +422,67 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
 .feat-apreciacion .btn-apreciacion:hover .arrow { transform: translateX(4px); }
 .feat-apreciacion .fa-soon { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: var(--t-sm); color: #bfe8d1; border: 1px dashed rgba(255, 255, 255, .30); border-radius: var(--r-pill); padding: 11px 18px; }
 
+/* ELECTRÓNICA — laboratorio de circuitos (papel, filete cian) */
+.feat-electro {
+  border: 1px solid var(--line-2); border-top: 3px solid #0E7490;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+}
+.feat-electro .fe-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-electro .fe-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: #0E7490; }
+/* Bandas de una resistencia de 1 kΩ ±5 %: marrón · negro · rojo · oro */
+.feat-electro .fe-bands { display: inline-flex; align-items: center; gap: 3px; padding: 3px 5px; border-radius: 3px; background: #D8C9A3; }
+.feat-electro .fe-bands i { width: 3px; height: 13px; border-radius: 1px; }
+.feat-electro .fe-bands i:nth-child(1) { background: #7B4A21; }
+.feat-electro .fe-bands i:nth-child(2) { background: #14181C; }
+.feat-electro .fe-bands i:nth-child(3) { background: #C62F2F; }
+.feat-electro .fe-bands i:nth-child(4) { background: #C9A227; }
+.feat-electro h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-electro .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-electro .fe-stats { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; margin: 4px 0 20px; }
+.feat-electro .fe-stat { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid var(--line); }
+.feat-electro .fe-stat:last-child { border-right: none; }
+.feat-electro .fe-n { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); line-height: 1; }
+.feat-electro .fe-l { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
+.feat-electro .btn-electro { display: inline-flex; align-items: center; gap: 9px; background: #0E7490; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-electro .btn-electro:hover { background: #1291b3; }
+.feat-electro .btn-electro:active { transform: translateY(1px); }
+.feat-electro .btn-electro .arrow { transition: transform .25s var(--ease); }
+.feat-electro .btn-electro:hover .arrow { transform: translateX(4px); }
+
+/* DIAGNÓSTICO Y CONTROL — papel, filete violeta, con el lazo cerrado como firma */
+.feat-control {
+  border: 1px solid var(--line-2); border-top: 3px solid #6D28D9;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+}
+.feat-control .fc-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-control .fc-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: #6D28D9; }
+/* El lazo: SP → C → P → PV, con la realimentación al final */
+.feat-control .fc-lazo { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border: 1px solid rgba(109, 40, 217, .28); border-radius: var(--r-pill); background: rgba(109, 40, 217, .06); }
+.feat-control .fc-lazo b { font-family: var(--font-mono); font-size: 9px; font-weight: 500; letter-spacing: .04em; color: #5B21B6; }
+.feat-control .fc-lazo i { width: 7px; height: 1px; background: rgba(109, 40, 217, .45); }
+.feat-control .fc-lazo u { text-decoration: none; margin-left: 3px; font-size: 10px; color: #6D28D9; }
+.feat-control h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-control .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-control .fc-stats { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; margin: 4px 0 20px; }
+.feat-control .fc-stat { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid var(--line); }
+.feat-control .fc-stat:last-child { border-right: none; }
+.feat-control .fc-n { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); line-height: 1; }
+.feat-control .fc-l { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
+.feat-control .btn-control { display: inline-flex; align-items: center; gap: 9px; background: #6D28D9; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-control .btn-control:hover { background: #8b4df0; }
+.feat-control .btn-control:active { transform: translateY(1px); }
+.feat-control .btn-control .arrow { transition: transform .25s var(--ease); }
+.feat-control .btn-control:hover .arrow { transform: translateX(4px); }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
   .feat-obs .fo-stat { min-width: 100px; }
   .feat-apreciacion .fa-stat { min-width: 100px; }
+  .feat-electro .fe-stat { min-width: 100px; }
+  .feat-control .fc-stat { min-width: 100px; }
 }
 
 /* Chips / tags / estados */

@@ -1,0 +1,38 @@
+{
+  "_comentario": [
+    "Reglas de la Realtime Database para el nodo 'electronica1'.",
+    "",
+    "IMPORTANTE: esto NO es el archivo completo de reglas del proyecto tower-ing.",
+    "Es SOLO el bloque de este juego. Hay que PEGARLO DENTRO de las reglas que ya",
+    "existen, junto a 'diagnostico_control' y las demas experiencias. Si se pega",
+    "reemplazando todo, se rompen todas las otras.",
+    "",
+    "Modelo de acceso:",
+    "  - El estudiante NO se autentica: se identifica con un hash de su cedula.",
+    "    Por eso escribe y lee solo bajo su propio hash, sin auth.",
+    "  - El listado completo (para el panel docente) solo lo lee el correo",
+    "    autorizado. Un estudiante no puede leer 'participantes' ni 'progreso'",
+    "    enteros, unicamente su propia rama.",
+    "",
+    "Antes de publicarlas: reemplazar CORREO_DEL_DOCENTE por el correo real y",
+    "darlo de alta en Firebase Auth (Authentication > Users > Add user)."
+  ],
+
+  "electronica1": {
+    ".read": "auth != null && auth.token.email === 'CORREO_DEL_DOCENTE'",
+    ".write": false,
+
+    "participantes": {
+      "$ccHash": { ".read": true, ".write": true }
+    },
+    "progreso": {
+      "$ccHash": { ".read": true, ".write": true }
+    },
+    "eventos": {
+      "$ccHash": { ".read": true, ".write": true }
+    },
+    "circuitos": {
+      "$ccHash": { ".read": true, ".write": true }
+    }
+  }
+}

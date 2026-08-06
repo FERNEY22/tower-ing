@@ -73,23 +73,40 @@ const proyectos = [
     externo: true
   },
   {
-    id: "apreciacion",
-    titulo: "Apreciación — Autoevaluación Institucional ETITC",
-    estado: "En desarrollo",
+    id: "electronica1",
+    titulo: "Laboratorio de Circuitos — Electrónica IFA00112",
+    estado: "Finalizado",
     fecha: "",
+    periodo: "2026 – Presente",
     descripcion:
-      "Aplicación web que replica y moderniza los tableros de autoevaluación institucional de la ETITC (2016–2025): KPIs por factor y estamento, distribución de respuestas y comparativo Programas vs. Institucional con su brecha. Un pipeline ETL en Python consolida los tableros de Excel en base de datos y los expone vía API.",
-    tecnologias: ["React", "Vite", "FastAPI", "Python", "pandas", "PostgreSQL", "Supabase", "Recharts"],
-    periodo: "2025 – Presente",
-    stats: [
-      { n: "2016–2025", l: "Series históricas" },
-      { n: "8", l: "Factores" },
-      { n: "ETL → API", l: "Arquitectura" }
-    ],
-    link: "apreciacion/publicado/index.html",
-    externo: false,
+      "Simulador de circuitos DC en el navegador con motor de análisis nodal modificado e iteración de Newton. Vistas esquemática y física sincronizadas, multímetro con resistencias internas reales y modelo de quemado. Cinco lecciones evaluadas con avería sembrada, práctica libre y panel docente con exportación CSV.",
+    tecnologias: ["React 19", "TypeScript", "Vite", "Zustand", "Firebase RTDB", "SVG interactivo", "Solver MNA + Newton"],
+    link: "../forms/electronica1/dist/",
     destacado: true,
-    variante: "apreciacion"
+    variante: "electro",
+    stats: [
+      { n: "5", l: "Lecciones evaluadas" },
+      { n: "620", l: "Pruebas en verde" },
+      { n: "MNA", l: "Motor propio" }
+    ]
+  },
+  {
+    id: "diagnostico-control",
+    titulo: "Diagnóstico y Control — IFA00117",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026 – Presente",
+    descripcion:
+      "Cuatro retos gamificados de instrumentación y control que se abren por etapas: cada uno exige aprobar el anterior y esperar el tiempo que fije el docente. Identificación de variables de proceso, señales 4–20 mA, armado del lazo de control y el modelo ISA-95. Progreso persistido en Firebase, con reloj de servidor contra el adelanto del reloj local y dashboard docente en vivo.",
+    tecnologias: ["JavaScript", "Firebase RTDB", "Reloj de servidor", "ISA-95", "Señales 4–20 mA", "Dashboard docente"],
+    link: "../forms/diagnostico-control/index.html",
+    destacado: true,
+    variante: "control",
+    stats: [
+      { n: "4", l: "Actividades" },
+      { n: "ISA-95", l: "Modelo de referencia" },
+      { n: "4–20", l: "mA · señal de campo" }
+    ]
   }
 
   // =====================================================

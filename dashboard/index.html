@@ -29,6 +29,8 @@
   <script src="render-ingles.js"></script>
   <script src="render-lab-automa.js"></script>
   <script src="render-lab-electro.js"></script>
+  <script src="render-lab-automa-v2.js"></script>
+  <script src="render-lab-electro-v2.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -257,6 +259,8 @@
     <option value="ingles">Diagnóstico de Inglés · Ingeniería</option>
     <option value="labAutoma">Quiz Laboratorio · Automatización de Procesos</option>
     <option value="labElectro">Quiz Laboratorio · Electrónica</option>
+    <option value="labAutomaV2">Quiz Laboratorio v2 · Automatización de Procesos</option>
+    <option value="labElectroV2">Quiz Laboratorio v2 · Electrónica</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -652,6 +656,10 @@
 
 <div class="vista" id="vista-labElectro"></div>
 
+<div class="vista" id="vista-labAutomaV2"></div>
+
+<div class="vista" id="vista-labElectroV2"></div>
+
 </main>
 
 <footer><p>&copy; 2025 Towers Ing. Todos los derechos reservados.</p></footer>
@@ -677,7 +685,7 @@
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
     flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: [], ingles: {},
-    labAutoma: {}, labElectro: {}
+    labAutoma: {}, labElectro: {}, labAutomaV2: {}, labElectroV2: {}
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -748,8 +756,25 @@
   db.ref('percepcion_observatorio').on('value', snap => { DATA.percepcion = snap.val()||{}; if(vistaActiva==='percepcion') renderPercepcion(); });
   db.ref('autoevaluacion_estamentos').on('value', s => { DATA.encuestas = s.val() ? Object.values(s.val()) : []; if (vistaActiva === 'encuestas') renderEncuestas();});
   db.ref('diagnostico_ingles').on('value', snap => { DATA.ingles = snap.val()||{}; if(vistaActiva==='ingles') renderIngles(); });
-  db.ref('quiz_lab_automa').on('value', snap => { DATA.labAutoma = snap.val()||{}; if(vistaActiva==='labAutoma') renderLabAutoma(); });
-  db.ref('quiz_lab_electro').on('value', snap => { DATA.labElectro = snap.val()||{}; if(vistaActiva==='labElectro') renderLabElectro(); });
+  // Los quices de laboratorio v1 y v2 comparten nodo: el formulario los distingue por el id del
+  // apartado (quiz1…quiz4 contra quiz1v2…quiz4v2). Un solo listener por nodo alimenta las dos
+  // vistas, cada una con su porción, para no suscribirse dos veces a los mismos datos.
+  const esV2 = r => typeof (r && r.quiz) === 'string' && /v2$/.test(r.quiz);
+  const porVersion = (raw, v2) => Object.fromEntries(Object.entries(raw).filter(([,r]) => esV2(r) === v2));
+  db.ref('quiz_lab_automa').on('value', snap => {
+    const raw = snap.val()||{};
+    DATA.labAutoma   = porVersion(raw, false);
+    DATA.labAutomaV2 = porVersion(raw, true);
+    if(vistaActiva==='labAutoma')   renderLabAutoma();
+    if(vistaActiva==='labAutomaV2') renderLabAutomaV2();
+  });
+  db.ref('quiz_lab_electro').on('value', snap => {
+    const raw = snap.val()||{};
+    DATA.labElectro   = porVersion(raw, false);
+    DATA.labElectroV2 = porVersion(raw, true);
+    if(vistaActiva==='labElectro')   renderLabElectro();
+    if(vistaActiva==='labElectroV2') renderLabElectroV2();
+  });
 
 
   }
@@ -781,7 +806,9 @@
       encuestas: [renderEncuestas, DATA.encuestas],
       ingles: [renderIngles, DATA.ingles],
       labAutoma: [renderLabAutoma, DATA.labAutoma],
-      labElectro: [renderLabElectro, DATA.labElectro]
+      labElectro: [renderLabElectro, DATA.labElectro],
+      labAutomaV2: [renderLabAutomaV2, DATA.labAutomaV2],
+      labElectroV2: [renderLabElectroV2, DATA.labElectroV2]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
