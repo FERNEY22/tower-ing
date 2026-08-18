@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial Corte 1 · IFA00117 — Automatización de Procesos</title>
+<style>
+  :root{
+    --papel:#e7e5dd; --hoja:#fbfaf6; --panel:#f3f1e9;
+    --tinta:#171816; --grafito:#4a4d47; --tenue:#797d75;
+    --regla:#c8c5ba; --regla2:#e0ddd3;
+    --oxido:#95371a; --verde:#1e5b41; --ambar:#a06b06;
+    --sans:"Helvetica Neue",Helvetica,Arial,"Segoe UI",sans-serif;
+    --mono:"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--papel);color:var(--tinta);font:15px/1.55 var(--sans);padding:22px 16px 70px;-webkit-font-smoothing:antialiased}
+  .hoja{max-width:1060px;margin:0 auto;background:var(--hoja);border:1px solid var(--tinta)}
+  .franja{height:7px;background:var(--tinta)}
+
+  /* ── cajetín superior ─────────────────────────────── */
+  .cajetin{display:grid;grid-template-columns:2.4fr 1fr 1fr 1.1fr 1fr;border-bottom:1px solid var(--tinta)}
+  .cel{padding:9px 13px;border-left:1px solid var(--regla);min-width:0}
+  .cel:first-child{border-left:0}
+  .cel .k{font:600 9.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--tenue)}
+  .cel .v{font:13px/1.35 var(--mono);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cel .v.gr{font:600 15px/1.2 var(--mono)}
+  .cel .v.rojo{color:var(--oxido)}
+  @media(max-width:760px){.cajetin{grid-template-columns:1fr 1fr}.cel{border-left:1px solid var(--regla);border-top:1px solid var(--regla)}.cel:nth-child(odd){border-left:0}}
+
+  /* ── estructura ───────────────────────────────────── */
+  .tablero{display:grid;grid-template-columns:210px 1fr}
+  .riel{border-right:1px solid var(--regla);background:var(--panel);padding:14px 0 20px}
+  .riel .tit{font:600 9.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--tenue);padding:0 14px 10px}
+  .riel button{display:flex;align-items:baseline;gap:9px;width:100%;padding:8px 13px;background:none;border:0;border-left:3px solid transparent;font:13px var(--sans);color:var(--grafito);text-align:left;cursor:pointer}
+  .riel button:hover{background:#eceada}
+  .riel button.on{background:var(--hoja);border-left-color:var(--oxido);color:var(--tinta);font-weight:700}
+  .riel button .n{font:11px var(--mono);color:var(--tenue)}
+  .riel button.on .n{color:var(--oxido)}
+  .riel button .st{margin-left:auto;font:12px var(--mono);color:var(--verde)}
+  .riel hr{border:0;border-top:1px solid var(--regla2);margin:10px 13px}
+  .lienzo{padding:26px 30px 32px;min-width:0}
+  @media(max-width:820px){
+    .tablero{grid-template-columns:1fr}
+    .riel{border-right:0;border-bottom:1px solid var(--regla);display:flex;overflow-x:auto;padding:0}
+    .riel .tit,.riel hr{display:none}
+    .riel button{width:auto;white-space:nowrap;border-left:0;border-bottom:3px solid transparent;padding:11px 13px}
+    .riel button.on{border-left:0;border-bottom-color:var(--oxido)}
+    .lienzo{padding:20px 18px 26px}
+  }
+
+  /* ── tipografía de contenido ──────────────────────── */
+  h2.rot{font:700 19px/1.3 var(--sans);margin:0 0 4px;letter-spacing:-.01em}
+  .lead{font-size:14.5px;color:var(--grafito);margin:0 0 20px;max-width:66ch}
+  .evid{display:flex;align-items:baseline;gap:11px;border-bottom:1px solid var(--tinta);padding-bottom:9px;margin-bottom:18px;flex-wrap:wrap}
+  .cod{font:600 11px/1 var(--mono);letter-spacing:.06em;background:var(--tinta);color:var(--hoja);padding:5px 8px}
+  .evid .desc{font:600 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--tenue)}
+  .evid .pts{margin-left:auto;font:11px var(--mono);color:var(--tenue)}
+  .enun{font:16px/1.5 var(--sans);margin:0 0 18px;max-width:70ch}
+  .nota{font-size:13px;color:var(--tenue);margin:14px 0 0;max-width:70ch}
+  /* recordatorio del escenario, plegable, en cada pregunta */
+  .ctx{border:1px solid var(--regla);background:var(--panel);margin:0 0 20px}
+  .ctx>summary{list-style:none;cursor:pointer;padding:9px 13px;display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+  .ctx>summary::-webkit-details-marker{display:none}
+  .ctx>summary::marker{content:""}
+  .ctx>summary:hover{background:#edeade}
+  .ctx .id{font:600 10px/1 var(--mono);letter-spacing:.06em;background:var(--grafito);color:var(--hoja);padding:4px 7px}
+  .ctx .nom{font:600 13px var(--sans)}
+  .ctx .mot{font:11px var(--mono);color:var(--tenue)}
+  .ctx .abrir{margin-left:auto;font:600 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--oxido)}
+  .ctx:not([open]) .abrir::after{content:"ver enunciado ▾"}
+  .ctx[open] .abrir::after{content:"ocultar ▴"}
+  .ctx .cue{padding:13px;border-top:1px solid var(--regla)}
+  .ctx .cue p{margin:0 0 12px;font-size:13.8px;line-height:1.6}
+  .ctx .cue p:last-child{margin-bottom:0}
+  .ctx .cue .rot{font:600 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--tenue);margin:0 0 6px}
+  .bloq{margin:0 0 22px}
+  .subt{font:600 9.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--tenue);margin:0 0 9px}
+
+  /* ── tablas de datos ──────────────────────────────── */
+  table.dat{border-collapse:collapse;width:100%;font:13px var(--mono);margin:0 0 6px}
+  table.dat th{font:600 9.5px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--tenue);text-align:left;padding:7px 10px;border:1px solid var(--regla);background:var(--panel);white-space:nowrap}
+  table.dat td{padding:7px 10px;border:1px solid var(--regla);vertical-align:middle}
+  table.dat td.el{font-weight:700;white-space:nowrap;background:#f7f5ee}
+  table.dat td.num{text-align:right}
+  table.dat .mini{font:400 11px/1.4 var(--sans);color:var(--tenue);margin-top:3px}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  pre.ds{font:12.5px/1.65 var(--mono);white-space:pre-wrap;background:var(--panel);border:1px solid var(--regla);border-left:3px solid var(--tinta);padding:15px 17px;margin:0;max-height:340px;overflow:auto}
+
+  /* ── formulario ───────────────────────────────────── */
+  .campo{margin:0 0 15px;max-width:560px}
+  .campo.ancho{max-width:none}
+  label.et{display:block;font:600 13px/1.3 var(--sans);margin:0 0 6px}
+  label.et .aux{font-weight:400;color:var(--tenue)}
+  .in{width:100%;font:15px/1.4 var(--sans);color:var(--tinta);padding:9px 11px;border:1px solid var(--grafito);background:#fff;border-radius:0}
+  .in:focus{outline:0;border-color:var(--tinta);box-shadow:inset 0 -2px 0 var(--oxido)}
+  .in.mono,input.num{font:15px var(--mono)}
+  input.num{text-align:right}
+  textarea.in{resize:vertical;min-height:96px;line-height:1.55}
+  select.in{appearance:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%234a4d47'/></svg>") no-repeat right 12px center/9px 6px;padding-right:32px}
+  .medida{display:flex;max-width:280px}
+  .medida .in{border-right:0}
+  .medida .u{display:flex;align-items:center;padding:0 13px;border:1px solid var(--grafito);background:var(--panel);font:13px var(--mono);color:var(--grafito);white-space:nowrap}
+  .fila2{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:640px}
+  @media(max-width:640px){.fila2{grid-template-columns:1fr}}
+  .cuenta{font:11px var(--mono);color:var(--tenue);text-align:right;margin-top:4px}
+  .ops{display:grid;gap:8px;max-width:560px}
+  .op{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--regla);background:#fff;padding:12px 14px;cursor:pointer;user-select:none}
+  .op:hover{border-color:var(--grafito)}
+  .op .marca{flex:none;width:15px;height:15px;border:1px solid var(--grafito);margin-top:3px;background:#fff}
+  .op.sel{border-color:var(--tinta);background:#f4f1e7;box-shadow:inset 3px 0 0 var(--oxido)}
+  .op.sel .marca{background:var(--tinta);border-color:var(--tinta);box-shadow:inset 0 0 0 3px #fff}
+  .op b{display:block;font-size:14.5px}
+  .op span.d{display:block;font-size:12.5px;color:var(--tenue);margin-top:2px}
+  .op.mc{align-items:center}
+  .op.mc .marca{margin-top:0}
+  .op.mc .opt{font:15px var(--mono)}
+  .preg{margin:0 0 24px;padding:0 0 0 0}
+  .preg:last-of-type{margin-bottom:0}
+  .pq{display:flex;gap:10px;align-items:baseline;font:600 15.5px/1.45 var(--sans);margin:0 0 11px;max-width:70ch}
+  .pn{flex:none;width:22px;height:22px;display:grid;place-items:center;background:var(--tinta);color:var(--hoja);font:600 11px/1 var(--mono)}
+  .err{font:12px var(--sans);color:var(--oxido);margin-top:5px;min-height:16px}
+  input.dat-in{width:100%;font:13px var(--mono);padding:6px 8px;border:1px solid transparent;background:transparent;border-radius:0}
+  input.dat-in:focus{outline:0;border-color:var(--tinta);background:#fff}
+  input.dat-in::placeholder{color:#b6b3a8}
+
+  /* ── navegación ───────────────────────────────────── */
+  .nav{display:flex;gap:10px;align-items:center;margin-top:26px;padding-top:18px;border-top:1px solid var(--regla2);flex-wrap:wrap}
+  .b{font:600 12px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:13px 22px;border:1px solid var(--tinta);background:var(--tinta);color:var(--hoja);cursor:pointer;border-radius:0}
+  .b:hover:not(:disabled){background:#000}
+  .b.sec{background:transparent;color:var(--tinta)}
+  .b.sec:hover{background:#eceada}
+  .b:disabled{opacity:.32;cursor:not-allowed}
+  .b.der{margin-left:auto}
+  .b.env{background:var(--oxido);border-color:var(--oxido);color:#fff}
+  .b.env:hover{background:#7d2d12}
+
+  /* ── avisos ───────────────────────────────────────── */
+  .caja{border:1px solid var(--regla);background:var(--panel);padding:16px 18px;font-size:13.5px;line-height:1.6}
+  .caja.ojo{border-left:3px solid var(--oxido);background:#f7efe9}
+  .caja.ok{border-left:3px solid var(--verde);background:#eef3ef}
+  .legal{border:1px solid var(--regla);background:#fff;padding:18px 20px;font-size:12.8px;line-height:1.62;color:var(--grafito);max-height:290px;overflow:auto}
+  .legal b{color:var(--tinta)}
+  .check{display:flex;gap:11px;align-items:flex-start;margin:16px 0 0;cursor:pointer;font-size:14px;max-width:70ch}
+  .check input{width:17px;height:17px;margin-top:2px;flex:none;accent-color:var(--tinta)}
+  ol.reglas{margin:0;padding:0;list-style:none;counter-reset:r}
+  ol.reglas li{counter-increment:r;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--regla2);font-size:14px}
+  ol.reglas li:last-child{border-bottom:0}
+  ol.reglas li::before{content:counter(r,decimal-leading-zero);position:absolute;left:0;top:12px;font:600 12px var(--mono);color:var(--oxido)}
+  .sello{display:inline-block;border:2px solid var(--oxido);color:var(--oxido);font:700 26px/1 var(--mono);letter-spacing:.06em;padding:12px 20px;transform:rotate(-1.2deg)}
+  .pie{border-top:1px solid var(--tinta);padding:12px 14px;display:flex;justify-content:space-between;gap:12px;font:10.5px var(--mono);color:var(--tenue);flex-wrap:wrap}
+  .guardado{font:11px var(--mono);color:var(--tenue)}
+  .guardado.mal{color:var(--oxido);font-weight:700}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="hoja">
+  <div class="franja"></div>
+  <div class="cajetin" id="cajetin"></div>
+  <div id="marco"></div>
+  <div class="pie">
+    <span>IFA00117 · CORTE 1 · CRITERIO A · PARTE 1 — DISEÑO EN SIMULADOR</span>
+    <span>DATOS TRATADOS CONFORME A LA LEY 1581 DE 2012</span>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     DATOS DEL ESTUDIANTE — subconjunto público de banco_enunciados.json
+     Aquí NO va ninguna clave de respuesta: ni In_A, ni motor.clave,
+     ni escalado.clave, ni instrumentacion, ni las claves del datasheet.
+     La calificación automática vive en calificador.html.
+     ══════════════════════════════════════════════════════════════════ -->
+<script>
+"use strict";
+const NODO = "parcial_automatizacion1";
+const VERSION_BANCO = "1.0";
+
+/* ══════ DATOS · generado por build_datos.js — NO EDITAR A MANO ══════
+   Fuente de verdad: banco_enunciados.json + banco_evidencias.json.
+   Regenerar con:  node build_datos.js                                 */
+//<DATOS>
+const CURSO = {
+  codigo:"IFA00117",
+  nombre:"Automatización de Procesos y Control Distribuido",
+  institucion:"Universidad EAN — Ingeniería Mecatrónica",
+  corte:1, criterio:"A",
+  red:"380 V / 220 V · 60 Hz · sistema trifásico con neutro",
+  mando:"220 V AC",
+  duracion_min:120
+};
+
+const MOTORES = {
+  M1:{P_kW:1.5, V:380, cos_fi:0.8, eta:0.82, rpm:1740},
+  M2:{P_kW:2.2, V:380, cos_fi:0.83, eta:0.85, rpm:1735},
+  M3:{P_kW:3, V:380, cos_fi:0.85, eta:0.87, rpm:1745},
+  M4:{P_kW:4, V:380, cos_fi:0.86, eta:0.89, rpm:1750},
+  M5:{P_kW:7.5, V:380, cos_fi:0.87, eta:0.89, rpm:1755},
+  M6:{P_kW:11, V:380, cos_fi:0.88, eta:0.9, rpm:1760}
+};
+
+const DATASHEET = {
+  id:"DS-01",
+  titulo:"SELECTION TABLE — AC CONTACTORS AND THERMAL OVERLOAD RELAYS (extract)",
+  texto:"AC CONTACTORS — NC1 SERIES\nRated operational current in AC-3 duty at 380/400 V AC:\n  NC1-0910 : 9 A   |  NC1-1210 : 12 A  |  NC1-1810 : 18 A\n  NC1-2510 : 25 A  |  NC1-3210 : 32 A  |  NC1-4011 : 40 A\nRated insulation voltage Ui: 690 V. Utilisation category: AC-1 / AC-3 / AC-4.\nAuxiliary contact built in: suffix '10' = 1 N/O, suffix '01' = 1 N/C.\nCoil voltage codes: Z = 24 V DC | B = 24 V AC | F = 110 V AC | M = 220 V AC | Q = 380 V AC (50/60 Hz).\nOrder example: NC1-1810/M = 18 A contactor, 1 N/O auxiliary, 220 V AC coil.\n\nTHERMAL OVERLOAD RELAYS — NR2-25 SERIES\nTrip class: 10A. Mounts directly onto NC1 contactors.\nCurrent setting ranges (A): 1.6-2.5 | 2.5-4 | 4-6 | 5.5-8 | 7-10 | 9-13 | 12-18 | 17-25\nAuxiliary contacts: one N/C (terminals 95-96) and one N/O (terminals 97-98), electrically separated.\nThe N/C contact must be wired in series with the contactor coil circuit.\nThe N/O contact is intended for remote fault signalling (indicator lamp or audible alarm).\nReset mode: manual or automatic, selectable. STOP button provides manual trip for functional testing.\nNote: the setting dial must be adjusted to the motor rated current, never to a higher value.",
+  preguntas:[
+    "From the table, write the full contactor reference (including the coil voltage code) that you would order for the motor in your statement, assuming a 220 V AC control circuit.",
+    "Which terminals must be wired in series with the contactor coil, and which terminals are intended for the audible fault alarm?",
+    "According to the note at the end of the table, what is the rule for adjusting the thermal relay setting dial?"
+  ]
+};
+
+/* Opciones de selección múltiple — SIN la respuesta correcta.
+   El estudiante responde con el texto de la opción y el orden se baraja por
+   documento, así que la posición no significa nada y "es la b" no sirve. */
+const MC = {
+  "A.4.1":[
+    {id:"q1", tipo:"escenario", enunciado:"A partir de los datos de placa, ¿cuál es la corriente nominal del motor de su escenario?",
+     opciones:{
+       M1:["2,28 A", "2,85 A", "3,47 A", "6,01 A"],
+       M2:["3,34 A", "4,03 A", "4,74 A", "8,21 A"],
+       M3:["4,56 A", "5,36 A", "6,16 A", "10,67 A"],
+       M4:["6,08 A", "7,07 A", "7,94 A", "13,75 A"],
+       M5:["11,40 A", "13,10 A", "14,72 A", "25,50 A"],
+       M6:["16,71 A", "18,99 A", "21,10 A", "36,55 A"]
+     }},
+    {id:"q2", tipo:"conceptual", enunciado:"¿Cuál de estas expresiones corresponde a la corriente nominal de un motor trifásico?",
+     opciones:["In = P / (√3 · U · cos φ · η)", "In = P / (U · cos φ · η)", "In = P · √3 / (U · cos φ · η)", "In = P / (√3 · U)"]}
+  ],
+  "A.4.2":[
+    {id:"q1", tipo:"escenario", enunciado:"Según la corriente nominal de su motor, ¿qué rango de ajuste del relé térmico NR2-25 corresponde?",
+     opciones:{
+       M1:["1,6 – 2,5 A", "2,5 – 4 A", "4 – 6 A", "5,5 – 8 A"],
+       M2:["2,5 – 4 A", "4 – 6 A", "5,5 – 8 A", "7 – 10 A"],
+       M3:["4 – 6 A", "5,5 – 8 A", "7 – 10 A", "9 – 13 A"],
+       M4:["5,5 – 8 A", "7 – 10 A", "9 – 13 A", "12 – 18 A"],
+       M5:["7 – 10 A", "9 – 13 A", "12 – 18 A", "17 – 25 A"],
+       M6:["7 – 10 A", "9 – 13 A", "12 – 18 A", "17 – 25 A"]
+     }},
+    {id:"q2", tipo:"conceptual", enunciado:"Una vez seleccionado el rango, ¿en qué valor debe quedar el dial del relé térmico?",
+     opciones:["A la corriente nominal del motor", "Al valor máximo del rango seleccionado", "A 1,25 veces la corriente nominal del motor", "A la corriente de arranque del motor"]}
+  ]
+};
+
+const ESCENARIOS = [
+{ id:"P1", nombre:"Banda de clasificación de bultos", motor:"M3",
+  contexto:"Un centro de distribución recibe bultos que llegan por una banda de alimentación y se descargan sobre una banda de clasificación. Un sensor fotoeléctrico detecta el paso de cada bulto en la salida. Una tolva de acumulación cuenta con un transmisor de nivel.",
+  escalado:{variable:"nivel de tolva de acumulación", LRV:0, URV:3.5, unidad:"m", mA:7.2},
+  A:{titulo:"Banda de clasificación — tramo único",
+     desc:"Diseñe el mando y la fuerza de la banda de clasificación accionada por un solo motor. Debe arrancar con pulsador de marcha y mantenerse por enclavamiento (sello), detenerse con pulsador de paro, contar con paro de emergencia de retención mecánica y con protección térmica que detenga el sistema y no permita el rearranque automático. Señalización: lámpara verde de banda en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Banda de alimentación + banda de clasificación",
+     desc:"Amplíe el diseño a dos tramos: BANDA 1 de alimentación y BANDA 2 de clasificación. La secuencia de arranque debe ser aguas abajo primero: BANDA 2 arranca y solo entonces se habilita BANDA 1. La secuencia de paro es la inversa: BANDA 1 se detiene primero y BANDA 2 continúa 10 segundos para evacuar el material antes de detenerse. Ninguna banda puede operar si la otra está en falla.",
+     preaviso:"Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque BANDA 2, y se calla exactamente cuando BANDA 2 arranca.",
+     alarma:"Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua y se mantiene hasta desenergizar el tablero.",
+     extra:["KM2", "F3", "KT1 (temporizador a la conexión, preaviso)", "KT2 (temporizador al paro, evacuación)", "KA1 (enganche de alarma)", "HA1 (bocina preaviso)", "HA2 (bocina alarma)", "H3 ámbar (advertencia)"]}},
+
+{ id:"P2", nombre:"Estación de dosificación de líquido", motor:"M2",
+  contexto:"Una planta de alimentos dosifica un aditivo líquido desde un tanque de almacenamiento hacia una línea de producción. El tanque tiene un transmisor de nivel de 4–20 mA. Un agitador mantiene el producto homogéneo antes de bombearlo.",
+  escalado:{variable:"nivel del tanque", LRV:0, URV:5, unidad:"m", mA:12},
+  A:{titulo:"Bomba dosificadora — accionamiento único",
+     desc:"Diseñe el mando y la fuerza de la bomba dosificadora. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de bomba en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Agitador + bomba dosificadora",
+     desc:"Amplíe el diseño incorporando el agitador. El agitador debe estar en marcha antes de que se permita arrancar la bomba, y debe haber transcurrido un tiempo mínimo de homogeneización de 5 segundos. Si el agitador se detiene por cualquier causa, la bomba debe detenerse de inmediato. El agitador puede operar solo, sin la bomba.",
+     preaviso:"Al accionar marcha del agitador, la bocina de preaviso suena 3 s antes del arranque y se calla cuando el agitador arranca.",
+     alarma:"Ante disparo térmico de cualquiera de los dos motores o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero.",
+     extra:["KM2", "F3", "KT1 (preaviso 3 s)", "KT2 (homogeneización 5 s)", "KA1 (enganche de alarma)", "HA1", "HA2", "H3 ámbar"]}},
+
+{ id:"P3", nombre:"Torre de enfriamiento", motor:"M5",
+  contexto:"Una torre de enfriamiento evacúa calor del circuito de refrigeración de una planta. Una bomba recircula el agua sobre el relleno de la torre y un ventilador fuerza el aire. Un transmisor mide la temperatura del agua de retorno.",
+  escalado:{variable:"temperatura del agua de retorno", LRV:-10, URV:150, unidad:"°C", mA:9.6},
+  A:{titulo:"Ventilador de torre — accionamiento único",
+     desc:"Diseñe el mando y la fuerza del ventilador de la torre. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de ventilador en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Bomba de recirculación + ventilador",
+     desc:"Amplíe el diseño incorporando la bomba de recirculación. El ventilador NO puede arrancar si la bomba no está en marcha, porque hacer girar el ventilador sobre un relleno seco daña la torre. La bomba puede operar sola. Si la bomba se detiene, el ventilador debe caer de inmediato. Además, el ventilador arranca por orden del termostato, no por pulsador.",
+     preaviso:"Al habilitarse el arranque del ventilador, la bocina de preaviso suena 3 s antes de que el ventilador gire y se calla cuando arranca.",
+     alarma:"Ante disparo térmico de cualquiera de los dos motores o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero.",
+     extra:["KM2", "F3", "ST (termostato, contacto seco)", "KT1 (preaviso 3 s)", "KA1 (enganche de alarma)", "HA1", "HA2", "H3 ámbar"]}},
+
+{ id:"P4", nombre:"Sistema de extracción de polvo", motor:"M4",
+  contexto:"Una planta de molienda cuenta con un sistema de extracción de polvo compuesto por un ventilador extractor que aspira el aire cargado hacia un filtro de mangas, y un tornillo transportador que evacúa el polvo recogido en la tolva del filtro. Un transmisor mide la presión diferencial del filtro.",
+  escalado:{variable:"presión diferencial del filtro", LRV:0, URV:16, unidad:"bar", mA:18.4},
+  A:{titulo:"Ventilador extractor — accionamiento único",
+     desc:"Diseñe el mando y la fuerza del ventilador extractor. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de extractor en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Extractor + tornillo transportador de descarga",
+     desc:"Amplíe el diseño incorporando el tornillo transportador. El tornillo solo puede operar si el extractor está en marcha. Al ordenar el paro general, el tornillo se detiene primero y el extractor continúa funcionando 10 segundos adicionales para limpiar el ducto antes de detenerse. Si el tornillo entra en falla, el extractor debe seguir operando pero debe encenderse la señalización de advertencia.",
+     preaviso:"Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque el extractor y se calla cuando arranca.",
+     alarma:"Ante paro de emergencia o disparo térmico del extractor, la segunda bocina suena de forma continua hasta desenergizar el tablero. El disparo del tornillo solo enciende la señalización ámbar, sin bocina.",
+     extra:["KM2", "F3", "KT1 (preaviso 3 s)", "KT2 (barrido 10 s)", "KA1 (enganche de alarma)", "HA1", "HA2", "H3 ámbar"]}},
+
+{ id:"P5", nombre:"Mezclador de pintura", motor:"M1",
+  contexto:"Una planta de pinturas homogeneiza el producto en un tanque mediante un agitador que debe invertir su sentido de giro para evitar la sedimentación en un solo sentido. Terminada la mezcla, una bomba descarga el producto hacia la línea de envasado. Un caudalímetro mide la descarga.",
+  escalado:{variable:"caudal de descarga", LRV:0, URV:250, unidad:"L/min", mA:14},
+  A:{titulo:"Agitador — accionamiento único en un sentido",
+     desc:"Diseñe el mando y la fuerza del agitador girando en un solo sentido. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de agitador en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Agitador con inversión de giro + bomba de descarga",
+     desc:"Amplíe el diseño para que el agitador pueda girar en ambos sentidos mediante dos contactores con enclavamiento eléctrico y mecánico entre ellos: en ningún caso pueden cerrar simultáneamente. El cambio de sentido solo se permite tras pasar por paro. La bomba de descarga únicamente puede arrancar cuando el agitador está detenido, nunca durante la mezcla.",
+     preaviso:"Al ordenar cualquier sentido de giro, la bocina de preaviso suena 3 s antes de que el agitador arranque y se calla cuando arranca.",
+     alarma:"Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero.",
+     extra:["KM2 (giro inverso)", "KM3 (bomba)", "F3", "KT1 (preaviso 3 s)", "KA1 (enganche de alarma)", "HA1", "HA2", "H3 ámbar"]}},
+
+{ id:"P6", nombre:"Alimentación de trituradora", motor:"M6",
+  contexto:"Una planta de reciclaje tritura material que llega por una banda alimentadora. La trituradora debe alcanzar su régimen de giro antes de recibir material, de lo contrario se atasca. Un transmisor mide la presión de la línea hidráulica de la trituradora.",
+  escalado:{variable:"presión de la línea hidráulica", LRV:0, URV:10, unidad:"bar", mA:16},
+  A:{titulo:"Banda alimentadora — accionamiento único",
+     desc:"Diseñe el mando y la fuerza de la banda alimentadora. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de banda en marcha y lámpara roja de falla.",
+     elementos:["Q1", "KM1", "F2", "S0 (E-stop)", "S1 (paro)", "S2 (marcha)", "H1 verde", "H2 roja"]},
+  B:{titulo:"Trituradora + banda alimentadora",
+     desc:"Amplíe el diseño incorporando la trituradora. La trituradora arranca primero y la banda alimentadora solo se habilita 8 segundos después, cuando la trituradora alcanzó su régimen. Al ordenar el paro, la banda se detiene primero y la trituradora continúa 15 segundos para evacuar el material remanente. Si la presión hidráulica supera el límite (presostato), la banda debe detenerse pero la trituradora debe seguir operando.",
+     preaviso:"Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque la trituradora y se calla cuando arranca.",
+     alarma:"Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero.",
+     extra:["KM2", "F3", "SP (presostato)", "KT1 (preaviso 3 s)", "KT2 (habilitación banda 8 s)", "KT3 (evacuación 15 s)", "KA1 (enganche de alarma)", "HA1", "HA2", "H3 ámbar"]}}
+];
+
+/* Entregables del Bloque B2 — ocho archivos, cuatro por sistema.
+   Varias evidencias se califican sobre un mismo plano: la relación es muchos a uno. */
+const PLANOS = [
+  {sis:"A", plano:"FUERZA", evid:["A.2.1"], det:"Q1 → KM1 → F2 → motor, simbología IEC 60617, tres fases e identificación de bornes."},
+  {sis:"A", plano:"MANDO", evid:["A.2.2", "A.2.3"], det:"Marcha-paro con sello sobre el auxiliar 13-14 de KM1; E-stop y contacto 95-96 de F2 en serie y aguas arriba de la bobina."},
+  {sis:"A", plano:"CONEXIONADO", evid:["A.2.4"], det:"Cada borne rastreable en los planos de fuerza y mando."},
+  {sis:"A", plano:"3D", evid:["A.2.4"], det:"Vista del tablero coherente con el conexionado."},
+  {sis:"B", plano:"FUERZA", evid:["A.2.5"], det:"Los dos accionamientos, cada uno con su protección y su térmico."},
+  {sis:"B", plano:"MANDO", evid:["A.2.5", "A.2.6", "A.2.7"], det:"Mando en ramas legibles, la lógica exigida por su enunciado con la simulación funcionando, preaviso temporizado y alarma enganchada."},
+  {sis:"B", plano:"CONEXIONADO", evid:["A.2.8"], det:"Coherente con fuerza y mando del Sistema B."},
+  {sis:"B", plano:"3D", evid:["A.2.8"], det:"Vista del tablero con los dos accionamientos."}
+];
+//</DATOS>
+const nombreArchivo = (p, doc) => `${S.escId}_SIS-${p.sis}_${p.plano}_${doc}`;
+const seCalifica = p => "se califica " + (p.evid.length === 1 ? p.evid[0]
+  : p.evid.slice(0,-1).join(", ") + " y " + p.evid[p.evid.length-1]);
+</script>
+
+<script>
+"use strict";
+/* ═══════════════════ utilidades ═══════════════════ */
+const $ = s => document.querySelector(s);
+const marco = $("#marco"), cajetin = $("#cajetin");
+const esc = s => (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const num = n => (""+n).replace(".",",");
+const db  = () => firebase.database();
+
+function reloj(ms){
+  if(ms==null) return "—";
+  const t = Math.max(0, Math.round(ms/1000));
+  return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+}
+
+/* ═══════════════════ frontera con la base ═══════════════════
+   Los códigos de evidencia llevan punto (A.1.1) y Realtime Database no admite
+   ".", "#", "$", "/", "[" ni "]" en una clave. Por eso el código viaja como
+   VALOR de fila, nunca como nombre de campo:
+       [{codigo:"A.1.1", campos:{…}}, …]   en vez de   {"A.1.1":{…}, …}
+   En memoria se sigue usando el mapa, que es lo cómodo para el formulario. */
+const aFilas = mapa => Object.keys(mapa || {}).map(c => ({codigo:c, campos:mapa[c] || {}}));
+const aMapa  = filas => {
+  const o = {};
+  Object.values(filas || {}).forEach(f => { if(f && f.codigo) o[f.codigo] = f.campos || {}; });
+  return o;
+};
+
+/* ═══════════════════ estado ═══════════════════ */
+const S = {
+  datos:null, docId:null, escId:null, E:null, motor:null,
+  resp:{}, inicio:0, paso:"P0", enviado:false, guardando:null, tick:null,
+  ctxAbierto:true          // el recordatorio del escenario nace abierto; si lo cierran, sigue cerrado
+};
+
+/* ═══════════════════ cajetín ═══════════════════ */
+function pintarCajetin(){
+  const restante = S.inicio ? (S.inicio + CURSO.duracion_min*60000 - Date.now()) : null;
+  const bajo = restante!=null && restante < 10*60000;
+  const cel = (k,v,cls="") => `<div class="cel"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`;
+  cajetin.innerHTML =
+    cel("Asignatura", esc(CURSO.codigo)+" · Corte "+CURSO.corte) +
+    cel("Estudiante", S.datos ? esc(S.datos.nombre.split(" ").slice(0,2).join(" ")) : "—") +
+    cel("Documento",  S.datos ? esc(S.datos.documento) : "—") +
+    cel("Escenario",  S.escId ? esc(S.escId)+" · "+esc(S.E.motor) : "sin asignar", S.escId?"gr":"") +
+    cel("Tiempo",     S.inicio ? reloj(restante) : CURSO.duracion_min+" min", bajo?"gr rojo":"gr");
+}
+
+function arrancarReloj(){
+  if(S.tick) return;
+  S.tick = setInterval(()=>{
+    pintarCajetin();
+    if(S.inicio && !S.enviado && Date.now() > S.inicio + CURSO.duracion_min*60000){
+      clearInterval(S.tick); S.tick=null; enviar(true);
+    }
+  }, 1000);
+}
+
+/* ═══════════════════ 0 · autorización de datos ═══════════════════ */
+function vAviso(){
+  marco.innerHTML = `<div class="lienzo">
+    <h2 class="rot">Autorización de tratamiento de datos personales</h2>
+    <p class="lead">Antes de abrir el parcial necesitamos su autorización para registrar el intento y devolverle la calificación.</p>
+    <div class="legal">
+      <p style="margin:0 0 10px"><b>${esc(CURSO.institucion)}</b> — ${esc(CURSO.codigo)} ${esc(CURSO.nombre)}.</p>
+      <p style="margin:0 0 10px">De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo, número de identificación y correo electrónico</b>, junto con las respuestas que registre en este examen.</p>
+      <p style="margin:0 0 10px"><b>Finalidad:</b> identificar su entrega, calificar el Corte 1 del criterio A y elaborar reportes académicos del curso. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales y se conservarán únicamente durante el periodo académico y el término legal de conservación de evidencias evaluativas.</p>
+      <p style="margin:0 0 10px"><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
+      <p style="margin:0"><b>Carácter voluntario:</b> otorgar esta autorización es libre. Si prefiere no hacerlo, informe al docente para presentar el parcial en formato impreso.</p>
+    </div>
+    <label class="check"><input type="checkbox" id="ok">
+      <span>He leído y <b>autorizo</b> el tratamiento de mis datos personales en los términos anteriores.</span></label>
+    <div class="nav"><button class="b" id="ir" disabled>Continuar</button></div>
+  </div>`;
+  $("#ok").onchange = e => $("#ir").disabled = !e.target.checked;
+  $("#ir").onclick = vDatos;
+}
+
+/* ═══════════════════ 1 · identificación ═══════════════════ */
+function vDatos(){
+  const d = S.datos || {};
+  marco.innerHTML = `<div class="lienzo">
+    <h2 class="rot">Identificación</h2>
+    <p class="lead">El escenario del parcial se sortea a partir de su número de documento y queda fijo. Si recarga la página o se cierra el navegador, vuelva a entrar con el mismo documento y recuperará su escenario y sus respuestas.</p>
+    <div class="campo">
+      <label class="et" for="f1">Nombre completo</label>
+      <input class="in" id="f1" type="text" autocomplete="name" placeholder="Nombres y apellidos" value="${esc(d.nombre||"")}">
+      <div class="err" id="e1"></div>
+    </div>
+    <div class="campo">
+      <label class="et" for="f2">Número de documento</label>
+      <input class="in mono" id="f2" type="text" inputmode="numeric" autocomplete="off" placeholder="Sin puntos ni espacios" value="${esc(d.documento||"")}">
+      <div class="err" id="e2"></div>
+    </div>
+    <div class="campo">
+      <label class="et" for="f3">Correo institucional</label>
+      <input class="in" id="f3" type="email" autocomplete="email" placeholder="usuario@universidadean.edu.co" value="${esc(d.correo||"")}">
+      <div class="err" id="e3"></div>
+    </div>
+    <div class="nav"><button class="b" id="ir">Abrir el parcial</button></div>
+  </div>`;
+  $("#ir").onclick = validar;
+  marco.querySelectorAll("input").forEach(i => i.addEventListener("keydown", e => { if(e.key==="Enter") validar(); }));
+}
+
+async function validar(){
+  const nombre    = $("#f1").value.trim().replace(/\s+/g," ");
+  const documento = $("#f2").value.trim();
+  const correo    = $("#f3").value.trim();
+  let ok = true;
+  const marcar = (id,msg) => { $(id).textContent = msg; if(msg) ok = false; };
+  marcar("#e1", nombre.length>=6 && nombre.includes(" ") ? "" : "Escriba nombres y apellidos completos.");
+  marcar("#e2", /^[0-9]{6,15}$/.test(documento) ? "" : "Solo números, entre 6 y 15 dígitos.");
+  marcar("#e3", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "" : "Correo no válido.");
+  if(!ok) return;
+
+  const b = $("#ir"); b.disabled = true; b.textContent = "Abriendo…";
+  S.datos = {nombre, documento, correo};
+  S.docId = documento;
+  pintarCajetin();
+
+  try{
+    const entrega = await db().ref(`${NODO}/entregas/${S.docId}`).once("value");
+    if(entrega.exists()){ S.enviado = true; vRecibo(entrega.val(), true); return; }
+  }catch(e){ console.warn("entregas:", e); }
+
+  await asignarEscenario();
+  recuperarLocal();          // red de seguridad local, no toca la base
+  abrirSesion();
+  if(S.inicio){ arrancarReloj(); vBloque(); }
+  else vReglas();
+}
+
+/* ═══════════════════ 2 · sorteo del escenario ═══════════════════ */
+/* Sin reemplazo por conteo: se toma el escenario menos usado y se
+   desempata al azar. Si la base no responde, se cae a un reparto
+   determinista por documento para no bloquear el examen. */
+async function asignarEscenario(){
+  const ref = db().ref(`${NODO}/asignacion/${S.docId}`);
+  let id = null;
+  try{
+    const ya = await ref.once("value");
+    if(ya.exists()) id = ya.val().escenario_id;
+  }catch(e){ console.warn("asignacion lectura:", e); }
+
+  if(!id){
+    id = await sortear();
+    try{
+      await ref.set({escenario_id:id, documento:S.docId, nombre:S.datos.nombre, creado_en:new Date().toISOString()});
+      const rele = await ref.once("value");           // gana quien escribió primero
+      if(rele.exists()) id = rele.val().escenario_id;
+      db().ref(`${NODO}/conteo/${id}`).transaction(n => (n||0)+1).catch(()=>{});
+    }catch(e){ console.warn("asignacion escritura:", e); }
+  }
+
+  S.escId = id;
+  S.E     = ESCENARIOS.find(x => x.id === id) || ESCENARIOS[0];
+  S.motor = MOTORES[S.E.motor];
+  pintarCajetin();
+}
+
+async function sortear(){
+  try{
+    const snap = await db().ref(`${NODO}/conteo`).once("value");
+    const c = snap.val() || {};
+    const min = Math.min(...ESCENARIOS.map(e => c[e.id] || 0));
+    const pool = ESCENARIOS.filter(e => (c[e.id]||0) === min);
+    return pool[Math.floor(Math.random()*pool.length)].id;
+  }catch(e){
+    let h = 0;
+    for(const ch of S.docId) h = (h*31 + ch.charCodeAt(0)) % 100003;
+    return ESCENARIOS[h % ESCENARIOS.length].id;
+  }
+}
+
+/* ═══════════════════ 3 · reglas ═══════════════════ */
+function vReglas(){
+  marco.innerHTML = `<div class="lienzo">
+    <h2 class="rot">Parte 1 — Diseño en simulador</h2>
+    <p class="lead">Lea las reglas y comience. El cronómetro arranca cuando pulse <b>Iniciar</b> y no se detiene.</p>
+    <ol class="reglas">
+      <li><b>${CURSO.duracion_min} minutos</b> en total para toda la Parte 1. El tiempo restante aparece arriba a la derecha.</li>
+      <li><b>Su escenario es el ${esc(S.escId)} — ${esc(S.E.nombre)}</b>, sorteado para usted. Los enunciados cambian entre estudiantes: las respuestas de su compañero no le sirven.</li>
+      <li><b>Puede navegar libremente</b> entre las preguntas y corregir lo que ya escribió mientras no envíe.</li>
+      <li><b>Todo se guarda solo.</b> Si se cae el navegador, vuelva a entrar con su documento y continúa donde iba.</li>
+      <li><b>Bloque digital (40 pts):</b> las nueve evidencias de este formulario.</li>
+      <li><b>Bloque de archivos (60 pts):</b> ocho planos de CADe_SIMU que se entregan aparte, según la lista que verá al final.</li>
+      <li><b>Un solo envío.</b> Al enviar se cierra el formulario y ya no podrá modificarlo.</li>
+    </ol>
+    <div class="caja ojo" style="margin-top:20px">Material permitido: calculadora, el datasheet incluido en la pregunta A.4.3 y CADe_SIMU. La red eléctrica de planta es <b>${esc(CURSO.red)}</b> y el circuito de mando de la Parte 1 está fijado en <b>${esc(CURSO.mando)}</b>.</div>
+    <div class="nav"><button class="b" id="go">Iniciar · leer el enunciado</button></div>
+  </div>`;
+  $("#go").onclick = () => {
+    S.inicio = Date.now();
+    arrancarReloj(); S.paso = "EN"; guardarLocal(); pulso(); vBloque();   // se entra por el enunciado
+  };
+}
+
+/* ═══════════════════ 4 · las nueve evidencias ═══════════════════ */
+function tablaMotor(){
+  const m = S.motor;
+  return `<div class="scroll"><table class="dat">
+    <tr><th>Motor</th><th>P&nbsp;[kW]</th><th>U&nbsp;[V]</th><th>cos&nbsp;φ</th><th>η</th><th>n&nbsp;[rpm]</th><th>Red</th></tr>
+    <tr><td class="el">${esc(S.E.motor)}</td><td class="num">${num(m.P_kW.toFixed(1))}</td><td class="num">${m.V}</td>
+        <td class="num">${num(m.cos_fi.toFixed(2))}</td><td class="num">${num(m.eta.toFixed(2))}</td>
+        <td class="num">${m.rpm}</td><td>3~ 380 V / 60 Hz</td></tr>
+  </table></div>`;
+}
+function tablaLazo(){
+  const e = S.E.escalado;
+  return `<div class="scroll"><table class="dat">
+    <tr><th>Variable medida</th><th>LRV</th><th>URV</th><th>Señal</th><th>Lectura</th></tr>
+    <tr><td>${esc(e.variable)}</td><td class="num">${num(e.LRV)} ${esc(e.unidad)}</td><td class="num">${num(e.URV)} ${esc(e.unidad)}</td>
+        <td class="num">4–20 mA</td><td class="num"><b>${num(e.mA)} mA</b></td></tr>
+  </table></div>`;
+}
+
+const ITEMS = [
+{
+  cod:"A.1.1", desp:"A.1 · Lectura del proceso", pts:4,
+  rot:"Elementos del lazo",
+  enun:"Identifique en su proceso: variable controlada, sensor, actuador y controlador.",
+  campos:["variable","sensor","actuador","controlador"],
+  html(){ return `
+    <div class="fila2">
+      ${txt("variable","Variable controlada","¿Qué magnitud del proceso se está regulando?")}
+      ${txt("sensor","Sensor / transmisor","Tipo y principio de medida")}
+      ${txt("actuador","Actuador","Elemento final que modifica el proceso")}
+      ${txt("controlador","Controlador","Quién decide la acción de control")}
+    </div>
+    <p class="nota">Use la denominación técnica, no el nombre comercial. Los cuatro campos se califican juntos.</p>`;}
+},
+{
+  cod:"A.1.2", desp:"A.1 · Lectura del proceso", pts:4,
+  rot:"Tipo de lazo",
+  enun:"¿El sistema descrito opera en lazo abierto o en lazo cerrado? Justifique en una frase.",
+  campos:["lazo","justificacion"],
+  html(){ return `
+    <div class="bloq">
+      <div class="ops">
+        ${op("lazo","abierto","Lazo abierto","La acción de control no depende de lo que se mide.")}
+        ${op("lazo","cerrado","Lazo cerrado","La medida realimenta y modifica la acción de control.")}
+      </div>
+    </div>
+    ${area("justificacion","Justificación","Una frase. Diga qué hace —o qué no hace— la señal medida sobre la acción de control.",260)}`;}
+},
+{
+  cod:"A.1.3", desp:"A.1 · Lectura del proceso", pts:4,
+  rot:"Escalado del transmisor",
+  enun:"El transmisor de su proceso entrega la corriente indicada. Calcule el valor de la variable en unidades de ingeniería.",
+  campos:["valor","unidad"],
+  html(){
+    const e = S.E.escalado;
+    const opciones = [e.unidad,"mA","%","V"];
+    return `<div class="bloq">${tablaLazo()}</div>
+    <div class="fila2">
+      <div class="campo">
+        <label class="et" for="i_valor">Valor de la variable <span class="aux">(tolerancia ±2 %)</span></label>
+        <input class="in num" id="i_valor" type="text" inputmode="decimal" data-c="valor" placeholder="0,00">
+      </div>
+      ${sel("unidad","Unidad", opciones)}
+    </div>
+    <p class="nota">Use coma o punto decimal, da igual. No escriba la unidad dentro del campo numérico.</p>`;}
+},
+{
+  cod:"A.1.4", desp:"A.1 · Lectura del proceso", pts:3,
+  rot:"Diagnóstico de la señal",
+  enun:"El transmisor de su proceso marca 4,0 mA de forma constante. Indique DOS causas posibles distintas y cómo distinguiría una de otra con una sola medición.",
+  campos:["causa1","causa2","medicion"],
+  html(){ return `
+    <div class="fila2">
+      ${txt("causa1","Causa 1","")}
+      ${txt("causa2","Causa 2","")}
+    </div>
+    ${area("medicion","Medición que las distingue","Describa una sola medición o prueba y qué resultado apuntaría a cada causa.",400)}
+    <p class="nota">Esta evidencia la revisa el docente; no se califica automáticamente.</p>`;}
+},
+{
+  cod:"A.2.10", desp:"A.2 · Diseño de mando y fuerza", pts:5,
+  rot:"Tabla de asignación — Sistema A",
+  enun:"Complete la tabla de asignación del Sistema A: elemento → borne/contacto → función → tag en inglés.",
+  campos(){ const c=[]; S.E.A.elementos.forEach((_,i)=>c.push("b"+i,"f"+i,"t"+i)); return c; },
+  html(){
+    const filas = S.E.A.elementos.map((el,i)=>`<tr>
+      <td class="el">${esc(el)}</td>
+      <td><input class="dat-in" data-c="b${i}" placeholder="13-14"></td>
+      <td><input class="dat-in" data-c="f${i}" placeholder="función en el circuito"></td>
+      <td><input class="dat-in" data-c="t${i}" placeholder="TAG"></td>
+    </tr>`).join("");
+    return `<div class="bloq"><div class="caja">Sistema A — <b>${esc(S.E.A.titulo)}</b>. ${esc(S.E.A.desc)}</div></div>
+    <div class="scroll"><table class="dat">
+      <tr><th style="width:120px">Elemento</th><th style="width:110px">Borne / contacto</th><th>Función</th><th style="width:190px">Tag (inglés)</th></tr>
+      ${filas}
+    </table></div>
+    <p class="nota">Los tags van en inglés y en mayúsculas, consistentes con los que usaría en el plano.</p>`;}
+},
+{
+  cod:"A.4.1", desp:"A.4 · Seguridad y dimensionamiento", pts:6,
+  rot:"Corriente nominal del motor",
+  enun:"Dos preguntas de selección múltiple. Una sola opción es correcta en cada una.",
+  campos:["q1","q2"],
+  html(){ return `<div class="bloq">${tablaMotor()}</div>${mc("A.4.1")}
+    <p class="nota">Los valores de las opciones salen de la placa de <b>su</b> motor: los de su compañero son otros.</p>`;}
+},
+{
+  cod:"A.4.2", desp:"A.4 · Seguridad y dimensionamiento", pts:6,
+  rot:"Ajuste del relé térmico F2",
+  enun:"Dos preguntas de selección múltiple. Una sola opción es correcta en cada una.",
+  campos:["q1","q2"],
+  html(){ return `<div class="bloq">${tablaMotor()}</div>${mc("A.4.2")}
+    <p class="nota">Relés NR2-25, clase de disparo 10A. Los rangos disponibles están en el datasheet DS-01 de la pregunta A.4.3.</p>`;}
+},
+{
+  cod:"A.4.3", desp:"A.4 · Seguridad y dimensionamiento", pts:4,
+  rot:"Datasheet DS-01 — answer in English",
+  enun:"Responda en inglés las tres preguntas sobre el datasheet DS-01.",
+  campos:["q1","q2","q3"],
+  html(){
+    const qs = DATASHEET.preguntas.map((q,i)=>`
+      <div class="campo ancho" style="max-width:760px">
+        <label class="et" for="i_q${i+1}">${i+1}. ${esc(q)}</label>
+        <input class="in" id="i_q${i+1}" type="text" data-c="q${i+1}" autocapitalize="characters" spellcheck="false">
+      </div>`).join("");
+    return `<div class="bloq">
+      <div class="subt">${esc(DATASHEET.id)} — ${esc(DATASHEET.titulo)}</div>
+      <pre class="ds">${esc(DATASHEET.texto)}</pre>
+    </div>${qs}
+    <p class="nota">Answer in English, in one short line each.</p>`;}
+},
+{
+  cod:"A.4.4", desp:"A.4 · Seguridad y dimensionamiento", pts:4,
+  rot:"Ubicación del paro de emergencia",
+  enun:"Explique por qué el paro de emergencia debe ubicarse donde usted lo ubicó en el circuito de mando, y qué ocurriría si estuviera después de la bobina.",
+  campos:["texto"],
+  html(){ return area("texto","Respuesta","Tipo de contacto, retención mecánica, ubicación en la rama y qué pasa al restablecerlo.",900)
+    + `<p class="nota">Esta evidencia la revisa el docente; no se califica automáticamente.</p>`;}
+}
+];
+
+/* fábricas de controles — todas escriben en S.resp vía data-c */
+function txt(c,label,aux){
+  return `<div class="campo"><label class="et" for="i_${c}">${esc(label)}${aux?` <span class="aux">· ${esc(aux)}</span>`:""}</label>
+    <input class="in" id="i_${c}" type="text" data-c="${c}"></div>`;
+}
+function area(c,label,aux,max){
+  return `<div class="campo ancho" style="max-width:760px"><label class="et" for="i_${c}">${esc(label)}${aux?` <span class="aux">· ${esc(aux)}</span>`:""}</label>
+    <textarea class="in" id="i_${c}" data-c="${c}" maxlength="${max}"></textarea>
+    <div class="cuenta" data-cuenta="${c}">0 / ${max}</div></div>`;
+}
+function sel(c,label,opciones){
+  const o = opciones.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+  return `<div class="campo"><label class="et" for="i_${c}">${esc(label)}</label>
+    <select class="in mono" id="i_${c}" data-c="${c}"><option value="">— elegir —</option>${o}</select></div>`;
+}
+function op(c,val,titulo,det){
+  return `<div class="op" data-c="${c}" data-v="${esc(val)}"><span class="marca"></span>
+    <span><b>${esc(titulo)}</b><span class="d">${esc(det)}</span></span></div>`;
+}
+
+/* ── selección múltiple ──
+   El orden se baraja con una semilla derivada del documento y del id de la pregunta:
+   estable entre recargas, distinto entre estudiantes. Se responde con el TEXTO. */
+function semilla(txt){
+  let h = 2166136261 >>> 0;
+  for(let i=0; i<txt.length; i++){ h ^= txt.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+function barajar(lista, sem){
+  const a = lista.slice();
+  let s = sem >>> 0;
+  const az = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
+  for(let i = a.length-1; i > 0; i--){ const j = Math.floor(az()*(i+1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function opcionesDe(q){
+  return q.tipo === "escenario" ? (q.opciones[S.E.motor] || []) : q.opciones;
+}
+function mc(cod){
+  return MC[cod].map((q, n) => {
+    const ops = barajar(opcionesDe(q), semilla(`${S.docId||""}|${cod}|${q.id}`));
+    return `<div class="preg">
+      <p class="pq"><span class="pn">${n+1}</span>${esc(q.enunciado)}</p>
+      <div class="ops">${ops.map(v => `<div class="op mc" data-c="${q.id}" data-v="${esc(v)}">
+        <span class="marca"></span><span class="opt">${esc(v)}</span></div>`).join("")}</div>
+    </div>`;
+  }).join("");
+}
+
+const campos = it => typeof it.campos === "function" ? it.campos() : it.campos;
+const completo = it => { const r = S.resp[it.cod]||{}; return campos(it).every(c => (r[c]||"").toString().trim() !== ""); };
+const faltan   = () => ITEMS.filter(it => !completo(it)).length;
+
+/* ── el bloque con riel ── */
+function vBloque(){
+  const idx = /^E[0-9]+$/.test(S.paso) ? +S.paso.slice(1) : -1;
+  const btn = (id,n,label,estado) => `<button data-p="${id}" class="${S.paso===id?"on":""}">
+      <span class="n">${n}</span><span>${esc(label)}</span>${estado?`<span class="st">${estado}</span>`:""}</button>`;
+
+  const riel = `<div class="riel">
+    <div class="tit">Parte 1 · Bloque digital</div>
+    ${btn("EN","00","Enunciado","")}
+    <hr>
+    ${ITEMS.map((it,i)=>btn("E"+i, String(i+1).padStart(2,"0"), it.cod, completo(it)?"✓":"")).join("")}
+    <hr>
+    ${btn("FIN","10","Revisar y enviar","")}
+  </div>`;
+
+  let cuerpo;
+  if(S.paso === "EN")      cuerpo = paneEnunciado();
+  else if(S.paso === "FIN")cuerpo = paneRevision();
+  else                     cuerpo = paneItem(ITEMS[idx], idx);
+
+  marco.innerHTML = `<div class="tablero">${riel}<div class="lienzo" id="pane">${cuerpo}</div></div>`;
+  marco.querySelectorAll(".riel button").forEach(b => b.onclick = () => { S.paso = b.dataset.p; guardarLocal(); vBloque(); });
+
+  if(idx >= 0) restaurar(ITEMS[idx]);
+  const ctx = marco.querySelector("#ctx");
+  if(ctx) ctx.addEventListener("toggle", () => { S.ctxAbierto = ctx.open; });
+  conectarNav();
+  const on = marco.querySelector(".riel button.on");
+  if(on && window.innerWidth <= 820) on.scrollIntoView({block:"nearest", inline:"center"});
+}
+
+function paneEnunciado(){
+  const E = S.E;
+  return `<div class="evid"><span class="cod">${esc(E.id)}</span>
+      <span class="desc">Escenario asignado</span><span class="pts">Motor ${esc(E.motor)}</span></div>
+    <h2 class="rot">${esc(E.nombre)}</h2>
+    <p class="lead">${esc(E.contexto)}</p>
+    <div class="bloq"><div class="subt">Datos de placa del motor</div>${tablaMotor()}</div>
+    <div class="bloq"><div class="subt">Lazo de medida</div>${tablaLazo()}</div>
+    <div class="bloq"><div class="subt">Sistema A — ${esc(E.A.titulo)}</div>
+      <p class="enun">${esc(E.A.desc)}</p>
+      <div class="scroll"><table class="dat"><tr><th>Elementos del Sistema A</th></tr>
+        <tr><td>${E.A.elementos.map(esc).join(" · ")}</td></tr></table></div></div>
+    <div class="bloq"><div class="subt">Sistema B — ${esc(E.B.titulo)}</div>
+      <p class="enun">${esc(E.B.desc)}</p>
+      <div class="scroll"><table class="dat">
+        <tr><th style="width:150px">Preaviso sonoro</th><td>${esc(E.B.preaviso)}</td></tr>
+        <tr><th>Alarma sonora</th><td>${esc(E.B.alarma)}</td></tr>
+        <tr><th>Elementos extra</th><td>${E.B.extra.map(esc).join(" · ")}</td></tr>
+      </table></div></div>
+    <div class="caja ojo">Los sistemas A y B se dibujan en CADe_SIMU y se entregan como archivos. Este formulario solo captura el bloque digital.</div>
+    <div class="nav"><button class="b der" data-ir="E0">Ir a la primera pregunta</button></div>`;
+}
+
+function recordatorio(){
+  const E = S.E;
+  return `<details class="ctx" id="ctx"${S.ctxAbierto ? " open" : ""}>
+    <summary><span class="id">${esc(E.id)}</span><span class="nom">${esc(E.nombre)}</span>
+      <span class="mot">motor ${esc(E.motor)}</span><span class="abrir"></span></summary>
+    <div class="cue">
+      <div class="rot">Contexto</div>
+      <p>${esc(E.contexto)}</p>
+      <div class="rot">Sistema A — ${esc(E.A.titulo)}</div>
+      <p>${esc(E.A.desc)}</p>
+      <div class="rot">Sistema B — ${esc(E.B.titulo)}</div>
+      <p>${esc(E.B.desc)}</p>
+    </div></details>`;
+}
+
+function paneItem(it, i){
+  return `<div class="evid"><span class="cod">${esc(it.cod)}</span><span class="desc">${esc(it.desp)}</span>
+      <span class="pts">${it.pts} pts · ${i+1} de ${ITEMS.length}</span></div>
+    ${recordatorio()}
+    <h2 class="rot">${esc(it.rot)}</h2>
+    <p class="enun">${esc(it.enun)}</p>
+    ${it.html()}
+    <div class="nav">
+      ${i>0 ? `<button class="b sec" data-ir="E${i-1}">← Anterior</button>` : `<button class="b sec" data-ir="EN">← Enunciado</button>`}
+      <button class="b der" data-ir="${i<ITEMS.length-1?"E"+(i+1):"FIN"}">${i<ITEMS.length-1?"Siguiente →":"Revisar →"}</button>
+      <button class="b env" id="env">Enviar ahora</button>
+    </div>`;
+}
+
+function paneRevision(){
+  const filas = ITEMS.map((it,i)=>`<tr>
+      <td class="el">${esc(it.cod)}</td><td>${esc(it.rot)}</td><td class="num">${it.pts}</td>
+      <td style="color:${completo(it)?"var(--verde)":"var(--oxido)"}">${completo(it)?"completa":"incompleta"}</td>
+      <td><button class="b sec" style="padding:5px 11px;font-size:10px" data-ir="E${i}">Ver</button></td>
+    </tr>`).join("");
+  const f = faltan();
+  const planos = PLANOS.map(p=>`<tr>
+      <td class="el">${esc(nombreArchivo(p, S.docId||""))}<div class="mini">${esc(seCalifica(p))}</div></td>
+      <td>${esc(p.det)}</td></tr>`).join("");
+  return `<div class="evid"><span class="cod">B1</span><span class="desc">Revisión final</span><span class="pts">40 pts</span></div>
+    <h2 class="rot">Antes de enviar</h2>
+    <p class="lead">Revise el estado de las nueve evidencias. El envío es definitivo: después no podrá modificar nada.</p>
+    <div class="scroll bloq"><table class="dat">
+      <tr><th>Evidencia</th><th>Asunto</th><th>Pts</th><th>Estado</th><th></th></tr>${filas}
+    </table></div>
+    <div class="caja">Ha respondido <b>${ITEMS.length - f}</b> de ${ITEMS.length}. Puede enviar cuando quiera: se registra lo que tenga hecho y no se le exige completar el resto.</div>
+    <div class="bloq" style="margin-top:26px"><div class="subt">Bloque B2 — ocho archivos, se entregan aparte (60 pts)</div>
+      <div class="scroll"><table class="dat">
+        <tr><th style="width:320px">Archivo</th><th>Debe mostrar</th></tr>${planos}
+      </table></div>
+    </div>
+    <div class="nav">
+      <button class="b sec" data-ir="E${ITEMS.length-1}">← Volver</button>
+      <button class="b der" id="env">Enviar el parcial</button>
+    </div>`;
+}
+
+function pintarEnviar(){
+  const b = marco.querySelector("#env");
+  if(b) b.textContent = `Enviar ahora (${ITEMS.length - faltan()}/${ITEMS.length})`;
+}
+function conectarNav(){
+  marco.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { S.paso = b.dataset.ir; guardarLocal(); vBloque(); window.scrollTo({top:0}); });
+  const e = marco.querySelector("#env");
+  if(e) e.onclick = () => enviar(false);
+  pintarEnviar();
+}
+
+/* ── restaurar valores y capturar cambios ── */
+function restaurar(it){
+  const r = S.resp[it.cod] || {};
+  marco.querySelectorAll("[data-c]").forEach(el => {
+    const v = r[el.dataset.c];
+    if(el.classList.contains("op")) el.classList.toggle("sel", v === el.dataset.v);
+    else if(v != null) el.value = v;
+  });
+  marco.querySelectorAll("[data-cuenta]").forEach(d => {
+    const ta = marco.querySelector(`textarea[data-c="${d.dataset.cuenta}"]`);
+    if(ta) d.textContent = `${ta.value.length} / ${ta.maxLength}`;
+  });
+}
+
+marco.addEventListener("input", e => {
+  const el = e.target.closest("[data-c]");
+  if(!el || S.enviado) return;
+  const it = ITEMS.find(x => x.cod === codActual()); if(!it) return;
+  (S.resp[it.cod] = S.resp[it.cod] || {})[el.dataset.c] = el.value;
+  const cnt = marco.querySelector(`[data-cuenta="${el.dataset.c}"]`);
+  if(cnt && el.maxLength > 0) cnt.textContent = `${el.value.length} / ${el.maxLength}`;
+  tocado();
+});
+
+marco.addEventListener("click", e => {
+  const o = e.target.closest(".op");
+  if(!o || S.enviado) return;
+  const it = ITEMS.find(x => x.cod === codActual()); if(!it) return;
+  marco.querySelectorAll(`.op[data-c="${o.dataset.c}"]`).forEach(x => x.classList.remove("sel"));
+  o.classList.add("sel");
+  (S.resp[it.cod] = S.resp[it.cod] || {})[o.dataset.c] = o.dataset.v;
+  tocado();
+  pintarEnviar();
+});
+
+function codActual(){
+  const i = /^E[0-9]+$/.test(S.paso) ? +S.paso.slice(1) : -1;
+  return i >= 0 && ITEMS[i] ? ITEMS[i].cod : null;
+}
+
+/* ═══════════════════ escritura con respaldo ═══════════════════
+   Si las reglas publicadas rechazan el nodo del parcial, se escribe en
+   diagnostico_control/<sección>/<documento>, que las reglas vigentes ya
+   permiten. El envío nunca se pierde por un tema de permisos, y el panel
+   lee los dos sitios. */
+const RESPALDO = "diagnostico_control";
+const rutaEntrega = d => [`${NODO}/entregas/${d}`, `${RESPALDO}/parcial_c1_entregas/${d}`];
+const rutaSesion  = d => [`${NODO}/sesiones/${d}`, `${RESPALDO}/parcial_c1_sesiones/${d}`];
+
+async function escribir([principal, respaldo], valor, metodo){
+  try{
+    await db().ref(principal)[metodo](valor);
+    return {ok:true, via:"principal"};
+  }catch(e){
+    console.warn("nodo principal rechazado:", e && e.message);
+    try{
+      await db().ref(respaldo)[metodo](Object.assign({}, valor, {via:"respaldo"}));
+      return {ok:true, via:"respaldo", motivo:e && e.message};
+    }catch(e2){
+      return {ok:false, motivo:(e && e.message) + "  ·  respaldo: " + (e2 && e2.message)};
+    }
+  }
+}
+
+/* ═══════════════════ 5 · sesión en línea ═══════════════════
+   No se guardan borradores: las respuestas solo viajan a la base cuando el
+   estudiante pulsa ENVIAR. Lo único que se publica mientras trabaja es su
+   presencia y su porcentaje de avance, para que el docente vea quién está
+   resolviendo. Firebase borra el nodo solo al desconectarse el navegador. */
+const LATIDO_MS = 30000;
+let latido = null;
+
+const avance = () => Math.round(100 * (ITEMS.length - faltan()) / ITEMS.length);
+
+function abrirSesion(){
+  if(!S.docId || S.enviado) return;
+  rutaSesion(S.docId).forEach(r => { try{ db().ref(r).onDisconnect().remove(); }catch(e){} });
+  pulso();
+  clearInterval(latido);
+  latido = setInterval(pulso, LATIDO_MS);
+}
+function pulso(){
+  if(!S.docId || S.enviado) return;
+  escribir(rutaSesion(S.docId), {
+    documento:S.docId, nombre:S.datos.nombre, escenario_id:S.escId,
+    avance:avance(), respondidas:ITEMS.length - faltan(), total:ITEMS.length,
+    inicio:S.inicio || null, paso:S.paso,
+    visto:firebase.database.ServerValue.TIMESTAMP
+  }, "update");
+}
+function cerrarSesion(){
+  clearInterval(latido); latido = null;
+  if(S.docId) rutaSesion(S.docId).forEach(r => db().ref(r).remove().catch(()=>{}));
+}
+
+/* Copia local de las respuestas, solo en este navegador: si la página se
+   recarga sin querer, el estudiante no pierde lo que llevaba. No es un
+   borrador en la base y el docente nunca la ve. */
+const LLAVE = () => `parcial_c1_${S.docId}`;
+function guardarLocal(){
+  try{ localStorage.setItem(LLAVE(), JSON.stringify({resp:S.resp, inicio:S.inicio, paso:S.paso})); }
+  catch(e){}
+}
+function recuperarLocal(){
+  try{
+    const v = JSON.parse(localStorage.getItem(LLAVE()) || "null");
+    if(v && v.resp){ S.resp = v.resp; S.inicio = v.inicio || 0; S.paso = v.paso || "EN"; }
+  }catch(e){}
+}
+function limpiarLocal(){ try{ localStorage.removeItem(LLAVE()); }catch(e){} }
+
+let reloj_local = null;
+function tocado(){
+  clearTimeout(reloj_local);
+  reloj_local = setTimeout(() => { guardarLocal(); pulso(); pintarEnviar(); }, 1000);
+}
+
+/* ═══════════════════ 6 · envío ═══════════════════ */
+async function enviar(porTiempo){
+  if(S.enviado) return;
+  /* Sin condiciones previas: se envía lo que haya, completo o no.
+     Los ocho planos se entregan por fuera y no son parte de este envío. */
+  S.enviado = true;
+  clearInterval(S.tick); S.tick = null;
+  clearTimeout(reloj_local);
+  cerrarSesion();
+
+  const fin = new Date();
+  const payload = {
+    banco:VERSION_BANCO, curso:CURSO.codigo, corte:CURSO.corte, criterio:CURSO.criterio,
+    instrumento:"parte_1_B1",
+    nombre:S.datos.nombre, documento:S.docId, correo:S.datos.correo,
+    escenario_id:S.escId, motor_id:S.E.motor,
+    inicio_en:S.inicio ? new Date(S.inicio).toISOString() : null,
+    enviado_en:fin.toISOString(),
+    duracion_min:S.inicio ? Math.round((fin.getTime()-S.inicio)/60000) : 0,
+    cerrado_por_tiempo:!!porTiempo,
+    completas:ITEMS.length - faltan(),
+    respuestas:aFilas(S.resp)
+  };
+
+  marco.innerHTML = `<div class="lienzo"><p class="lead" style="margin:30px 0">Enviando…</p></div>`;
+  const r = await escribir(rutaEntrega(S.docId), payload, "set");
+  const ok = r.ok, motivo = r.motivo || "";
+  if(ok) limpiarLocal();
+  if(r.via === "respaldo") console.warn("entrega guardada en el nodo de respaldo");
+  vRecibo(payload, false, ok, porTiempo, motivo);
+}
+
+function vRecibo(p, previo, ok = true, porTiempo = false, motivo = ""){
+  clearInterval(S.tick); S.tick = null;
+  S.enviado = true;
+  S.escId = p.escenario_id; S.E = ESCENARIOS.find(x=>x.id===p.escenario_id) || S.E;
+  pintarCajetin();
+  const planos = PLANOS.map(x=>`<tr>
+      <td class="el">${esc(p.escenario_id)}_SIS-${x.sis}_${x.plano}_${esc(p.documento)}<div class="mini">${esc(seCalifica(x))}</div></td>
+      <td>${esc(x.det)}</td></tr>`).join("");
+  marco.innerHTML = `<div class="lienzo">
+    <div class="sello">${previo ? "YA ENTREGADO" : ok ? "RECIBIDO" : "SIN CONFIRMAR"}</div>
+    <h2 class="rot" style="margin-top:20px">${previo ? "Su parcial ya estaba entregado" : ok ? "Parte 1 — bloque digital entregado" : "No se pudo confirmar el envío"}</h2>
+    <p class="lead">${previo
+      ? "Este documento ya registró una entrega. Solo se admite un envío; si necesita corregir algo, hable con el docente."
+      : ok
+        ? (porTiempo ? "Se agotaron los 120 minutos y el formulario se cerró con lo que había registrado." : "Sus respuestas quedaron registradas. El bloque digital se califica contra la clave de su escenario.")
+        : "El navegador no logró escribir en la base. <b>No cierre esta página</b> y avise al docente ahora mismo."}</p>
+    ${!previo && !ok && motivo ? `<div class="caja ojo" style="font-family:var(--mono);font-size:12px">${esc(motivo)}</div>` : ""}
+    <div class="scroll bloq"><table class="dat">
+      <tr><th>Estudiante</th><td>${esc(p.nombre)}</td><th>Documento</th><td class="num">${esc(p.documento)}</td></tr>
+      <tr><th>Escenario</th><td>${esc(p.escenario_id)} · ${esc((ESCENARIOS.find(x=>x.id===p.escenario_id)||{}).nombre||"")}</td>
+          <th>Motor</th><td>${esc(p.motor_id)}</td></tr>
+      <tr><th>Evidencias</th><td>${p.completas} de ${ITEMS.length} completas</td>
+          <th>Enviado</th><td style="font-family:var(--mono);font-size:12px">${esc((p.enviado_en||"").replace("T"," ").slice(0,19))}</td></tr>
+    </table></div>
+    <div class="bloq" style="margin-top:26px"><div class="subt">Falta entregar — Bloque B2 · ocho archivos · 60 pts</div>
+      <div class="scroll"><table class="dat">
+        <tr><th style="width:320px">Nombre del archivo</th><th>Debe mostrar</th></tr>${planos}
+      </table></div>
+    </div>
+    <div class="caja">La Parte 2 (montaje en el banco, 100 pts) se presenta por turnos en el laboratorio.</div>
+  </div>`;
+}
+
+/* ═══════════════════ arranque ═══════════════════ */
+window.addEventListener("beforeunload", e => {
+  if(S.inicio && !S.enviado){ e.preventDefault(); e.returnValue = ""; }
+});
+pintarCajetin();
+vAviso();
+</script>
+</body>
+</html>
