@@ -150,18 +150,30 @@ const PROGRAMAS = ["Ingeniería Mecatrónica","Ingeniería Electrónica","Ingeni
 /* ===== Apartados (4 quices; solo el 1 habilitado) ===== */
 const QUICES = [
   {id:"quiz1v2", nombre:"Quiz 1 · Instrumentos y Práctica No 1 (versión 2)", meta:"Multímetro, fuente, generador, osciloscopio y protoboard", activo:true},
-  {id:"quiz2v2", nombre:"Quiz 2 · Práctica de laboratorio No 2 (versión 2)", meta:"Se habilitará al cierre de la práctica No 2",             activo:false},
+  {id:"quiz2v2", nombre:"Quiz 2 · Rectificadores y filtrado (versión 2)", meta:"Media onda, puente de diodos, medida en osciloscopio y rizado", activo:true},
   {id:"quiz3v2", nombre:"Quiz 3 · Práctica de laboratorio No 3 (versión 2)", meta:"Se habilitará al cierre de la práctica No 3",             activo:false},
   {id:"quiz4v2", nombre:"Quiz 4 · Práctica de laboratorio No 4 (versión 2)", meta:"Se habilitará al cierre de la práctica No 4",             activo:false}
 ];
 
+/* Los bloques temáticos son propios de cada quiz: se indexan primero por id de quiz. */
 const BLOQUES = {
+quiz1v2:{
   "1":"Multímetro: conexión, modos y diagnóstico",
   "2":"Fuente DC y generador de funciones",
   "3":"Osciloscopio y acoplamiento",
   "4":"Protoboard, montaje y buenas prácticas",
   "5":"Práctica No 1: estaciones y cálculos"
+},
+quiz2v2:{
+  "1":"El diodo como rectificador",
+  "2":"Rectificador de media onda",
+  "3":"Rectificador de onda completa: puente de diodos",
+  "4":"Medición de la señal en el osciloscopio",
+  "5":"Filtro capacitivo y rizado"
+}
 };
+/* Nombre legible del bloque dentro del quiz en curso. */
+function nombreBloque(b){ return ((BLOQUES[st.quiz]||{})[b]) || b; }
 
 /* ===== BANCO DE PREGUNTAS ===== opts + correcta (índice 0-based) · t = segundos ===== */
 const BANCO = {
@@ -215,6 +227,62 @@ quiz1v2:[
 {id:"q42",bloque:"5",tema:"Estación 5 · amplitud en la frecuencia de corte",t:90,q:"Si la entrada del filtro es de 2 Vpp, la salida esperada en la frecuencia de corte es aproximadamente:",opts:["2,0 Vpp","1,41 Vpp","1,00 Vpp","0,20 Vpp"],correcta:1},
 {id:"q43",bloque:"5",tema:"Lista de materiales · condensador",q:"El condensador cerámico de la práctica está marcado con el código 103, que corresponde a:",opts:["100 pF","1 nF","10 nF","100 nF"],correcta:2},
 {id:"q44",bloque:"5",tema:"Tolerancia de las resistencias",q:"Que el valor medido de una resistencia no coincida exactamente con el nominal se explica principalmente por:",opts:["La tolerancia de fabricación del ±5 %.","Un error de conexión del óhmetro.","El calentamiento provocado por el generador.","La escala de volts/div del osciloscopio."],correcta:0}
+],
+
+/* ===== QUIZ 2 · Rectificadores y filtrado =====
+   Valores de referencia usados en los cálculos: red de 60 Hz, secundario del
+   transformador de 12 Vrms (Vp ≈ 17 V), diodos de silicio 1N4007 (Vf ≈ 0,7 V),
+   carga R = 1 kΩ y condensadores electrolíticos de 100, 470 y 1000 µF. */
+quiz2v2:[
+/* Bloque 1 · El diodo como rectificador */
+{id:"r01",bloque:"1",tema:"Caída directa del diodo",q:"Un diodo de silicio en polarización directa presenta una caída de tensión aproximada de:",opts:["0,2 V","0,7 V","1,4 V","3,0 V"],correcta:1},
+{id:"r02",bloque:"1",tema:"Polarización inversa",q:"En polarización inversa, un diodo rectificador en buen estado se comporta aproximadamente como:",opts:["Un interruptor cerrado.","Una fuente de 0,7 V.","Un interruptor abierto.","Una resistencia de valor bajo y constante."],correcta:2},
+{id:"r03",bloque:"1",tema:"Identificación del cátodo",q:"En un diodo rectificador de encapsulado plástico, el cátodo se identifica por:",opts:["La banda impresa cerca de uno de los extremos.","El terminal más largo.","El lado donde va impresa la referencia del componente.","No se puede identificar sin medir con el multímetro."],correcta:0},
+{id:"r04",bloque:"1",tema:"Significado del PIV",q:"El parámetro PIV (tensión inversa de pico) de un diodo indica:",opts:["La corriente máxima que puede conducir en directo.","La tensión inversa máxima que soporta sin destruirse.","La caída de tensión que produce al conducir.","La frecuencia máxima a la que puede rectificar."],correcta:1},
+{id:"r05",bloque:"1",tema:"1N4007",q:"El diodo 1N4007 se emplea en fuentes rectificadoras porque soporta una tensión inversa de pico de:",opts:["50 V","100 V","400 V","1000 V"],correcta:3},
+{id:"r06",bloque:"1",tema:"Prueba de diodos",q:"Con el multímetro en la función de prueba de diodos, un diodo de silicio sano marca:",opts:["Entre 0,5 y 0,7 V en un sentido y OL en el sentido contrario.","Entre 0,5 y 0,7 V en los dos sentidos.","OL en los dos sentidos.","0 V con pitido en un sentido y 0,7 V en el otro."],correcta:0},
+{id:"r07",bloque:"1",tema:"Diodo en cortocircuito",q:"Si al probar un diodo el multímetro marca cerca de 0 V con pitido de continuidad en ambos sentidos, el diodo está:",opts:["En buen estado, pero montado al revés.","Abierto.","En cortocircuito.","Trabajando en la zona de ruptura."],correcta:2},
+{id:"r08",bloque:"1",tema:"Diodo abierto",q:"Un diodo que marca OL en los dos sentidos durante la prueba está:",opts:["En buen estado.","Abierto (no conduce en ningún sentido).","En cortocircuito.","Polarizado en inverso solamente."],correcta:1},
+/* Bloque 2 · Rectificador de media onda */
+{id:"r09",bloque:"2",tema:"Número de diodos",q:"El rectificador de media onda se construye con:",opts:["Un solo diodo en serie con la carga.","Dos diodos y toma central.","Cuatro diodos en configuración de puente.","Un diodo en paralelo con la carga."],correcta:0},
+{id:"r10",bloque:"2",tema:"Semiciclo bloqueado",q:"En el rectificador de media onda, durante el semiciclo en que el diodo queda polarizado en inverso:",opts:["La carga recibe la señal invertida.","No circula corriente por la carga y su tensión es prácticamente cero.","El diodo entrega los 0,7 V de su caída directa a la carga.","La corriente circula en sentido contrario por la carga."],correcta:1},
+{id:"r11",bloque:"2",tema:"Frecuencia de salida",q:"Con la red de 60 Hz, la señal a la salida de un rectificador de media onda se repite con una frecuencia de:",opts:["30 Hz","60 Hz","120 Hz","240 Hz"],correcta:1},
+{id:"r12",bloque:"2",tema:"Tensión de pico de salida",t:90,q:"El secundario del transformador entrega 12 Vrms. En media onda, el pico que se observa sobre la carga es aproximadamente:",opts:["12,0 V","11,3 V","16,3 V","24,0 V"],correcta:2},
+{id:"r13",bloque:"2",tema:"Valor medio sin filtro",t:90,q:"Para una señal de media onda sin condensador de filtro, el valor medio (DC) que mide el multímetro es:",opts:["Vp / π, es decir cerca del 32 % del pico.","2·Vp / π, es decir cerca del 64 % del pico.","Vp / √2, es decir cerca del 71 % del pico.","Igual al valor de pico."],correcta:0},
+{id:"r14",bloque:"2",tema:"Diodo invertido",q:"Si en el montaje de media onda se invierte el diodo, lo que ocurre es que:",opts:["El circuito deja de funcionar por completo.","Se rectifica el semiciclo contrario y la salida queda con polaridad negativa respecto a la referencia.","La salida duplica su tensión de pico.","La frecuencia de la salida pasa a 120 Hz."],correcta:1},
+{id:"r15",bloque:"2",tema:"Conducción en el periodo",q:"En un rectificador de media onda, la carga recibe energía durante:",opts:["Todo el periodo de la señal de entrada.","La mitad del periodo.","La cuarta parte del periodo.","Solo en los instantes de paso por cero."],correcta:1},
+{id:"r16",bloque:"2",tema:"Comparación con onda completa",q:"Frente al rectificador de onda completa, el de media onda presenta:",opts:["Mayor tensión media y menor rizado.","Menor tensión media y mayor rizado.","La misma tensión media, pero el doble de frecuencia.","Mayor tensión media y la misma frecuencia de rizado."],correcta:1},
+{id:"r17",bloque:"2",tema:"Aprovechamiento del transformador",q:"El rectificador de media onda se usa poco en fuentes de alimentación porque:",opts:["Requiere más diodos que el puente.","Aprovecha solo un semiciclo, entrega menos potencia y exige un filtrado mayor.","No admite condensador de filtro.","Solo funciona con señales de frecuencia superior a 1 kHz."],correcta:1},
+/* Bloque 3 · Puente de diodos */
+{id:"r18",bloque:"3",tema:"Número de diodos del puente",q:"El rectificador en puente está formado por:",opts:["Dos diodos.","Tres diodos.","Cuatro diodos.","Seis diodos."],correcta:2},
+{id:"r19",bloque:"3",tema:"Diodos que conducen",q:"En cada semiciclo de la señal de entrada, en el puente de diodos conducen:",opts:["Un solo diodo.","Dos diodos opuestos, en serie con la carga.","Los cuatro diodos a la vez.","Dos diodos en paralelo con la carga."],correcta:1},
+{id:"r20",bloque:"3",tema:"Caída total del puente",t:90,q:"Con un secundario de 12 Vrms, el pico a la salida del puente (sin filtro) es aproximadamente:",opts:["16,97 V, porque el puente no introduce caída.","16,3 V, porque solo conduce un diodo.","15,6 V, porque conducen dos diodos en serie.","8,5 V, porque el puente divide la tensión."],correcta:2},
+{id:"r21",bloque:"3",tema:"Frecuencia del rizado",q:"Alimentando el puente desde la red de 60 Hz, la señal rectificada se repite con una frecuencia de:",opts:["60 Hz","120 Hz","180 Hz","30 Hz"],correcta:1},
+{id:"r22",bloque:"3",tema:"Valor medio en onda completa",t:90,q:"Para una señal de onda completa sin filtro, el valor medio (DC) equivale a:",opts:["0,318 · Vp","0,500 · Vp","0,636 · Vp","0,707 · Vp"],correcta:2},
+{id:"r23",bloque:"3",tema:"Ventaja del puente",q:"La principal ventaja del puente de diodos frente al de media onda es que:",opts:["Aprovecha los dos semiciclos: mayor tensión media y rizado de doble frecuencia, más fácil de filtrar.","Elimina por completo el rizado sin necesidad de condensador.","No necesita transformador.","Reduce a la mitad la corriente que circula por la carga."],correcta:0},
+{id:"r24",bloque:"3",tema:"Falla: diodo abierto",q:"Si uno de los cuatro diodos del puente queda abierto, en el osciloscopio se observará que la salida:",opts:["Desaparece por completo.","Pasa a comportarse como media onda, con rizado a 60 Hz y menor tensión media.","Duplica su tensión de pico.","Conserva los 120 Hz pero con el doble de amplitud."],correcta:1},
+{id:"r25",bloque:"3",tema:"Falla: diodo en corto",q:"Si un diodo del puente queda en cortocircuito, lo que se espera es que:",opts:["La salida quede perfectamente continua.","El secundario del transformador quede cortocircuitado en un semiciclo, con corriente excesiva y riesgo de daño.","La frecuencia de la salida suba a 240 Hz.","No se note ningún cambio en el funcionamiento."],correcta:1},
+{id:"r26",bloque:"3",tema:"Polaridad sobre la carga",q:"En el rectificador de onda completa tipo puente, la tensión sobre la carga:",opts:["Cambia de polaridad en cada semiciclo.","Conserva la misma polaridad en los dos semiciclos.","Es negativa durante el semiciclo positivo de entrada.","Solo aparece en el semiciclo positivo."],correcta:1},
+/* Bloque 4 · Medición en el osciloscopio */
+{id:"r27",bloque:"4",tema:"Acople para ver la rectificación",q:"Para observar la forma de onda rectificada completa, con su nivel continuo incluido, el canal del osciloscopio debe estar en:",opts:["Acople AC.","Acople DC.","Acople GND.","Modo XY."],correcta:1},
+{id:"r28",bloque:"4",tema:"Acople para medir el rizado",q:"Para medir con precisión un rizado pequeño montado sobre la tensión continua de salida conviene:",opts:["Usar acople AC y ampliar la escala vertical.","Usar acople DC en la escala de 5 V/div.","Usar el multímetro en la escala de voltaje continuo.","Poner la sonda en ×10 y acople DC."],correcta:0},
+{id:"r29",bloque:"4",tema:"Masa de la sonda",q:"La pinza de masa de la sonda del osciloscopio está unida a la tierra de la red. Por eso, al medir sobre el puente:",opts:["Se puede conectar a cualquier nodo del circuito sin consecuencias.","Debe conectarse siempre a la referencia (negativo de la salida); conectarla a otro nodo puede provocar un cortocircuito.","Debe dejarse suelta para no alterar la medida.","Debe conectarse al terminal positivo de la salida."],correcta:1},
+{id:"r30",bloque:"4",tema:"Medida de la frecuencia de rizado",q:"Para determinar la frecuencia del rizado a partir de la pantalla se debe:",opts:["Medir la amplitud pico a pico y dividirla entre el time/div.","Medir el tiempo entre dos picos consecutivos y calcular f = 1/T.","Contar las divisiones verticales que ocupa la señal.","Leer directamente el valor de volts/div."],correcta:1},
+{id:"r31",bloque:"4",tema:"Periodo del rizado",t:90,q:"Si el rizado de la salida del puente se repite a 120 Hz, el tiempo entre dos picos consecutivos es de:",opts:["16,7 ms","8,33 ms","4,17 ms","1,20 ms"],correcta:1},
+{id:"r32",bloque:"4",tema:"Sonda ×10",q:"Si se usa la sonda en posición ×10 pero el osciloscopio queda configurado en ×1, la lectura de tensión aparecerá:",opts:["Diez veces mayor que la real.","Diez veces menor que la real.","Correcta, porque el ajuste es automático.","Desplazada en el eje de tiempo, no en amplitud."],correcta:1},
+{id:"r33",bloque:"4",tema:"Lectura de volts/div",t:90,q:"Con el canal en 5 V/div y acople DC, la señal rectificada alcanza un pico de 3,4 divisiones sobre la línea de referencia. El valor de pico es:",opts:["8,4 V","15,0 V","17,0 V","34,0 V"],correcta:2},
+{id:"r34",bloque:"4",tema:"Multímetro frente a osciloscopio",q:"Midiendo la salida filtrada, el multímetro en DC y el osciloscopio informan cosas distintas porque:",opts:["El multímetro muestra el valor medio y no permite ver el rizado, que sí se observa en el osciloscopio.","El osciloscopio muestra el valor medio y el multímetro el valor de pico.","El multímetro mide en alterna y el osciloscopio en continua.","Los dos deberían coincidir; si no, uno está averiado."],correcta:0},
+{id:"r35",bloque:"4",tema:"Cambio de acople",q:"Al pasar el canal de acople DC a acople AC sobre una salida filtrada, la traza en pantalla:",opts:["Se desplaza hacia arriba una cantidad igual al valor de pico.","Baja y se centra alrededor de cero, porque se bloquea la componente continua.","Desaparece por completo.","Duplica su amplitud pico a pico."],correcta:1},
+{id:"r36",bloque:"4",tema:"Estabilidad del trigger",q:"Si la señal rectificada se desplaza continuamente en la pantalla, lo correcto es:",opts:["Cambiar el condensador de filtro.","Ajustar el nivel de disparo (trigger) hasta estabilizar la traza.","Pasar el canal a acople GND.","Bajar la frecuencia del transformador."],correcta:1},
+/* Bloque 5 · Filtro capacitivo y rizado */
+{id:"r37",bloque:"5",tema:"Conexión del condensador",q:"El condensador de filtro de una fuente rectificada se conecta:",opts:["En serie con la carga.","En paralelo con la carga.","En serie con uno de los diodos.","Entre los dos terminales del secundario del transformador."],correcta:1},
+{id:"r38",bloque:"5",tema:"Funcionamiento del filtro",q:"El condensador reduce el rizado porque:",opts:["Se carga en los picos de la señal y se descarga sobre la carga durante los valles.","Bloquea el paso de la corriente continua hacia la carga.","Aumenta la frecuencia de la señal rectificada.","Recorta los picos de la señal rectificada."],correcta:0},
+{id:"r39",bloque:"5",tema:"Efecto de aumentar C",q:"Manteniendo la misma carga, al aumentar la capacidad del condensador de filtro el rizado:",opts:["Aumenta, porque el condensador almacena más energía.","Disminuye, y la salida se acerca más a una tensión continua.","No cambia, porque solo depende de la frecuencia.","Cambia de frecuencia pero conserva su amplitud."],correcta:1},
+{id:"r40",bloque:"5",tema:"Duplicar la capacidad",t:90,q:"Si se sustituye el condensador de 470 µF por uno de 940 µF sin cambiar la carga, el rizado pico a pico se reduce aproximadamente:",opts:["A la mitad.","A la cuarta parte.","En un 10 %.","No se reduce; solo cambia la frecuencia."],correcta:0},
+{id:"r41",bloque:"5",tema:"Cálculo del rizado",t:90,q:"Con la aproximación Vr(pp) ≈ Idc / (f · C), en un puente de 120 Hz que entrega 12 mA a la carga con un condensador de 100 µF, el rizado es de unos:",opts:["0,1 V","1,0 V","10 V","0,01 V"],correcta:1},
+{id:"r42",bloque:"5",tema:"Rizado en media onda frente a puente",q:"Con el mismo condensador y la misma carga, el rizado del puente es menor que el de media onda porque:",opts:["El puente entrega menos corriente a la carga.","La recarga ocurre al doble de frecuencia, así que el condensador se descarga durante la mitad del tiempo.","El puente introduce una caída de 1,4 V que suaviza la señal.","El condensador se carga a una tensión mayor en el puente."],correcta:1},
+{id:"r43",bloque:"5",tema:"Efecto de la carga",q:"Si se reduce la resistencia de carga (se exige más corriente) manteniendo el mismo condensador, el rizado:",opts:["Disminuye.","Aumenta, porque el condensador se descarga más rápido.","No cambia.","Desaparece al superar los 100 mA."],correcta:1},
+{id:"r44",bloque:"5",tema:"Condensador electrolítico",q:"Al montar el condensador electrolítico de filtro se debe verificar que:",opts:["Su polaridad sea la correcta y su tensión de trabajo supere el pico de la salida.","Quede conectado en serie con el diodo de mayor PIV.","Su capacidad sea inferior a 100 µF para no dañar los diodos.","Se conecte antes del puente, en el lado de alterna."],correcta:0}
 ]
 };
 /* ===== Elementos ===== */
@@ -310,7 +378,7 @@ function vQuiz(){
     <span class="est-tag ${qz.activo?"on":"off"}">${qz.activo?"Habilitado":"Próximamente"}</span></button>`).join("");
   body.innerHTML=`
     <div class="step-label"><span>Selecciona el quiz</span></div>
-    <p class="intro-p">La unidad contempla cuatro quices de laboratorio. En este momento <b>solo está habilitado el Quiz 1</b>; los demás se abrirán al cierre de cada práctica.</p>
+    <p class="intro-p">La unidad contempla cuatro quices de laboratorio. En este momento están habilitados <b>el Quiz 1 y el Quiz 2</b>; los demás se abrirán al cierre de cada práctica. Cada quiz tiene su propio intento único.</p>
     <div class="est-grid">${cards}</div>`;
   body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
     if(b.disabled) return;
@@ -391,7 +459,7 @@ function vPregunta(){
   body.innerHTML=`
     <div class="step-label"><span>Pregunta ${st.idx+1} de ${total}</span>
       <span class="time-chip" id="chip">${it.t}s</span></div>
-    <span class="badge-sec">Bloque ${it.bloque} · ${esc(BLOQUES[it.bloque]||"")}</span>
+    <span class="badge-sec">Bloque ${it.bloque} · ${esc(nombreBloque(it.bloque))}</span>
     <p class="qtext">${esc(it.q)}</p>
     <div class="opts">${opts}</div>
     <div class="nav"><button class="btn btn-primary" id="next" disabled>${st.idx===total-1?"Finalizar":"Siguiente →"}</button></div>`;
@@ -435,7 +503,7 @@ function construirPayload(abandonado){
     if(sel!==null) respondidas++;
     if(ok) correctas++;
     const b=blqAcc[it.bloque]||(blqAcc[it.bloque]={c:0,t:0}); b.t++; if(ok) b.c++;
-    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:BLOQUES[it.bloque]||it.bloque, tema:it.tema,
+    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:nombreBloque(it.bloque), tema:it.tema,
       etiqueta:it.q, sel:sel, selTexto:(sel===null?null:it.opts[sel]),
       correcta:ok, agotado:(sel===null)});
   });
