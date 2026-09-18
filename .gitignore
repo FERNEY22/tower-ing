@@ -2,3 +2,5 @@
 proyectos/apreciacion/Fuente/
 .claude/
 expressions.txt
+.venv/
+__pycache__/
