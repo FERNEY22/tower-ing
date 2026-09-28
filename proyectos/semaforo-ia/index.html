@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semáforo del Reglamento de IA — Towers Ing</title>
+<meta name="description" content="Juego de aula sobre el Reglamento de Inteligencia Artificial de la Universidad Ean. Verde permitido, ámbar se declara, rojo es una falta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles/towers.css">
+<style>
+/* ============================================================
+   SEMÁFORO DEL REGLAMENTO DE IA
+   Sobre el sistema "Papel & Voltaje" de Towers Ing.
+   Todo lo propio del juego va con prefijo .sem- / #sem-
+   ============================================================ */
+:root {
+  --verde:      #15803D;  --verde-2: #1A9A4A;  --verde-soft: rgba(21,128,61,.10);
+  --ambar:      #C2700A;  --ambar-2: #DD830F;  --ambar-soft: rgba(194,112,10,.12);
+  --rojo:       #BE2D44;  --rojo-2:  #D33A52;  --rojo-soft:  rgba(190,45,68,.10);
+}
+
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); }
+.sem-wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 28px); }
+[hidden] { display: none !important; }
+
+/* ---------- Barra superior ---------- */
+.sem-bar {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  background: rgba(243,238,226,.88); backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.sem-bar-in { max-width: 1240px; margin: 0 auto; padding: 12px clamp(16px,3vw,28px);
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: space-between; }
+.sem-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);
+  font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: 1rem; }
+.sem-brand .bolt { color: var(--electric); }
+.sem-bar-mid { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sem-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 13px; border-radius: var(--r-pill);
+  background: var(--surface); border: 1px solid var(--line); font-size: var(--t-sm); color: var(--ink-2); }
+.sem-pill strong { color: var(--ink); font-weight: 600; }
+.sem-pill.is-turn { background: var(--electric-soft); border-color: transparent; color: var(--electric-ink); }
+.sem-tools { display: flex; align-items: center; gap: 8px; }
+.sem-tools label { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-sm); color: var(--ink-3); cursor: pointer; }
+
+/* ---------- Botones ---------- */
+.sem-btn { font-family: var(--font-body); font-size: var(--t-base); font-weight: 600; cursor: pointer;
+  border-radius: var(--r-pill); padding: 10px 18px; border: 1px solid var(--line-2);
+  background: var(--surface); color: var(--ink); transition: background .18s var(--ease-soft), border-color .18s, transform .12s var(--ease); }
+.sem-btn:hover:not(:disabled) { background: var(--paper-2); border-color: var(--line-strong); }
+.sem-btn:active:not(:disabled) { transform: translateY(1px); }
+.sem-btn:disabled { opacity: .42; cursor: not-allowed; }
+.sem-btn-primary { background: var(--electric); border-color: transparent; color: #fff; box-shadow: var(--shadow-sm); }
+.sem-btn-primary:hover:not(:disabled) { background: var(--electric-2); border-color: transparent; }
+.sem-btn-lg { font-size: 1.05rem; padding: 14px 30px; }
+.sem-btn-sm { font-size: var(--t-sm); padding: 6px 13px; }
+.sem-btn .arrow { transition: transform .25s var(--ease); display: inline-block; }
+.sem-btn:hover .arrow { transform: translateX(4px); }
+
+/* ---------- Luces de semáforo (firma visual) ---------- */
+.sem-lights { display: inline-flex; gap: 7px; align-items: center; }
+.sem-lights i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.sem-lights i:nth-child(1) { background: var(--verde); }
+.sem-lights i:nth-child(2) { background: var(--ambar); }
+.sem-lights i:nth-child(3) { background: var(--rojo); }
+.sem-lights.lg i { width: 15px; height: 15px; }
+
+/* ============================ SETUP ============================ */
+.sem-setup { padding: clamp(28px,5vw,56px) 0 72px; }
+.sem-hero { margin-bottom: 30px; }
+.sem-kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono);
+  font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.sem-hero h1 { font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: clamp(32px, 5.2vw, 56px); letter-spacing: var(--display-spacing); line-height: 1.02; margin-bottom: 14px; }
+.sem-hero h1 em { font-style: normal; color: var(--electric); }
+.sem-hero .sub { color: var(--ink-2); font-size: var(--t-md); line-height: 1.6; max-width: 62ch; }
+.sem-hero .norma { margin-top: 10px; font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink-3); }
+
+.sem-grid2 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; align-items: start; }
+.sem-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: clamp(20px,2.6vw,28px); box-shadow: var(--shadow-sm); }
+.sem-card + .sem-card { margin-top: 20px; }
+.sem-card h2 { font-family: var(--font-display); font-size: 1.22rem; font-weight: 600;
+  letter-spacing: -.01em; margin-bottom: 4px; }
+.sem-card .hint { font-size: var(--t-sm); color: var(--ink-3); margin-bottom: 18px; }
+
+/* Grupos */
+.sem-grouplist { display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; }
+.sem-grow { display: flex; align-items: center; gap: 10px; }
+.sem-grow .idx { width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper-2); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); }
+.sem-input { flex: 1; font-family: var(--font-body); font-size: var(--t-base); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 9px 13px;
+  transition: border-color .18s, box-shadow .18s; min-width: 0; }
+.sem-input:focus { outline: none; border-color: var(--electric); box-shadow: 0 0 0 3px var(--electric-soft); }
+.sem-del { flex: none; width: 30px; height: 30px; border-radius: var(--r-sm); border: 1px solid var(--line);
+  background: transparent; color: var(--ink-3); cursor: pointer; font-size: 15px; line-height: 1;
+  transition: background .16s, color .16s, border-color .16s; }
+.sem-del:hover:not(:disabled) { background: var(--neg-soft); color: var(--neg); border-color: transparent; }
+.sem-del:disabled { opacity: .3; cursor: not-allowed; }
+
+/* Reglas */
+.sem-field { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 13px 0; border-bottom: 1px solid var(--line); }
+.sem-field:last-of-type { border-bottom: none; }
+.sem-field label { font-size: var(--t-base); color: var(--ink-2); }
+.sem-field .num { width: 96px; text-align: right; font-family: var(--font-mono); }
+.sem-readout { font-family: var(--font-display); font-size: 1.32rem; font-weight: 600; color: var(--electric-ink); }
+.sem-note { font-size: var(--t-sm); color: var(--ink-3); line-height: 1.55; margin-top: 14px; }
+.sem-warn { margin-top: 10px; font-size: var(--t-sm); font-weight: 600; color: var(--neg);
+  background: var(--neg-soft); border-radius: var(--r-sm); padding: 9px 13px; }
+
+/* Leyenda de colores */
+.sem-legend { display: flex; flex-direction: column; gap: 10px; }
+.sem-leg { display: flex; align-items: flex-start; gap: 13px; padding: 13px 15px;
+  border-radius: var(--r-md); border: 1px solid var(--line); background: var(--paper); }
+.sem-leg .dot { width: 13px; height: 13px; border-radius: 50%; flex: none; margin-top: 3px; }
+.sem-leg .w { font-family: var(--font-display); font-weight: 700; font-size: .95rem; letter-spacing: .01em; }
+.sem-leg .d { font-size: var(--t-sm); color: var(--ink-3); margin-top: 1px; line-height: 1.45; }
+.sem-leg.v { background: var(--verde-soft); border-color: transparent; } .sem-leg.v .dot { background: var(--verde); } .sem-leg.v .w { color: var(--verde); }
+.sem-leg.a { background: var(--ambar-soft); border-color: transparent; } .sem-leg.a .dot { background: var(--ambar); } .sem-leg.a .w { color: var(--ambar); }
+.sem-leg.r { background: var(--rojo-soft);  border-color: transparent; } .sem-leg.r .dot { background: var(--rojo);  } .sem-leg.r .w { color: var(--rojo);  }
+
+.sem-saved { border-left: 3px solid var(--electric); }
+.sem-actions { display: flex; flex-wrap: wrap; gap: 11px; }
+.sem-start { margin-top: 26px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ============================ JUEGO ============================ */
+.sem-game { padding: 22px 0 40px; }
+.sem-stage { display: grid; grid-template-columns: minmax(300px, 38%) 1fr; gap: 24px; align-items: start; }
+
+/* Ruleta */
+.sem-wheelbox { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 18px; box-shadow: var(--shadow-sm); text-align: center; position: sticky; top: 78px; }
+#semWheel { width: 100%; max-width: 460px; height: auto; display: block; margin: 0 auto 14px; }
+.sem-left { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink-3);
+  letter-spacing: .04em; margin-bottom: 12px; }
+
+/* Panel del caso */
+.sem-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md); overflow: hidden; min-height: 460px; display: flex; flex-direction: column; }
+.sem-idle { flex: 1; display: grid; place-content: center; text-align: center; padding: 60px 26px; gap: 8px; }
+.sem-idle .big { font-family: var(--font-display); font-size: clamp(20px,2.4vw,27px); font-weight: 600;
+  letter-spacing: -.01em; line-height: 1.25; }
+.sem-idle .big b { color: var(--electric); }
+.sem-idle .small { color: var(--ink-3); font-size: var(--t-base); }
+
+.sem-case-head { display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 15px 22px; border-bottom: 1px solid var(--line); background: var(--paper); flex-wrap: wrap; }
+.sem-chip { font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); }
+.sem-body { padding: 24px 26px 8px; flex: 1; }
+.sem-case-text { font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(1.32rem, 1.9vw, 1.78rem); line-height: 1.32; letter-spacing: -.012em; color: var(--ink); }
+
+/* Cronómetro de anillo */
+.sem-timer { display: flex; align-items: center; gap: 13px; }
+.sem-ring { position: relative; width: 62px; height: 62px; flex: none; }
+.sem-ring svg { transform: rotate(-90deg); display: block; }
+.sem-ring circle { fill: none; stroke-width: 5; stroke-linecap: round; }
+.sem-ring .bg { stroke: var(--line-2); }
+.sem-ring .fg { stroke: var(--electric); transition: stroke-dashoffset .25s linear, stroke .3s; }
+.sem-ring .n { position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: 1.02rem; font-variant-numeric: tabular-nums; color: var(--ink); }
+.sem-timer .lbl { font-size: var(--t-sm); color: var(--ink-3); line-height: 1.35; }
+.sem-timer.warn .sem-ring .fg { stroke: var(--rojo); }
+.sem-timer.warn .sem-ring .n { color: var(--rojo); animation: sem-pulse 1s ease-in-out infinite; }
+.sem-timer.warn .lbl { color: var(--rojo); font-weight: 600; }
+@keyframes sem-pulse { 50% { opacity: .35; } }
+
+/* Respuestas */
+.sem-answers { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; padding: 20px 26px 24px; }
+.sem-ans { position: relative; border: none; border-radius: var(--r-md); padding: 20px 12px 16px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; letter-spacing: .01em; color: #fff;
+  box-shadow: var(--shadow-sm); transition: transform .14s var(--ease), box-shadow .2s, opacity .25s, filter .18s; }
+.sem-ans small { display: block; font-family: var(--font-body); font-size: var(--t-sm); font-weight: 500;
+  opacity: .92; margin-top: 4px; letter-spacing: 0; }
+.sem-ans .mk { display: block; font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; margin-top: 9px; min-height: 1.1em; opacity: .95; }
+.sem-ans.v { background: var(--verde); }
+.sem-ans.a { background: var(--ambar); }
+.sem-ans.r { background: var(--rojo); }
+.sem-ans:hover:not(:disabled) { transform: translateY(-3px); box-shadow: var(--shadow-md); filter: brightness(1.07); }
+.sem-ans:active:not(:disabled) { transform: translateY(0); }
+.sem-ans:disabled { cursor: default; }
+.sem-ans.dim { opacity: .26; filter: saturate(.5); }
+.sem-ans.ok { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px currentColor, var(--shadow-md); }
+
+/* Revelación */
+.sem-reveal { border-top: 1px solid var(--line); background: var(--paper); padding: 20px 26px 24px; }
+.sem-verdict { display: flex; align-items: center; gap: 11px; font-family: var(--font-display);
+  font-size: 1.24rem; font-weight: 700; letter-spacing: -.01em; margin-bottom: 13px; }
+.sem-verdict .bdg { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 11px; border-radius: var(--r-pill); }
+.sem-verdict.good .bdg { background: var(--verde-soft); color: var(--verde); }
+.sem-verdict.bad  .bdg { background: var(--rojo-soft);  color: var(--rojo);  }
+.sem-kv { font-size: var(--t-base); color: var(--ink-2); line-height: 1.62; margin-bottom: 9px; }
+.sem-kv b { color: var(--ink); font-weight: 600; }
+.sem-art { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--ink-3);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 9px 13px; margin-top: 11px; line-height: 1.5; }
+.sem-fix { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 16px; padding-top: 14px;
+  border-top: 1px dashed var(--line-2); font-size: var(--t-sm); color: var(--ink-3); }
+.sem-fix .sem-input { width: 80px; flex: none; text-align: right; font-family: var(--font-mono); padding: 6px 10px; font-size: var(--t-sm); }
+.sem-next { margin-top: 18px; }
+
+/* Marcador */
+.sem-score { display: grid; grid-template-columns: repeat(auto-fit, minmax(146px,1fr)); gap: 11px; margin-top: 22px; }
+.sem-sb { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 13px 16px; text-align: center; transition: background .2s, border-color .2s, transform .2s var(--ease); }
+.sem-sb .n { font-size: var(--t-sm); color: var(--ink-3); margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sem-sb .p { font-family: var(--font-display); font-size: 1.62rem; font-weight: 700;
+  letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.sem-sb.on { background: var(--electric); border-color: transparent; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.sem-sb.on .n { color: rgba(255,255,255,.82); }
+.sem-sb.on .p { color: #fff; }
+
+/* Historial */
+.sem-det { margin-top: 24px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); overflow: hidden; }
+.sem-det > summary { cursor: pointer; padding: 14px 20px; font-family: var(--font-display);
+  font-weight: 600; font-size: var(--t-md); list-style: none; display: flex; align-items: center; gap: 9px; }
+.sem-det > summary::-webkit-details-marker { display: none; }
+.sem-det > summary::before { content: "▸"; color: var(--ink-3); transition: transform .2s var(--ease); display: inline-block; }
+.sem-det[open] > summary::before { transform: rotate(90deg); }
+.sem-det .inner { padding: 0 20px 20px; }
+.sem-table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+.sem-table th { text-align: left; font-family: var(--font-mono); font-size: var(--t-xs);
+  letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 500;
+  padding: 9px 11px; border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+.sem-table td { padding: 10px 11px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+.sem-table tr:last-child td { border-bottom: none; }
+.sem-table .num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sem-table .case { max-width: 380px; color: var(--ink); }
+.sem-badge { font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; letter-spacing: .05em;
+  padding: 3px 9px; border-radius: var(--r-pill); white-space: nowrap; }
+.sem-badge.v { background: var(--verde-soft); color: var(--verde); }
+.sem-badge.a { background: var(--ambar-soft); color: var(--ambar); }
+.sem-badge.r { background: var(--rojo-soft);  color: var(--rojo);  }
+.sem-badge.t { background: var(--paper-2);    color: var(--ink-3); }
+
+/* ============================ FINAL ============================ */
+.sem-end { padding: clamp(26px,4vw,48px) 0 72px; }
+.sem-end h1 { font-family: var(--font-display); font-size: clamp(30px,4.4vw,46px);
+  font-weight: var(--display-weight); letter-spacing: var(--display-spacing); line-height: 1.04; margin-bottom: 8px; }
+.sem-endnote { color: var(--ink-3); font-size: var(--t-base); margin-bottom: 34px; }
+.sem-podium { display: flex; justify-content: center; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+.sem-pod { width: 208px; text-align: center; }
+.sem-pod .nm { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+  letter-spacing: -.01em; margin-bottom: 2px; overflow-wrap: anywhere; }
+.sem-pod .pt { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--ink-3); margin-bottom: 9px; }
+.sem-pod .bl { border-radius: var(--r-md) var(--r-md) 0 0; display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 2.1rem; font-weight: 700; letter-spacing: -.02em;
+  background: var(--surface); border: 1px solid var(--line); border-bottom: none; color: var(--ink-3); }
+.sem-pod.r1 .bl { height: 168px; background: var(--electric); border-color: transparent; color: #fff; box-shadow: var(--shadow-md); }
+.sem-pod.r2 .bl { height: 124px; }
+.sem-pod.r3 .bl { height: 94px; }
+.sem-rule { border: 1px solid var(--line); border-left: 4px solid var(--electric);
+  background: var(--surface); border-radius: var(--r-lg); padding: clamp(24px,3.4vw,40px);
+  margin: 38px 0 26px; box-shadow: var(--shadow-sm); }
+.sem-rule .lb { font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 13px; }
+.sem-rule .tx { font-family: var(--font-display); font-size: clamp(1.28rem,2.4vw,1.92rem);
+  font-weight: 600; line-height: 1.34; letter-spacing: -.015em; }
+.sem-rule .tx b { color: var(--electric); font-weight: 700; }
+
+.sem-foot { border-top: 1px solid var(--line); margin-top: 52px; padding: 26px 0 40px;
+  font-size: var(--t-sm); color: var(--ink-3); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.sem-foot a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.sem-foot a:hover { color: var(--electric); border-color: var(--electric); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .sem-grid2 { grid-template-columns: 1fr; }
+  .sem-stage { grid-template-columns: 1fr; }
+  .sem-wheelbox { position: static; }
+  #semWheel { max-width: 360px; }
+}
+@media (max-width: 620px) {
+  .sem-answers { grid-template-columns: 1fr; padding: 16px; }
+  .sem-ans { padding: 15px 12px; font-size: 1.14rem; }
+  .sem-body { padding: 18px 16px 6px; }
+  .sem-case-head, .sem-reveal { padding-left: 16px; padding-right: 16px; }
+  .sem-pod { width: 100%; max-width: 280px; }
+  .sem-table .case { max-width: 180px; }
+}
+@media print { .sem-bar, .sem-actions, .sem-fix, .sem-next { display: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ======================= BARRA ======================= -->
+<header class="sem-bar">
+  <div class="sem-bar-in">
+    <a class="sem-brand" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+    <div class="sem-bar-mid" id="semBarMid" hidden>
+      <span class="sem-pill" id="pRound"></span>
+      <span class="sem-pill is-turn" id="pTurn"></span>
+    </div>
+    <div class="sem-tools">
+      <label><input type="checkbox" id="chkSound" checked> Sonido</label>
+      <button class="sem-btn sem-btn-sm" id="btnEndEarly" hidden>Terminar</button>
+      <button class="sem-btn sem-btn-sm" id="btnMenu" hidden>Menú</button>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= CONFIGURACIÓN ======================= -->
+<main id="scr-setup" class="sem-wrap sem-setup">
+
+  <section class="sem-hero">
+    <div class="sem-kicker"><span class="sem-lights"><i></i><i></i><i></i></span> Juego de aula · Universidad Ean</div>
+    <h1>Semáforo del <em>Reglamento de IA</em></h1>
+    <p class="sub">Cada grupo gira la ruleta, lee un caso real de uso de inteligencia artificial y decide en qué color cae antes de que se acabe el tiempo.</p>
+    <p class="norma">Acuerdo 006 del Consejo Superior · 24 de abril de 2025</p>
+  </section>
+
+  <div class="sem-card sem-saved" id="savedBox" hidden>
+    <h2>Hay un juego guardado</h2>
+    <p class="hint" id="savedInfo"></p>
+    <div class="sem-actions">
+      <button class="sem-btn sem-btn-primary" id="btnContinue">Continuar donde quedó <span class="arrow">→</span></button>
+      <button class="sem-btn" id="btnNewGame">Empezar uno nuevo</button>
+    </div>
+  </div>
+
+  <div class="sem-grid2">
+    <div>
+      <div class="sem-card">
+        <h2>Grupos</h2>
+        <p class="hint">Escriba el nombre de cada equipo. El orden de turno es el de esta lista.</p>
+        <div class="sem-grouplist" id="groupRows"></div>
+        <button class="sem-btn sem-btn-sm" id="btnAddGroup">+ Agregar grupo</button>
+      </div>
+
+      <div class="sem-card">
+        <h2>Reglas</h2>
+        <p class="hint">Son 5 rondas de 20 puntos: un juego perfecto suma 100, que es la nota máxima. El juego termina al cerrar la ronda 5, cuando todos los grupos han jugado los mismos turnos.</p>
+        <div class="sem-field">
+          <label for="inRounds">Rondas por grupo (fijo)</label>
+          <input class="sem-input num" id="inRounds" type="number" min="5" max="5" step="1" value="5" disabled>
+        </div>
+        <div class="sem-field">
+          <label for="inTime">Segundos para responder</label>
+          <input class="sem-input num" id="inTime" type="number" min="10" max="600" step="5">
+        </div>
+        <div class="sem-field">
+          <label>Puntos por acierto</label>
+          <span class="sem-readout" id="outPts">—</span>
+        </div>
+        <p class="sem-note" id="setupInfo"></p>
+        <p class="sem-warn" id="setupWarn" hidden></p>
+      </div>
+    </div>
+
+    <div>
+      <div class="sem-card">
+        <h2>Los tres colores</h2>
+        <p class="hint">Es la única decisión que toma cada grupo.</p>
+        <div class="sem-legend">
+          <div class="sem-leg v"><span class="dot"></span><div><div class="w">VERDE</div><div class="d">Uso permitido. La IA no tocó el entregable.</div></div></div>
+          <div class="sem-leg a"><span class="dot"></span><div><div class="w">ÁMBAR</div><div class="d">Permitido, pero hay que declararlo: modelo, versión, creador, prompt y fecha.</div></div></div>
+          <div class="sem-leg r"><span class="dot"></span><div><div class="w">ROJO</div><div class="d">Es una falta. Ni declarándolo queda bien.</div></div></div>
+        </div>
+        <p class="sem-note">Acierto = los puntos de la ronda. Error o tiempo agotado = 0. El docente puede corregir cualquier turno a mano.</p>
+      </div>
+
+      <div class="sem-card">
+        <h2>Cómo se juega</h2>
+        <p class="hint" style="margin:0">Gire la ruleta, lea el caso en voz alta y deje que el grupo decida. Al responder se revela la explicación y el artículo del Reglamento que lo sustenta. Hay <strong id="nCases">30</strong> casos, diez de cada color, y ninguno se repite en la misma partida. El sorteo reparte los colores de forma pareja entre los grupos.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sem-start">
+    <button class="sem-btn sem-btn-primary sem-btn-lg" id="btnStart">Iniciar juego <span class="arrow">→</span></button>
+    <span class="sem-note" style="margin:0" id="storageWarn" hidden></span>
+  </div>
+</main>
+
+<!-- ======================= JUEGO ======================= -->
+<main id="scr-game" class="sem-wrap sem-game" hidden>
+  <div class="sem-stage">
+    <div class="sem-wheelbox">
+      <canvas id="semWheel" width="880" height="880" aria-label="Ruleta de casos"></canvas>
+      <div class="sem-left" id="wheelLeft"></div>
+      <button class="sem-btn sem-btn-primary sem-btn-lg" id="btnSpin" style="width:100%">Girar ruleta</button>
+    </div>
+
+    <div class="sem-panel">
+      <div class="sem-idle" id="pIdle"></div>
+
+      <div id="pCase" hidden style="display:flex;flex-direction:column;flex:1">
+        <div class="sem-case-head">
+          <span class="sem-chip" id="caseNum"></span>
+          <div class="sem-timer" id="timerBox">
+            <div class="sem-ring">
+              <svg width="62" height="62" viewBox="0 0 62 62">
+                <circle class="bg" cx="31" cy="31" r="26"></circle>
+                <circle class="fg" cx="31" cy="31" r="26" id="ringFg"></circle>
+              </svg>
+              <span class="n" id="timerT"></span>
+            </div>
+            <span class="lbl" id="timerMsg"></span>
+          </div>
+        </div>
+
+        <div class="sem-body"><p class="sem-case-text" id="caseText"></p></div>
+
+        <div class="sem-answers">
+          <button class="sem-ans v" data-ans="VERDE">VERDE<small>permitido</small><span class="mk"></span></button>
+          <button class="sem-ans a" data-ans="AMBAR">ÁMBAR<small>se declara</small><span class="mk"></span></button>
+          <button class="sem-ans r" data-ans="ROJO">ROJO<small>es una falta</small><span class="mk"></span></button>
+        </div>
+
+        <div class="sem-reveal" id="pReveal" hidden>
+          <div class="sem-verdict" id="rVerdict"></div>
+          <p class="sem-kv" id="rExpl"></p>
+          <div class="sem-art" id="rArt"></div>
+          <div class="sem-fix">
+            <span>Corregir este turno:</span>
+            <input type="text" class="sem-input" id="fixVal" inputmode="decimal" aria-label="Puntaje corregido">
+            <button class="sem-btn sem-btn-sm" id="btnFixApply">Aplicar</button>
+            <button class="sem-btn sem-btn-sm" id="btnFixFull"></button>
+            <button class="sem-btn sem-btn-sm" id="btnFixZero">Poner 0</button>
+          </div>
+          <button class="sem-btn sem-btn-primary sem-btn-lg sem-next" id="btnNext"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sem-score" id="scoreboard"></div>
+
+  <details class="sem-det">
+    <summary>Historial por turno</summary>
+    <div class="inner" id="histGame"></div>
+  </details>
+</main>
+
+<!-- ======================= FINAL ======================= -->
+<main id="scr-end" class="sem-wrap sem-end" hidden>
+  <div class="sem-kicker"><span class="sem-lights"><i></i><i></i><i></i></span> Resultados</div>
+  <h1>Así quedó la partida</h1>
+  <p class="sem-endnote" id="endNote"></p>
+
+  <div class="sem-podium" id="podium"></div>
+
+  <div class="sem-card">
+    <h2>Tabla final</h2>
+    <p class="hint">Puntaje por ronda y total de cada grupo.</p>
+    <div id="finalTable"></div>
+  </div>
+
+  <div class="sem-rule">
+    <div class="lb">La regla para recordar</div>
+    <div class="tx">Si la IA tocó el entregable, <b>se declara</b>.<br>Si la IA reemplazó su criterio, <b>es falta</b>.</div>
+  </div>
+
+  <div class="sem-actions">
+    <button class="sem-btn sem-btn-primary sem-btn-lg" id="btnCSV">Exportar resultados (CSV)</button>
+    <button class="sem-btn" id="btnEndNew">Nuevo juego</button>
+  </div>
+
+  <details class="sem-det" open>
+    <summary>Historial por turno</summary>
+    <div class="inner" id="histEnd"></div>
+  </details>
+</main>
+
+<footer class="sem-wrap sem-foot">
+  <span>Semáforo del Reglamento de IA · Universidad Ean · Acuerdo CSU 006 de 2025</span>
+  <span><a href="../index.html">← Volver a proyectos</a></span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Casos: 10 VERDE · 10 ÁMBAR · 10 ROJO (v3) ----------
+     Los ids deben ser 1..N contiguos: cada id es un sector de la ruleta.
+     15, 16 y 20 se reemplazaron en su lugar; 26–30 son nuevos. */
+  var CASES = [
+    { id: 1, t: 'Mejoré con IA la redacción de la introducción de mi informe y en la declaración anoté modelo, versión, creador, prompt y fecha.', a: 'AMBAR',
+      e: 'Uso permitido de apoyo a la redacción. La declaración está completa: modelo, versión, creador, prompt y fecha (etiqueta «Redactado» o «Corregido con IA»).',
+      r: 'Art. 5, num. 5.3 (deber 3.º) y num. 5.4.' },
+    { id: 2, t: 'Le pedí a la IA que me explicara la ley de Ohm para estudiar antes del parcial; no la usé en ningún entregable.', a: 'VERDE',
+      e: 'Uso de la IA como recurso orientativo para comprender un tema; la IA no tocó ningún entregable.',
+      r: 'Art. 5, num. 5.1 (guía complementaria para el aprendizaje).' },
+    { id: 3, t: 'Para armar los equipos, pegamos en ChatGPT la lista del curso con nombres, cédulas y correos.', a: 'ROJO',
+      e: 'Se ingresaron nombres, números de identificación y datos de contacto en una herramienta de IA; el Reglamento lo prohíbe expresamente.',
+      r: 'Art. 5, num. 5.3 (deber 18.º); Art. 6, num. 6.1; Art. 8, num. 8.2.' },
+    { id: 4, t: 'La IA me dio una cifra sobre consumo energético en Colombia y la cité en el informe como "ChatGPT, 2026".', a: 'ROJO',
+      e: 'La IA no es fuente principal. El dato se valida con fuentes confiables y en las bases de datos de la Biblioteca Hildebrando Perico Afanador, y se cita esa fuente.',
+      r: 'Art. 5, num. 5.1 (motor de expresión de posibilidades) y num. 5.3 (deberes 5.º, 6.º y 7.º).' },
+    { id: 5, t: 'Escribí el código de Arduino, la IA me ayudó a encontrar un error y lo declaré.', a: 'AMBAR',
+      e: 'En programación la IA puede apoyar la explicación, la detección de errores y la optimización del código que escribió el estudiante; se declara («Corregido con IA»).',
+      r: 'Art. 5, num. 5.3 (deber 17.º) y num. 5.4.' },
+    { id: 6, t: 'La IA escribió toda la lógica del programa del sensor; yo cambié los nombres de las variables y lo declaré.', a: 'ROJO',
+      e: 'Declarar no basta: la IA sustituyó la lógica estructural del código, que debe producir el estudiante, y no hay contribución significativa.',
+      r: 'Art. 5, num. 5.3 (deber 17.º) y num. 5.4 (contribución significativa).' },
+    { id: 7, t: 'La narración de nuestro video es voz sintética y la declaramos en los créditos finales.', a: 'AMBAR',
+      e: 'Todo contenido generado con IA (texto, imágenes, datos, etc.) se declara; la voz sintética también, con modelo, versión, creador, prompt y fecha.',
+      r: 'Art. 5, num. 5.4.' },
+    { id: 8, t: 'Subí a una IA gratuita los planos y costos que la empresa aliada nos compartió como confidenciales.', a: 'ROJO',
+      e: 'Se compartió información confidencial de un tercero en una herramienta de IA no avalada por la Universidad.',
+      r: 'Art. 5, num. 5.1 (uso de IA generativa) y num. 5.3 (deberes 2.º, 16.º y 18.º); Art. 8, num. 8.2.' },
+    { id: 9, t: 'Antes de pasar a la IA la transcripción de la entrevista a un operario, quité su nombre y datos, le avisé y declaré el uso.', a: 'AMBAR',
+      e: 'Anonimizar los datos, comunicar al titular que se usarán en una IA y declarar el uso.',
+      r: 'Art. 6, num. 6.1; Art. 5, num. 5.4.' },
+    { id: 10, t: 'La IA nos propuso nombres para el proyecto; el equipo eligió uno, lo ajustó y lo declaramos.', a: 'AMBAR',
+      e: 'La IA como motor de posibilidades; la elección y el ajuste son contribución propia, y se declara.',
+      r: 'Art. 5, num. 5.1 (motor de expresión de posibilidades) y num. 5.4.' },
+    { id: 11, t: 'Usé IA para traducir un artículo en inglés y entenderlo; en el trabajo cito el artículo original.', a: 'VERDE',
+      e: 'Traducción para superar una barrera lingüística y comprender el texto; la fuente citada es el artículo original.',
+      r: 'Art. 5, num. 5.1 (traducción en caso de barrera lingüística).' },
+    { id: 12, t: 'Entregué un ensayo generado por IA y lo pasé por un "humanizador" para que no lo detectaran.', a: 'ROJO',
+      e: 'Hacer pasar como propio un contenido generado por IA y ocultarlo es fraude académico; la responsabilidad es de quien lo usa y se tramita por el Reglamento Estudiantil.',
+      r: 'Art. 4 (integridad académica y transparencia); Art. 5, num. 5.3 (deberes 13.º y 15.º); Art. 8, num. 8.1.' },
+    { id: 13, t: 'Un integrante usó IA en su parte sin declararla y el equipo entregó sin revisar.', a: 'ROJO',
+      e: 'El entregable salió con un uso de IA no declarado. Se incumple el deber de declarar, y la responsabilidad es de cada miembro que usa la herramienta.',
+      r: 'Art. 5, num. 5.3 (deberes 3.º y 15.º) y num. 5.4; Art. 8, num. 8.1.' },
+    { id: 14, t: 'La IA generó las imágenes de mi infografía y me sugirió datos; dos estaban errados, los corregí con fuentes de la biblioteca y declaré el uso.', a: 'AMBAR',
+      e: 'Validar los datos con fuentes confiables y las bases de la biblioteca, corregirlos y declarar el uso.',
+      r: 'Art. 5, num. 5.3 (deberes 5.º y 6.º) y num. 5.4.' },
+    { id: 15, t: 'En el quiz presencial abrí la IA en el celular para responder dos preguntas.', a: 'ROJO',
+      e: 'Entregar como propias respuestas producidas por la IA en una evaluación es fraude académico; se tramita por el Reglamento Estudiantil.',
+      r: 'Art. 4 (integridad académica); Art. 5, num. 5.3 (deberes 13.º y 15.º); Art. 8, num. 8.1.' },
+    { id: 16, t: 'El profesor autorizó usar IA en el taller evaluable; la usé para revisar si mi procedimiento tenía errores y lo declaré con modelo, versión, creador, prompt y fecha.', a: 'AMBAR',
+      e: 'Con autorización el uso es permitido, pero el entregable lleva la declaración completa (etiqueta «Corregido con Herramienta de IA»). El procedimiento sigue siendo del estudiante.',
+      r: 'Art. 5, num. 5.3 (deber 3.º) y num. 5.4.' },
+    { id: 17, t: 'La IA me sugirió tres formas de bajar el consumo de mi circuito; elegí una, la probé en el FabLab y lo declaré.', a: 'AMBAR',
+      e: 'La IA propuso alternativas; la elección y la verificación práctica son contribución propia, y se declara.',
+      r: 'Art. 5, num. 5.1 (motor de expresión de posibilidades) y num. 5.4.' },
+    { id: 18, t: 'La IA me orientó sobre qué buscar; encontré el artículo en la base de datos de la biblioteca y cito ese artículo.', a: 'VERDE',
+      e: 'La IA orientó la búsqueda; la fuente es verificada en las bases de la biblioteca y la IA no produjo contenido del entregable.',
+      r: 'Art. 5, num. 5.1 y num. 5.3 (deber 6.º).' },
+    { id: 19, t: 'Conecté una app de IA desconocida a mi correo institucional para que organizara mis tareas.', a: 'ROJO',
+      e: 'Herramienta no avalada con acceso a información institucional: riesgo de ciberseguridad y de exposición de datos.',
+      r: 'Art. 7 (ciberseguridad y riesgos); Art. 5, num. 5.1 (IA generativa avalada) y num. 5.3 (deberes 11.º y 16.º).' },
+    { id: 20, t: 'Corregí a mano un error de compilación y después le pedí a la IA que me explicara por qué ocurría.', a: 'VERDE',
+      e: 'La IA explicó código existente para comprender el error; la corrección y el código entregado son del estudiante.',
+      r: 'Art. 5, num. 5.1 (guía complementaria para el aprendizaje) y num. 5.3 (deber 17.º).' },
+    { id: 21, t: 'En la declaración escribí solo "usé IA", sin modelo, versión, prompt ni fecha.', a: 'ROJO',
+      e: 'La declaración debe incluir modelo, versión, creador, prompt y fecha; «usé IA» no cumple.',
+      r: 'Art. 5, num. 5.4.' },
+    { id: 22, t: 'Le pedí a la IA preguntas de práctica para el parcial y las respondí yo solo.', a: 'VERDE',
+      e: 'Uso orientativo para estudiar; no hay entregable.',
+      r: 'Art. 5, num. 5.1 (guía complementaria para el aprendizaje).' },
+    { id: 23, t: 'La IA graficó los datos de mi propio sensor (sin datos personales); yo interpreté los resultados y lo declaré.', a: 'AMBAR',
+      e: 'La IA como asistente de análisis de datos; la interpretación es propia, y se declara.',
+      r: 'Art. 5, num. 5.1 (herramienta para explorar y reflexionar) y num. 5.4.' },
+    { id: 24, t: 'En el pódcast de la Actividad 2 usé música de fondo generada con IA y la declaré en la descripción.', a: 'AMBAR',
+      e: 'El audio generado con IA es contenido generado y se declara.',
+      r: 'Art. 5, num. 5.4.' },
+    { id: 25, t: 'Me di cuenta de que la IA que usamos expuso datos del proyecto y no lo reporté.', a: 'ROJO',
+      e: 'Un incidente de seguridad con IA se gestiona con los procedimientos de la Universidad para contener el riesgo; ocultarlo lo impide.',
+      r: 'Art. 7 (gestión de incidentes y ciberseguridad); Art. 8, num. 8.1.' },
+    { id: 26, t: 'Antes de empezar el taller le pedí a la IA que me explicara los conceptos del enunciado que no entendía.', a: 'VERDE',
+      e: 'Recurso orientativo para comprender un tema; la IA no produjo nada del entregable.',
+      r: 'Art. 5, num. 5.1 (guía complementaria para el aprendizaje).' },
+    { id: 27, t: 'Para ensayar la sustentación le pedí a la IA que me hiciera preguntas como si fuera el jurado; la exposición la preparé yo.', a: 'VERDE',
+      e: 'Uso a título personal para prepararse; la IA no generó contenido de la presentación.',
+      r: 'Art. 5, num. 5.1 (guía complementaria para el aprendizaje).' },
+    { id: 28, t: 'Le pedí a la IA un ejercicio resuelto de un tema parecido al del taller para entender el método; el taller lo resolví yo.', a: 'VERDE',
+      e: 'Contenido didáctico destinado a comprender un tema: es el uso orientativo que permite el Reglamento. El taller no se tocó.',
+      r: 'Art. 5, num. 5.1 (contenido didáctico para la comprensión de un tema).' },
+    { id: 29, t: 'Usé la IA para organizar mi horario de estudio de la semana; no le di datos de nadie más.', a: 'VERDE',
+      e: 'Uso personal de apoyo al aprendizaje, sin entregable y sin datos personales de terceros.',
+      r: 'Art. 5, num. 5.1 (uso a título personal); Art. 8, num. 8.2.' },
+    { id: 30, t: 'Solo usé la IA para estudiar el tema, pero igual lo mencioné en el informe.', a: 'VERDE',
+      e: 'Declarar de más no es una falta: el principio de transparencia invita a comunicar el uso de la IA. La falta es ocultar un uso que sí tocó el entregable.',
+      r: 'Art. 4 (transparencia); Art. 5, num. 5.1.' }
+  ];
+
+  var LABEL = { VERDE: 'VERDE', AMBAR: 'ÁMBAR', ROJO: 'ROJO', TIEMPO: 'Sin respuesta' };
+  var DESC  = { VERDE: 'permitido', AMBAR: 'se declara', ROJO: 'es una falta' };
+  var CLS   = { VERDE: 'v', AMBAR: 'a', ROJO: 'r', TIEMPO: 't' };
+  var KEY = 'semaforoReglamentoIA_v3';
+  var COLORS = ['VERDE', 'AMBAR', 'ROJO'];
+  var TAU = Math.PI * 2, N = CASES.length, SEG = TAU / N;
+  var RING = 2 * Math.PI * 26;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = null;
+  var draft = defaultDraft();
+  var timerId = null, deadline = 0, lastShown = null, paused = 0;
+  var rot = 0, spinning = false, audioCtx = null, storageOk = true;
+
+  var ROUNDS = 5;   // fijo: 5 × 20 = 100, la nota máxima
+  function defaultDraft() { return { groups: ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4', 'Grupo 5'], rounds: ROUNDS, time: 60 }; }
+
+  /* ---------- Utilidades ---------- */
+  function r2(n) { return Math.round(n * 100) / 100; }
+  function fmt(n) { return r2(n).toLocaleString('es-CO', { maximumFractionDigits: 2 }); }
+  function ptsFor(r) { return r2(100 / r); }
+  function caseById(id) { for (var i = 0; i < CASES.length; i++) if (CASES[i].id === id) return CASES[i]; return null; }
+  function nG() { return state.config.groups.length; }
+  function totalTurns() { return nG() * state.config.rounds; }
+  function roundOf(t) { return Math.floor(t / nG()) + 1; }
+  function groupOf(t) { return t % nG(); }
+  function totals() {
+    var t = state.config.groups.map(function () { return 0; });
+    state.history.forEach(function (h) { t[h.g] += h.points; });
+    return t.map(r2);
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  /* Sorteo por color: cada grupo recibe una mezcla equivalente de los tres colores
+     (el color que sale de más rota entre grupos) y el orden se baraja por grupo. */
+  function makePlan(nGroups, rounds) {
+    var plan = [];
+    for (var g = 0; g < nGroups; g++) {
+      var seq = [];
+      for (var k = 0; k < rounds; k++) seq.push(COLORS[(g + k) % 3]);
+      plan.push(shuffle(seq));
+    }
+    return plan;
+  }
+  function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function show(id) {
+    ['scr-setup', 'scr-game', 'scr-end'].forEach(function (s) { $(s).hidden = (s !== id); });
+    var playing = (id === 'scr-game');
+    $('semBarMid').hidden = !playing;
+    $('btnEndEarly').hidden = !playing;
+    $('btnMenu').hidden = !playing;
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Almacenamiento (avisa si falla, no falla en silencio) ---------- */
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { flagStorage(); } }
+  function loadSaved() { try { var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { flagStorage(); return null; } }
+  function clearSaved() { try { localStorage.removeItem(KEY); } catch (e) {} }
+  function flagStorage() {
+    if (!storageOk) return;
+    storageOk = false;
+    var w = $('storageWarn');
+    w.textContent = 'Este navegador no permite guardar la partida. El juego funciona, pero si recarga la página se pierde el avance: exporte el CSV al terminar.';
+    w.hidden = false;
+  }
+  (function probe() { try { localStorage.setItem(KEY + '_p', '1'); localStorage.removeItem(KEY + '_p'); } catch (e) { flagStorage(); } })();
+
+  /* ---------- Sonido ---------- */
+  function initAudio() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch (e) { audioCtx = null; }
+  }
+  function beep(freq, dur, gain) {
+    if (!audioCtx || !$('chkSound').checked) return;
+    try {
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = audioCtx.currentTime;
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(gain || 0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  document.addEventListener('click', initAudio, { once: false });
+
+  /* ---------- Diálogos que no dejan correr el reloj ---------- */
+  function pauseTimer() {
+    if (!timerId) return false;
+    paused = deadline - Date.now();
+    clearInterval(timerId); timerId = null;
+    return true;
+  }
+  function resumeTimer(was) {
+    if (!was || !state || state.phase !== 'question') return;
+    deadline = Date.now() + Math.max(0, paused);
+    lastShown = null;
+    tickTimer();
+    timerId = setInterval(tickTimer, 200);
+  }
+  function ask(msg) { var w = pauseTimer(); var ok = window.confirm(msg); if (!ok) resumeTimer(w); return ok; }
+  function askText(msg, def) { var w = pauseTimer(); var v = window.prompt(msg, def); resumeTimer(w); return v; }
+
+  /* ======================= CONFIGURACIÓN ======================= */
+  function renderSetup() {
+    var box = $('groupRows'); box.innerHTML = '';
+    draft.groups.forEach(function (name, i) {
+      var row = el('div', null, 'sem-grow');
+      row.appendChild(el('span', String(i + 1), 'idx'));
+      var inp = el('input', null, 'sem-input');
+      inp.type = 'text'; inp.value = name; inp.maxLength = 40;
+      inp.placeholder = 'Grupo ' + (i + 1);
+      inp.setAttribute('aria-label', 'Nombre del grupo ' + (i + 1));
+      inp.addEventListener('input', function () { draft.groups[i] = inp.value; });
+      row.appendChild(inp);
+      var b = el('button', '×', 'sem-del');
+      b.type = 'button'; b.title = 'Eliminar grupo';
+      b.disabled = draft.groups.length <= 1;
+      b.addEventListener('click', function () { draft.groups.splice(i, 1); renderSetup(); });
+      row.appendChild(b);
+      box.appendChild(row);
+    });
+    $('inRounds').value = draft.rounds;
+    $('inTime').value = draft.time;
+    $('nCases').textContent = N;
+    updateSetupInfo();
+  }
+
+  function updateSetupInfo() {
+    var r = parseInt($('inRounds').value, 10) || 0;
+    var t = parseInt($('inTime').value, 10) || 0;
+    var n = draft.groups.length, turns = n * r, max = Math.floor(N / n);
+    $('outPts').textContent = r > 0 ? fmt(ptsFor(r)) + ' pts' : '—';
+    $('setupInfo').textContent = n + ' grupos × ' + r + ' rondas = ' + turns + ' turnos, de ' + N + ' casos disponibles.';
+    var msg = '';
+    if (r < 1) msg = 'Debe haber al menos una ronda.';
+    else if (max < 1) msg = 'Hay demasiados grupos: el juego tiene ' + N + ' casos y cada grupo necesita al menos uno.';
+    else if (turns > N) msg = 'No alcanzan los casos: con ' + ROUNDS + ' rondas fijas el máximo es ' + Math.floor(N / ROUNDS) + ' grupos.';
+    else if (t < 10 || t > 600) msg = 'El tiempo debe estar entre 10 y 600 segundos.';
+    $('setupWarn').textContent = msg;
+    $('setupWarn').hidden = (msg === '');
+    $('btnStart').disabled = msg !== '';
+  }
+
+  function renderSavedBox() {
+    var s = loadSaved(), box = $('savedBox');
+    if (!s || !s.config || !s.history) { box.hidden = true; return; }
+    var g = s.config.groups.length, info;
+    if (s.phase === 'end') info = 'Partida terminada · ' + g + ' grupos · ' + s.history.length + ' turnos jugados.';
+    else info = 'Ronda ' + (Math.floor(s.turn / g) + 1) + ' de ' + s.config.rounds + ' · turno de ' + s.config.groups[s.turn % g] +
+                ' · ' + s.history.length + ' de ' + (g * s.config.rounds) + ' turnos jugados.';
+    $('savedInfo').textContent = info;
+    box.hidden = false;
+  }
+
+  $('btnAddGroup').addEventListener('click', function () {
+    var k = draft.groups.length + 1;
+    while (draft.groups.indexOf('Grupo ' + k) !== -1) k++;
+    draft.groups.push('Grupo ' + k);
+    renderSetup();
+  });
+  $('inRounds').addEventListener('input', function () { draft.rounds = parseInt(this.value, 10) || 0; updateSetupInfo(); });
+  $('inTime').addEventListener('input', function () { draft.time = parseInt(this.value, 10) || 0; updateSetupInfo(); });
+
+  $('btnStart').addEventListener('click', function () {
+    var s = loadSaved();
+    if (s && s.phase && s.phase !== 'end' &&
+        !confirm('Hay un juego guardado sin terminar. Si inicia uno nuevo, se reemplazará. ¿Continuar?')) return;
+    var groups = draft.groups.map(function (g, i) { return (g || '').trim() || ('Grupo ' + (i + 1)); });
+    state = {
+      v: 3,
+      config: { groups: groups, rounds: ROUNDS, time: draft.time, pts: ptsFor(ROUNDS) },
+      plan: makePlan(groups.length, ROUNDS),
+      turn: 0, used: [], history: [], phase: 'spin', current: null, rot: 0,
+      started: new Date().toISOString()
+    };
+    rot = 0; save(); enterGame();
+  });
+
+  $('btnContinue').addEventListener('click', function () {
+    var s = loadSaved(); if (!s) { renderSavedBox(); return; }
+    state = s; rot = state.rot || 0;
+    if (state.phase === 'end') renderEnd(); else enterGame();
+  });
+
+  $('btnNewGame').addEventListener('click', function () {
+    if (!confirm('Se borrará el juego guardado. ¿Empezar uno nuevo?')) return;
+    clearSaved(); state = null; draft = defaultDraft();
+    renderSetup(); renderSavedBox();
+  });
+
+  /* ======================= JUEGO ======================= */
+  function enterGame() {
+    show('scr-game');
+    if (state.phase === 'spinning') { state.phase = 'question'; state.current.remaining = state.config.time; }
+    if (state.current && (state.phase === 'question' || state.phase === 'reveal')) rot = restRot(state.current.caseId);
+    save(); renderGame();
+    if (state.phase === 'question') startTimer(state.current.remaining);
+  }
+
+  function restRot(id) { return (((-(id - 0.5) * SEG) % TAU) + TAU) % TAU; }
+
+  function renderGame() {
+    var t = state.turn;
+    $('pRound').innerHTML = 'Ronda <strong>' + roundOf(t) + '</strong> de ' + state.config.rounds;
+    $('pTurn').innerHTML = 'Turno: <strong>' + esc(state.config.groups[groupOf(t)]) + '</strong>';
+    renderScoreboard(); drawWheel(); renderPanel(); renderHistory($('histGame'));
+    $('btnSpin').disabled = state.phase !== 'spin' || spinning;
+    $('wheelLeft').textContent = 'Casos sin usar: ' + (N - state.used.length) + ' de ' + N;
+  }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function renderScoreboard() {
+    var sb = $('scoreboard'), tot = totals(), cur = groupOf(state.turn);
+    sb.innerHTML = '';
+    state.config.groups.forEach(function (name, i) {
+      var c = el('div', null, 'sem-sb' + (i === cur ? ' on' : ''));
+      var n = el('div', name, 'n'); n.title = name;
+      c.appendChild(n);
+      c.appendChild(el('div', fmt(tot[i]), 'p'));
+      sb.appendChild(c);
+    });
+  }
+
+  function renderPanel() {
+    var ph = state.phase, idle = (ph === 'spin' || ph === 'spinning');
+    $('pIdle').hidden = !idle;
+    $('pCase').hidden = idle;
+    if (idle) {
+      $('pIdle').innerHTML = '';
+      if (ph === 'spinning') {
+        $('pIdle').appendChild(el('div', 'Girando…', 'big'));
+      } else {
+        var d = el('div', null, 'big');
+        d.appendChild(document.createTextNode('Turno de '));
+        d.appendChild(el('b', state.config.groups[groupOf(state.turn)]));
+        $('pIdle').appendChild(d);
+        $('pIdle').appendChild(el('div', 'Giren la ruleta para recibir su caso.', 'small'));
+      }
+      return;
+    }
+
+    var c = caseById(state.current.caseId);
+    if (!c) { alert('El caso guardado ya no existe en esta versión del juego. Inicie una partida nueva.'); return; }
+    $('caseNum').textContent = 'Caso ' + c.id + ' de ' + N;
+    $('caseText').textContent = c.t;
+
+    var h = (ph === 'reveal') ? histForTurn(state.turn) : null;
+    var btns = document.querySelectorAll('.sem-ans');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i], a = b.getAttribute('data-ans'), mk = b.querySelector('.mk');
+      b.classList.remove('dim', 'ok'); mk.textContent = '';
+      b.disabled = (ph !== 'question');
+      if (h) {
+        if (a === c.a) { b.classList.add('ok'); mk.textContent = 'Correcta'; }
+        else b.classList.add('dim');
+        if (a === h.given) mk.textContent = (a === c.a) ? 'Correcta · su respuesta' : 'Su respuesta';
+      }
+    }
+
+    $('timerBox').hidden = (ph === 'reveal');
+    $('pReveal').hidden = (ph !== 'reveal');
+    if (h) {
+      var good = (h.given === c.a), v = $('rVerdict');
+      v.className = 'sem-verdict ' + (good ? 'good' : 'bad');
+      v.innerHTML = '';
+      v.appendChild(el('span', good ? 'Acierto' : (h.given === 'TIEMPO' ? 'Sin respuesta' : 'Error'), 'bdg'));
+      v.appendChild(el('span', good ? '+' + fmt(state.config.pts) + ' puntos'
+        : (h.given === 'TIEMPO' ? 'Se acabó el tiempo · 0 puntos' : 'Era ' + LABEL[c.a] + ' · 0 puntos')));
+      if (h.corrected) v.appendChild(el('span', '· corregido a ' + fmt(h.points), 'bdg'));
+      $('rExpl').innerHTML = '<b>' + LABEL[c.a] + ' · ' + DESC[c.a] + '.</b> ' + esc(c.e);
+      $('rArt').textContent = c.r;
+      $('fixVal').value = fmt(h.points);
+      $('btnFixFull').textContent = 'Dar acierto (' + fmt(state.config.pts) + ')';
+      $('btnNext').innerHTML = (state.turn + 1 >= totalTurns())
+        ? 'Ver resultados finales <span class="arrow">→</span>' : 'Siguiente turno <span class="arrow">→</span>';
+    }
+  }
+
+  function histForTurn(t) { for (var i = 0; i < state.history.length; i++) if (state.history[i].turn === t) return state.history[i]; return null; }
+
+  /* ---------- Ruleta ---------- */
+  function cssVar(n, f) {
+    try { var v = getComputedStyle(document.documentElement).getPropertyValue(n).trim(); return v || f; }
+    catch (e) { return f; }
+  }
+  function drawWheel() {
+    var cv = $('semWheel'); if (!cv) return;
+    var x = cv.getContext('2d'), W = cv.width, H = cv.height;
+    var paper = cssVar('--surface', '#FBF8F1'), paper2 = cssVar('--paper-2', '#ECE6D8');
+    var ink = cssVar('--ink', '#15171F'), ink3 = cssVar('--ink-3', '#5A5D69');
+    var line = cssVar('--line-2', 'rgba(21,23,31,.16)'), elec = cssVar('--electric', '#1F3DFF');
+
+    x.clearRect(0, 0, W, H);
+    var cx = W / 2, cy = H / 2 + 14, R = W / 2 - 46;
+    var cur = (state && state.current) ? state.current.caseId : null;
+    var revealed = state && (state.phase === 'question' || state.phase === 'reveal');
+
+    for (var i = 0; i < N; i++) {
+      var id = i + 1, a0 = rot + i * SEG - Math.PI / 2, a1 = a0 + SEG;
+      var isCur = revealed && id === cur;
+      var used = state && state.used.indexOf(id) !== -1 && !(id === cur && !revealed);
+      x.beginPath(); x.moveTo(cx, cy); x.arc(cx, cy, R, a0, a1); x.closePath();
+      x.fillStyle = isCur ? elec : (used ? paper2 : (i % 2 ? paper : '#FFFFFF'));
+      x.fill();
+      x.lineWidth = 1.5; x.strokeStyle = line; x.stroke();
+
+      x.save();
+      x.translate(cx, cy); x.rotate(a0 + SEG / 2); x.translate(R * 0.79, 0); x.rotate(Math.PI / 2);
+      x.fillStyle = isCur ? '#FFFFFF' : (used ? ink3 : ink);
+      x.font = (isCur ? '700 ' : '500 ') + '42px "Geist", system-ui, sans-serif';
+      x.globalAlpha = used ? 0.45 : 1;
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(String(id), 0, 0);
+      x.restore();
+    }
+
+    x.beginPath(); x.arc(cx, cy, R, 0, TAU); x.lineWidth = 3; x.strokeStyle = cssVar('--line-strong', 'rgba(21,23,31,.28)'); x.stroke();
+    x.beginPath(); x.arc(cx, cy, R + 9, 0, TAU); x.lineWidth = 1; x.strokeStyle = line; x.stroke();
+
+    // Cubo central con las tres luces
+    x.beginPath(); x.arc(cx, cy, 62, 0, TAU);
+    x.fillStyle = paper; x.fill();
+    x.lineWidth = 2; x.strokeStyle = line; x.stroke();
+    var cols = [cssVar('--verde', '#15803D'), cssVar('--ambar', '#C2700A'), cssVar('--rojo', '#BE2D44')];
+    for (var k = 0; k < 3; k++) {
+      x.beginPath(); x.arc(cx, cy - 26 + k * 26, 8.5, 0, TAU);
+      x.fillStyle = cols[k]; x.fill();
+    }
+
+    // Puntero
+    x.beginPath();
+    x.moveTo(cx - 19, cy - R - 26); x.lineTo(cx + 19, cy - R - 26); x.lineTo(cx, cy - R + 16); x.closePath();
+    x.fillStyle = ink; x.fill();
+    x.strokeStyle = paper; x.lineWidth = 3; x.stroke();
+  }
+  function sectorUnderPointer(r) { return Math.floor((((-r) % TAU) + TAU) % TAU / SEG); }
+
+  function spin() {
+    if (!state || state.phase !== 'spin' || spinning) return;
+    initAudio();
+    var avail = CASES.filter(function (c) { return state.used.indexOf(c.id) === -1; });
+    if (!avail.length) { alert('No quedan casos disponibles.'); return; }
+    var want = state.plan && state.plan[groupOf(state.turn)] && state.plan[groupOf(state.turn)][roundOf(state.turn) - 1];
+    var pool = avail.filter(function (c) { return c.a === want; });
+    if (!pool.length) pool = avail;   // si ese color se agotó, cualquiera de los que quedan
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    state.used.push(pick.id);
+    state.current = { caseId: pick.id, remaining: state.config.time };
+    state.phase = 'spinning';
+    save(); spinning = true; renderGame();
+
+    var jitter = (Math.random() - 0.5) * SEG * 0.6;
+    var desired = -(pick.id - 0.5) * SEG + jitter;
+    var start = rot;
+    var delta = (((desired - start) % TAU) + TAU) % TAU;
+    var end = start + TAU * (5 + Math.floor(Math.random() * 2)) + delta;
+    var dur = 3000 + Math.random() * 1000;
+    var t0 = performance.now(), lastSec = sectorUnderPointer(start);
+
+    function frame(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      rot = start + (end - start) * (1 - Math.pow(1 - p, 3));
+      var s = sectorUnderPointer(rot);
+      if (s !== lastSec) { lastSec = s; beep(1400, 0.02, 0.05); }
+      drawWheel();
+      if (p < 1) { requestAnimationFrame(frame); return; }
+      rot = ((end % TAU) + TAU) % TAU;
+      spinning = false;
+      state.phase = 'question'; state.rot = rot;
+      save(); beep(660, 0.25, 0.15); renderGame(); startTimer(state.config.time);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- Cronómetro ---------- */
+  function startTimer(sec) {
+    stopTimer();
+    deadline = Date.now() + sec * 1000;
+    lastShown = null;
+    tickTimer();
+    timerId = setInterval(tickTimer, 200);
+  }
+  function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+  function tickTimer() {
+    if (!state || state.phase !== 'question') { stopTimer(); return; }
+    var ms = deadline - Date.now();
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    if (s !== lastShown) {
+      lastShown = s;
+      $('timerT').textContent = s;
+      $('ringFg').style.strokeDasharray = RING;
+      $('ringFg').style.strokeDashoffset = RING * (1 - s / state.config.time);
+      var warn = s <= 10;
+      $('timerBox').classList.toggle('warn', warn);
+      $('timerMsg').textContent = warn ? (s > 0 ? '¡Últimos segundos!' : '¡Tiempo!') : 'segundos\nrestantes';
+      state.current.remaining = s;
+      if (s % 5 === 0 || warn) save();
+      if (warn && s > 0) beep(880, 0.08, 0.15);
+    }
+    if (ms <= 0) { stopTimer(); beep(330, 0.7, 0.2); answer('TIEMPO'); }
+  }
+
+  /* ---------- Respuesta y turnos ---------- */
+  function answer(given) {
+    if (!state || state.phase !== 'question') return;
+    stopTimer();
+    $('timerBox').classList.remove('warn');
+    var c = caseById(state.current.caseId);
+    var pts = (given === c.a) ? state.config.pts : 0;
+    state.history.push({
+      turn: state.turn, round: roundOf(state.turn), g: groupOf(state.turn),
+      caseId: c.id, given: given, correct: c.a, points: pts, auto: pts, corrected: false
+    });
+    state.phase = 'reveal';
+    save();
+    if (given !== 'TIEMPO') beep(given === c.a ? 880 : 220, 0.35, 0.15);
+    renderGame();
+  }
+
+  function setPoints(turn, val) {
+    var h = histForTurn(turn); if (!h) return;
+    h.points = r2(val);
+    h.corrected = (h.points !== h.auto);
+    save();
+    if (state.phase === 'end') renderEnd(); else renderGame();
+  }
+  function parsePts(str) {
+    var v = parseFloat(String(str).replace(/\./g, '').replace(',', '.'));
+    var max = state.config.pts;   // un turno nunca vale más que su ronda: el total no pasa de 100
+    if (isNaN(v) || v < 0 || v > max) { alert('Escriba un puntaje entre 0 y ' + fmt(max) + '.'); return null; }
+    return v;
+  }
+  function nextTurn() {
+    if (!state || state.phase !== 'reveal') return;
+    state.turn++; state.current = null;
+    if (state.turn >= totalTurns()) { state.phase = 'end'; save(); renderEnd(); return; }
+    state.phase = 'spin'; save(); renderGame();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.sem-ans'), function (b) {
+    b.addEventListener('click', function () { answer(b.getAttribute('data-ans')); });
+  });
+  $('btnSpin').addEventListener('click', spin);
+  $('btnNext').addEventListener('click', nextTurn);
+  $('btnFixApply').addEventListener('click', function () { var v = parsePts($('fixVal').value); if (v !== null) setPoints(state.turn, v); });
+  $('btnFixFull').addEventListener('click', function () { setPoints(state.turn, state.config.pts); });
+  $('btnFixZero').addEventListener('click', function () { setPoints(state.turn, 0); });
+
+  $('btnEndEarly').addEventListener('click', function () {
+    if (spinning) return;
+    if (!ask('¿Terminar el juego ahora y ver los resultados? El turno en curso sin responder no se contará.')) return;
+    stopTimer();
+    if (state.phase === 'question' && state.current) {
+      var i = state.used.indexOf(state.current.caseId); if (i !== -1) state.used.splice(i, 1);
+    }
+    state.current = null; state.phase = 'end'; state.endedEarly = true;
+    save(); renderEnd();
+  });
+
+  $('btnMenu').addEventListener('click', function () {
+    if (spinning) return;
+    stopTimer(); save();
+    show('scr-setup'); renderSetup(); renderSavedBox();
+  });
+
+  /* ---------- Historial ---------- */
+  function renderHistory(container) {
+    container.innerHTML = '';
+    if (!state.history.length) { container.appendChild(el('p', 'Todavía no se ha jugado ningún turno.', 'hint')); return; }
+    var tbl = el('table', null, 'sem-table'), thead = el('thead'), tr = el('tr');
+    ['#', 'Ronda', 'Grupo', 'Caso', 'Respondió', 'Era', 'Puntos', ''].forEach(function (h) { tr.appendChild(el('th', h)); });
+    thead.appendChild(tr); tbl.appendChild(thead);
+    var tb = el('tbody');
+    state.history.forEach(function (h) {
+      var c = caseById(h.caseId), r = el('tr');
+      r.appendChild(el('td', String(h.turn + 1), 'num'));
+      r.appendChild(el('td', String(h.round), 'num'));
+      r.appendChild(el('td', state.config.groups[h.g]));
+      var tdc = el('td', c ? (c.id + '. ' + (c.t.length > 64 ? c.t.slice(0, 64) + '…' : c.t)) : '—', 'case');
+      if (c) tdc.title = c.t;
+      r.appendChild(tdc);
+      var t1 = el('td'); t1.appendChild(el('span', LABEL[h.given], 'sem-badge ' + CLS[h.given])); r.appendChild(t1);
+      var t2 = el('td'); t2.appendChild(el('span', LABEL[h.correct], 'sem-badge ' + CLS[h.correct])); r.appendChild(t2);
+      r.appendChild(el('td', fmt(h.points) + (h.corrected ? ' *' : ''), 'num'));
+      var tdb = el('td'), b = el('button', 'Corregir', 'sem-btn sem-btn-sm');
+      b.addEventListener('click', function () {
+        var v = askText('Nuevo puntaje para ' + state.config.groups[h.g] + ', ronda ' + h.round + ' (caso ' + h.caseId + '):', fmt(h.points));
+        if (v === null) return;
+        var p = parsePts(v); if (p !== null) setPoints(h.turn, p);
+      });
+      tdb.appendChild(b); r.appendChild(tdb);
+      tb.appendChild(r);
+    });
+    tbl.appendChild(tb); container.appendChild(tbl);
+    container.appendChild(el('p', '* Puntaje corregido a mano por el docente.', 'hint'));
+  }
+
+  /* ======================= FINAL ======================= */
+  function ranking() {
+    var tot = totals();
+    var list = state.config.groups.map(function (n, i) { return { n: n, i: i, t: tot[i] }; });
+    list.sort(function (a, b) { return (b.t - a.t) || (a.i - b.i); });
+    var pos = 0;
+    list.forEach(function (e, k) { if (k === 0 || e.t !== list[k - 1].t) pos = k + 1; e.pos = pos; });
+    return list;
+  }
+  function roundPts(gi, r) {
+    var found = false, s = 0;
+    state.history.forEach(function (h) { if (h.g === gi && h.round === r) { found = true; s += h.points; } });
+    return found ? r2(s) : null;
+  }
+
+  function renderEnd() {
+    stopTimer(); show('scr-end');
+    var rk = ranking(), played = state.history.length;
+    $('endNote').textContent = (state.endedEarly ? 'Partida terminada antes de tiempo. ' : '') +
+      played + ' de ' + totalTurns() + ' turnos jugados · ' + state.config.rounds + ' rondas · ' +
+      fmt(state.config.pts) + ' puntos por acierto.';
+
+    var pod = $('podium'); pod.innerHTML = '';
+    [1, 0, 2].forEach(function (k) {
+      var e = rk[k]; if (!e) return;
+      // La altura del bloque sigue la POSICIÓN real, no el orden: los empates quedan iguales.
+      var d = el('div', null, 'sem-pod r' + Math.min(3, e.pos));
+      d.appendChild(el('div', e.n, 'nm'));
+      d.appendChild(el('div', fmt(e.t) + ' pts', 'pt'));
+      d.appendChild(el('div', e.pos + '.º', 'bl'));
+      pod.appendChild(d);
+    });
+
+    var ft = $('finalTable'); ft.innerHTML = '';
+    var tbl = el('table', null, 'sem-table'), thead = el('thead'), tr = el('tr');
+    tr.appendChild(el('th', 'Pos.'));
+    tr.appendChild(el('th', 'Grupo'));
+    for (var r = 1; r <= state.config.rounds; r++) tr.appendChild(el('th', 'R' + r));
+    tr.appendChild(el('th', 'Total'));
+    thead.appendChild(tr); tbl.appendChild(thead);
+    var tb = el('tbody');
+    rk.forEach(function (e) {
+      var row = el('tr');
+      row.appendChild(el('td', e.pos + '.º', 'num'));
+      row.appendChild(el('td', e.n));
+      for (var r = 1; r <= state.config.rounds; r++) {
+        var p = roundPts(e.i, r);
+        row.appendChild(el('td', p === null ? '—' : fmt(p), 'num'));
+      }
+      var tdT = el('td', fmt(e.t), 'num');
+      tdT.style.fontWeight = '700'; tdT.style.color = 'var(--ink)';
+      row.appendChild(tdT);
+      tb.appendChild(row);
+    });
+    tbl.appendChild(tb); ft.appendChild(tbl);
+    renderHistory($('histEnd'));
+  }
+
+  /* ---------- CSV ---------- */
+  function csvCell(v) { var s = String(v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function csvNum(n) { return n === null ? '' : String(r2(n)).replace('.', ','); }
+
+  $('btnCSV').addEventListener('click', function () {
+    var rk = ranking(), lines = [];
+    var head = ['Posicion', 'Grupo', 'Puntaje total'];
+    for (var r = 1; r <= state.config.rounds; r++) head.push('Ronda ' + r);
+    lines.push(head.map(csvCell).join(';'));
+    rk.forEach(function (e) {
+      var row = [e.pos, e.n, csvNum(e.t)];
+      for (var r = 1; r <= state.config.rounds; r++) row.push(csvNum(roundPts(e.i, r)));
+      lines.push(row.map(csvCell).join(';'));
+    });
+    lines.push('');
+    lines.push('Historial por turno');
+    lines.push(['Turno', 'Ronda', 'Grupo', 'Caso', 'Texto del caso', 'Respondio', 'Era', 'Puntos', 'Corregido'].join(';'));
+    state.history.forEach(function (h) {
+      var c = caseById(h.caseId);
+      lines.push([h.turn + 1, h.round, state.config.groups[h.g], h.caseId, c ? c.t : '',
+                  LABEL[h.given], LABEL[h.correct], csvNum(h.points), h.corrected ? 'Si' : 'No'].map(csvCell).join(';'));
+    });
+    var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'semaforo-reglamento-ia_' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.csv';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  });
+
+  $('btnEndNew').addEventListener('click', function () {
+    if (!confirm('Se borrará este juego guardado. ¿Empezar uno nuevo? Exporte el CSV antes si necesita los resultados.')) return;
+    clearSaved(); state = null; draft = defaultDraft(); rot = 0;
+    show('scr-setup'); renderSetup(); renderSavedBox();
+  });
+
+  /* ---------- Inicio ---------- */
+  renderSetup();
+  renderSavedBox();
+  show('scr-setup');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (state) drawWheel(); });
+  window.addEventListener('resize', function () { if (state) drawWheel(); });
+})();
+</script>
+</body>
+</html>
