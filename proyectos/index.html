@@ -230,6 +230,30 @@
         </article>`;
     }
 
+    // SEMÁFORO IA — juego de aula (verde / ámbar / rojo como firma)
+    function renderSemaforo(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      return `
+        <article class="feat-semaforo">
+          <div class="fs-head">
+            <span class="fs-kicker">
+              <span class="fs-luz" aria-hidden="true"><i></i><i></i><i></i></span>
+              Juego de aula · Universidad Ean
+            </span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          <div class="fs-reglas">
+            <span class="fs-regla v"><b>VERDE</b><span>permitido</span></span>
+            <span class="fs-regla a"><b>ÁMBAR</b><span>se declara</span></span>
+            <span class="fs-regla r"><b>ROJO</b><span>es una falta</span></span>
+          </div>
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-semaforo">Jugar ahora <span class="arrow">→</span></a>
+        </article>`;
+    }
+
     function renderCard(p) {
       const linkHtml = p.link !== '#'
         ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
@@ -245,7 +269,7 @@
     }
 
     // Cada destacado elige su plantilla según 'variante'
-    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl };
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl, semaforo: renderSemaforo };
 
     const destacados = proyectos.filter(p => p.destacado);
     const resto      = proyectos.filter(p => !p.destacado);

@@ -476,6 +476,40 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
 .feat-control .btn-control .arrow { transition: transform .25s var(--ease); }
 .feat-control .btn-control:hover .arrow { transform: translateX(4px); }
 
+/* SEMÁFORO IA — juego de aula: las tres luces como firma */
+.feat-semaforo {
+  border: 1px solid var(--line-2); border-top: 3px solid #15803D;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+  position: relative; overflow: hidden;
+}
+.feat-semaforo::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 190px; height: 100%; pointer-events: none;
+  background: linear-gradient(118deg, transparent 40%, rgba(21,128,61,.05) 40%, rgba(21,128,61,.05) 58%, rgba(194,112,10,.06) 58%, rgba(194,112,10,.06) 76%, rgba(190,45,68,.06) 76%);
+}
+.feat-semaforo > * { position: relative; z-index: 1; }
+.feat-semaforo .fs-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-semaforo .fs-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.feat-semaforo .fs-luz { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper); }
+.feat-semaforo .fs-luz i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+.feat-semaforo .fs-luz i:nth-child(1) { background: #15803D; }
+.feat-semaforo .fs-luz i:nth-child(2) { background: #C2700A; }
+.feat-semaforo .fs-luz i:nth-child(3) { background: #BE2D44; }
+.feat-semaforo h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-semaforo .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-semaforo .fs-reglas { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 20px; }
+.feat-semaforo .fs-regla { display: inline-flex; align-items: baseline; gap: 7px; padding: 8px 14px; border-radius: var(--r-md); font-size: var(--t-sm); }
+.feat-semaforo .fs-regla b { font-family: var(--font-display); font-weight: 700; letter-spacing: .01em; }
+.feat-semaforo .fs-regla.v { background: rgba(21,128,61,.10);  color: #15803D; }
+.feat-semaforo .fs-regla.a { background: rgba(194,112,10,.12); color: #A35E08; }
+.feat-semaforo .fs-regla.r { background: rgba(190,45,68,.10);  color: #BE2D44; }
+.feat-semaforo .fs-regla span { color: var(--ink-2); }
+.feat-semaforo .btn-semaforo { display: inline-flex; align-items: center; gap: 9px; background: #15803D; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-semaforo .btn-semaforo:hover { background: #1A9A4A; }
+.feat-semaforo .btn-semaforo:active { transform: translateY(1px); }
+.feat-semaforo .btn-semaforo .arrow { transition: transform .25s var(--ease); }
+.feat-semaforo .btn-semaforo:hover .arrow { transform: translateX(4px); }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
@@ -483,6 +517,7 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
   .feat-apreciacion .fa-stat { min-width: 100px; }
   .feat-electro .fe-stat { min-width: 100px; }
   .feat-control .fc-stat { min-width: 100px; }
+  .feat-semaforo::after { display: none; }
 }
 
 /* Chips / tags / estados */

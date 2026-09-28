@@ -107,6 +107,19 @@ const proyectos = [
       { n: "ISA-95", l: "Modelo de referencia" },
       { n: "4–20", l: "mA · señal de campo" }
     ]
+  },
+  {
+    id: "semaforo-ia",
+    titulo: "Semáforo del Reglamento de IA",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026 – Presente",
+    descripcion:
+      "Juego de aula sobre el Reglamento de Inteligencia Artificial de la Universidad Ean. Cada grupo gira una ruleta de 30 casos reales —redacción asistida, datos personales, código, voz sintética, evaluaciones, incidentes de seguridad—, diez de cada color, y decide en qué color cae antes de que se acabe el tiempo. Al responder se revela la explicación y el artículo del Acuerdo que la sustenta. Marcador en vivo, corrección manual del docente, partida persistente y exportación a CSV.",
+    tecnologias: ["JavaScript", "Canvas 2D", "Web Audio API", "localStorage", "Exportación CSV", "Acuerdo CSU 006 de 2025"],
+    link: "semaforo-ia/index.html",
+    destacado: true,
+    variante: "semaforo"
   }
 
   // =====================================================
