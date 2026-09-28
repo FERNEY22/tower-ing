@@ -337,10 +337,10 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
 
       <div class="sem-card">
         <h2>Reglas</h2>
-        <p class="hint">Son 5 rondas de 20 puntos: un juego perfecto suma 100, que es la nota máxima. El juego termina al cerrar la ronda 5, cuando todos los grupos han jugado los mismos turnos.</p>
+        <p class="hint">El puntaje se reparte entre las rondas para que un juego perfecto sume 100, que es la nota máxima. El juego termina al cerrar la última ronda, cuando todos los grupos han jugado los mismos turnos.</p>
         <div class="sem-field">
-          <label for="inRounds">Rondas por grupo (fijo)</label>
-          <input class="sem-input num" id="inRounds" type="number" min="5" max="5" step="1" value="5" disabled>
+          <label for="inRounds">Rondas por grupo</label>
+          <input class="sem-input num" id="inRounds" type="number" min="1" max="30" step="1">
         </div>
         <div class="sem-field">
           <label for="inTime">Segundos para responder</label>
@@ -585,17 +585,17 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
 
   var $ = function (id) { return document.getElementById(id); };
   var state = null;
+  var ROUNDS = 5;   // rondas por defecto (5 × 20 = 100); el docente puede cambiarlas
   var draft = defaultDraft();
   var timerId = null, deadline = 0, lastShown = null, paused = 0;
   var rot = 0, spinning = false, audioCtx = null, storageOk = true;
 
-  var ROUNDS = 5;   // fijo: 5 × 20 = 100, la nota máxima
   function defaultDraft() { return { groups: ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4', 'Grupo 5'], rounds: ROUNDS, time: 60 }; }
 
   /* ---------- Utilidades ---------- */
   function r2(n) { return Math.round(n * 100) / 100; }
   function fmt(n) { return r2(n).toLocaleString('es-CO', { maximumFractionDigits: 2 }); }
-  function ptsFor(r) { return r2(100 / r); }
+  function ptsFor(r) { return 100 / r; }   // sin redondear: un juego perfecto suma 100 exacto; se redondea solo al mostrar
   function caseById(id) { for (var i = 0; i < CASES.length; i++) if (CASES[i].id === id) return CASES[i]; return null; }
   function nG() { return state.config.groups.length; }
   function totalTurns() { return nG() * state.config.rounds; }
@@ -604,7 +604,7 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
   function totals() {
     var t = state.config.groups.map(function () { return 0; });
     state.history.forEach(function (h) { t[h.g] += h.points; });
-    return t.map(r2);
+    return t.map(function (v) { return Math.min(100, r2(v)); });   // nota máxima 100
   }
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
@@ -715,7 +715,7 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
     var msg = '';
     if (r < 1) msg = 'Debe haber al menos una ronda.';
     else if (max < 1) msg = 'Hay demasiados grupos: el juego tiene ' + N + ' casos y cada grupo necesita al menos uno.';
-    else if (turns > N) msg = 'No alcanzan los casos: con ' + ROUNDS + ' rondas fijas el máximo es ' + Math.floor(N / ROUNDS) + ' grupos.';
+    else if (turns > N) msg = 'No alcanzan los casos. Con ' + n + ' grupos el máximo es ' + max + (max === 1 ? ' ronda.' : ' rondas.');
     else if (t < 10 || t > 600) msg = 'El tiempo debe estar entre 10 y 600 segundos.';
     $('setupWarn').textContent = msg;
     $('setupWarn').hidden = (msg === '');
@@ -749,8 +749,8 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
     var groups = draft.groups.map(function (g, i) { return (g || '').trim() || ('Grupo ' + (i + 1)); });
     state = {
       v: 3,
-      config: { groups: groups, rounds: ROUNDS, time: draft.time, pts: ptsFor(ROUNDS) },
-      plan: makePlan(groups.length, ROUNDS),
+      config: { groups: groups, rounds: draft.rounds, time: draft.time, pts: ptsFor(draft.rounds) },
+      plan: makePlan(groups.length, draft.rounds),
       turn: 0, used: [], history: [], phase: 'spin', current: null, rot: 0,
       started: new Date().toISOString()
     };
@@ -1000,7 +1000,7 @@ body { background: var(--paper); color: var(--ink); font-family: var(--font-body
 
   function setPoints(turn, val) {
     var h = histForTurn(turn); if (!h) return;
-    h.points = r2(val);
+    h.points = (val === state.config.pts) ? val : r2(val);
     h.corrected = (h.points !== h.auto);
     save();
     if (state.phase === 'end') renderEnd(); else renderGame();
