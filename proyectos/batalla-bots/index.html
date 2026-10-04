@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batalla de Bots — Towers Ing</title>
+<meta name="description" content="Juego de aula en dos niveles: los grupos adivinan si un rasgo o una experiencia de uso corresponde a ChatGPT, Claude, Gemini o Perplexity, según la documentación oficial de cada fabricante.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles/towers.css">
+<link rel="stylesheet" href="estilos.css">
+<style>
+/* ============================================================
+   HOME de Batalla de Bots: explica el juego y presenta los niveles.
+   Reutiliza estilos.css (prefijo .bb-) del motor del juego.
+   ============================================================ */
+.bb-home { padding: clamp(28px,5vw,56px) 0 24px; }
+
+/* Pasos */
+.bb-steps { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 6px; }
+.bb-step { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; }
+.bb-step .k { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--electric-ink); letter-spacing: .06em; }
+.bb-step b { display: block; font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin: 6px 0 4px; }
+.bb-step p { font-size: var(--t-sm); color: var(--ink-2); line-height: 1.5; margin: 0; }
+.bb-reglas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.bb-reglas span { font-size: var(--t-sm); color: var(--ink-2); background: var(--paper-2); border-radius: var(--r-pill); padding: 5px 12px; }
+
+/* Niveles */
+.bb-sec-title { font-family: var(--font-display); font-size: clamp(1.4rem, 2.6vw, 1.9rem); font-weight: 600;
+  letter-spacing: -.02em; margin: clamp(36px,5vw,56px) 0 6px; }
+.bb-sec-sub { color: var(--ink-3); font-size: var(--t-base); margin: 0 0 20px; }
+.bb-levels { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; }
+.bb-level { position: relative; display: flex; flex-direction: column; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); overflow: hidden;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.bb-level:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line-2); }
+.bb-level-top { padding: clamp(20px,2.6vw,28px); flex: 1; display: flex; flex-direction: column; }
+.bb-level-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.bb-meter { display: inline-flex; gap: 4px; }
+.bb-meter i { width: 22px; height: 6px; border-radius: 3px; background: var(--line-2); }
+.bb-meter i.on { background: var(--electric); }
+.bb-level h3 { font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; letter-spacing: -.02em; margin: 0 0 4px; }
+.bb-level .q { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--electric-ink); margin: 0 0 12px; }
+.bb-level .d { color: var(--ink-2); font-size: var(--t-base); line-height: 1.6; margin: 0 0 16px; }
+.bb-facts { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.bb-facts div { padding: 10px 0; }
+.bb-facts div + div { padding-left: 14px; border-left: 1px solid var(--line); }
+.bb-facts .n { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; }
+.bb-facts .l { font-size: var(--t-xs); color: var(--ink-3); }
+.bb-sample { margin-top: auto; background: var(--paper); border: 1px dashed var(--line-2); border-radius: var(--r-md); padding: 14px 16px; }
+.bb-sample .lb { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.bb-sample p { margin: 0; font-family: var(--font-display); font-size: 1.02rem; line-height: 1.45; color: var(--ink); }
+.bb-sample p::before { content: "“"; color: var(--electric); } .bb-sample p::after { content: "”"; color: var(--electric); }
+.bb-level-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 16px clamp(20px,2.6vw,28px); border-top: 1px solid var(--line); background: var(--paper); }
+.bb-saved-tag { font-size: var(--t-sm); font-weight: 600; color: var(--electric-ink); }
+.bb-level a.bb-btn { text-decoration: none; }
+
+@media (max-width: 980px) { .bb-levels { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .bb-steps { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="bb-bar">
+  <div class="bb-bar-in">
+    <a class="bb-brand" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+    <span class="bb-pill">Actividad 5 · Juego de aula</span>
+  </div>
+</header>
+
+<main class="bb-wrap bb-home">
+
+  <section class="bb-hero">
+    <div class="bb-kicker"><span class="bb-lights lg"><i></i><i></i><i></i><i></i></span> Actividad 5 · Juego de aula</div>
+    <h1>Batalla <em>de Bots</em></h1>
+    <p class="sub">Cuatro asistentes de IA, un solo ganador por turno. Cada grupo gira la ruleta, recibe una pista y decide si corresponde a ChatGPT, Claude, Gemini o Perplexity antes de que se acabe el tiempo. Toda respuesta se sustenta en la documentación oficial del fabricante, y el juego tiene dos niveles de dificultad.</p>
+    <p class="norma">ChatGPT · Claude · Gemini · Perplexity</p>
+  </section>
+
+  <div class="bb-grid2">
+    <div class="bb-card">
+      <h2>Cómo se juega</h2>
+      <p class="hint">La mecánica es la misma en los dos niveles; solo cambia el tipo de pista.</p>
+      <div class="bb-steps">
+        <div class="bb-step"><span class="k">01</span><b>Armen los grupos</b><p>El docente escribe los equipos, las rondas y los segundos por turno.</p></div>
+        <div class="bb-step"><span class="k">02</span><b>Giren la ruleta</b><p>Sale una pista que nadie ha visto en la partida. Los bots se reparten parejo entre grupos.</p></div>
+        <div class="bb-step"><span class="k">03</span><b>Decidan a tiempo</b><p>El grupo elige uno de los cuatro bots antes de que el cronómetro llegue a cero.</p></div>
+        <div class="bb-step"><span class="k">04</span><b>Verifiquen</b><p>Se revela la respuesta con su explicación y la fuente oficial que la sustenta.</p></div>
+      </div>
+      <div class="bb-reglas">
+        <span>Un juego perfecto suma 100</span>
+        <span>Error o tiempo agotado = 0</span>
+        <span>El docente corrige a mano</span>
+        <span>Partida guardada</span>
+        <span>Resultados en CSV</span>
+      </div>
+    </div>
+
+    <div class="bb-card">
+      <h2>Los cuatro bots</h2>
+      <p class="hint">Cada botón de respuesta tiene el color de su bot.</p>
+      <div class="bb-legend">
+        <div class="bb-leg c"><span class="dot"></span><div><div class="w">ChatGPT</div><div class="d">OpenAI.</div></div></div>
+        <div class="bb-leg l"><span class="dot"></span><div><div class="w">Claude</div><div class="d">Anthropic.</div></div></div>
+        <div class="bb-leg g"><span class="dot"></span><div><div class="w">Gemini</div><div class="d">Google.</div></div></div>
+        <div class="bb-leg p"><span class="dot"></span><div><div class="w">Perplexity</div><div class="d">Perplexity AI.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="bb-sec-title">Elijan el nivel</h2>
+  <p class="bb-sec-sub">Cada nivel tiene su propio banco de preguntas y guarda su propia partida.</p>
+
+  <div class="bb-levels" id="levels"></div>
+</main>
+
+<footer class="bb-wrap bb-foot">
+  <span>Batalla de Bots · Actividad 5 · Características según la documentación oficial de cada fabricante, revisada el 2 de octubre de 2026</span>
+  <span><a href="../index.html">← Volver a proyectos</a></span>
+</footer>
+
+<script src="bancos/basico.js"></script>
+<script src="bancos/avanzado.js"></script>
+<script>
+(function () {
+  'use strict';
+  /* Las tarjetas toman los datos de cada banco: si cambia el banco, el home se actualiza solo. */
+  var NIVELES = [
+    { k: 'basico',   barras: 1,
+      desc: 'Cada bot habla en primera persona y defiende sus rasgos: nombres de modelos, productos y fortalezas que publica su fabricante. Ideal para empezar o para grupos que aún no han usado los cuatro.' },
+    { k: 'avanzado', barras: 3,
+      desc: 'Experiencias reales de uso contadas por estudiantes: avisos, límites y comportamientos de la interfaz. Para acertar hay que haber usado las IA, no basta con haber leído sobre ellas.' }
+  ];
+  var esc = function (s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+  function guardada(clave) {
+    try { var s = JSON.parse(localStorage.getItem(clave) || 'null'); return !!(s && s.phase && s.phase !== 'end'); }
+    catch (e) { return false; }
+  }
+
+  document.getElementById('levels').innerHTML = NIVELES.map(function (n) {
+    var b = window.BANCOS[n.k], c = b.casos;
+    var ejes = {}; c.forEach(function (x) { ejes[x.eje] = 1; });
+    var muestra = c.filter(function (x) { return x.t.length < 170; })[0] || c[0];
+    var meter = '';
+    for (var i = 1; i <= 3; i++) meter += '<i' + (i <= n.barras ? ' class="on"' : '') + '></i>';
+    return '<article class="bb-level">' +
+      '<div class="bb-level-top">' +
+        '<div class="bb-level-head"><span class="bb-nivel-tag">' + esc(b.nombre) + '</span><span class="bb-meter" title="Dificultad">' + meter + '</span></div>' +
+        '<h3>' + (n.k === 'basico' ? 'Básico' : 'Avanzado') + '</h3>' +
+        '<p class="q">' + esc(b.txt.pregunta) + '</p>' +
+        '<p class="d">' + esc(n.desc) + '</p>' +
+        '<div class="bb-facts">' +
+          '<div><div class="n">' + c.length + '</div><div class="l">' + esc(b.txt.unidades) + '</div></div>' +
+          '<div><div class="n">' + (c.length / 4) + '</div><div class="l">por bot</div></div>' +
+          '<div><div class="n">' + Object.keys(ejes).length + '</div><div class="l">ejes del debate</div></div>' +
+        '</div>' +
+        '<div class="bb-sample"><div class="lb">Ejemplo de ' + esc(b.txt.unidad.toLowerCase()) + '</div><p>' + esc(muestra.t) + '</p></div>' +
+      '</div>' +
+      '<div class="bb-level-foot">' +
+        '<span class="bb-saved-tag">' + (guardada(b.clave) ? '● Hay una partida guardada' : '') + '</span>' +
+        '<a class="bb-btn bb-btn-primary" href="juego.html?nivel=' + n.k + '">Jugar ' + esc(b.nombre.toLowerCase()) + ' <span class="arrow">→</span></a>' +
+      '</div>' +
+    '</article>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -510,6 +510,42 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
 .feat-semaforo .btn-semaforo .arrow { transition: transform .25s var(--ease); }
 .feat-semaforo .btn-semaforo:hover .arrow { transform: translateX(4px); }
 
+/* BATALLA DE BOTS — juego de aula: una luz por bot como firma */
+.feat-bots {
+  border: 1px solid var(--line-2); border-top: 3px solid #C15F3C;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+  position: relative; overflow: hidden;
+}
+.feat-bots::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 210px; height: 100%; pointer-events: none;
+  background: linear-gradient(118deg, transparent 34%, rgba(35,38,46,.05) 34%, rgba(35,38,46,.05) 50%, rgba(193,95,60,.07) 50%, rgba(193,95,60,.07) 66%, rgba(106,75,216,.07) 66%, rgba(106,75,216,.07) 82%, rgba(28,125,136,.07) 82%);
+}
+.feat-bots > * { position: relative; z-index: 1; }
+.feat-bots .fs-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-bots .fs-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.feat-bots .fs-luz { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper); }
+.feat-bots .fs-luz i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+.feat-bots .fs-luz i:nth-child(1) { background: #23262E; }
+.feat-bots .fs-luz i:nth-child(2) { background: #C15F3C; }
+.feat-bots .fs-luz i:nth-child(3) { background: #6A4BD8; }
+.feat-bots .fs-luz i:nth-child(4) { background: #1C7D88; }
+.feat-bots h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-bots .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-bots .fs-reglas { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 20px; }
+.feat-bots .fs-regla { display: inline-flex; align-items: baseline; gap: 7px; padding: 8px 14px; border-radius: var(--r-md); font-size: var(--t-sm); }
+.feat-bots .fs-regla b { font-family: var(--font-display); font-weight: 700; letter-spacing: .01em; }
+.feat-bots .fs-regla.c { background: rgba(35,38,46,.08);   color: #23262E; }
+.feat-bots .fs-regla.l { background: rgba(193,95,60,.12);  color: #A84F30; }
+.feat-bots .fs-regla.g { background: rgba(106,75,216,.11); color: #5A3DC4; }
+.feat-bots .fs-regla.p { background: rgba(28,125,136,.11); color: #176A74; }
+.feat-bots .fs-regla span { color: var(--ink-2); }
+.feat-bots .btn-bots { display: inline-flex; align-items: center; gap: 9px; background: #C15F3C; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-bots .btn-bots:hover { background: #A84F30; }
+.feat-bots .btn-bots:active { transform: translateY(1px); }
+.feat-bots .btn-bots .arrow { transition: transform .25s var(--ease); }
+.feat-bots .btn-bots:hover .arrow { transform: translateX(4px); }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
@@ -518,6 +554,7 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
   .feat-electro .fe-stat { min-width: 100px; }
   .feat-control .fc-stat { min-width: 100px; }
   .feat-semaforo::after { display: none; }
+  .feat-bots::after { display: none; }
 }
 
 /* Chips / tags / estados */

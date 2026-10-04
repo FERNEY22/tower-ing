@@ -120,6 +120,19 @@ const proyectos = [
     link: "semaforo-ia/index.html",
     destacado: true,
     variante: "semaforo"
+  },
+  {
+    id: "batalla-bots",
+    titulo: "Batalla de Bots",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026 – Presente",
+    descripcion:
+      "Juego de aula para la Actividad 5, en dos niveles. Cada grupo gira una ruleta y decide si la pista corresponde a ChatGPT, Claude, Gemini o Perplexity antes de que se acabe el tiempo. Nivel básico: 32 argumentos en primera persona, ocho por bot, para adivinar quién lo dijo. Nivel avanzado: 40 experiencias reales de uso, diez por bot; para acertar hay que haber usado las IA, porque las pistas son avisos, límites y comportamientos de cada app. Cada respuesta se sustenta en la documentación oficial del fabricante. Marcador en vivo, corrección manual del docente, partida guardada por nivel y exportación a CSV.",
+    tecnologias: ["JavaScript", "Canvas 2D", "Web Audio API", "localStorage", "Exportación CSV", "Fuentes oficiales"],
+    link: "batalla-bots/index.html",
+    destacado: true,
+    variante: "bots"
   }
 
   // =====================================================

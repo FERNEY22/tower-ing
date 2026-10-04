@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batalla de Bots · Juego — Towers Ing</title>
+<meta name="description" content="Juego de aula: cada bot defiende sus fortalezas y los grupos adivinan quién habla. ChatGPT, Claude, Gemini o Perplexity, según sus características oficiales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles/towers.css">
+<link rel="stylesheet" href="estilos.css">
+<script>
+/* El nivel llega por la dirección: juego.html?nivel=basico | ?nivel=avanzado.
+   Se carga solo el banco de ese nivel; sin nivel válido se vuelve al home. */
+(function () {
+  var n = (new URLSearchParams(location.search).get('nivel') || '').toLowerCase();
+  if (n !== 'basico' && n !== 'avanzado') { location.replace('index.html'); return; }
+  window.NIVEL = n;
+  document.write('<script src="bancos/' + n + '.js"><\/script>');
+})();
+</script>
+</head>
+<body>
+
+<!-- ======================= BARRA ======================= -->
+<header class="bb-bar">
+  <div class="bb-bar-in">
+    <a class="bb-brand" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+    <div class="bb-bar-mid" id="semBarMid" hidden>
+      <span class="bb-pill" id="pRound"></span>
+      <span class="bb-pill is-turn" id="pTurn"></span>
+    </div>
+    <div class="bb-tools">
+      <label><input type="checkbox" id="chkSound" checked> Sonido</label>
+      <button class="bb-btn bb-btn-sm" id="btnEndEarly" hidden>Terminar</button>
+      <button class="bb-btn bb-btn-sm" id="btnMenu" hidden>Menú</button>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= CONFIGURACIÓN ======================= -->
+<main id="scr-setup" class="bb-wrap bb-setup">
+
+  <section class="bb-hero">
+    <div class="bb-kicker"><span class="bb-lights"><i></i><i></i><i></i><i></i></span> Actividad 5 · Juego de aula · <span class="bb-nivel-tag" id="nivelTag"></span></div>
+    <h1>Batalla <em>de Bots</em></h1>
+    <p class="sub" id="nivelResumen"></p>
+    <p class="norma">ChatGPT · Claude · Gemini · Perplexity</p>
+  </section>
+
+  <div class="bb-card bb-saved" id="savedBox" hidden>
+    <h2>Hay un juego guardado</h2>
+    <p class="hint" id="savedInfo"></p>
+    <div class="bb-actions">
+      <button class="bb-btn bb-btn-primary" id="btnContinue">Continuar donde quedó <span class="arrow">→</span></button>
+      <button class="bb-btn" id="btnNewGame">Empezar uno nuevo</button>
+    </div>
+  </div>
+
+  <div class="bb-grid2">
+    <div>
+      <div class="bb-card">
+        <h2>Grupos</h2>
+        <p class="hint">Escriba el nombre de cada equipo. El orden de turno es el de esta lista.</p>
+        <div class="bb-grouplist" id="groupRows"></div>
+        <button class="bb-btn bb-btn-sm" id="btnAddGroup">+ Agregar grupo</button>
+      </div>
+
+      <div class="bb-card">
+        <h2>Reglas</h2>
+        <p class="hint">El puntaje se reparte entre las rondas para que un juego perfecto sume 100, que es la nota máxima. El juego termina al cerrar la última ronda, cuando todos los grupos han jugado los mismos turnos.</p>
+        <div class="bb-field">
+          <label for="inRounds">Rondas por grupo</label>
+          <input class="bb-input num" id="inRounds" type="number" min="1" max="30" step="1">
+        </div>
+        <div class="bb-field">
+          <label for="inTime">Segundos para responder</label>
+          <input class="bb-input num" id="inTime" type="number" min="10" max="600" step="5">
+        </div>
+        <div class="bb-field">
+          <label>Puntos por acierto</label>
+          <span class="bb-readout" id="outPts">—</span>
+        </div>
+        <p class="bb-note" id="setupInfo"></p>
+        <p class="bb-warn" id="setupWarn" hidden></p>
+      </div>
+    </div>
+
+    <div>
+      <div class="bb-card">
+        <h2>Los cuatro bots</h2>
+        <p class="hint" id="nivelDecision"></p>
+        <div class="bb-legend">
+          <div class="bb-leg c"><span class="dot"></span><div><div class="w">ChatGPT</div><div class="d">OpenAI.</div></div></div>
+          <div class="bb-leg l"><span class="dot"></span><div><div class="w">Claude</div><div class="d">Anthropic.</div></div></div>
+          <div class="bb-leg g"><span class="dot"></span><div><div class="w">Gemini</div><div class="d">Google.</div></div></div>
+          <div class="bb-leg p"><span class="dot"></span><div><div class="w">Perplexity</div><div class="d">Perplexity AI.</div></div></div>
+        </div>
+        <p class="bb-note">Acierto = los puntos de la ronda. Error o tiempo agotado = 0. El docente puede corregir cualquier turno a mano.</p>
+      </div>
+
+      <div class="bb-card">
+        <h2>Cómo se juega</h2>
+        <p class="hint" style="margin:0" id="nivelComo"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-start">
+    <button class="bb-btn bb-btn-primary bb-btn-lg" id="btnStart">Iniciar juego <span class="arrow">→</span></button>
+    <span class="bb-note" style="margin:0" id="storageWarn" hidden></span>
+  </div>
+</main>
+
+<!-- ======================= JUEGO ======================= -->
+<main id="scr-game" class="bb-wrap bb-game" hidden>
+  <div class="bb-stage">
+    <div class="bb-wheelbox">
+      <canvas id="semWheel" width="880" height="880"></canvas>
+      <div class="bb-left" id="wheelLeft"></div>
+      <button class="bb-btn bb-btn-primary bb-btn-lg" id="btnSpin" style="width:100%">Girar ruleta</button>
+    </div>
+
+    <div class="bb-panel">
+      <div class="bb-idle" id="pIdle"></div>
+
+      <div id="pCase" hidden style="display:flex;flex-direction:column;flex:1">
+        <div class="bb-case-head">
+          <span class="bb-chip" id="caseNum"></span>
+          <div class="bb-timer" id="timerBox">
+            <div class="bb-ring">
+              <svg width="62" height="62" viewBox="0 0 62 62">
+                <circle class="bg" cx="31" cy="31" r="26"></circle>
+                <circle class="fg" cx="31" cy="31" r="26" id="ringFg"></circle>
+              </svg>
+              <span class="n" id="timerT"></span>
+            </div>
+            <span class="lbl" id="timerMsg"></span>
+          </div>
+        </div>
+
+        <div class="bb-body"><div class="bb-ask" id="nivelPregunta"></div><p class="bb-case-text" id="caseText"></p></div>
+
+        <div class="bb-answers">
+          <button class="bb-ans c" data-ans="CHATGPT">ChatGPT<small>OpenAI</small><span class="mk"></span></button>
+          <button class="bb-ans l" data-ans="CLAUDE">Claude<small>Anthropic</small><span class="mk"></span></button>
+          <button class="bb-ans g" data-ans="GEMINI">Gemini<small>Google</small><span class="mk"></span></button>
+          <button class="bb-ans p" data-ans="PERPLEXITY">Perplexity<small>Perplexity AI</small><span class="mk"></span></button>
+        </div>
+
+        <div class="bb-reveal" id="pReveal" hidden>
+          <div class="bb-verdict" id="rVerdict"></div>
+          <p class="bb-kv" id="rExpl"></p>
+          <div class="bb-art" id="rArt"></div>
+          <div class="bb-fix">
+            <span>Corregir este turno:</span>
+            <input type="text" class="bb-input" id="fixVal" inputmode="decimal" aria-label="Puntaje corregido">
+            <button class="bb-btn bb-btn-sm" id="btnFixApply">Aplicar</button>
+            <button class="bb-btn bb-btn-sm" id="btnFixFull"></button>
+            <button class="bb-btn bb-btn-sm" id="btnFixZero">Poner 0</button>
+          </div>
+          <button class="bb-btn bb-btn-primary bb-btn-lg bb-next" id="btnNext"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-score" id="scoreboard"></div>
+
+  <details class="bb-det">
+    <summary>Historial por turno</summary>
+    <div class="inner" id="histGame"></div>
+  </details>
+</main>
+
+<!-- ======================= FINAL ======================= -->
+<main id="scr-end" class="bb-wrap bb-end" hidden>
+  <div class="bb-kicker"><span class="bb-lights"><i></i><i></i><i></i><i></i></span> Resultados</div>
+  <h1>Así quedó la partida</h1>
+  <p class="bb-endnote" id="endNote"></p>
+
+  <div class="bb-podium" id="podium"></div>
+
+  <div class="bb-card">
+    <h2>Tabla final</h2>
+    <p class="hint">Puntaje por ronda y total de cada grupo.</p>
+    <div id="finalTable"></div>
+  </div>
+
+  <div class="bb-rule">
+    <div class="lb">La regla para recordar</div>
+    <div class="tx">No hay un bot que gane en todo: <b>elija según la tarea</b>.<br>Y diga el que diga, <b>verifique lo que responde</b>.</div>
+  </div>
+
+  <div class="bb-actions">
+    <button class="bb-btn bb-btn-primary bb-btn-lg" id="btnCSV">Exportar resultados (CSV)</button>
+    <button class="bb-btn" id="btnEndNew">Nuevo juego</button>
+  </div>
+
+  <details class="bb-det" open>
+    <summary>Historial por turno</summary>
+    <div class="inner" id="histEnd"></div>
+  </details>
+</main>
+
+<footer class="bb-wrap bb-foot">
+  <span>Batalla de Bots · Actividad 5 · Características según la documentación oficial de cada fabricante, revisada el 2 de octubre de 2026</span>
+  <span><a href="index.html">← Elegir nivel</a> · <a href="../index.html">Volver a proyectos</a></span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Banco del nivel (bancos/basico.js o bancos/avanzado.js) ---------- */
+  var B = window.BANCOS && window.BANCOS[window.NIVEL];
+  if (!B) return;   // sin nivel válido el cargador ya redirigió al home
+  var T = B.txt;
+  var CASES = B.casos;
+  var LABEL = { CHATGPT: 'ChatGPT', CLAUDE: 'Claude', GEMINI: 'Gemini', PERPLEXITY: 'Perplexity', TIEMPO: 'Sin respuesta' };
+  var DESC  = { CHATGPT: 'OpenAI', CLAUDE: 'Anthropic', GEMINI: 'Google', PERPLEXITY: 'Perplexity AI' };
+  var CLS   = { CHATGPT: 'c', CLAUDE: 'l', GEMINI: 'g', PERPLEXITY: 'p', TIEMPO: 't' };
+  var KEY = B.clave;   // cada nivel guarda su propia partida
+  var BOTS = ['CHATGPT', 'CLAUDE', 'GEMINI', 'PERPLEXITY'];
+  var TAU = Math.PI * 2, N = CASES.length, SEG = TAU / N;
+  var RING = 2 * Math.PI * 26;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = null;
+  var ROUNDS = 5;   // rondas por defecto (5 × 20 = 100); el docente puede cambiarlas
+  var draft = defaultDraft();
+  var timerId = null, deadline = 0, lastShown = null, paused = 0;
+  var rot = 0, spinning = false, audioCtx = null, storageOk = true;
+
+  function defaultDraft() { return { groups: ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4', 'Grupo 5'], rounds: ROUNDS, time: 60 }; }
+
+  /* ---------- Utilidades ---------- */
+  function r2(n) { return Math.round(n * 100) / 100; }
+  function fmt(n) { return r2(n).toLocaleString('es-CO', { maximumFractionDigits: 2 }); }
+  function ptsFor(r) { return 100 / r; }   // sin redondear: un juego perfecto suma 100 exacto; se redondea solo al mostrar
+  function caseById(id) { for (var i = 0; i < CASES.length; i++) if (CASES[i].id === id) return CASES[i]; return null; }
+  function nG() { return state.config.groups.length; }
+  function totalTurns() { return nG() * state.config.rounds; }
+  function roundOf(t) { return Math.floor(t / nG()) + 1; }
+  function groupOf(t) { return t % nG(); }
+  function totals() {
+    var t = state.config.groups.map(function () { return 0; });
+    state.history.forEach(function (h) { t[h.g] += h.points; });
+    return t.map(function (v) { return Math.min(100, r2(v)); });   // nota máxima 100
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  /* Sorteo por bot: cada grupo recibe una mezcla equivalente de los cuatro bots
+     (el que sale de más rota entre grupos) y el orden se baraja por grupo. */
+  function makePlan(nGroups, rounds) {
+    var plan = [];
+    for (var g = 0; g < nGroups; g++) {
+      var seq = [];
+      for (var k = 0; k < rounds; k++) seq.push(BOTS[(g + k) % BOTS.length]);
+      plan.push(shuffle(seq));
+    }
+    return plan;
+  }
+  function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function show(id) {
+    ['scr-setup', 'scr-game', 'scr-end'].forEach(function (s) { $(s).hidden = (s !== id); });
+    var playing = (id === 'scr-game');
+    $('semBarMid').hidden = !playing;
+    $('btnEndEarly').hidden = !playing;
+    $('btnMenu').hidden = !playing;
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Almacenamiento (avisa si falla, no falla en silencio) ---------- */
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { flagStorage(); } }
+  function loadSaved() { try { var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { flagStorage(); return null; } }
+  function clearSaved() { try { localStorage.removeItem(KEY); } catch (e) {} }
+  function flagStorage() {
+    if (!storageOk) return;
+    storageOk = false;
+    var w = $('storageWarn');
+    w.textContent = 'Este navegador no permite guardar la partida. El juego funciona, pero si recarga la página se pierde el avance: exporte el CSV al terminar.';
+    w.hidden = false;
+  }
+  (function probe() { try { localStorage.setItem(KEY + '_p', '1'); localStorage.removeItem(KEY + '_p'); } catch (e) { flagStorage(); } })();
+
+  /* ---------- Sonido ---------- */
+  function initAudio() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch (e) { audioCtx = null; }
+  }
+  function beep(freq, dur, gain) {
+    if (!audioCtx || !$('chkSound').checked) return;
+    try {
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = audioCtx.currentTime;
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(gain || 0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  document.addEventListener('click', initAudio, { once: false });
+
+  /* ---------- Diálogos que no dejan correr el reloj ---------- */
+  function pauseTimer() {
+    if (!timerId) return false;
+    paused = deadline - Date.now();
+    clearInterval(timerId); timerId = null;
+    return true;
+  }
+  function resumeTimer(was) {
+    if (!was || !state || state.phase !== 'question') return;
+    deadline = Date.now() + Math.max(0, paused);
+    lastShown = null;
+    tickTimer();
+    timerId = setInterval(tickTimer, 200);
+  }
+  function ask(msg) { var w = pauseTimer(); var ok = window.confirm(msg); if (!ok) resumeTimer(w); return ok; }
+  function askText(msg, def) { var w = pauseTimer(); var v = window.prompt(msg, def); resumeTimer(w); return v; }
+
+  /* ======================= CONFIGURACIÓN ======================= */
+  function renderSetup() {
+    var box = $('groupRows'); box.innerHTML = '';
+    draft.groups.forEach(function (name, i) {
+      var row = el('div', null, 'bb-grow');
+      row.appendChild(el('span', String(i + 1), 'idx'));
+      var inp = el('input', null, 'bb-input');
+      inp.type = 'text'; inp.value = name; inp.maxLength = 40;
+      inp.placeholder = 'Grupo ' + (i + 1);
+      inp.setAttribute('aria-label', 'Nombre del grupo ' + (i + 1));
+      inp.addEventListener('input', function () { draft.groups[i] = inp.value; });
+      row.appendChild(inp);
+      var b = el('button', '×', 'bb-del');
+      b.type = 'button'; b.title = 'Eliminar grupo';
+      b.disabled = draft.groups.length <= 1;
+      b.addEventListener('click', function () { draft.groups.splice(i, 1); renderSetup(); });
+      row.appendChild(b);
+      box.appendChild(row);
+    });
+    $('inRounds').value = draft.rounds;
+    $('inTime').value = draft.time;
+    updateSetupInfo();
+  }
+
+  function updateSetupInfo() {
+    var r = parseInt($('inRounds').value, 10) || 0;
+    var t = parseInt($('inTime').value, 10) || 0;
+    var n = draft.groups.length, turns = n * r, max = Math.floor(N / n);
+    $('outPts').textContent = r > 0 ? fmt(ptsFor(r)) + ' pts' : '—';
+    $('setupInfo').textContent = n + ' grupos × ' + r + ' rondas = ' + turns + ' turnos, de ' + N + ' ' + T.unidades + ' disponibles.';
+    var msg = '';
+    if (r < 1) msg = 'Debe haber al menos una ronda.';
+    else if (max < 1) msg = 'Hay demasiados grupos: el juego tiene ' + N + ' ' + T.unidades + ' y ' + T.alMenos + '.';
+    else if (turns > N) msg = T.noAlcanzan + '. Con ' + n + ' grupos el máximo es ' + max + (max === 1 ? ' ronda.' : ' rondas.');
+    else if (t < 10 || t > 600) msg = 'El tiempo debe estar entre 10 y 600 segundos.';
+    $('setupWarn').textContent = msg;
+    $('setupWarn').hidden = (msg === '');
+    $('btnStart').disabled = msg !== '';
+  }
+
+  function renderSavedBox() {
+    var s = loadSaved(), box = $('savedBox');
+    if (!s || !s.config || !s.history) { box.hidden = true; return; }
+    var g = s.config.groups.length, info;
+    if (s.phase === 'end') info = 'Partida terminada · ' + g + ' grupos · ' + s.history.length + ' turnos jugados.';
+    else info = 'Ronda ' + (Math.floor(s.turn / g) + 1) + ' de ' + s.config.rounds + ' · turno de ' + s.config.groups[s.turn % g] +
+                ' · ' + s.history.length + ' de ' + (g * s.config.rounds) + ' turnos jugados.';
+    $('savedInfo').textContent = info;
+    box.hidden = false;
+  }
+
+  $('btnAddGroup').addEventListener('click', function () {
+    var k = draft.groups.length + 1;
+    while (draft.groups.indexOf('Grupo ' + k) !== -1) k++;
+    draft.groups.push('Grupo ' + k);
+    renderSetup();
+  });
+  $('inRounds').addEventListener('input', function () { draft.rounds = parseInt(this.value, 10) || 0; updateSetupInfo(); });
+  $('inTime').addEventListener('input', function () { draft.time = parseInt(this.value, 10) || 0; updateSetupInfo(); });
+
+  $('btnStart').addEventListener('click', function () {
+    var s = loadSaved();
+    if (s && s.phase && s.phase !== 'end' &&
+        !confirm('Hay un juego guardado sin terminar. Si inicia uno nuevo, se reemplazará. ¿Continuar?')) return;
+    var groups = draft.groups.map(function (g, i) { return (g || '').trim() || ('Grupo ' + (i + 1)); });
+    state = {
+      v: B.version, nivel: B.nivel,
+      config: { groups: groups, rounds: draft.rounds, time: draft.time, pts: ptsFor(draft.rounds) },
+      plan: makePlan(groups.length, draft.rounds),
+      turn: 0, used: [], history: [], phase: 'spin', current: null, rot: 0,
+      started: new Date().toISOString()
+    };
+    rot = 0; save(); enterGame();
+  });
+
+  $('btnContinue').addEventListener('click', function () {
+    var s = loadSaved(); if (!s) { renderSavedBox(); return; }
+    state = s; rot = state.rot || 0;
+    if (state.phase === 'end') renderEnd(); else enterGame();
+  });
+
+  $('btnNewGame').addEventListener('click', function () {
+    if (!confirm('Se borrará el juego guardado. ¿Empezar uno nuevo?')) return;
+    clearSaved(); state = null; draft = defaultDraft();
+    renderSetup(); renderSavedBox();
+  });
+
+  /* ======================= JUEGO ======================= */
+  function enterGame() {
+    show('scr-game');
+    if (state.phase === 'spinning') { state.phase = 'question'; state.current.remaining = state.config.time; }
+    if (state.current && (state.phase === 'question' || state.phase === 'reveal')) rot = restRot(state.current.caseId);
+    save(); renderGame();
+    if (state.phase === 'question') startTimer(state.current.remaining);
+  }
+
+  function restRot(id) { return (((-(id - 0.5) * SEG) % TAU) + TAU) % TAU; }
+
+  function renderGame() {
+    var t = state.turn;
+    $('pRound').innerHTML = 'Ronda <strong>' + roundOf(t) + '</strong> de ' + state.config.rounds;
+    $('pTurn').innerHTML = 'Turno: <strong>' + esc(state.config.groups[groupOf(t)]) + '</strong>';
+    renderScoreboard(); drawWheel(); renderPanel(); renderHistory($('histGame'));
+    $('btnSpin').disabled = state.phase !== 'spin' || spinning;
+    $('wheelLeft').textContent = T.sinUsar + ': ' + (N - state.used.length) + ' de ' + N;
+  }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function renderScoreboard() {
+    var sb = $('scoreboard'), tot = totals(), cur = groupOf(state.turn);
+    sb.innerHTML = '';
+    state.config.groups.forEach(function (name, i) {
+      var c = el('div', null, 'bb-sb' + (i === cur ? ' on' : ''));
+      var n = el('div', name, 'n'); n.title = name;
+      c.appendChild(n);
+      c.appendChild(el('div', fmt(tot[i]), 'p'));
+      sb.appendChild(c);
+    });
+  }
+
+  function renderPanel() {
+    var ph = state.phase, idle = (ph === 'spin' || ph === 'spinning');
+    $('pIdle').hidden = !idle;
+    $('pCase').hidden = idle;
+    if (idle) {
+      $('pIdle').innerHTML = '';
+      if (ph === 'spinning') {
+        $('pIdle').appendChild(el('div', 'Girando…', 'big'));
+      } else {
+        var d = el('div', null, 'big');
+        d.appendChild(document.createTextNode('Turno de '));
+        d.appendChild(el('b', state.config.groups[groupOf(state.turn)]));
+        $('pIdle').appendChild(d);
+        $('pIdle').appendChild(el('div', T.girar, 'small'));
+      }
+      return;
+    }
+
+    var c = caseById(state.current.caseId);
+    if (!c) { alert(T.noExiste); return; }
+    $('caseNum').textContent = T.unidad + ' ' + c.id + ' de ' + N + ' · ' + c.eje;
+    $('caseText').textContent = c.t;
+
+    var h = (ph === 'reveal') ? histForTurn(state.turn) : null;
+    var btns = document.querySelectorAll('.bb-ans');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i], a = b.getAttribute('data-ans'), mk = b.querySelector('.mk');
+      b.classList.remove('dim', 'ok'); mk.textContent = '';
+      b.disabled = (ph !== 'question');
+      if (h) {
+        if (a === c.a) { b.classList.add('ok'); mk.textContent = 'Correcta'; }
+        else b.classList.add('dim');
+        if (a === h.given) mk.textContent = (a === c.a) ? 'Correcta · su respuesta' : 'Su respuesta';
+      }
+    }
+
+    $('timerBox').hidden = (ph === 'reveal');
+    $('pReveal').hidden = (ph !== 'reveal');
+    if (h) {
+      var good = (h.given === c.a), v = $('rVerdict');
+      v.className = 'bb-verdict ' + (good ? 'good' : 'bad');
+      v.innerHTML = '';
+      v.appendChild(el('span', good ? 'Acierto' : (h.given === 'TIEMPO' ? 'Sin respuesta' : 'Error'), 'bdg'));
+      v.appendChild(el('span', good ? '+' + fmt(state.config.pts) + ' puntos'
+        : (h.given === 'TIEMPO' ? 'Se acabó el tiempo · 0 puntos' : 'Era ' + LABEL[c.a] + ' · 0 puntos')));
+      if (h.corrected) v.appendChild(el('span', '· corregido a ' + fmt(h.points), 'bdg'));
+      $('rExpl').innerHTML = '<b>' + T.revela + ' ' + LABEL[c.a] + ' (' + DESC[c.a] + ').</b> ' + esc(c.e);
+      $('rArt').textContent = 'Fuente oficial: ' + c.r;
+      $('fixVal').value = fmt(h.points);
+      $('btnFixFull').textContent = 'Dar acierto (' + fmt(state.config.pts) + ')';
+      $('btnNext').innerHTML = (state.turn + 1 >= totalTurns())
+        ? 'Ver resultados finales <span class="arrow">→</span>' : 'Siguiente turno <span class="arrow">→</span>';
+    }
+  }
+
+  function histForTurn(t) { for (var i = 0; i < state.history.length; i++) if (state.history[i].turn === t) return state.history[i]; return null; }
+
+  /* ---------- Ruleta ---------- */
+  function cssVar(n, f) {
+    try { var v = getComputedStyle(document.documentElement).getPropertyValue(n).trim(); return v || f; }
+    catch (e) { return f; }
+  }
+  function drawWheel() {
+    var cv = $('semWheel'); if (!cv) return;
+    var x = cv.getContext('2d'), W = cv.width, H = cv.height;
+    var paper = cssVar('--surface', '#FBF8F1'), paper2 = cssVar('--paper-2', '#ECE6D8');
+    var ink = cssVar('--ink', '#15171F'), ink3 = cssVar('--ink-3', '#5A5D69');
+    var line = cssVar('--line-2', 'rgba(21,23,31,.16)'), elec = cssVar('--electric', '#1F3DFF');
+
+    x.clearRect(0, 0, W, H);
+    var cx = W / 2, cy = H / 2 + 14, R = W / 2 - 46;
+    var cur = (state && state.current) ? state.current.caseId : null;
+    var revealed = state && (state.phase === 'question' || state.phase === 'reveal');
+
+    for (var i = 0; i < N; i++) {
+      var id = i + 1, a0 = rot + i * SEG - Math.PI / 2, a1 = a0 + SEG;
+      var isCur = revealed && id === cur;
+      var used = state && state.used.indexOf(id) !== -1 && !(id === cur && !revealed);
+      x.beginPath(); x.moveTo(cx, cy); x.arc(cx, cy, R, a0, a1); x.closePath();
+      x.fillStyle = isCur ? elec : (used ? paper2 : (i % 2 ? paper : '#FFFFFF'));
+      x.fill();
+      x.lineWidth = 1.5; x.strokeStyle = line; x.stroke();
+
+      x.save();
+      x.translate(cx, cy); x.rotate(a0 + SEG / 2); x.translate(R * B.rueda.radio, 0); x.rotate(Math.PI / 2);
+      x.fillStyle = isCur ? '#FFFFFF' : (used ? ink3 : ink);
+      x.font = (isCur ? '700 ' : '500 ') + B.rueda.fuente + 'px "Geist", system-ui, sans-serif';   // más sectores, letra más pequeña
+      x.globalAlpha = used ? 0.45 : 1;
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(String(id), 0, 0);
+      x.restore();
+    }
+
+    x.beginPath(); x.arc(cx, cy, R, 0, TAU); x.lineWidth = 3; x.strokeStyle = cssVar('--line-strong', 'rgba(21,23,31,.28)'); x.stroke();
+    x.beginPath(); x.arc(cx, cy, R + 9, 0, TAU); x.lineWidth = 1; x.strokeStyle = line; x.stroke();
+
+    // Cubo central con las cuatro luces, una por bot
+    x.beginPath(); x.arc(cx, cy, 62, 0, TAU);
+    x.fillStyle = paper; x.fill();
+    x.lineWidth = 2; x.strokeStyle = line; x.stroke();
+    var cols = [cssVar('--chatgpt', '#23262E'), cssVar('--claude', '#C15F3C'), cssVar('--gemini', '#6A4BD8'), cssVar('--perplexity', '#1C7D88')];
+    for (var k = 0; k < 4; k++) {
+      x.beginPath(); x.arc(cx + (k % 2 ? 15 : -15), cy + (k < 2 ? -15 : 15), 10, 0, TAU);
+      x.fillStyle = cols[k]; x.fill();
+    }
+
+    // Puntero
+    x.beginPath();
+    x.moveTo(cx - 19, cy - R - 26); x.lineTo(cx + 19, cy - R - 26); x.lineTo(cx, cy - R + 16); x.closePath();
+    x.fillStyle = ink; x.fill();
+    x.strokeStyle = paper; x.lineWidth = 3; x.stroke();
+  }
+  function sectorUnderPointer(r) { return Math.floor((((-r) % TAU) + TAU) % TAU / SEG); }
+
+  function spin() {
+    if (!state || state.phase !== 'spin' || spinning) return;
+    initAudio();
+    var avail = CASES.filter(function (c) { return state.used.indexOf(c.id) === -1; });
+    if (!avail.length) { alert(T.noQuedan); return; }
+    var want = state.plan && state.plan[groupOf(state.turn)] && state.plan[groupOf(state.turn)][roundOf(state.turn) - 1];
+    var pool = avail.filter(function (c) { return c.a === want; });
+    if (!pool.length) pool = avail;   // si ese bot se agotó, cualquiera de los que quedan
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    state.used.push(pick.id);
+    state.current = { caseId: pick.id, remaining: state.config.time };
+    state.phase = 'spinning';
+    save(); spinning = true; renderGame();
+
+    var jitter = (Math.random() - 0.5) * SEG * 0.6;
+    var desired = -(pick.id - 0.5) * SEG + jitter;
+    var start = rot;
+    var delta = (((desired - start) % TAU) + TAU) % TAU;
+    var end = start + TAU * (5 + Math.floor(Math.random() * 2)) + delta;
+    var dur = 3000 + Math.random() * 1000;
+    var t0 = performance.now(), lastSec = sectorUnderPointer(start);
+
+    function frame(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      rot = start + (end - start) * (1 - Math.pow(1 - p, 3));
+      var s = sectorUnderPointer(rot);
+      if (s !== lastSec) { lastSec = s; beep(1400, 0.02, 0.05); }
+      drawWheel();
+      if (p < 1) { requestAnimationFrame(frame); return; }
+      rot = ((end % TAU) + TAU) % TAU;
+      spinning = false;
+      state.phase = 'question'; state.rot = rot;
+      save(); beep(660, 0.25, 0.15); renderGame(); startTimer(state.config.time);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- Cronómetro ---------- */
+  function startTimer(sec) {
+    stopTimer();
+    deadline = Date.now() + sec * 1000;
+    lastShown = null;
+    tickTimer();
+    timerId = setInterval(tickTimer, 200);
+  }
+  function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+  function tickTimer() {
+    if (!state || state.phase !== 'question') { stopTimer(); return; }
+    var ms = deadline - Date.now();
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    if (s !== lastShown) {
+      lastShown = s;
+      $('timerT').textContent = s;
+      $('ringFg').style.strokeDasharray = RING;
+      $('ringFg').style.strokeDashoffset = RING * (1 - s / state.config.time);
+      var warn = s <= 10;
+      $('timerBox').classList.toggle('warn', warn);
+      $('timerMsg').textContent = warn ? (s > 0 ? '¡Últimos segundos!' : '¡Tiempo!') : 'segundos\nrestantes';
+      state.current.remaining = s;
+      if (s % 5 === 0 || warn) save();
+      if (warn && s > 0) beep(880, 0.08, 0.15);
+    }
+    if (ms <= 0) { stopTimer(); beep(330, 0.7, 0.2); answer('TIEMPO'); }
+  }
+
+  /* ---------- Respuesta y turnos ---------- */
+  function answer(given) {
+    if (!state || state.phase !== 'question') return;
+    stopTimer();
+    $('timerBox').classList.remove('warn');
+    var c = caseById(state.current.caseId);
+    var pts = (given === c.a) ? state.config.pts : 0;
+    state.history.push({
+      turn: state.turn, round: roundOf(state.turn), g: groupOf(state.turn),
+      caseId: c.id, given: given, correct: c.a, points: pts, auto: pts, corrected: false
+    });
+    state.phase = 'reveal';
+    save();
+    if (given !== 'TIEMPO') beep(given === c.a ? 880 : 220, 0.35, 0.15);
+    renderGame();
+  }
+
+  function setPoints(turn, val) {
+    var h = histForTurn(turn); if (!h) return;
+    h.points = (val === state.config.pts) ? val : r2(val);
+    h.corrected = (h.points !== h.auto);
+    save();
+    if (state.phase === 'end') renderEnd(); else renderGame();
+  }
+  function parsePts(str) {
+    var v = parseFloat(String(str).replace(/\./g, '').replace(',', '.'));
+    var max = state.config.pts;   // un turno nunca vale más que su ronda: el total no pasa de 100
+    if (isNaN(v) || v < 0 || v > max) { alert('Escriba un puntaje entre 0 y ' + fmt(max) + '.'); return null; }
+    return v;
+  }
+  function nextTurn() {
+    if (!state || state.phase !== 'reveal') return;
+    state.turn++; state.current = null;
+    if (state.turn >= totalTurns()) { state.phase = 'end'; save(); renderEnd(); return; }
+    state.phase = 'spin'; save(); renderGame();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.bb-ans'), function (b) {
+    b.addEventListener('click', function () { answer(b.getAttribute('data-ans')); });
+  });
+  $('btnSpin').addEventListener('click', spin);
+  $('btnNext').addEventListener('click', nextTurn);
+  $('btnFixApply').addEventListener('click', function () { var v = parsePts($('fixVal').value); if (v !== null) setPoints(state.turn, v); });
+  $('btnFixFull').addEventListener('click', function () { setPoints(state.turn, state.config.pts); });
+  $('btnFixZero').addEventListener('click', function () { setPoints(state.turn, 0); });
+
+  $('btnEndEarly').addEventListener('click', function () {
+    if (spinning) return;
+    if (!ask('¿Terminar el juego ahora y ver los resultados? El turno en curso sin responder no se contará.')) return;
+    stopTimer();
+    if (state.phase === 'question' && state.current) {
+      var i = state.used.indexOf(state.current.caseId); if (i !== -1) state.used.splice(i, 1);
+    }
+    state.current = null; state.phase = 'end'; state.endedEarly = true;
+    save(); renderEnd();
+  });
+
+  $('btnMenu').addEventListener('click', function () {
+    if (spinning) return;
+    stopTimer(); save();
+    show('scr-setup'); renderSetup(); renderSavedBox();
+  });
+
+  /* ---------- Historial ---------- */
+  function renderHistory(container) {
+    container.innerHTML = '';
+    if (!state.history.length) { container.appendChild(el('p', 'Todavía no se ha jugado ningún turno.', 'hint')); return; }
+    var tbl = el('table', null, 'bb-table'), thead = el('thead'), tr = el('tr');
+    ['#', 'Ronda', 'Grupo', T.unidad, 'Respondió', 'Era', 'Puntos', ''].forEach(function (h) { tr.appendChild(el('th', h)); });
+    thead.appendChild(tr); tbl.appendChild(thead);
+    var tb = el('tbody');
+    state.history.forEach(function (h) {
+      var c = caseById(h.caseId), r = el('tr');
+      r.appendChild(el('td', String(h.turn + 1), 'num'));
+      r.appendChild(el('td', String(h.round), 'num'));
+      r.appendChild(el('td', state.config.groups[h.g]));
+      var tdc = el('td', c ? (c.id + '. ' + (c.t.length > 64 ? c.t.slice(0, 64) + '…' : c.t)) : '—', 'case');
+      if (c) tdc.title = c.t;
+      r.appendChild(tdc);
+      var t1 = el('td'); t1.appendChild(el('span', LABEL[h.given], 'bb-badge ' + CLS[h.given])); r.appendChild(t1);
+      var t2 = el('td'); t2.appendChild(el('span', LABEL[h.correct], 'bb-badge ' + CLS[h.correct])); r.appendChild(t2);
+      r.appendChild(el('td', fmt(h.points) + (h.corrected ? ' *' : ''), 'num'));
+      var tdb = el('td'), b = el('button', 'Corregir', 'bb-btn bb-btn-sm');
+      b.addEventListener('click', function () {
+        var v = askText('Nuevo puntaje para ' + state.config.groups[h.g] + ', ronda ' + h.round + ' (' + T.unidad.toLowerCase() + ' ' + h.caseId + '):', fmt(h.points));
+        if (v === null) return;
+        var p = parsePts(v); if (p !== null) setPoints(h.turn, p);
+      });
+      tdb.appendChild(b); r.appendChild(tdb);
+      tb.appendChild(r);
+    });
+    tbl.appendChild(tb); container.appendChild(tbl);
+    container.appendChild(el('p', '* Puntaje corregido a mano por el docente.', 'hint'));
+  }
+
+  /* ======================= FINAL ======================= */
+  function ranking() {
+    var tot = totals();
+    var list = state.config.groups.map(function (n, i) { return { n: n, i: i, t: tot[i] }; });
+    list.sort(function (a, b) { return (b.t - a.t) || (a.i - b.i); });
+    var pos = 0;
+    list.forEach(function (e, k) { if (k === 0 || e.t !== list[k - 1].t) pos = k + 1; e.pos = pos; });
+    return list;
+  }
+  function roundPts(gi, r) {
+    var found = false, s = 0;
+    state.history.forEach(function (h) { if (h.g === gi && h.round === r) { found = true; s += h.points; } });
+    return found ? r2(s) : null;
+  }
+
+  function renderEnd() {
+    stopTimer(); show('scr-end');
+    var rk = ranking(), played = state.history.length;
+    $('endNote').textContent = (state.endedEarly ? 'Partida terminada antes de tiempo. ' : '') +
+      played + ' de ' + totalTurns() + ' turnos jugados · ' + state.config.rounds + ' rondas · ' +
+      fmt(state.config.pts) + ' puntos por acierto.';
+
+    var pod = $('podium'); pod.innerHTML = '';
+    [1, 0, 2].forEach(function (k) {
+      var e = rk[k]; if (!e) return;
+      // La altura del bloque sigue la POSICIÓN real, no el orden: los empates quedan iguales.
+      var d = el('div', null, 'bb-pod r' + Math.min(3, e.pos));
+      d.appendChild(el('div', e.n, 'nm'));
+      d.appendChild(el('div', fmt(e.t) + ' pts', 'pt'));
+      d.appendChild(el('div', e.pos + '.º', 'bl'));
+      pod.appendChild(d);
+    });
+
+    var ft = $('finalTable'); ft.innerHTML = '';
+    var tbl = el('table', null, 'bb-table'), thead = el('thead'), tr = el('tr');
+    tr.appendChild(el('th', 'Pos.'));
+    tr.appendChild(el('th', 'Grupo'));
+    for (var r = 1; r <= state.config.rounds; r++) tr.appendChild(el('th', 'R' + r));
+    tr.appendChild(el('th', 'Total'));
+    thead.appendChild(tr); tbl.appendChild(thead);
+    var tb = el('tbody');
+    rk.forEach(function (e) {
+      var row = el('tr');
+      row.appendChild(el('td', e.pos + '.º', 'num'));
+      row.appendChild(el('td', e.n));
+      for (var r = 1; r <= state.config.rounds; r++) {
+        var p = roundPts(e.i, r);
+        row.appendChild(el('td', p === null ? '—' : fmt(p), 'num'));
+      }
+      var tdT = el('td', fmt(e.t), 'num');
+      tdT.style.fontWeight = '700'; tdT.style.color = 'var(--ink)';
+      row.appendChild(tdT);
+      tb.appendChild(row);
+    });
+    tbl.appendChild(tb); ft.appendChild(tbl);
+    renderHistory($('histEnd'));
+  }
+
+  /* ---------- CSV ---------- */
+  function csvCell(v) { var s = String(v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function csvNum(n) { return n === null ? '' : String(r2(n)).replace('.', ','); }
+
+  $('btnCSV').addEventListener('click', function () {
+    var rk = ranking(), lines = [];
+    lines.push('Batalla de Bots · ' + B.nombre); lines.push('');
+    var head = ['Posicion', 'Grupo', 'Puntaje total'];
+    for (var r = 1; r <= state.config.rounds; r++) head.push('Ronda ' + r);
+    lines.push(head.map(csvCell).join(';'));
+    rk.forEach(function (e) {
+      var row = [e.pos, e.n, csvNum(e.t)];
+      for (var r = 1; r <= state.config.rounds; r++) row.push(csvNum(roundPts(e.i, r)));
+      lines.push(row.map(csvCell).join(';'));
+    });
+    lines.push('');
+    lines.push('Historial por turno');
+    lines.push(['Turno', 'Ronda', 'Grupo', T.unidad, 'Eje', 'Texto', 'Respondio', 'Era', 'Puntos', 'Corregido'].map(csvCell).join(';'));
+    state.history.forEach(function (h) {
+      var c = caseById(h.caseId);
+      lines.push([h.turn + 1, h.round, state.config.groups[h.g], h.caseId, c ? c.eje : '', c ? c.t : '',
+                  LABEL[h.given], LABEL[h.correct], csvNum(h.points), h.corrected ? 'Si' : 'No'].map(csvCell).join(';'));
+    });
+    var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'batalla-de-bots_' + B.nivel + '_' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.csv';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  });
+
+  $('btnEndNew').addEventListener('click', function () {
+    if (!confirm('Se borrará este juego guardado. ¿Empezar uno nuevo? Exporte el CSV antes si necesita los resultados.')) return;
+    clearSaved(); state = null; draft = defaultDraft(); rot = 0;
+    show('scr-setup'); renderSetup(); renderSavedBox();
+  });
+
+  /* ---------- Inicio ---------- */
+  document.title = 'Batalla de Bots · ' + B.nombre + ' — Towers Ing';
+  document.body.classList.add('nivel-' + B.nivel);
+  $('nivelTag').textContent = B.nombre;
+  $('nivelResumen').textContent = T.resumen;
+  $('nivelDecision').textContent = T.decision;
+  $('nivelComo').innerHTML = T.comoJugar.replace('{N}', N);
+  $('nivelPregunta').textContent = T.pregunta;
+  $('semWheel').setAttribute('aria-label', T.ruleta);
+  renderSetup();
+  renderSavedBox();
+  show('scr-setup');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (state) drawWheel(); });
+  window.addEventListener('resize', function () { if (state) drawWheel(); });
+})();
+</script>
+</body>
+</html>
