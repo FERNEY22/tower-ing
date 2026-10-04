@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Quiz de Laboratorio · Automatización de Procesos (v2)</title>
+<title>Quiz · Sintaxis de Python</title>
 <style>
   :root{
     --bg:#eef2f6;--surface:#fff;--ink:#172033;--muted:#5b6b82;--line:#dde4ec;
     --primary:#13476b;--accent:#c98a1a;--soft:#f4f7fa;--ok:#1f7a4d;--danger:#c0392b;
+    --code-bg:#0f2235;--code-ink:#e3ebf3;
     --shadow:0 8px 30px rgba(16,38,64,.10);--radius:16px;
   }
   *{box-sizing:border-box}html,body{margin:0}
@@ -23,32 +24,29 @@
   .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#2a6e9c);transition:width .35s ease}
   /* Temporizador por pregunta */
   .timer{height:5px;background:#f0d9d9}
-  .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#1f7a4d,#c98a1a);transition:width 1s linear}
+  .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#1f7a4d,#c98a1a)}
   .timer-fill.warn{background:linear-gradient(90deg,#c98a1a,#c0392b)}
   .body{padding:30px}
+  @media(max-width:560px){.head{padding:22px 20px 18px}.body{padding:22px 18px}}
   .step-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
   .time-chip{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#b3541e;background:#fdf1e3;border:1px solid #f0d9bd;border-radius:20px;padding:3px 11px}
   .time-chip.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
   .intro-p{font-size:14.5px;color:var(--muted);margin:0 0 22px}
-  .est-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  @media(max-width:560px){.est-grid{grid-template-columns:1fr}}
-  .est{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit;position:relative}
-  .est:hover:not(:disabled){border-color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 18px rgba(19,71,107,.12)}
-  .est:focus-visible{outline:3px solid #9cc4dd;outline-offset:2px}
-  .est:disabled{opacity:.55;cursor:not-allowed;background:var(--soft)}
-  .est-name{font-weight:700;font-size:15.5px;color:var(--primary)}
-  .est-meta{font-size:12.5px;color:var(--muted)}
-  .est-tag{align-self:flex-start;margin-top:8px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-radius:6px;padding:3px 8px}
-  .est-tag.on{color:#1f7a4d;background:#e6f4ec;border:1px solid #c6e6d5}
-  .est-tag.off{color:#7b8798;background:#eef1f5;border:1px solid #dfe5ec}
   .badge-sec{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#42688a;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:6px;padding:2px 8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
   .qtext{font-size:17px;line-height:1.5;font-weight:600;margin:0 0 22px;color:var(--ink)}
+  .qtext code,.opt-txt code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#eaf2f8;border:1px solid #d2e3f0;border-radius:5px;padding:1px 6px;color:var(--primary)}
+  /* Bloques de código */
+  .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.6;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px 16px;margin:-6px 0 22px;overflow-x:auto;white-space:pre;tab-size:4}
+  .opt .code{font-size:12.5px;margin:0;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:10px 12px}
+  .opt.sel .code{background:#fff;border-color:#c7dbea}
   .opts{display:grid;gap:9px}
   .opt{position:relative;display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.13s;background:var(--surface)}
+  .opt.opt-code{align-items:flex-start}
+  .opt.opt-code .dot,.opt.opt-code .opt-num{margin-top:9px}
   .opt:hover{border-color:#9db9d0;background:#fafdff}
   .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid #b9c6d6;display:grid;place-items:center;transition:.13s}
   .opt-num{font-weight:700;color:var(--muted);min-width:16px}
-  .opt-txt{font-size:14.5px;font-weight:500}
+  .opt-txt{font-size:14.5px;font-weight:500;min-width:0;flex:1}
   .opt.sel{border-color:var(--primary);background:#eef6fb;box-shadow:inset 0 0 0 1px var(--primary)}
   .opt.sel .dot{border-color:var(--primary);background:var(--primary)}
   .opt.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
@@ -102,9 +100,9 @@
 <div class="wrap">
   <div class="frame">
     <div class="head">
-      <div class="eyebrow">Quiz de laboratorio</div>
-      <h1 class="title">Automatización de Procesos y Control Distribuido · IFA00117</h1>
-      <p class="sub" id="headSub">Reconocimiento de equipos · Circuitos serie, paralelo y mixto</p>
+      <div class="eyebrow">Quiz de programación</div>
+      <h1 class="title">Sintaxis básica de Python</h1>
+      <p class="sub" id="headSub">Python para análisis de datos · Reto bicicletas UCI</p>
     </div>
     <div class="progress"><div class="bar" id="bar"></div></div>
     <div class="timer" id="timerWrap" style="display:none"><div class="timer-fill" id="timerFill"></div></div>
@@ -131,93 +129,74 @@ firebase.initializeApp({
 </script>
 <script>
 "use strict";
-/* Nodo raíz: la subrama "quizzes/" está cerrada a escritura anónima en las reglas
-   de la Realtime Database, por lo que los intentos se guardan en un nodo de primer nivel. */
-const NODO = "quiz_lab_automa";
-/* Candado de intento único. Las reglas de la base solo permiten CREAR una clave, nunca
-   sobrescribirla, así que un error de permiso al escribirla significa "esta cédula ya presentó".
-   Es lo que permite controlar el intento sin necesidad de permiso de lectura. */
-const NODO_LOCK = "quiz_lab_automa_intentos";
+/* Nodo raíz: los intentos se guardan en un nodo de primer nivel (la regla $root/$entryId
+   solo permite crear claves nuevas, nunca sobrescribirlas). */
+const NODO = "quiz_python_1";
+/* Candado de intento único: un error de permiso al crear la clave significa
+   "esta cédula ya presentó". */
+const NODO_LOCK = "quiz_python_1_intentos";
 const TIMEOUT_MS = 10000;
-const UNIDAD = "IFA00117 · Automatización de Procesos y Control Distribuido";
+const UNIDAD = "Python para análisis de datos";
+const QUIZ_ID = "quiz1";
+const QUIZ_NOMBRE = "Quiz 1 · Sintaxis básica de Python";
 
 /* Nº de preguntas que se sortean del banco y segundos por pregunta (por defecto) */
-const N_PREGUNTAS = 2;
+const N_PREGUNTAS = 20;
 const T_DEFECTO   = 60;
 
 const PROGRAMAS = ["Ingeniería Mecatrónica","Ingeniería Electrónica","Ingeniería de Software","Ingeniería Industrial"];
 
-/* ===== Apartados (4 quices; solo el 1 habilitado) ===== */
-const QUICES = [
-  {id:"quiz1v2", nombre:"Quiz 1 · Práctica de laboratorio 01 (versión 2)", meta:"Reconocimiento de equipos y circuitos serie/paralelo/mixto", activo:true},
-  {id:"quiz2v2", nombre:"Quiz 2 · Práctica de laboratorio 02 (versión 2)", meta:"Se habilitará al cierre de la práctica 02",               activo:false},
-  {id:"quiz3v2", nombre:"Quiz 3 · Práctica de laboratorio 03 (versión 2)", meta:"Se habilitará al cierre de la práctica 03",               activo:false},
-  {id:"quiz4v2", nombre:"Quiz 4 · Práctica de laboratorio 04 (versión 2)", meta:"Se habilitará al cierre de la práctica 04",               activo:false}
+const BLOQUES = {
+  "1":"Variables",
+  "2":"Condicionales",
+  "3":"Ciclos for y while",
+  "4":"Listas y listas anidadas",
+  "5":"Reto bicicletas UCI"
+};
+function nombreBloque(b){ return BLOQUES[b] || b; }
+
+/* ===== BANCO DE PREGUNTAS =====
+   opts + correcta (índice 0-based) · t = segundos · code = bloque de código del enunciado
+   codeOpts = opciones en monoespaciado · blockOpts = cada opción es un bloque de código
+   fija = no barajar las opciones (verdadero/falso) */
+const VF = ["Verdadero","Falso"];
+const FRUTA = 'fruta = "Fresa"\nif fruta == "Mango":\n    print("El costo es 3.000 pesos por kg")\nelse:\n    print("El costo es 8.000 pesos por kg")';
+const FRUTAS = 'frutas = [["Pera", "Banano", "Mango"], ["Limón", "Fresa", "Maracuyá"]]';
+const WHILE_CUERPO = 'while i <= 6:\n    x = i % 2\n    if x == 0:\n        print(i, " es par")\n    i = i + 1\nprint("Fin del programa")';
+const BANCO = [
+/* Bloque 1 · Variables */
+{id:"p03",bloque:"1",tema:"Definición de variables",q:"La definición de variables en Python se hace de la siguiente forma:",codeOpts:true,opts:['Variable < 3','Variable ¡= "Karla"','Variable == "Karla"','Variable = "Hola"'],correcta:3},
+{id:"p04",bloque:"1",tema:"Tipado dinámico",fija:true,q:"Cuando se quiere definir una variable en Python se debe indicar el tipo de variable y el nombre o identificación.",opts:VF,correcta:1},
+/* Bloque 2 · Condicionales */
+{id:"p05",bloque:"2",tema:"if · elif · else",q:"Los condicionales en Python tienen tres expresiones, que son IF, ELSE y:",codeOpts:true,opts:["Elita","Eli","Elif","Elsi"],correcta:2},
+{id:"p06",bloque:"2",tema:"Sintaxis del if",fija:true,t:75,q:"La siguiente expresión cumple con la sintaxis de Python:",code:"if (int(db[i+1][0]) >= parametros[0]):",opts:VF,correcta:0},
+{id:"p07",bloque:"2",tema:"Ejecución de if/else",t:90,q:"Del siguiente código se puede concluir que:",code:FRUTA,opts:["El resultado es NULL.","El resultado es “El costo es 8.000 pesos por kg” y “El costo es 3.000 pesos por kg”.","El resultado es “El costo es 3.000 pesos por kg”.","El resultado es “El costo es 8.000 pesos por kg”."],correcta:3},
+{id:"p08",bloque:"2",tema:"Comparación de cadenas",t:90,q:"Teniendo en cuenta el siguiente código:",code:FRUTA,opts:["La variable fruta debe contener “Nulo” para que la salida sea “El costo es 3.000 pesos por kg”.","La variable fruta debe contener “Mango” para que la salida sea “El costo es 3.000 pesos por kg”.","La variable fruta debe contener “MANGO” para que la salida sea “El costo es 3.000 pesos por kg”.","La variable fruta debe contener “Fresa” para que la salida sea “El costo es 3.000 pesos por kg”."],correcta:1},
+{id:"p09",bloque:"2",tema:"Posición del elif",fija:true,q:"Por lo general, la expresión ELIF se debe utilizar entre un IF y un ELSE.",opts:VF,correcta:0},
+/* Bloque 3 · Ciclos */
+{id:"p02",bloque:"3",tema:"Estructuras de ciclo",q:"Las dos estructuras más utilizadas para los ciclos o bucles en Python son:",opts:["Input y Print","Int y Float","Input y While","For y While"],correcta:3},
+{id:"p10",bloque:"3",tema:"Sintaxis del while",t:120,q:"¿Cuál de los siguientes casos tiene la sintaxis correcta del ciclo while?",blockOpts:true,opts:[
+  WHILE_CUERPO,
+  'i = 1;\nwhile i <= 6:\n    x = i % 2;\n    if x == 0:\n        print(i, " es par");\n    i = i + 1;\nprint("Fin del programa");',
+  'i = 1\nwhile i <= 6\n    x = i % 2\n    if x == 0:\n        print(i, " es par")\n    i = i + 1\nprint("Fin del programa")',
+  'i = 1\n'+WHILE_CUERPO],correcta:3},
+{id:"p11",bloque:"3",tema:"Variable de control del for",fija:true,q:"El ciclo for en Python cuenta con el aumento de la variable de control incorporado, pero requiere la inicialización de esta variable.",opts:VF,correcta:1},
+/* Bloque 4 · Listas */
+{id:"p01",bloque:"4",tema:"Contenido de una lista",fija:true,q:"Las listas son un tipo de datos o estructura de datos que permite varios tipos de variables en su interior.",opts:VF,correcta:0},
+{id:"p12",bloque:"4",tema:"Doble índice",q:"Para obtener el valor en la posición 1 de la lista general y, dentro de ella, la posición 0 de la sublista, se escribe:",codeOpts:true,opts:["Lista[1][1]","Lista[0][1]","Lista[1][0]","Lista[0][0]"],correcta:2},
+{id:"p13",bloque:"4",tema:"Acceso a un elemento",t:75,q:"Se desea obtener “Fresa” de la siguiente lista:",code:FRUTAS,codeOpts:true,opts:["print(frutas[1][1])","print(frutas[1][2])","print(frutas[0][2])","print(frutas[1][0])"],correcta:0},
+{id:"p14",bloque:"4",tema:"Acceso a una sublista",t:75,q:"Con la siguiente lista, se requiere imprimir la lista de frutas ácidas:",code:FRUTAS,codeOpts:true,opts:["print(frutas[1])","print(frutas[0])","print(frutas[2][1])","print(frutas[1][2])"],correcta:0},
+/* Bloque 5 · Reto bicicletas UCI */
+{id:"p15",bloque:"5",tema:"Lista de parámetros",t:75,q:"Los parámetros planteados por la UCI son 4; en la lista parametros se traducen en:",opts:["6 elementos","7 elementos","8 elementos","5 elementos"],correcta:1},
+{id:"p16",bloque:"5",tema:"Bandera booleana",fija:true,q:"La variable booleana disponibilidad indica si al menos un registro cumple las medidas, para imprimir los precios o “NO DISPONIBLE”.",opts:VF,correcta:0},
+{id:"p17",bloque:"5",tema:"Formato de salida",fija:true,q:"La salida por consola se hace con string cuando la respuesta es “NO DISPONIBLE” y en formato lista con todos los precios cuando existen bicicletas que cumplen.",opts:VF,correcta:1},
+{id:"p18",bloque:"5",tema:"Función de N",t:75,q:"Según la lógica del problema, la función de la variable N es:",opts:["Registrarse en la primera posición de la base de datos para indicar cuántas bicicletas se van a incluir en la lista.","Registrarse en la base de datos porque indicará las veces que debe imprimir los precios al final.","Incluirse en la base de datos como la cantidad de parámetros por bicicleta.","Incluirse en la lista exito para definir cuántas bicicletas cumplen."],correcta:0},
+{id:"p19",bloque:"5",tema:"Conversión a entero",t:120,q:"En el condicional del reto, ¿cuál es el sentido de convertir a entero los datos ingresados?",
+  code:"if (int(db[i+1][0]) >= parametros[0]) and \\\n   (int(db[i+1][0]) <= parametros[1]) and \\\n   (int(db[i+1][1]) >= parametros[2]) and \\\n   (int(db[i+1][1]) <= parametros[3]) and \\\n   (int(db[i+1][2]) >= parametros[4]) and \\\n   (int(db[i+1][2]) <= parametros[5]) and \\\n   (int(db[i+1][3]) <= parametros[6]):",
+  opts:["La lista de parámetros se puede convertir en string para compararla con db.","La lista de parámetros es de tipo string y se compara directamente con db.","La lista de parámetros es numérica y se compara directamente con db.","La lista de parámetros es numérica y no se puede comparar con db porque sus elementos son string."],correcta:3},
+{id:"p20",bloque:"5",tema:"Continuación de línea y and",fija:true,t:75,q:"La expresión completa 7 comparaciones al mismo tiempo; por eso se usa \\ al final de cada línea para unir la expresión, y el operador and para verificar que se cumplan todos los parámetros a la vez.",opts:VF,correcta:0}
 ];
 
-const BLOQUES = {
-  A:"Objetivos y normas de seguridad",
-  B:"Banco de microneumática",
-  C:"Tablero eléctrico",
-  D:"PLC",
-  E:"Ficha de reconocimiento",
-  F:"Cableado y circuitos"
-};
-
-/* ===== BANCO DE PREGUNTAS ===== opts + correcta (índice 0-based) · t = segundos ===== */
-const BANCO = {
-quiz1v2:[
-/* Bloque A · Objetivos y normas de seguridad */
-{id:"a01",bloque:"A",tema:"Objetivos de la práctica",q:"Además de identificar los equipos del banco, el tablero y el PLC, la guía plantea como objetivo:",opts:["Diseñar el plano unifilar de la subestación del laboratorio.","Interpretar un diagrama de conexiones.","Seleccionar el calibre de los conductores por caída de tensión.","Programar el ciclo automático del cilindro en lenguaje Ladder."],correcta:1},
-{id:"a02",bloque:"A",tema:"Objetivos · registro de resultados",q:"Diligenciar la tabla de verificación al final de la Parte 2 responde al objetivo de:",opts:["Registrar y comparar el comportamiento lógico de los circuitos.","Calcular la potencia disipada por la lámpara H1.","Dimensionar la fuente de alimentación del tablero.","Documentar el consumo de aire del banco de microneumática."],correcta:0},
-{id:"a03",bloque:"A",tema:"Alimentación de los circuitos",q:"Los cuatro circuitos de la Parte 2 se alimentan desde:",opts:["La salida Q0.0 del PLC.","Una batería independiente de 48 V.","La fuente de 24 VDC del tablero.","La red de 120 VAC del laboratorio."],correcta:2},
-{id:"a04",bloque:"A",tema:"Secuencia de trabajo",q:"¿Cuál es la secuencia de trabajo que establece la guía para cada circuito?",opts:["Energizar, cablear, revisar y avisar al docente.","Cablear sin tensión, revisar, visto bueno del docente, energizar y probar.","Cablear con tensión reducida, probar y luego llamar al docente.","Probar el circuito en simulación y omitir el visto bueno del docente."],correcta:1},
-{id:"a05",bloque:"A",tema:"Cierre de la práctica",q:"Despresurizar al terminar la práctica significa:",opts:["Cerrar la alimentación de aire y liberar la presión que queda en el circuito.","Bajar la presión del regulador hasta la mitad y dejar el circuito conectado.","Desconectar la fuente de 24 VDC del tablero.","Retirar el lubricador de la unidad de aire."],correcta:0},
-{id:"a06",bloque:"A",tema:"Normas de seguridad",q:"¿Cuál de las siguientes NO figura entre las normas de seguridad de la guía?",opts:["Cablear siempre sin tensión.","Un solo responsable de energizar.","Usar guantes dieléctricos clase 0 durante todo el cableado.","Aire comprimido cerrado mientras no se use."],correcta:2},
-/* Bloque B · Banco de microneumática */
-{id:"b07",bloque:"B",tema:"Unidad FRL · filtro",q:"Dentro de la unidad de aire FRL, la función del filtro es:",opts:["Fijar la presión de trabajo del circuito.","Retener partículas y condensados presentes en el aire comprimido.","Añadir aceite al aire para lubricar los actuadores.","Indicar la presión disponible en la red."],correcta:1},
-{id:"b08",bloque:"B",tema:"Unidad FRL · manómetro",q:"En la unidad FRL, el manómetro está asociado a:",opts:["El lubricador, para medir el nivel de aceite.","El filtro, para indicar cuándo está saturado.","El regulador, para indicar la presión ajustada.","El distribuidor, para repartir el aire a las válvulas."],correcta:2},
-{id:"b09",bloque:"B",tema:"Unidad FRL · lubricador",q:"El lubricador de la unidad FRL cumple la función de:",opts:["Aportar una fina niebla de aceite al aire para los elementos móviles.","Separar el agua condensada antes del regulador.","Limitar la presión máxima de la línea.","Amortiguar el ruido de escape de las válvulas."],correcta:0},
-{id:"b10",bloque:"B",tema:"Designación de válvulas",q:"La designación 3/2 NC de una válvula distribuidora significa:",opts:["Tres posiciones, dos vías y accionamiento por leva.","Tres vías y dos posiciones, cerrada en reposo.","Tres milímetros de paso y dos salidas de escape.","Tres vías y dos posiciones, abierta en reposo."],correcta:1},
-{id:"b11",bloque:"B",tema:"Selección de válvula",q:"Para gobernar un cilindro de doble efecto se emplea la válvula:",opts:["3/2 NC, porque solo requiere una vía de trabajo.","5/2, porque dispone de dos vías de trabajo.","Antirretorno, porque bloquea el escape.","Reguladora de caudal, porque invierte el sentido del vástago."],correcta:1},
-{id:"b12",bloque:"B",tema:"Cilindro de simple efecto",q:"El cilindro de simple efecto del banco se caracteriza porque:",opts:["Recibe aire por sus dos cámaras alternativamente.","Trabaja en un solo sentido y el retorno lo realiza un muelle.","Solo puede accionarse con una válvula 5/2.","Requiere lubricación externa en cada carrera."],correcta:1},
-{id:"b13",bloque:"B",tema:"Reguladora de caudal",q:"La válvula reguladora de caudal se emplea para:",opts:["Aumentar la fuerza que entrega el cilindro.","Bloquear el paso del aire en un sentido.","Controlar la velocidad del actuador limitando el caudal.","Elevar la presión de la línea por encima de la del regulador."],correcta:2},
-{id:"b14",bloque:"B",tema:"Función O",q:"En un montaje neumático, la función O permite que haya señal de salida cuando:",opts:["Hay presión en cualquiera de sus dos entradas.","Hay presión simultáneamente en sus dos entradas.","Se pierde la presión en una de sus entradas.","El presostato alcanza su valor de consigna."],correcta:0},
-{id:"b15",bloque:"B",tema:"Finales de carrera",q:"¿Qué información entrega un final de carrera del banco?",opts:["El caudal de aire que consume el cilindro.","La presión de la línea en ese punto del circuito.","Que el vástago del actuador alcanzó una posición determinada.","El tiempo de ciclo del actuador."],correcta:2},
-/* Bloque C · Tablero eléctrico */
-{id:"c16",bloque:"C",tema:"Pulsador NA",q:"Un pulsador normalmente abierto (NA) del tablero:",opts:["Mantiene el circuito cerrado y lo abre solo mientras se pulsa.","Mantiene el circuito abierto y lo cierra solo mientras se pulsa.","Conmuta y conserva la posición hasta que se vuelve a pulsar.","Solo puede conectarse a una salida del PLC."],correcta:1},
-{id:"c17",bloque:"C",tema:"Pulsador NC",q:"Un pulsador normalmente cerrado (NC) del tablero:",opts:["Deja pasar la corriente en reposo y la interrumpe al pulsarlo.","No conduce hasta que se pulsa y se mantiene.","Necesita un relé auxiliar para funcionar.","Solo se usa en circuitos de señalización."],correcta:0},
-{id:"c18",bloque:"C",tema:"Selector y pulsador",q:"La diferencia entre un selector y un pulsador es que el selector:",opts:["Solo admite contactos NC.","Trabaja únicamente con 24 VAC.","Mantiene la posición seleccionada, mientras el pulsador vuelve a su reposo al soltarlo.","Corta la alimentación general del tablero."],correcta:2},
-{id:"c19",bloque:"C",tema:"Pulsador de emergencia",q:"El pulsador de emergencia del tablero está destinado a:",opts:["Reiniciar el programa del PLC.","Interrumpir el circuito de mando cuando se presenta una situación de riesgo.","Sustituir al seccionador general en la maniobra diaria.","Habilitar el paso de aire comprimido al banco."],correcta:1},
-{id:"c20",bloque:"C",tema:"Zumbador",q:"El zumbador del tablero corresponde a un elemento de:",opts:["Señalización acústica.","Mando manual.","Protección contra sobrecorriente.","Distribución de alimentación."],correcta:0},
-{id:"c21",bloque:"C",tema:"Relé auxiliar",q:"El funcionamiento de un relé auxiliar del tablero consiste en que:",opts:["Sus contactos cambian de estado con el nivel de presión del circuito.","Su bobina, al energizarse, conmuta sus contactos NA y NC.","Reduce la tensión de 24 VDC a la del PLC.","Protege la línea de alimentación frente a cortocircuitos."],correcta:1},
-{id:"c22",bloque:"C",tema:"Numeración de bornes",q:"La numeración de los bornes del tablero sirve para:",opts:["Indicar la corriente máxima admisible en cada punto.","Ordenar los elementos por su año de instalación.","Identificar cada conexión y facilitar la trazabilidad del cableado.","Definir la polaridad de la fuente de 24 VDC."],correcta:2},
-{id:"c23",bloque:"C",tema:"Protección de línea",q:"La protección de línea asociada al seccionador general cumple la función de:",opts:["Estabilizar la tensión de salida de la fuente.","Proteger la línea de alimentación frente a sobrecorrientes y cortocircuitos.","Señalizar que el tablero está energizado.","Conmutar entre alimentación de 24 VDC y 120 VAC."],correcta:1},
-/* Bloque D · PLC */
-{id:"d24",bloque:"D",tema:"Selector de modo",q:"El selector de modo de la CPU permite:",opts:["Cambiar la tensión de las entradas digitales.","Poner la CPU en RUN o en STOP.","Seleccionar el idioma del software de programación.","Habilitar los módulos analógicos de expansión."],correcta:1},
-{id:"d25",bloque:"D",tema:"Indicador ERROR",q:"Si el indicador ERROR de la CPU se enciende, significa que:",opts:["La CPU está ejecutando el programa con normalidad.","El programa se descargó correctamente.","La CPU presenta una falla y no está operando de forma normal.","El PLC está en modo de simulación."],correcta:2},
-{id:"d26",bloque:"D",tema:"Conexión de sensores",q:"Un final de carrera que informa la posición del vástago se conecta al PLC en:",opts:["Una entrada digital (I).","Una salida digital (Q).","El borne de alimentación de la CPU.","El puerto del cable de descarga."],correcta:0},
-{id:"d27",bloque:"D",tema:"Conexión de actuadores",q:"Una lámpara piloto gobernada por el programa se conecta al PLC en:",opts:["Una entrada digital (I).","Una salida digital (Q).","El común de las entradas.","El selector de modo de la CPU."],correcta:1},
-{id:"d28",bloque:"D",tema:"Borne común",q:"El borne común de un grupo de entradas digitales:",opts:["Es la referencia compartida por todas las entradas de ese grupo.","Alimenta la CPU cuando falla la fuente del tablero.","Sustituye al LED indicador de cada entrada.","Solo se conecta cuando se usan módulos analógicos."],correcta:0},
-{id:"d29",bloque:"D",tema:"Módulos de expansión",q:"Respecto a los módulos analógicos o de expansión, la guía indica que se reconocen:",opts:["Siempre, porque todos los PLC del laboratorio los incluyen.","Solo si el equipo los tiene.","Únicamente en la práctica 04.","Solo cuando se usa la simulación del software."],correcta:1},
-{id:"d30",bloque:"D",tema:"Cable de descarga",q:"El cable de descarga que se reconoce junto con el software sirve para:",opts:["Alimentar la CPU desde el computador.","Conectar las entradas digitales al tablero.","Transferir el programa desde el computador a la CPU.","Comunicar el PLC con el banco de microneumática."],correcta:2},
-/* Bloque E · Ficha de reconocimiento */
-{id:"e31",bloque:"E",tema:"Columna Ubicación",q:"En la ficha de reconocimiento, la columna “Ubicación” registra:",opts:["El lugar donde se encuentra el elemento dentro del sistema.","El país de fabricación del componente.","La posición de reposo de la válvula.","La dirección de la entrada del PLC asociada."],correcta:0},
-{id:"e32",bloque:"E",tema:"Columna Datos de placa",q:"¿Qué se registra en la columna “Datos de placa”?",opts:["El símbolo normalizado del elemento.","La información impresa por el fabricante: referencia, tensión, presión y similares.","La función lógica que cumple el elemento en el circuito.","El número de hilos con que se conecta."],correcta:1},
-{id:"e33",bloque:"E",tema:"Formato de la ficha",q:"¿Cuál de las siguientes columnas NO hace parte del formato de la ficha?",opts:["Símbolo.","Función que cumple.","Tiempo de ciclo.","Ubicación."],correcta:2},
-/* Bloque F · Cableado y circuitos */
-{id:"f34",bloque:"F",tema:"Ejemplo 1 · conexiones",q:"En el Ejemplo 1, el hilo 2 va conectado:",opts:["Del borne +24 V a S1(1).","De S1(2) a H1(X1).","De H1(X2) al borne 0 V.","Del nudo A al nudo B."],correcta:1},
-{id:"f35",bloque:"F",tema:"Ejemplo 2 · número de hilos",q:"¿Cuántos hilos se emplean en el montaje del Ejemplo 2?",opts:["2","3","4","6"],correcta:2},
-{id:"f36",bloque:"F",tema:"Ejemplo 3 · número de hilos",q:"El montaje del Ejemplo 3 (dos interruptores en paralelo) emplea:",opts:["3 hilos","4 hilos","5 hilos","6 hilos"],correcta:2},
-{id:"f37",bloque:"F",tema:"Ejemplo 3 · nudos",q:"En el Ejemplo 3, los hilos 2 y 3:",opts:["Van del nudo A al nudo B, uno por S1 y otro por S2.","Unen los dos extremos de la lámpara H1.","Llevan el 0 V a cada interruptor.","Conectan el nudo B directamente al borne +24 V."],correcta:0},
-{id:"f38",bloque:"F",tema:"Ejemplo 4 · número de hilos",q:"El montaje del Ejemplo 4 (conexión mixta) emplea:",opts:["4 hilos","5 hilos","6 hilos","8 hilos"],correcta:2},
-{id:"f39",bloque:"F",tema:"Ejemplo 4 · comportamiento",t:90,q:"En el Ejemplo 4, con S1 cerrado y S2 y S3 abiertos, la lámpara H1:",opts:["Permanece apagada, porque falta cerrar S2 o S3.","Enciende, porque basta con S1 cerrado.","Enciende con la mitad de su brillo.","Enciende solo si además se abre S1."],correcta:0},
-{id:"f40",bloque:"F",tema:"Ejemplo 3 · comportamiento",t:90,q:"En el Ejemplo 3, con S1 cerrado y S2 abierto, la lámpara H1:",opts:["Permanece apagada, porque el paralelo exige los dos cerrados.","Enciende, porque basta con que uno de los dos esté cerrado.","Permanece apagada, porque S2 interrumpe el retorno a 0 V.","Parpadea mientras se cierra S2."],correcta:1},
-{id:"f41",bloque:"F",tema:"Tabla de verificación",t:90,q:"Sumando las combinaciones de los cuatro ejemplos (2, 4, 4 y 8), la tabla de verificación debe tener:",opts:["14 filas","16 filas","18 filas","20 filas"],correcta:2},
-{id:"f42",bloque:"F",tema:"Discrepancia en la prueba",q:"Si el comportamiento observado no coincide con el previsto, la guía indica:",opts:["Repetir la prueba varias veces hasta que coincida.","Desenergizar y revisar el hilo.","Aumentar la tensión de la fuente hasta 48 VDC.","Cambiar la lámpara H1 por una de mayor potencia."],correcta:1},
-{id:"f43",bloque:"F",tema:"Marcado de conductores",q:"¿Por qué cada conductor se marca en sus dos extremos?",opts:["Para identificar el hilo en los dos puntos de conexión y facilitar la revisión.","Porque el color del conductor cambia a lo largo del recorrido.","Para indicar el sentido de circulación de la corriente.","Porque cada borne admite dos conductores marcados."],correcta:0}
-]
-};
 /* ===== Elementos ===== */
 const body=document.getElementById('body'), bar=document.getElementById('bar'), headSub=document.getElementById('headSub');
 const timerWrap=document.getElementById('timerWrap'), timerFill=document.getElementById('timerFill'), shield=document.getElementById('shield');
@@ -231,7 +210,7 @@ function conTimeout(promesa, ms){
 }
 
 /* ===== Estado ===== */
-let st = { datos:null, quiz:null, quizNombre:null, items:[], idx:0, resp:{}, inicio:0, examActivo:false, cerrado:false, tick:null,
+let st = { datos:null, items:[], idx:0, resp:{}, inicio:0, examActivo:false, cerrado:false, tick:null,
            payload:null, guardado:false };
 
 /* ============ 1) CONSENTIMIENTO ============ */
@@ -240,11 +219,11 @@ function vConsent(){
   headSub.textContent="Autorización de tratamiento de datos personales";
   body.innerHTML=`
     <div class="step-label"><span>Antes de empezar · Autorización de datos</span></div>
-    <p class="intro-p">Este quiz evalúa los contenidos de la práctica de laboratorio de <b>${esc(UNIDAD)}</b>. Para registrar tu calificación necesitamos tus datos personales.</p>
+    <p class="intro-p">Este quiz evalúa la sintaxis básica de Python vista en <b>${esc(UNIDAD)}</b>: variables, condicionales, ciclos, listas y el reto de bicicletas UCI. Para registrar tu calificación necesitamos tus datos personales.</p>
     <div class="consent">
       <p style="margin:0 0 10px"><b>Autorización para el tratamiento de datos personales</b></p>
       <p style="margin:0 0 10px">De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo, número de identificación, correo electrónico y programa académico</b>.</p>
-      <p style="margin:0 0 10px"><b>Finalidad:</b> registrar y calificar su quiz de laboratorio, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
+      <p style="margin:0 0 10px"><b>Finalidad:</b> registrar y calificar su quiz, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
       <p style="margin:0 0 10px"><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
       <p style="margin:0"><b>Carácter voluntario:</b> otorgar esta autorización es libre y voluntario. Al marcar la casilla y continuar, usted declara que ha leído esta autorización y otorga su consentimiento libre, previo, expreso e informado.</p>
     </div>
@@ -271,7 +250,7 @@ function vDatos(){
     <div class="field-wrap">
       <label class="field" for="f-id">Número de identificación</label>
       <input class="txt" id="f-id" type="text" inputmode="numeric" autocomplete="off" placeholder="Documento" value="${esc(d.identificacion||"")}">
-      <div class="hint">Se usa para registrar tu intento. Solo se permite un intento por documento en cada quiz.</div>
+      <div class="hint">Se usa para registrar tu intento. Solo se permite un intento por documento.</div>
       <div class="err" id="e-id"></div>
     </div>
     <div class="field-wrap">
@@ -300,36 +279,21 @@ function validarDatos(){
   set('e-prog', programa ? "" : "Selecciona tu programa académico.");
   if(!ok) return;
   st.datos={nombre,identificacion,correo,programa};
-  vQuiz();
+  vInstrucciones();
 }
 
-/* ============ 3) SELECCIÓN DE QUIZ (4 apartados) ============ */
-function vQuiz(){
-  setBar(12); headSub.textContent=st.datos.nombre;
-  const cards=QUICES.map(qz=>`<button class="est" data-id="${qz.id}" ${qz.activo?"":"disabled"}>
-    <span class="est-name">${esc(qz.nombre)}</span><span class="est-meta">${esc(qz.meta)}</span>
-    <span class="est-tag ${qz.activo?"on":"off"}">${qz.activo?"Habilitado":"Próximamente"}</span></button>`).join("");
-  body.innerHTML=`
-    <div class="step-label"><span>Selecciona el quiz</span></div>
-    <p class="intro-p">La unidad contempla cuatro quices de laboratorio. En este momento <b>solo está habilitado el Quiz 1</b>; los demás se abrirán al cierre de cada práctica.</p>
-    <div class="est-grid">${cards}</div>`;
-  body.querySelectorAll('.est').forEach(b=>b.onclick=()=>{
-    if(b.disabled) return;
-    const qz=QUICES.find(x=>x.id===b.dataset.id);
-    st.quiz=qz.id; st.quizNombre=qz.nombre;
-    vInstrucciones();
-  });
-}
-
-/* ============ 4) INSTRUCCIONES ============ */
+/* ============ 3) INSTRUCCIONES ============ */
 function vInstrucciones(){
-  setBar(16); headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
-  const banco=BANCO[st.quiz]||[];
+  setBar(12); headSub.textContent=`${QUIZ_NOMBRE} · ${st.datos.programa}`;
+  const n=Math.min(N_PREGUNTAS, BANCO.length);
+  const sorteo = n<BANCO.length
+    ? `<b>${n} preguntas al azar</b> tomadas de un banco de ${BANCO.length}. Cada estudiante recibe una combinación distinta y las opciones se reordenan.`
+    : `<b>${n} preguntas en orden aleatorio.</b> Cada estudiante las recibe en un orden distinto y las opciones se reordenan.`;
   body.innerHTML=`
     <div class="step-label"><span>Reglas del quiz</span></div>
     <ul class="rules">
-      <li><span class="ic">🎲</span><span><b>${N_PREGUNTAS} preguntas al azar</b> tomadas de un banco de ${banco.length}. Cada estudiante recibe una combinación distinta y las opciones se reordenan.</span></li>
-      <li><span class="ic">⏱</span><span><b>Tiempo por pregunta.</b> Cada pregunta tiene su propio contador. Cuando se agota, el quiz avanza solo a la siguiente y la pregunta queda sin responder.</span></li>
+      <li><span class="ic">🎲</span><span>${sorteo}</span></li>
+      <li><span class="ic">⏱</span><span><b>Tiempo por pregunta.</b> Cada pregunta tiene su propio contador; las que traen código tienen más tiempo. Cuando se agota, el quiz avanza solo y la pregunta queda sin responder.</span></li>
       <li><span class="ic">→</span><span><b>Sin retroceder.</b> No podrás volver ni cambiar una respuesta ya enviada. Responde con seguridad.</span></li>
       <li><span class="ic">🔒</span><span><b>No salgas de la pantalla.</b> Si cambias de pestaña, minimizas o abres otra app, el quiz <b>se cierra automáticamente</b> y quedará como abandonado.</span></li>
       <li><span class="ic">1</span><span><b>Un solo intento</b> por número de identificación.</span></li>
@@ -341,11 +305,11 @@ function vInstrucciones(){
 
 async function iniciarExamen(){
   const b=document.getElementById('start'); b.disabled=true; b.textContent="Verificando…";
-  // Un intento por identificación (dentro del mismo quiz): se intenta crear el candado.
-  // Si las reglas rechazan la escritura, la clave ya existía → la cédula ya presentó este quiz.
+  // Un intento por identificación: se intenta crear el candado.
+  // Si las reglas rechazan la escritura, la clave ya existía → la cédula ya presentó.
   try{
     await conTimeout(
-      firebase.database().ref(NODO_LOCK+"/"+st.quiz+"_"+st.datos.identificacion).set(new Date().toISOString()),
+      firebase.database().ref(NODO_LOCK+"/"+QUIZ_ID+"_"+st.datos.identificacion).set(new Date().toISOString()),
       TIMEOUT_MS);
   }catch(e){
     const cod=((e&&(e.code||e.message))||"").toString().toUpperCase();
@@ -354,9 +318,9 @@ async function iniciarExamen(){
     console.warn("No se pudo verificar el intento:",e);
   }
 
-  // Sortear preguntas y barajar opciones
-  const banco=BANCO[st.quiz]||[];
-  st.items = barajar(banco).slice(0,N_PREGUNTAS).map(it=>{
+  // Sortear preguntas y barajar opciones (las de verdadero/falso conservan su orden)
+  st.items = barajar(BANCO).slice(0,N_PREGUNTAS).map(it=>{
+    if(it.fija) return {...it, t: it.t||T_DEFECTO};
     const pares = it.opts.map((txt,i)=>({txt, ok:i===it.correcta}));
     const mez = barajar(pares);
     return {...it, t: it.t||T_DEFECTO, opts: mez.map(p=>p.txt), correcta: mez.findIndex(p=>p.ok)};
@@ -372,28 +336,35 @@ function vYaRegistrado(){
   headSub.textContent="Intento no disponible";
   body.innerHTML=`<div class="lock"><div class="ic">🔒</div>
     <h2>Ya tienes un intento registrado</h2>
-    <p class="intro-p" style="margin:0 auto;max-width:420px">El documento <b>${esc(st.datos.identificacion)}</b> ya presentó <b>${esc(st.quizNombre)}</b>. Solo se permite un intento por identificación. Si crees que es un error, avisa a tu docente.</p></div>`;
+    <p class="intro-p" style="margin:0 auto;max-width:420px">El documento <b>${esc(st.datos.identificacion)}</b> ya presentó <b>${esc(QUIZ_NOMBRE)}</b>. Solo se permite un intento por identificación. Si crees que es un error, avisa a tu docente.</p></div>`;
 }
 
-/* ============ 5) PREGUNTAS ============ */
+/* ============ 4) PREGUNTAS ============ */
 function detenerTick(){ if(st.tick){ clearInterval(st.tick); st.tick=null; } }
+
+function txtOpcion(it,o){
+  if(it.blockOpts) return `<pre class="code">${esc(o)}</pre>`;
+  if(it.codeOpts) return `<code>${esc(o)}</code>`;
+  return esc(o);
+}
 
 function vPregunta(){
   if(!st.examActivo) return;
   detenerTick();
   const total=st.items.length, it=st.items[st.idx];
-  setBar(18 + (st.idx/total)*80);
-  headSub.textContent=`${st.quizNombre} · ${st.datos.programa}`;
+  setBar(14 + (st.idx/total)*84);
+  headSub.textContent=`${QUIZ_NOMBRE} · ${st.datos.programa}`;
   timerWrap.style.display="block";
 
-  const opts = it.opts.map((o,oi)=>`<div class="opt" data-o="${oi}">
-      <span class="dot"></span><span class="opt-num">${String.fromCharCode(65+oi)}.</span><span class="opt-txt">${esc(o)}</span></div>`).join("");
+  const opts = it.opts.map((o,oi)=>`<div class="opt${it.blockOpts?" opt-code":""}" data-o="${oi}">
+      <span class="dot"></span><span class="opt-num">${String.fromCharCode(65+oi)}.</span><span class="opt-txt">${txtOpcion(it,o)}</span></div>`).join("");
 
   body.innerHTML=`
     <div class="step-label"><span>Pregunta ${st.idx+1} de ${total}</span>
       <span class="time-chip" id="chip">${it.t}s</span></div>
-    <span class="badge-sec">Bloque ${it.bloque} · ${esc(BLOQUES[it.bloque]||"")}</span>
+    <span class="badge-sec">Bloque ${it.bloque} · ${esc(nombreBloque(it.bloque))}</span>
     <p class="qtext">${esc(it.q)}</p>
+    ${it.code?`<pre class="code">${esc(it.code)}</pre>`:""}
     <div class="opts">${opts}</div>
     <div class="nav"><button class="btn btn-primary" id="next" disabled>${st.idx===total-1?"Finalizar":"Siguiente →"}</button></div>`;
 
@@ -404,13 +375,13 @@ function vPregunta(){
     body.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
     o.classList.add('sel'); next.disabled=false;
   });
-  next.onclick=avanzar;
+  next.onclick=()=>avanzar(false);
 
-  // Temporizador por pregunta
+  // Temporizador por pregunta: la barra se vacía a lo largo de todo el tiempo de la pregunta
   let queda=it.t;
   const chip=document.getElementById('chip');
   timerFill.classList.remove('warn'); timerFill.style.transition="none"; timerFill.style.width="100%";
-  void timerFill.offsetWidth; // fuerza el reinicio al 100% antes de animar
+  void timerFill.offsetWidth;
   timerFill.style.transition=`width ${it.t}s linear`; timerFill.style.width="0%";
   st.tick=setInterval(()=>{
     queda--;
@@ -428,7 +399,7 @@ function avanzar(porTiempo){
   else finalizar(false);
 }
 
-/* ============ 6) RESULTADO / ENVÍO ============ */
+/* ============ 5) RESULTADO / ENVÍO ============ */
 function construirPayload(abandonado){
   const blqAcc={}; const respuestas=[]; let correctas=0, respondidas=0;
   st.items.forEach((it,i)=>{
@@ -437,7 +408,7 @@ function construirPayload(abandonado){
     if(sel!==null) respondidas++;
     if(ok) correctas++;
     const b=blqAcc[it.bloque]||(blqAcc[it.bloque]={c:0,t:0}); b.t++; if(ok) b.c++;
-    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:BLOQUES[it.bloque]||it.bloque, tema:it.tema,
+    respuestas.push({id:it.id, bloque:it.bloque, bloqueNombre:nombreBloque(it.bloque), tema:it.tema,
       etiqueta:it.q, sel:sel, selTexto:(sel===null?null:it.opts[sel]),
       correcta:ok, agotado:(sel===null)});
   });
@@ -446,7 +417,7 @@ function construirPayload(abandonado){
   const pct = total? Math.round(100*correctas/total) : 0;
   return {
     nombre:st.datos.nombre, identificacion:st.datos.identificacion, correo:st.datos.correo, programa:st.datos.programa,
-    quiz:st.quiz, quizNombre:st.quizNombre, unidad:UNIDAD,
+    quiz:QUIZ_ID, quizNombre:QUIZ_NOMBRE, unidad:UNIDAD,
     enviadoEn:new Date().toISOString(),
     abandonado:!!abandonado,
     duracionSeg: st.inicio? Math.round((Date.now()-st.inicio)/1000):0,

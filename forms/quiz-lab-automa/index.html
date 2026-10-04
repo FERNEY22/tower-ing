@@ -408,7 +408,8 @@ function vPregunta(){
   let queda=it.t;
   const chip=document.getElementById('chip');
   timerFill.classList.remove('warn'); timerFill.style.transition="none"; timerFill.style.width="100%";
-  requestAnimationFrame(()=>{ timerFill.style.transition="width 1s linear"; timerFill.style.width="0%"; });
+  void timerFill.offsetWidth; // fuerza el reinicio al 100% antes de animar
+  timerFill.style.transition=`width ${it.t}s linear`; timerFill.style.width="0%";
   st.tick=setInterval(()=>{
     queda--;
     if(chip){ chip.textContent=queda+"s"; if(queda<=5){ chip.classList.add('danger'); timerFill.classList.add('warn'); } }
