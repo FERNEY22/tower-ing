@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Módulo 3 · Prácticas en protoboard · Electrónica – Towers Ing</title>
+<meta name="author" content="Ferney Torres Ome">
+<meta name="description" content="Demostraciones con componentes reales: montaje, medición con multímetro y comparación con teoría y simulación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: cuaderno de laboratorio — encabezado con ruta de lecciones, luego cada lección como una mesa de trabajo (banco + cálculos) seguida de sus cápsulas */
+:root{
+  --page:#EEF1F4;--surface-0:#FBFCFD;--surface-1:#E6EBF0;--surface-2:#FFFFFF;
+  --text-primary:#18212B;--text-secondary:#4C5A68;--text-muted:#7A8796;
+  --border:#CDD5DE;--border-strong:#9AA8B6;--accent:#0B6E8A;--accent-soft:#D6ECF2;
+  --text-success:#2F7A1F;--text-danger:#B3261E;--text-warning:#8A5A00;
+  --current:#378ADD;--current-hot:#E24B4A;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --radius:8px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#11161C;--surface-0:#171E26;--surface-1:#212A34;--surface-2:#1C242D;
+  --text-primary:#E7ECF1;--text-secondary:#A9B5C1;--text-muted:#7D8A97;
+  --border:#2F3A46;--border-strong:#4A5866;--accent:#5DB8D3;--accent-soft:#16323C;
+  --text-success:#8BCB6E;--text-danger:#F08A84;--text-warning:#E7B65A;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#11161C;--surface-0:#171E26;--surface-1:#212A34;--surface-2:#1C242D;
+  --text-primary:#E7ECF1;--text-secondary:#A9B5C1;--text-muted:#7D8A97;
+  --border:#2F3A46;--border-strong:#4A5866;--accent:#5DB8D3;--accent-soft:#16323C;
+  --text-success:#8BCB6E;--text-danger:#F08A84;--text-warning:#E7B65A;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}
+[hidden]:not([hidden=until-found i]){display:none!important}
+body{margin:0;background:var(--page);color:var(--text-primary);font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1040px;margin:0 auto}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+header.top{padding-block:40px 24px;display:grid;gap:12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2.4rem,6vw,3.6rem);line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+.sub{font-family:var(--display);font-weight:500;font-size:1.5rem;margin:0;color:var(--text-secondary)}
+.lead{max-width:62ch;margin:0;color:var(--text-secondary)}
+nav.route{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);padding-block:10px;border-bottom:1px solid var(--border);margin-bottom:8px}
+nav.route ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+nav.route a{display:flex;gap:6px;align-items:baseline;text-decoration:none;color:var(--text-primary);font-size:14px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface-2)}
+nav.route a b{font-family:var(--mono);font-weight:500;color:var(--accent);font-size:12px}
+nav.route a:hover,nav.route a:focus-visible{border-color:var(--accent);outline:none}
+section.lesson{padding-block:40px 8px;scroll-margin-top:64px;display:grid;gap:16px}
+.lhead{display:grid;gap:6px}
+h2{font-family:var(--display);font-weight:600;font-size:2rem;line-height:1.1;margin:0;text-wrap:balance}
+.lhead p{margin:0;max-width:64ch;color:var(--text-secondary)}
+.bench{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:18px}
+.bench.l5{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.bench svg{width:100%;height:auto;display:block}
+.ctrl{display:grid;gap:4px;font-size:14px;align-content:start}
+.ctrl label{color:var(--text-secondary)}
+.ctrl label b{color:var(--text-primary);font-weight:500;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0 10px}
+.calc{background:var(--surface-1);border-radius:var(--radius);padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.8;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.calc .muted{color:var(--text-secondary)}
+.calc .state{margin-top:6px;font-family:var(--body);font-weight:500}
+.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:10px}
+button{font:inherit;font-size:14px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--text-primary)}
+.caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.cap{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+.cap.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.cap h3{font-family:var(--body);font-weight:500;font-size:15px;margin:0 0 4px}
+.cap p{font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.6}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;font-size:13.5px}
+.gloss div{background:var(--surface-1);border-radius:var(--radius);padding:10px 12px}
+.gloss b{font-weight:500}
+.gloss span{color:var(--text-secondary)}
+.note{font-size:12.5px;color:var(--text-muted);margin:0}
+.wide{overflow-x:auto;background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:12px}
+.wide svg{min-width:560px;width:100%;height:auto;display:block}
+.task{background:var(--surface-1);border-radius:12px;padding:14px 16px;line-height:1.7}
+.task h3{margin:0 0 4px;font-weight:500;font-size:15px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fields label{font-size:13px;color:var(--text-secondary);display:block}
+.fields input{width:100%;margin-top:4px;font:inherit;font-family:var(--mono);font-size:14px;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary)}
+.msg{font-size:13px;min-height:20px;margin-top:2px}
+.score{font-weight:500;font-size:15px;min-height:24px}
+.ex{background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:18px;display:grid;gap:14px}
+svg .t{fill:var(--text-primary);font-size:13px;font-family:var(--body)}
+svg .ts{fill:var(--text-secondary);font-size:12px;font-family:var(--body)}
+svg .tm{fill:var(--text-muted);font-size:11px;font-family:var(--body)}
+svg .wire{fill:none;stroke:var(--text-secondary);stroke-width:3}
+svg .ink{stroke:var(--text-primary)}
+svg .cut{fill:var(--surface-0)}
+svg .dot{fill:var(--current)}
+svg .hot .dot{fill:var(--current-hot)}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (max-width:760px){.bench,.bench.l5{grid-template-columns:minmax(0,1fr)}}
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--page);display:flex;align-items:center;gap:12px;padding-block:12px;border-bottom:1px solid var(--border)}
+.appbar .brand{display:grid;line-height:1.15;min-width:0;flex:1}
+.appbar .brand b{font-family:var(--display);font-weight:600;font-size:1.25rem;letter-spacing:.01em}
+.appbar .brand span{font-size:12.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;flex:none}
+.iconbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.prog{display:grid;gap:4px;width:min(220px,38vw);flex:none}
+.prog .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:999px;background:var(--surface-1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .4s ease}
+main{padding-block:20px 8px}
+.view.card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:24px}
+section.lesson{padding-block:24px;scroll-margin-top:0}
+.hero{display:grid;gap:12px;padding-block:16px 24px}
+.hero .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.primary{background:var(--accent);border-color:var(--accent);color:var(--surface-2);font-weight:500;padding:10px 16px}
+.primary:hover{filter:brightness(1.08);border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.lcard{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:18px;display:grid;grid-template-rows:auto auto 1fr auto;gap:10px;transition:border-color .2s,transform .2s}
+.lcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lcard .num{font-family:var(--display);font-weight:600;font-size:2.2rem;line-height:1;color:var(--accent)}
+.lcard h3{font-family:var(--display);font-weight:600;font-size:1.45rem;line-height:1.1;margin:0}
+.lcard p{margin:0;font-size:14px;color:var(--text-secondary)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary)}
+.pill{font-size:12px;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary);white-space:nowrap}
+.pill.prog-on{background:var(--accent-soft);color:var(--accent)}
+.pill.done{background:var(--accent);color:var(--surface-2)}
+.lcard .foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mini{display:flex;gap:4px}.mini i{width:22px;height:5px;border-radius:3px;background:var(--surface-1)}.mini i.on{background:var(--accent)}
+.theory{display:grid;gap:18px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tblock{background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.tblock h3{margin:0 0 6px;font-weight:500;font-size:15.5px}
+.tblock p,.tblock li{font-size:14.5px;color:var(--text-secondary);margin:0}
+.tblock ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.formula{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--text-primary);background:var(--accent-soft);border-radius:10px;padding:12px 16px;text-align:center;font-variant-numeric:tabular-nums;overflow-x:auto}
+.worked{background:var(--surface-1);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:13.5px;line-height:1.85;overflow-x:auto}
+.worked b{font-family:var(--body);font-weight:500;display:block;margin-bottom:2px}
+.goal{border-left:3px solid var(--accent);border-radius:0;padding:4px 0 4px 14px;color:var(--text-secondary);font-size:14.5px;margin:0}
+table.tt{border-collapse:collapse;font-family:var(--mono);font-size:13px;width:100%}
+table.tt th,table.tt td{border:1px solid var(--border);padding:6px 8px;text-align:center}
+table.tt th{font-family:var(--body);font-weight:500;background:var(--surface-1)}
+.pager{position:sticky;bottom:0;z-index:10;background:var(--page);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));margin-top:16px}
+.pager button{display:inline-flex;align-items:center;gap:6px}
+.pager button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pager .where{font-size:13px;color:var(--text-secondary);text-align:center;min-width:0}
+.pager .where b{display:block;color:var(--text-primary);font-weight:500;font-size:14px}
+.pager[hidden]{display:none!important}
+.module{display:grid;gap:14px;padding-block:20px;border-top:1px solid var(--border)}
+.mhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px}
+.mhead h2{font-size:1.8rem}
+.mhead p{margin:4px 0 0;color:var(--text-secondary);max-width:62ch;font-size:14.5px}
+.mhead .prog{width:min(240px,100%)}
+.video{aspect-ratio:16/9;width:100%;max-width:100%;border-radius:12px;overflow:hidden;background:var(--surface-1);border:1px solid var(--border)}
+.video iframe{width:100%;height:100%;border:0;display:block}
+.video.empty{display:grid;place-content:center;justify-items:center;gap:6px;text-align:center;padding:16px;color:var(--text-secondary)}
+.video.empty svg{width:44px;height:44px;stroke:var(--accent);fill:none;stroke-width:1.6}
+.video.empty b{color:var(--text-primary);font-weight:500}
+.video.empty span{font-size:13px}
+.vlink{font-size:13px;color:var(--accent)}
+.pgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.steps{margin:0;padding-left:22px;display:grid;gap:8px;font-size:14.5px}
+.steps li::marker{font-family:var(--mono);color:var(--accent);font-weight:500}
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+table.meas{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+table.meas th,table.meas td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
+table.meas th{font-weight:500;background:var(--surface-1);font-size:13px}
+table.meas td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.meas input{width:110px;font:inherit;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary)}
+table.meas small{display:block;color:var(--text-muted);font-size:12px}
+.err{font-family:var(--mono);font-weight:500;padding:2px 8px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary);white-space:nowrap}
+.err.ok{color:var(--text-success)}.err.mid{color:var(--text-warning)}.err.bad{color:var(--text-danger)}
+.board svg{width:100%;height:auto;display:block}
+.linkrow{display:flex;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){.pgrid{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){.lcard,.bar i{transition:none}}
+@media (max-width:520px){.prog{width:30vw}.appbar .brand span{display:none}.pager .where{font-size:12px}.view.card{padding:16px}.crumb span{display:none}}
+.crumb{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);text-decoration:none;padding:6px 0;white-space:nowrap;flex:none}
+.crumb:hover,.crumb:focus-visible{color:var(--accent)}
+a.btnlink{display:inline-block;font-size:14px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 10px;text-decoration:none}
+a.btnlink:hover{border-color:var(--accent)}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="appbar">
+  <a class="crumb" href="../index.html" aria-label="Volver al curso de Electrónica">←<span> Electrónica</span></a>
+  <button class="iconbtn" id="goHome" aria-label="Ir al inicio del módulo"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></button>
+  <div class="brand"><b>Módulo 3</b><span>Prácticas en protoboard</span></div>
+  <div class="prog" aria-label="Progreso del módulo"><div class="lbl"><span>Progreso</span><span id="progTxt">0 %</span></div><div class="bar"><i id="progBar"></i></div></div>
+</header>
+
+<main>
+<!-- ============ HOME ============ -->
+<section class="view" data-step="home" id="home">
+  <div class="hero">
+    <div class="eyebrow">tower-ing.com · Electrónica · Módulo 3</div>
+    <h1>Prácticas en protoboard</h1>
+    <p class="lead">Demostraciones con componentes reales: montaje, medición con multímetro y comparación con teoría y simulación.</p>
+    <div class="row"><button class="primary" id="continueBtn">Empezar el módulo</button><button id="resetBtn">Reiniciar progreso</button><span class="note" id="resetMsg"></span></div>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+</main>
+
+<nav class="pager" id="pager" aria-label="Navegación entre pasos" hidden>
+  <button id="prevBtn"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span>Anterior</span></button>
+  <div class="where"><b id="whereT"></b><span id="whereS"></span></div>
+  <button id="nextBtn"><span>Siguiente</span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+</nav>
+
+<footer>
+  <span>© 2026 Ferney Torres Ome · Laboratorio de Circuitos</span>
+  <span><a href="../index.html">Curso de Electrónica</a> · <a href="../../../index.html">tower-ing.com</a></span>
+</footer>
+</div>
+
+<script>
+/* ==========================================================
+   CONFIGURACIÓN EDITABLE
+   videos: pega el ID de YouTube de cada video (lo que va
+   después de "v=" en el enlace). Vacío = "Video en preparación".
+   medidas: tus valores medidos en cada demostración, en la
+   unidad que indica la tabla. null = pendiente.
+   ========================================================== */
+const CONFIG={
+  videos:{
+    'm3-intro':'','m3-c1':'','m3-c2':'','m3-c3':'','m3-c4':'','m3-c5':''
+  },
+  medidas:{
+    'm3-c1':{V:null,VL:null,I:null,Rf:null},
+    'm3-c2':{V:null,VR:null,VLED:null,I:null},
+    'm3-c3':{V:null,VR:null,Vr:null,Vg:null,Vb:null,I:null},
+    'm3-c4':{V:null,I1:null,I2:null,I3:null,IT:null},
+    'm3-c5':{V:null,IT1:null,IT2:null,IT3:null}
+  }
+};
+
+/* ---------- Datos de los cinco circuitos ---------- */
+const CIRC=[
+{k:'c1',t:'Lámpara con interruptor',m1:'l1-teo',d:'Fuente de 12 V, interruptor y bombillo de 12 V / 3 W. Circuito cerrado, abierto y cortocircuito.',tags:['12 V','48 Ω'],
+ vars:[{id:'V',lab:'Tensión de la fuente',u:'V',p:12},{id:'VL',lab:'Tensión en la lámpara',u:'V',p:12},{id:'I',lab:'Corriente del circuito',u:'A',p:0.25},
+       {id:'Rf',lab:'Resistencia del bombillo en frío',u:'Ω',p:48,only:'m3',note:'Se espera menor: el filamento frío tiene menos resistencia que encendido.'}],
+ m3m:['Fuente DC de 12 V (regulable o adaptador)','Bombillo 12 V / 3 W con portalámparas','Interruptor de palanca','Cables con caimán','Multímetro digital'],
+ m3s:['Con todo desconectado, mide la resistencia del bombillo con el óhmetro: es su resistencia en frío.','Monta el lazo fuente → interruptor → bombillo → regreso a la fuente. Revisa antes de energizar.','Enciende y cierra el interruptor. Mide la tensión en el bombillo con el multímetro en paralelo (V DC).','Apaga, pasa la punta roja al borne de corriente (A) y conecta el multímetro en serie. Enciende y mide I.','Abre el interruptor y mide la tensión entre sus contactos: aparece toda la tensión de la fuente.','El cortocircuito no se hace en físico. Explícalo con lo visto en Multisim y en la lección 1.'],
+ q:['¿Por qué la resistencia medida en frío es menor que la calculada con 12 V / 3 W?','Con el interruptor abierto no circula corriente. ¿Por qué el voltímetro marca 12 V entre sus contactos?']},
+{k:'c2',t:'Resistencia y LED rojo',m1:'l2-teo',d:'LED rojo con resistencia limitadora de 390 Ω a 9 V. Polarización directa e inversa.',tags:['9 V','390 Ω'],
+ vars:[{id:'V',lab:'Tensión de la fuente',u:'V',p:9},{id:'VR',lab:'Tensión en la resistencia',u:'V',p:7.0},{id:'VLED',lab:'Tensión en el LED (Vf)',u:'V',p:2.0},{id:'I',lab:'Corriente del circuito',u:'mA',p:17.9}],
+ m3m:['Batería de 9 V con broche (o fuente a 9 V)','Resistencia de 390 Ω (naranja, blanco, café)','LED rojo de 5 mm','Protoboard y cables','Multímetro digital'],
+ m3s:['Identifica el ánodo del LED: la pata larga. El cátodo está del lado plano.','Coloca la resistencia y el LED en columnas distintas de la protoboard, unidos por una columna común.','Conecta el + de la batería a la resistencia y el cátodo del LED al −.','Mide la tensión en la resistencia y en el LED.','Abre el circuito en un punto, conecta el multímetro en serie en el borne mA y mide la corriente.','Invierte el LED y comprueba que no enciende ni circula corriente.'],
+ q:['¿Qué Vf real tiene tu LED rojo y cómo cambia la corriente respecto a la predicción?','¿Qué pasaría si quitas la resistencia? Explícalo con la ley de Ohm (no lo hagas en físico).']},
+{k:'c3',t:'LEDs RGB en serie',m1:'l3-teo',d:'Tres LEDs rojo, verde y azul en serie con 270 Ω a 12 V. Suma de tensiones y falla en serie.',tags:['12 V','270 Ω','LKV'],
+ vars:[{id:'V',lab:'Tensión de la fuente',u:'V',p:12},{id:'VR',lab:'Tensión en la resistencia',u:'V',p:4.6},{id:'Vr',lab:'Tensión en el LED rojo',u:'V',p:2.0},{id:'Vg',lab:'Tensión en el LED verde',u:'V',p:2.2},{id:'Vb',lab:'Tensión en el LED azul',u:'V',p:3.2},{id:'I',lab:'Corriente del lazo',u:'mA',p:17.0}],
+ m3m:['Fuente DC de 12 V','Resistencia de 270 Ω (rojo, violeta, café)','LEDs rojo, verde y azul de 5 mm','Protoboard y cables','Multímetro digital'],
+ m3s:['Coloca los tres LEDs en serie en la protoboard: el cátodo de uno va al ánodo del siguiente.','Agrega la resistencia de 270 Ω entre el + de la fuente y el primer ánodo.','Energiza y mide la tensión en la resistencia y en cada LED.','Mide la corriente en serie en dos puntos del lazo.','Suma las caídas y compárala con la fuente.','Retira un LED y observa que todo el lazo se apaga.'],
+ q:['¿Se cumple V = V_R + ΣVf con tus mediciones? Calcula la diferencia.','¿Por qué al retirar un solo LED se apagan los tres?']},
+{k:'c4',t:'LEDs RGB en paralelo',m1:'l4-teo',d:'Tres ramas a 9 V, cada una con su LED y su resistencia de 390 Ω. Suma de corrientes.',tags:['9 V','390 Ω','LKC'],
+ vars:[{id:'V',lab:'Tensión de la fuente',u:'V',p:9},{id:'I1',lab:'Corriente rama roja',u:'mA',p:17.9},{id:'I2',lab:'Corriente rama verde',u:'mA',p:17.4},{id:'I3',lab:'Corriente rama azul',u:'mA',p:14.9},{id:'IT',lab:'Corriente total',u:'mA',p:50.3}],
+ m3m:['Batería de 9 V o fuente a 9 V','3 resistencias de 390 Ω (naranja, blanco, café)','LEDs rojo, verde y azul de 5 mm','Protoboard y cables','Multímetro digital'],
+ m3s:['Usa los rieles de la protoboard como nodos: + arriba y − abajo.','Arma tres ramas verticales, cada una con resistencia y LED.','Mide la tensión en cada rama: debe ser la misma.','Abre cada rama por turno, intercala el multímetro en mA y mide su corriente.','Mide la corriente total a la salida de la fuente y compárala con la suma.','Retira un LED y comprueba que las otras ramas no se afectan.'],
+ q:['¿Se cumple I_T = I₁ + I₂ + I₃ con tus mediciones?','Con la misma resistencia, ¿por qué la rama azul toma menos corriente que la roja?']},
+{k:'c5',t:'Iluminación con interruptores',m1:'l5-teo',d:'Tres luminarias LED blancas a 12 V con interruptor propio, interruptor general y conmutada opcional.',tags:['12 V','470 Ω','3 vías'],
+ vars:[{id:'V',lab:'Tensión de la fuente',u:'V',p:12},{id:'IT1',lab:'Corriente total con 1 luminaria',u:'mA',p:19.1},{id:'IT2',lab:'Corriente total con 2 luminarias',u:'mA',p:38.3},{id:'IT3',lab:'Corriente total con 3 luminarias',u:'mA',p:57.4}],
+ m3m:['Fuente DC de 12 V','3 resistencias de 470 Ω (amarillo, violeta, café)','3 LEDs blancos de 5 mm','4 interruptores deslizables SPST (3 de rama y 1 general)','Opcional: 2 conmutadores SPDT','Protoboard, cables y multímetro'],
+ m3s:['Coloca el interruptor general entre el + de la fuente y el riel positivo.','Arma tres ramas, cada una con su interruptor, su resistencia de 470 Ω y su LED blanco.','Intercala el multímetro en mA entre la fuente y el interruptor general.','Enciende una, dos y tres luminarias y anota la corriente total en cada paso.','Abre el interruptor general y comprueba que toda la "casa" se apaga.','Opcional: monta la conmutada con dos SPDT y controla una luz desde ambos extremos.'],
+ q:['¿Cuánto aumenta I_T con cada luminaria que enciendes y por qué?','En una casa real, ¿por qué el breaker va en serie antes de todas las ramas?']}];
+
+const ESC=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function videoBox(key,title){const id=(CONFIG.videos[key]||'').trim();
+if(id)return `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}" title="${ESC(title)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div><a class="vlink" href="https://www.youtube.com/watch?v=${encodeURIComponent(id)}" target="_blank" rel="noopener">Abrir el video en YouTube</a>`;
+return `<div class="video empty"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><b>Video en preparación</b><span>Aquí se verá la demostración grabada.</span></div>`}
+
+const MAIN=document.querySelector('main');
+function addView(step,html,cls){const s=document.createElement('section');s.className='view card '+(cls||'theory');s.dataset.step=step;s.hidden=true;s.innerHTML=html;MAIN.appendChild(s);return s}
+
+/* ----- Introducción módulo 3 (con protoboard) ----- */
+const pb=(()=>{let h='';const cols=30,x0=40,dx=15;
+for(let r=0;r<2;r++)for(let c=0;c<cols;c++)if(c%6!==5)h+=`<rect x="${x0+c*dx-3}" y="${18+r*12-3}" width="6" height="6" rx="1" fill="var(--text-muted)"/>`;
+h+=`<line x1="${x0-8}" y1="9" x2="${x0+cols*dx-8}" y2="9" stroke="#E24B4A" stroke-width="2"/><line x1="${x0-8}" y1="41" x2="${x0+cols*dx-8}" y2="41" stroke="#378ADD" stroke-width="2"/>`;
+h+=`<rect x="${x0-6}" y="12" width="${cols*dx-3}" height="12" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+const rows='abcdefghij';for(let r=0;r<10;r++){const y=r<5?62+r*12:136+(r-5)*12;
+h+=`<text x="${x0-18}" y="${y+4}" class="tm">${rows[r]}</text>`;for(let c=0;c<cols;c++)h+=`<rect x="${x0+c*dx-3}" y="${y-3}" width="6" height="6" rx="1" fill="${c===6?'var(--accent)':'var(--text-muted)'}"/>`}
+h+=`<rect x="${x0+6*dx-7}" y="54" width="14" height="64" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
+h+=`<text x="${x0+6*dx+14}" y="92" class="ts">5 agujeros de una columna = un nodo</text>`;
+h+=`<text x="${x0+cols*dx-6}" y="30" text-anchor="end" class="ts">Riel: toda la fila conectada</text>`;
+h+=`<text x="${x0+cols*dx/2}" y="128" text-anchor="middle" class="tm">canal central: separa las dos mitades</text>`;
+return `<svg viewBox="0 0 520 200" role="img" aria-label="Protoboard: rieles horizontales y columnas de cinco agujeros conectados">${h}</svg>`})();
+addView('m3-intro',`<div class="lhead"><div class="eyebrow">Módulo 3 · Introducción</div><h2>Del simulador a la protoboard</h2>
+<p>En este módulo los cinco circuitos se montan con componentes reales y se miden con multímetro. Las diferencias con la teoría y la simulación son el resultado más valioso.</p></div>
+<div class="pgrid">${videoBox('m3-intro','Cómo funciona la protoboard')}
+<div class="tblock board"><h3>Cómo está conectada una protoboard</h3>${pb}</div></div>
+<div class="tgrid">
+<div class="tblock"><h3>Seguridad primero</h3><ul><li>Monta y modifica siempre con la fuente desconectada.</li><li>Revisa la polaridad antes de energizar.</li><li>Nunca hagas un cortocircuito real a la fuente.</li></ul></div>
+<div class="tblock"><h3>Medir con el multímetro</h3><ul><li><b>Voltaje:</b> en paralelo, puntas en COM y V.</li><li><b>Corriente:</b> en serie, punta roja en mA o A.</li><li><b>Resistencia:</b> componente desconectado.</li></ul></div>
+<div class="tblock"><h3>Código de colores</h3><table class="tt"><tr><th>Valor</th><th>Bandas</th></tr><tr><td>270 Ω</td><td>rojo · violeta · café</td></tr><tr><td>390 Ω</td><td>naranja · blanco · café</td></tr><tr><td>470 Ω</td><td>amarillo · violeta · café</td></tr></table></div>
+</div>
+<p class="goal">En cada práctica verás la demostración grabada, el montaje paso a paso y la tabla con las mediciones reales.</p>`);
+
+/* ----- Prácticas M2 y M3 ----- */
+const MODNAME={m2:'Módulo 2',m3:'Módulo 3'};
+['m3'].forEach(mod=>CIRC.forEach((c,i)=>{const key=`${mod}-${c.k}`,isM2=mod==='m2';
+addView(`${key}-guia`,`<div class="lhead"><div class="eyebrow">${MODNAME[mod]} · Práctica ${i+1} · Montaje</div><h2>${c.t}</h2><p>${c.d}</p></div>
+<div class="pgrid">${videoBox(key,c.t)}
+<div class="tblock"><h3>${isM2?'Componentes en Multisim':'Materiales'}</h3><ul>${(isM2?c.m2c:c.m3m).map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+<div class="tblock"><h3>${isM2?'Montaje y simulación':'Montaje y medición'}</h3><ol class="steps">${(isM2?c.m2s:c.m3s).map(x=>`<li>${x}</li>`).join('')}</ol></div>
+<div class="linkrow"><a class="btnlink" href="../../laboratorio-circuitos/index.html#${c.m1}">Repasar la teoría en el módulo 1</a></div>`);
+const vars=c.vars.filter(v=>!v.only||v.only===mod);
+addView(`${key}-med`,`<div class="lhead"><div class="eyebrow">${MODNAME[mod]} · Práctica ${i+1} · Mediciones</div><h2>${c.t}: ${isM2?'predicción vs. simulación':'predicción vs. medición real'}</h2>
+<p>La predicción viene del módulo 1. ${isM2?'Los valores simulados':'Los valores medidos'} son los de la demostración; puedes cambiarlos para probar tus propios datos.</p></div>
+<div class="tw"><table class="meas"><thead><tr><th>Variable</th><th>Predicción</th><th>${isM2?'Simulado':'Medido'}</th><th>Error</th></tr></thead><tbody>
+${vars.map(v=>{const m=(CONFIG.medidas[key]||{})[v.id];return `<tr><td>${v.lab}${v.note?`<small>${v.note}</small>`:''}</td><td class="num">${v.p} ${v.u}</td><td class="num"><input type="number" step="any" inputmode="decimal" id="${key}-${v.id}" data-p="${v.p}" value="${m==null?'':m}" aria-label="${ESC(v.lab)} en ${v.u}" placeholder="pendiente"> ${v.u}</td><td><span class="err" data-err="${key}-${v.id}">—</span></td></tr>`}).join('')}
+</tbody></table></div>
+<p class="note">Error = |${isM2?'simulado':'medido'} − predicho| / predicho × 100. Verde ≤ 5 %, ámbar ≤ 15 %, rojo &gt; 15 %.</p>
+<div class="tblock"><h3>Preguntas de análisis</h3><ol class="steps">${c.q.map(x=>`<li>${x}</li>`).join('')}</ol></div>`);
+}));
+function calcErr(inp){const o=document.querySelector(`[data-err="${inp.id}"]`);if(!o)return;const p=+inp.dataset.p,v=parseFloat(inp.value);
+o.className='err';if(inp.value.trim()===''||isNaN(v)){o.textContent='—';return}
+const e=Math.abs(v-p)/p*100;o.textContent=e.toFixed(1)+' %';o.classList.add(e<=5?'ok':e<=15?'mid':'bad')}
+MAIN.querySelectorAll('table.meas input').forEach(inp=>{inp.addEventListener('input',()=>calcErr(inp));calcErr(inp)});
+
+/* ---------- Navegación y progreso ---------- */
+(function(){
+const M={n:'Módulo 3',lessons:[
+ {t:'Antes de montar',d:'Cómo está conectada una protoboard, seguridad y uso del multímetro.',tags:['Protoboard','Multímetro'],steps:['m3-intro']},
+ ...CIRC.map(c=>({t:c.t,d:c.d,tags:c.tags,steps:[`m3-${c.k}-guia`,`m3-${c.k}-med`]}))]};
+const LABEL=s=>s.endsWith('-intro')?'Introducción':s.endsWith('-guia')?'Montaje':'Mediciones';
+const FLAT=[],INFO={};M.lessons.forEach((L,li)=>L.steps.forEach(s=>{INFO[s]={L,li,idx:FLAT.length};FLAT.push(s)}));
+const VIEWS={};document.querySelectorAll('.view').forEach(v=>VIEWS[v.dataset.step]=v);
+const KEY='lvc-m3-progreso';let st={v:[]};
+try{const raw=localStorage.getItem(KEY);if(raw)st=Object.assign(st,JSON.parse(raw))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const done=s=>st.v.includes(s);
+let cur='home';
+const lessonState=L=>{const n=L.steps.filter(done).length;return n===L.steps.length?'done':n?'prog':'todo'};
+const pct=()=>Math.round(FLAT.filter(done).length/FLAT.length*100);
+const firstTodo=()=>FLAT.find(s=>!done(s));
+function renderCards(){const c=document.getElementById('cards');c.innerHTML='';const f=firstTodo();
+M.lessons.forEach((L,li)=>{const s=lessonState(L);
+const pill=s==='done'?'<span class="pill done">Completada</span>':s==='prog'?'<span class="pill prog-on">En curso</span>':'<span class="pill">Pendiente</span>';
+const btn=s==='done'?'Repasar':s==='prog'?'Continuar':'Empezar';
+const el=document.createElement('article');el.className='lcard';
+el.innerHTML=`<div class="top"><span class="num">${String(li).padStart(2,'0')}</span>${pill}</div><h3>${L.t}</h3><p>${L.d}</p><div class="foot"><div class="tags">${L.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="mini" aria-hidden="true">${L.steps.map(x=>`<i class="${done(x)?'on':''}"></i>`).join('')}</div></div><button class="${L.steps.includes(f)?'primary':''}">${btn}</button>`;
+el.querySelector('button').onclick=()=>go(s==='done'?L.steps[0]:(L.steps.find(x=>!done(x))||L.steps[0]));
+c.appendChild(el)})}
+function renderProg(){const p=pct();document.getElementById('progBar').style.width=p+'%';document.getElementById('progTxt').textContent=p+' %';
+const f=firstTodo(),cb=document.getElementById('continueBtn');
+cb.textContent=p===0?'Empezar el módulo':f?`Continuar: ${INFO[f].L.t}`:'Módulo completado · repasar'}
+function go(step,push){if(!VIEWS[step])step='home';cur=step;
+Object.entries(VIEWS).forEach(([k,v])=>v.hidden=k!==step);
+if(step!=='home'&&!done(step)){st.v.push(step);save()}
+const pg=document.getElementById('pager');pg.hidden=step==='home';
+if(step!=='home'){const I=INFO[step],N=FLAT.length,lname=I.li===0?'Introducción':`Práctica ${I.li}`;
+document.getElementById('whereT').textContent=I.L.steps.length>1?`${lname} · ${LABEL(step)}`:lname;
+document.getElementById('whereS').textContent=`Paso ${I.idx+1} de ${N}`;
+document.getElementById('prevBtn').querySelector('span').textContent=I.idx===0?'Inicio':'Anterior';
+document.getElementById('nextBtn').querySelector('span').textContent=I.idx===N-1?'Finalizar':'Siguiente'}
+renderProg();renderCards();
+try{if(push!==false)history.replaceState(null,'','#'+step)}catch(e){}
+window.scrollTo({top:0})}
+document.getElementById('prevBtn').onclick=()=>{const I=INFO[cur];if(!I)return go('home');go(I.idx===0?'home':FLAT[I.idx-1])};
+document.getElementById('nextBtn').onclick=()=>{const I=INFO[cur];if(!I)return go('home');go(I.idx===FLAT.length-1?'home':FLAT[I.idx+1])};
+document.getElementById('goHome').onclick=()=>go('home');
+document.getElementById('continueBtn').onclick=()=>go(firstTodo()||FLAT[0]);
+let armed=false;const rb=document.getElementById('resetBtn'),rm=document.getElementById('resetMsg');
+rb.onclick=()=>{if(!armed){armed=true;rb.textContent='Confirmar reinicio';rm.textContent='Se borrará tu avance en este navegador.';setTimeout(()=>{armed=false;rb.textContent='Reiniciar progreso';rm.textContent=''},4000);return}
+armed=false;st={v:[]};save();rb.textContent='Reiniciar progreso';rm.textContent='Progreso reiniciado';go('home')};
+document.addEventListener('keydown',e=>{if(cur==='home'||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+if(e.key==='ArrowRight')document.getElementById('nextBtn').click();if(e.key==='ArrowLeft')document.getElementById('prevBtn').click()});
+const h=(location.hash||'').slice(1);go(VIEWS[h]?h:'home',false);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Módulo 1 · Laboratorio virtual: fundamentos de electricidad · Electrónica – Towers Ing</title>
+<meta name="author" content="Ferney Torres Ome">
+<meta name="description" content="Módulo 1: Fundamentos de electricidad. Seis lecciones interactivas, de la ley de Ohm a la instalación de iluminación residencial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: cuaderno de laboratorio — encabezado con ruta de lecciones, luego cada lección como una mesa de trabajo (banco + cálculos) seguida de sus cápsulas */
+:root{
+  --page:#EEF1F4;--surface-0:#FBFCFD;--surface-1:#E6EBF0;--surface-2:#FFFFFF;
+  --text-primary:#18212B;--text-secondary:#4C5A68;--text-muted:#7A8796;
+  --border:#CDD5DE;--border-strong:#9AA8B6;--accent:#0B6E8A;--accent-soft:#D6ECF2;
+  --text-success:#2F7A1F;--text-danger:#B3261E;--text-warning:#8A5A00;
+  --current:#378ADD;--current-hot:#E24B4A;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --radius:8px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#11161C;--surface-0:#171E26;--surface-1:#212A34;--surface-2:#1C242D;
+  --text-primary:#E7ECF1;--text-secondary:#A9B5C1;--text-muted:#7D8A97;
+  --border:#2F3A46;--border-strong:#4A5866;--accent:#5DB8D3;--accent-soft:#16323C;
+  --text-success:#8BCB6E;--text-danger:#F08A84;--text-warning:#E7B65A;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#11161C;--surface-0:#171E26;--surface-1:#212A34;--surface-2:#1C242D;
+  --text-primary:#E7ECF1;--text-secondary:#A9B5C1;--text-muted:#7D8A97;
+  --border:#2F3A46;--border-strong:#4A5866;--accent:#5DB8D3;--accent-soft:#16323C;
+  --text-success:#8BCB6E;--text-danger:#F08A84;--text-warning:#E7B65A;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}
+[hidden]:not([hidden=until-found i]){display:none!important}
+body{margin:0;background:var(--page);color:var(--text-primary);font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 48px}
+.crumb{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);text-decoration:none;padding:6px 0;white-space:nowrap;flex:none}
+.crumb:hover,.crumb:focus-visible{color:var(--accent)}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+header.top{padding-block:40px 24px;display:grid;gap:12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2.4rem,6vw,3.6rem);line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+.sub{font-family:var(--display);font-weight:500;font-size:1.5rem;margin:0;color:var(--text-secondary)}
+.lead{max-width:62ch;margin:0;color:var(--text-secondary)}
+nav.route{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);padding-block:10px;border-bottom:1px solid var(--border);margin-bottom:8px}
+nav.route ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+nav.route a{display:flex;gap:6px;align-items:baseline;text-decoration:none;color:var(--text-primary);font-size:14px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface-2)}
+nav.route a b{font-family:var(--mono);font-weight:500;color:var(--accent);font-size:12px}
+nav.route a:hover,nav.route a:focus-visible{border-color:var(--accent);outline:none}
+section.lesson{padding-block:40px 8px;scroll-margin-top:64px;display:grid;gap:16px}
+.lhead{display:grid;gap:6px}
+h2{font-family:var(--display);font-weight:600;font-size:2rem;line-height:1.1;margin:0;text-wrap:balance}
+.lhead p{margin:0;max-width:64ch;color:var(--text-secondary)}
+.bench{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:18px}
+.bench.l5{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.bench svg{width:100%;height:auto;display:block}
+.ctrl{display:grid;gap:4px;font-size:14px;align-content:start}
+.ctrl label{color:var(--text-secondary)}
+.ctrl label b{color:var(--text-primary);font-weight:500;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0 10px}
+.calc{background:var(--surface-1);border-radius:var(--radius);padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.8;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.calc .muted{color:var(--text-secondary)}
+.calc .state{margin-top:6px;font-family:var(--body);font-weight:500}
+.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:10px}
+button{font:inherit;font-size:14px;color:var(--text-primary);background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--text-primary)}
+.caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.cap{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+.cap.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.cap h3{font-family:var(--body);font-weight:500;font-size:15px;margin:0 0 4px}
+.cap p{font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.6}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;font-size:13.5px}
+.gloss div{background:var(--surface-1);border-radius:var(--radius);padding:10px 12px}
+.gloss b{font-weight:500}
+.gloss span{color:var(--text-secondary)}
+.note{font-size:12.5px;color:var(--text-muted);margin:0}
+.wide{overflow-x:auto;background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:12px}
+.wide svg{min-width:560px;width:100%;height:auto;display:block}
+.task{background:var(--surface-1);border-radius:12px;padding:14px 16px;line-height:1.7}
+.task h3{margin:0 0 4px;font-weight:500;font-size:15px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fields label{font-size:13px;color:var(--text-secondary);display:block}
+.fields input{width:100%;margin-top:4px;font:inherit;font-family:var(--mono);font-size:14px;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary)}
+.msg{font-size:13px;min-height:20px;margin-top:2px}
+.score{font-weight:500;font-size:15px;min-height:24px}
+.ex{background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:18px;display:grid;gap:14px}
+svg .t{fill:var(--text-primary);font-size:13px;font-family:var(--body)}
+svg .ts{fill:var(--text-secondary);font-size:12px;font-family:var(--body)}
+svg .tm{fill:var(--text-muted);font-size:11px;font-family:var(--body)}
+svg .wire{fill:none;stroke:var(--text-secondary);stroke-width:3}
+svg .ink{stroke:var(--text-primary)}
+svg .cut{fill:var(--surface-0)}
+svg .dot{fill:var(--current)}
+svg .hot .dot{fill:var(--current-hot)}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (max-width:760px){.bench,.bench.l5{grid-template-columns:minmax(0,1fr)}}
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--page);display:flex;align-items:center;gap:12px;padding-block:12px;border-bottom:1px solid var(--border)}
+.appbar .brand{display:grid;line-height:1.15;min-width:0;flex:1}
+.appbar .brand b{font-family:var(--display);font-weight:600;font-size:1.25rem;letter-spacing:.01em}
+.appbar .brand span{font-size:12.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;flex:none}
+.iconbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.prog{display:grid;gap:4px;width:min(220px,38vw);flex:none}
+.prog .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:999px;background:var(--surface-1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .4s ease}
+main{padding-block:20px 8px}
+.view.card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:24px}
+section.lesson{padding-block:24px;scroll-margin-top:0}
+.hero{display:grid;gap:12px;padding-block:16px 24px}
+.hero .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.primary{background:var(--accent);border-color:var(--accent);color:var(--surface-2);font-weight:500;padding:10px 16px}
+.primary:hover{filter:brightness(1.08);border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.lcard{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:18px;display:grid;grid-template-rows:auto auto 1fr auto;gap:10px;transition:border-color .2s,transform .2s}
+.lcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lcard .num{font-family:var(--display);font-weight:600;font-size:2.2rem;line-height:1;color:var(--accent)}
+.lcard h3{font-family:var(--display);font-weight:600;font-size:1.45rem;line-height:1.1;margin:0}
+.lcard p{margin:0;font-size:14px;color:var(--text-secondary)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary)}
+.pill{font-size:12px;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary);white-space:nowrap}
+.pill.prog-on{background:var(--accent-soft);color:var(--accent)}
+.pill.done{background:var(--accent);color:var(--surface-2)}
+.lcard .foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mini{display:flex;gap:4px}.mini i{width:22px;height:5px;border-radius:3px;background:var(--surface-1)}.mini i.on{background:var(--accent)}
+.theory{display:grid;gap:18px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tblock{background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.tblock h3{margin:0 0 6px;font-weight:500;font-size:15.5px}
+.tblock p,.tblock li{font-size:14.5px;color:var(--text-secondary);margin:0}
+.tblock ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.formula{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--text-primary);background:var(--accent-soft);border-radius:10px;padding:12px 16px;text-align:center;font-variant-numeric:tabular-nums;overflow-x:auto}
+.worked{background:var(--surface-1);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:13.5px;line-height:1.85;overflow-x:auto}
+.worked b{font-family:var(--body);font-weight:500;display:block;margin-bottom:2px}
+.goal{border-left:3px solid var(--accent);border-radius:0;padding:4px 0 4px 14px;color:var(--text-secondary);font-size:14.5px;margin:0}
+table.tt{border-collapse:collapse;font-family:var(--mono);font-size:13px;width:100%}
+table.tt th,table.tt td{border:1px solid var(--border);padding:6px 8px;text-align:center}
+table.tt th{font-family:var(--body);font-weight:500;background:var(--surface-1)}
+.pager{position:sticky;bottom:0;z-index:10;background:var(--page);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));margin-top:16px}
+.pager button{display:inline-flex;align-items:center;gap:6px}
+.pager button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pager .where{font-size:13px;color:var(--text-secondary);text-align:center;min-width:0}
+.pager .where b{display:block;color:var(--text-primary);font-weight:500;font-size:14px}
+.pager[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.lcard,.bar i{transition:none}}
+@media (max-width:520px){.prog{width:30vw}.appbar .brand span{display:none}.pager .where{font-size:12px}.view.card{padding:16px}.crumb span{display:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="appbar">
+  <a class="crumb" href="../electronica/index.html" aria-label="Volver al curso de Electrónica">←<span> Electrónica</span></a>
+  <button class="iconbtn" id="goHome" aria-label="Ir al inicio"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></button>
+  <div class="brand"><b>Módulo 1 · Laboratorio virtual</b><span>Fundamentos de electricidad</span></div>
+  <div class="prog" aria-label="Progreso del módulo"><div class="lbl"><span>Progreso</span><span id="progTxt">0 %</span></div><div class="bar"><i id="progBar"></i></div></div>
+</header>
+
+<main>
+<!-- ============ HOME ============ -->
+<section class="view" data-step="home" id="home">
+  <div class="hero">
+    <div class="eyebrow">tower-ing.com · Módulo 1</div>
+    <h1>Fundamentos de electricidad</h1>
+    <p class="lead">Seis lecciones que van de la ley de Ohm a la iluminación de una casa. Cada lección abre con la teoría que necesitas y sigue con un laboratorio interactivo donde mueves controles, abres interruptores y fundes componentes mientras los cálculos se actualizan.</p>
+    <div class="row"><button class="primary" id="continueBtn">Empezar el módulo</button><button id="resetBtn">Reiniciar progreso</button><span class="note" id="resetMsg"></span></div>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<!-- ============ TEORÍA 1 ============ -->
+<section class="view card theory" data-step="l1-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 1 · Teoría</div><h2>¿Qué es un circuito eléctrico?</h2>
+  <p>Un circuito es un camino cerrado por donde circulan cargas eléctricas. Siempre tiene cuatro partes, y su comportamiento lo resume una sola relación: la ley de Ohm.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Partes de un circuito</h3><ul><li><b>Fuente:</b> entrega la energía (batería, fuente DC).</li><li><b>Conductor:</b> cables que forman el camino.</li><li><b>Carga:</b> transforma la energía (lámpara, LED, motor).</li><li><b>Control:</b> abre o cierra el camino (interruptor).</li></ul></div>
+    <div class="tblock"><h3>Analogía hidráulica</h3><p>El voltaje es la presión de la bomba, la corriente es el caudal de agua y la resistencia es qué tan estrecha es la tubería. Más presión o tubería más ancha significan más caudal.</p></div>
+  </div>
+  <div class="formula">V = I · R &nbsp;&nbsp;·&nbsp;&nbsp; I = V / R &nbsp;&nbsp;·&nbsp;&nbsp; P = V · I</div>
+  <div class="worked"><b>Ejemplo resuelto</b>Lámpara de 48 Ω conectada a 12 V<br>I = 12 V / 48 Ω = 0.25 A<br>P = 12 V × 0.25 A = 3 W</div>
+  <p class="goal">En el laboratorio vas a observar los tres estados de un circuito: cerrado, abierto y en cortocircuito, y cómo cambian I y P cuando mueves V y R.</p>
+</section>
+
+<!-- ============ LECCIÓN 1 ============ -->
+<section class="lesson view card" id="leccion-1" data-step="l1-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 1 · Laboratorio</div>
+    <h2>Fuente, interruptor y lámpara</h2>
+    <p>El circuito más simple: una fuente empuja corriente a través de una lámpara. Cambia el voltaje y la resistencia, y compara los tres estados de un circuito.</p>
+  </div>
+  <div class="bench">
+    <svg viewBox="0 0 460 300" role="img" aria-label="Circuito con fuente, interruptor y lámpara">
+      <path data-id="loopA" class="wire" d="M60 70 H380 V250 H60 Z"/>
+      <path data-id="loopB" d="M60 70 H380 V100 H430 V220 H380 V250 H60 Z" fill="none" stroke="none"/>
+      <path data-id="bypass" d="M380 100 H430 V220 H380" fill="none" stroke="#E24B4A" stroke-width="3" opacity="0"/>
+      <rect class="cut" x="200" y="62" width="70" height="16"/>
+      <circle cx="205" cy="70" r="5" fill="var(--text-primary)"/><circle cx="265" cy="70" r="5" fill="var(--text-primary)"/>
+      <line data-id="lever" x1="205" y1="70" x2="265" y2="70" class="ink" stroke-width="4" stroke-linecap="round" style="transform-box:view-box;transform-origin:205px 70px;transition:transform .3s"/>
+      <text x="235" y="50" text-anchor="middle" class="ts">Interruptor</text>
+      <rect class="cut" x="40" y="130" width="40" height="60"/>
+      <line x1="38" y1="140" x2="82" y2="140" class="ink" stroke-width="4"/><line x1="48" y1="152" x2="72" y2="152" class="ink" stroke-width="4"/>
+      <line x1="38" y1="166" x2="82" y2="166" class="ink" stroke-width="4"/><line x1="48" y1="178" x2="72" y2="178" class="ink" stroke-width="4"/>
+      <text x="95" y="145" class="ts" style="fill:var(--text-danger)">+</text>
+      <text data-id="vlab" x="95" y="168" class="t">12 V</text>
+      <rect class="cut" x="355" y="130" width="50" height="60"/>
+      <circle data-id="glow" cx="380" cy="160" r="38" fill="#EF9F27" opacity="0"/>
+      <circle cx="380" cy="160" r="22" fill="var(--surface-2)" class="ink" stroke-width="2.5"/>
+      <line x1="364.4" y1="144.4" x2="395.6" y2="175.6" class="ink" stroke-width="2.5"/><line x1="395.6" y1="144.4" x2="364.4" y2="175.6" class="ink" stroke-width="2.5"/>
+      <line x1="380" y1="130" x2="380" y2="138" class="ink" stroke-width="2.5"/><line x1="380" y1="182" x2="380" y2="190" class="ink" stroke-width="2.5"/>
+      <text data-id="rlab" x="345" y="225" text-anchor="end" class="t">R = 48 Ω</text>
+      <text data-id="bylab" x="438" y="165" class="ts" style="fill:var(--text-danger)" opacity="0">≈0 Ω</text>
+      <g data-id="dots"></g>
+      <text x="230" y="285" text-anchor="middle" class="ts">Flujo convencional de corriente</text>
+    </svg>
+    <div class="ctrl">
+      <label for="l1-v">Voltaje V <b data-id="vo">12 V</b></label>
+      <input type="range" id="l1-v" data-id="v" min="1" max="24" step="1" value="12">
+      <label for="l1-r">Resistencia de la lámpara R <b data-id="ro">48 Ω</b></label>
+      <input type="range" id="l1-r" data-id="r" min="10" max="200" step="2" value="48">
+      <div class="calc">
+        <div>I = V / R</div><div data-id="ic"></div>
+        <div style="margin-top:6px">P = V · I</div><div data-id="pc"></div>
+        <div class="state" data-id="st"></div>
+      </div>
+      <div class="btns"><button data-s="cerrado">Cerrado</button><button data-s="abierto">Abierto</button><button data-s="corto">Corto</button></div>
+    </div>
+  </div>
+  <div class="caps">
+    <div class="cap" data-c="cerrado"><h3>Circuito cerrado</h3><p>Camino continuo desde el borne + hasta el −. La corriente circula y la carga funciona: I = V / R.</p></div>
+    <div class="cap" data-c="abierto"><h3>Circuito abierto</h3><p>El camino se interrumpe (interruptor, cable roto). La resistencia es infinita e I = 0 A. La tensión aparece entre los contactos abiertos.</p></div>
+    <div class="cap" data-c="corto"><h3>Cortocircuito</h3><p>Un conductor de resistencia casi nula puentea la carga. La corriente sube sin control, la lámpara se apaga y el cable se calienta. Lo detiene un fusible o breaker.</p></div>
+  </div>
+  <div class="gloss">
+    <div><b>Voltaje (V)</b><br><span>Empuje eléctrico. Voltios.</span></div>
+    <div><b>Corriente (I)</b><br><span>Flujo de carga. Amperios.</span></div>
+    <div><b>Resistencia (R)</b><br><span>Oposición al flujo. Ohmios.</span></div>
+    <div><b>Potencia (P)</b><br><span>Energía por segundo. Vatios.</span></div>
+  </div>
+</section>
+
+<!-- ============ TEORÍA 2 ============ -->
+<section class="view card theory" data-step="l2-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 2 · Teoría</div><h2>El diodo LED y su resistencia</h2>
+  <p>Un LED es un diodo: deja pasar corriente en un solo sentido y emite luz cuando conduce. A diferencia de una lámpara, no limita su propia corriente, así que necesita una resistencia en serie.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Ánodo y cátodo</h3><p>La corriente entra por el ánodo (+, pata larga) y sale por el cátodo (−, pata corta, lado plano). En el símbolo, el triángulo apunta en el sentido de la corriente.</p></div>
+    <div class="tblock"><h3>Tensión directa (Vf)</h3><p>El LED necesita una tensión mínima para encender, que depende del color: rojo ≈ 2.0 V, verde ≈ 2.2 V, azul y blanco ≈ 3.0–3.2 V. Por debajo de Vf no hay luz.</p></div>
+    <div class="tblock"><h3>¿Por qué la resistencia?</h3><p>Una vez superada Vf, la corriente del LED crece casi sin freno. La resistencia toma la tensión sobrante (V − Vf) y fija la corriente en un valor seguro, normalmente 10–20 mA.</p></div>
+  </div>
+  <div class="formula">R = (V − Vf) / I</div>
+  <div class="worked"><b>Ejemplo resuelto</b>LED rojo a 9 V, corriente deseada 20 mA<br>R = (9 − 2.0) / 0.020 = 350 Ω → valor comercial: 390 Ω<br>I real = (9 − 2.0) / 390 = 17.9 mA ✓</div>
+  <p class="goal">En el laboratorio vas a cambiar el color del LED, invertir su polaridad y encontrar qué resistencia lo mantiene en rango… y cuál lo quema.</p>
+</section>
+
+<!-- ============ LECCIÓN 2 ============ -->
+<section class="lesson view card" id="leccion-2" data-step="l2-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 2 · Laboratorio</div>
+    <h2>Resistencia limitadora y LED</h2>
+    <p>Un LED no se conecta directo a la fuente: necesita una resistencia que absorba la tensión sobrante. Cambia el color, invierte el LED y busca el valor de R que lo mantiene en 20 mA.</p>
+  </div>
+  <div class="bench">
+    <svg viewBox="0 0 460 300" role="img" aria-label="Circuito con fuente, interruptor, resistencia y LED">
+      <path data-id="loop" class="wire" d="M60 70 H400 V250 H60 Z"/>
+      <rect class="cut" x="130" y="62" width="70" height="16"/>
+      <circle cx="135" cy="70" r="5" fill="var(--text-primary)"/><circle cx="195" cy="70" r="5" fill="var(--text-primary)"/>
+      <line data-id="lever" x1="135" y1="70" x2="195" y2="70" class="ink" stroke-width="4" stroke-linecap="round" style="transform-box:view-box;transform-origin:135px 70px;transition:transform .3s"/>
+      <text x="165" y="50" text-anchor="middle" class="ts">Interruptor</text>
+      <rect class="cut" x="250" y="56" width="90" height="28"/>
+      <path d="M250 70 H262 L268 58 L278 82 L288 58 L298 82 L308 58 L318 82 L328 58 L334 70 H340" fill="none" class="ink" stroke-width="2.5" stroke-linejoin="round"/>
+      <text data-id="rlab" x="295" y="102" text-anchor="middle" class="t">R = 470 Ω</text>
+      <text data-id="vrlab" x="295" y="46" text-anchor="middle" class="ts">V_R</text>
+      <rect class="cut" x="40" y="130" width="40" height="60"/>
+      <line x1="38" y1="140" x2="82" y2="140" class="ink" stroke-width="4"/><line x1="48" y1="152" x2="72" y2="152" class="ink" stroke-width="4"/>
+      <line x1="38" y1="166" x2="82" y2="166" class="ink" stroke-width="4"/><line x1="48" y1="178" x2="72" y2="178" class="ink" stroke-width="4"/>
+      <text x="95" y="145" class="ts" style="fill:var(--text-danger)">+</text>
+      <text data-id="vlab" x="95" y="168" class="t">9 V</text>
+      <rect class="cut" x="375" y="125" width="60" height="70"/>
+      <circle data-id="glow" cx="400" cy="160" r="34" fill="#E24B4A" opacity="0"/>
+      <g data-id="led" style="transform-box:view-box;transform-origin:400px 160px;transition:transform .3s">
+        <path data-id="tri" d="M386 146 H414 L400 172 Z" fill="var(--surface-2)" class="ink" stroke-width="2.5" stroke-linejoin="round"/>
+        <line x1="386" y1="172" x2="414" y2="172" class="ink" stroke-width="2.5"/>
+        <line x1="400" y1="125" x2="400" y2="146" class="ink" stroke-width="2.5"/><line x1="400" y1="172" x2="400" y2="195" class="ink" stroke-width="2.5"/>
+        <path d="M418 150 l12 -8 M424 142 h6 v6 M418 162 l12 -8 M424 154 h6 v6" fill="none" class="ink" stroke-width="1.8"/>
+      </g>
+      <text data-id="alab" x="372" y="140" text-anchor="end" class="ts">Ánodo +</text>
+      <text data-id="klab" x="372" y="186" text-anchor="end" class="ts">Cátodo −</text>
+      <text data-id="ledlab" x="400" y="222" text-anchor="middle" class="t">LED rojo</text>
+      <g data-id="dots"></g>
+      <text x="230" y="285" text-anchor="middle" class="ts">Flujo convencional de corriente</text>
+    </svg>
+    <div class="ctrl">
+      <label for="l2-v">Fuente V <b data-id="vo">9 V</b></label>
+      <input type="range" id="l2-v" data-id="v" min="0" max="12" step="0.5" value="9">
+      <label for="l2-r">Resistencia R <b data-id="ro">470 Ω</b></label>
+      <input type="range" id="l2-r" data-id="r" min="10" max="1000" step="10" value="470">
+      <div class="btns" style="margin:0 0 10px"><button data-c="rojo">Rojo</button><button data-c="verde">Verde</button><button data-c="azul">Azul</button></div>
+      <div class="calc">
+        <div>I = (V − Vf) / R</div><div data-id="ic"></div>
+        <div data-id="vrc"></div><div data-id="pc"></div><div class="muted" data-id="rec"></div>
+        <div class="state" data-id="st"></div>
+      </div>
+      <div class="btns"><button data-id="btnSw">Abrir</button><button data-id="btnPol">Invertir LED</button></div>
+    </div>
+  </div>
+  <div class="caps">
+    <div class="cap" data-k="led"><h3>LED</h3><p>Diodo emisor de luz. Solo conduce de ánodo a cátodo y necesita una tensión mínima (Vf) que depende del color. Corriente típica: 20 mA.</p></div>
+    <div class="cap" data-k="rlim"><h3>Resistencia limitadora</h3><p>Absorbe la tensión sobrante (V − Vf) y fija la corriente. Sin ella, el LED se destruye. R = (V − Vf) / I.</p></div>
+    <div class="cap" data-k="pol"><h3>Polarización</h3><p>Directa: ánodo hacia + y el diodo conduce. Inversa: ánodo hacia − y el diodo bloquea; I = 0 A, se comporta como circuito abierto.</p></div>
+  </div>
+  <p class="note">Vf típicos: rojo 2.0 V, verde 2.2 V, azul 3.2 V. Verifica la hoja de datos del LED real.</p>
+</section>
+
+<!-- ============ TEORÍA 3 ============ -->
+<section class="view card theory" data-step="l3-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 3 · Teoría</div><h2>Conexión en serie</h2>
+  <p>En serie los componentes se conectan uno tras otro, formando un único camino. Eso tiene dos consecuencias que se pueden medir y una desventaja práctica.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Misma corriente</h3><p>Como solo hay un camino, la corriente es la misma en todos los elementos: I = I<sub>R</sub> = I<sub>LED1</sub> = I<sub>LED2</sub> = I<sub>LED3</sub>.</p></div>
+    <div class="tblock"><h3>Las tensiones se suman</h3><p>Ley de voltajes de Kirchhoff (LKV): en una malla cerrada, la suma de las caídas de tensión es igual a la tensión de la fuente.</p></div>
+    <div class="tblock"><h3>Desventaja</h3><p>Si un elemento se abre (se funde), el camino se interrumpe y todo el circuito deja de funcionar.</p></div>
+  </div>
+  <div class="formula">V = V<sub>R</sub> + ΣVf &nbsp;&nbsp;·&nbsp;&nbsp; I = (V − ΣVf) / R</div>
+  <div class="worked"><b>Ejemplo resuelto</b>LEDs rojo + verde + azul a 12 V, I = 20 mA<br>ΣVf = 2.0 + 2.2 + 3.2 = 7.4 V<br>R = (12 − 7.4) / 0.020 = 230 Ω → comercial: 220 Ω o 270 Ω<br>Comprobación LKV: 12 = 4.6 + 7.4 ✓</div>
+  <p class="goal">En el laboratorio vas a comprobar que la corriente es igual en todo el lazo, que la fuente debe superar ΣVf y qué pasa cuando fundes un LED.</p>
+</section>
+
+<!-- ============ LECCIÓN 3 ============ -->
+<section class="lesson view card" id="leccion-3" data-step="l3-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 3 · Laboratorio</div>
+    <h2>LEDs RGB en serie</h2>
+    <p>Tres LEDs en un único camino comparten la misma corriente y sus caídas de tensión se suman. Haz clic en un LED para fundirlo y observa qué pasa con los demás.</p>
+  </div>
+  <div class="bench">
+    <svg viewBox="0 0 460 310" role="img" aria-label="Circuito serie con resistencia y tres LEDs">
+      <path data-id="loop" class="wire" d="M60 70 H420 V250 H60 Z"/>
+      <rect class="cut" x="190" y="56" width="90" height="28"/>
+      <path d="M190 70 H202 L208 58 L218 82 L228 58 L238 82 L248 58 L258 82 L268 58 L274 70 H280" fill="none" class="ink" stroke-width="2.5" stroke-linejoin="round"/>
+      <text data-id="rlab" x="235" y="102" text-anchor="middle" class="t">R = 150 Ω</text>
+      <text data-id="vrlab" x="235" y="46" text-anchor="middle" class="ts">V_R</text>
+      <rect class="cut" x="40" y="130" width="40" height="60"/>
+      <line x1="38" y1="140" x2="82" y2="140" class="ink" stroke-width="4"/><line x1="48" y1="152" x2="72" y2="152" class="ink" stroke-width="4"/>
+      <line x1="38" y1="166" x2="82" y2="166" class="ink" stroke-width="4"/><line x1="48" y1="178" x2="72" y2="178" class="ink" stroke-width="4"/>
+      <text x="95" y="145" class="ts" style="fill:var(--text-danger)">+</text>
+      <text data-id="vlab" x="95" y="168" class="t">12 V</text>
+      <g data-id="leds"></g>
+      <g data-id="dots"></g>
+      <text x="240" y="160" text-anchor="middle" class="ts">Clic en un LED para fundirlo</text>
+      <text data-id="ilab" x="240" y="180" text-anchor="middle" class="t">I</text>
+    </svg>
+    <div class="ctrl">
+      <label for="l3-v">Fuente V <b data-id="vo">12 V</b></label>
+      <input type="range" id="l3-v" data-id="v" min="0" max="15" step="0.5" value="12">
+      <label for="l3-r">Resistencia R <b data-id="ro">150 Ω</b></label>
+      <input type="range" id="l3-r" data-id="r" min="10" max="600" step="10" value="150">
+      <div class="calc">
+        <div data-id="sf"></div>
+        <div>I = (V − ΣVf) / R</div><div data-id="ic"></div>
+        <div data-id="kv"></div><div class="muted" data-id="rec"></div>
+        <div class="state" data-id="st"></div>
+      </div>
+      <div class="btns"><button data-id="rst">Reparar LEDs</button></div>
+    </div>
+  </div>
+  <div class="caps">
+    <div class="cap" data-k="serie"><h3>Circuito en serie</h3><p>Los elementos van uno tras otro en un único camino. La misma corriente atraviesa todos: I es igual en R y en cada LED.</p></div>
+    <div class="cap" data-k="lkv"><h3>Ley de voltajes de Kirchhoff</h3><p>La suma de caídas en la malla iguala la fuente: V = V_R + Vf₁ + Vf₂ + Vf₃. Por eso la fuente debe superar ΣVf.</p></div>
+    <div class="cap" data-k="falla"><h3>Falla en serie</h3><p>Si un elemento se abre, se corta el único camino y todo se apaga. Es la desventaja clásica de las conexiones en serie.</p></div>
+  </div>
+  <p class="note">Vf típicos: rojo 2.0 V, verde 2.2 V, azul 3.2 V. ΣVf = 7.4 V.</p>
+</section>
+
+<!-- ============ TEORÍA 4 ============ -->
+<section class="view card theory" data-step="l4-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 4 · Teoría</div><h2>Conexión en paralelo</h2>
+  <p>En paralelo cada componente tiene su propio camino entre los mismos dos nodos. Es la conexión que se usa en casas, tableros y casi cualquier instalación real.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Misma tensión</h3><p>Todas las ramas están conectadas a los mismos nodos, así que todas reciben la misma tensión V de la fuente.</p></div>
+    <div class="tblock"><h3>Las corrientes se suman</h3><p>Ley de corrientes de Kirchhoff (LKC): la corriente que entra a un nodo es igual a la suma de las que salen. La fuente entrega la suma de todas las ramas.</p></div>
+    <div class="tblock"><h3>Independencia</h3><p>Si una rama se abre, las demás siguen funcionando. Por eso cada LED lleva su propia resistencia: una sola resistencia compartida no reparte bien la corriente.</p></div>
+  </div>
+  <div class="formula">Iₖ = (V − Vfₖ) / Rₖ &nbsp;&nbsp;·&nbsp;&nbsp; I<sub>T</sub> = I₁ + I₂ + I₃</div>
+  <div class="worked"><b>Ejemplo resuelto</b>Tres ramas a 9 V, cada una con 390 Ω<br>I rojo = (9 − 2.0) / 390 = 17.9 mA<br>I verde = (9 − 2.2) / 390 = 17.4 mA<br>I azul = (9 − 3.2) / 390 = 14.9 mA<br>I<sub>T</sub> = 17.9 + 17.4 + 14.9 = 50.2 mA</div>
+  <p class="goal">En el laboratorio vas a ver cómo cada rama toma su propia corriente, cómo se suman en la fuente y por qué falla el atajo de usar una sola resistencia.</p>
+</section>
+
+<!-- ============ LECCIÓN 4 ============ -->
+<section class="lesson view card" id="leccion-4" data-step="l4-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 4 · Laboratorio</div>
+    <h2>LEDs RGB en paralelo</h2>
+    <p>Cada LED tiene su propia rama y su propia resistencia. Todas las ramas ven la misma tensión y la fuente entrega la suma de sus corrientes. Prueba también el error de usar una sola resistencia.</p>
+  </div>
+  <div class="bench">
+    <svg viewBox="0 0 460 320" role="img" aria-label="Circuito paralelo con tres ramas de LED">
+      <path class="wire" d="M60 60 H400 M60 270 H400 M60 60 V270"/>
+      <g data-id="rshared" opacity="0">
+        <rect class="cut" x="85" y="46" width="70" height="28"/>
+        <path d="M85 60 H95 L100 48 L108 72 L116 48 L124 72 L132 48 L140 72 L145 60 H155" fill="none" class="ink" stroke-width="2.5" stroke-linejoin="round"/>
+        <text data-id="rslab" x="120" y="38" text-anchor="middle" class="ts">R común</text>
+      </g>
+      <rect class="cut" x="40" y="135" width="40" height="60"/>
+      <line x1="38" y1="145" x2="82" y2="145" class="ink" stroke-width="4"/><line x1="48" y1="157" x2="72" y2="157" class="ink" stroke-width="4"/>
+      <line x1="38" y1="171" x2="82" y2="171" class="ink" stroke-width="4"/><line x1="48" y1="183" x2="72" y2="183" class="ink" stroke-width="4"/>
+      <text x="92" y="150" class="ts" style="fill:var(--text-danger)">+</text>
+      <text data-id="vlab" x="92" y="173" class="t">9 V</text>
+      <text data-id="itlab" x="92" y="215" class="ts">I_T</text>
+      <g data-id="br"></g>
+      <g data-id="dots"></g>
+      <text x="290" y="310" text-anchor="middle" class="ts">Clic en un LED para fundirlo</text>
+    </svg>
+    <div class="ctrl">
+      <label for="l4-v">Fuente V <b data-id="vo">9 V</b></label>
+      <input type="range" id="l4-v" data-id="v" min="0" max="12" step="0.5" value="9">
+      <label for="l4-r">R por rama <b data-id="ro">390 Ω</b></label>
+      <input type="range" id="l4-r" data-id="r" min="10" max="1000" step="10" value="390">
+      <div class="calc">
+        <div>Iₖ = (V − Vfₖ) / R</div><div data-id="i1"></div><div data-id="i2"></div><div data-id="i3"></div>
+        <div data-id="it" style="margin-top:4px"></div>
+        <div class="state" data-id="st"></div>
+      </div>
+      <div class="btns"><button data-id="mode">Usar R común</button><button data-id="rst">Reparar LEDs</button></div>
+    </div>
+  </div>
+  <div class="caps">
+    <div class="cap" data-k="par"><h3>Circuito en paralelo</h3><p>Cada rama se conecta entre los mismos dos nodos. Todas reciben la misma tensión V, y si una falla las demás siguen funcionando.</p></div>
+    <div class="cap" data-k="lkc"><h3>Ley de corrientes de Kirchhoff</h3><p>La corriente que entra a un nodo es igual a la que sale: I_T = I₁ + I₂ + I₃. La fuente entrega la suma de todas las ramas.</p></div>
+    <div class="cap" data-k="comun"><h3>Una sola R para varios LEDs</h3><p>Error común: el LED de menor Vf fija la tensión del nodo y acapara la corriente; los demás no encienden. Cada LED necesita su propia resistencia.</p></div>
+  </div>
+  <p class="note">Modelo ideal de LED con Vf fijo: rojo 2.0 V, verde 2.2 V, azul 3.2 V.</p>
+</section>
+
+<!-- ============ TEORÍA 5 ============ -->
+<section class="view card theory" data-step="l5-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 5 · Teoría</div><h2>La instalación de iluminación de una casa</h2>
+  <p>Todo lo que viste en las lecciones anteriores está en las paredes de tu casa. La iluminación residencial es un circuito en paralelo con protección general y controles por habitación.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Tablero y breaker</h3><p>La energía llega al tablero. El breaker (interruptor automático) está en serie con todo el circuito: protege contra sobrecorriente y cortocircuito, y permite desenergizar la instalación para trabajar con seguridad.</p></div>
+    <div class="tblock"><h3>Ramas en paralelo</h3><p>Cada luminaria es una rama. Todas reciben la misma tensión y cada una se controla de forma independiente con su interruptor sencillo.</p></div>
+    <div class="tblock"><h3>Conmutador de 3 vías</h3><p>Para controlar una luz desde dos puntos (pasillo, escalera) se usan dos conmutadores unidos por dos hilos viajeros. La luz enciende cuando ambos eligen el mismo viajero.</p></div>
+  </div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Tabla de verdad · conmutada</h3>
+      <table class="tt"><tr><th>Conmutador A</th><th>Conmutador B</th><th>Luz</th></tr>
+      <tr><td>Viajero 1</td><td>Viajero 1</td><td>Encendida</td></tr>
+      <tr><td>Viajero 1</td><td>Viajero 2</td><td>Apagada</td></tr>
+      <tr><td>Viajero 2</td><td>Viajero 1</td><td>Apagada</td></tr>
+      <tr><td>Viajero 2</td><td>Viajero 2</td><td>Encendida</td></tr></table></div>
+    <div class="worked"><b>Ejemplo resuelto</b>5 luminarias LED a 12 V, 470 Ω cada una<br>I rama = (12 − 3.0) / 470 = 19.1 mA<br>Con 3 encendidas: I<sub>T</sub> = 3 × 19.1 = 57.4 mA<br>P<sub>T</sub> = 12 × 0.0574 = 0.69 W</div>
+  </div>
+  <p class="goal">En el laboratorio vas a operar los interruptores de cada habitación, controlar el pasillo desde sus dos extremos y bajar el breaker general.</p>
+  <p class="note">Modelo didáctico en DC de baja tensión. La instalación real en Colombia es AC 120 V y se rige por el RETIE.</p>
+</section>
+
+<!-- ============ LECCIÓN 5 ============ -->
+<section class="lesson view card" id="leccion-5" data-step="l5-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 5 · Laboratorio</div>
+    <h2>Iluminación de una casa</h2>
+    <p>Cada habitación es una rama en paralelo con su interruptor de pared. El pasillo usa dos conmutadores de 3 vías y todo pasa por el breaker general. El plano y el esquema se mueven juntos.</p>
+  </div>
+  <div class="bench l5">
+    <svg viewBox="0 0 400 284" role="img" aria-label="Plano de la casa con luminarias e interruptores">
+      <g data-id="rooms"></g>
+      <text x="200" y="281" text-anchor="middle" class="tm">Clic en los interruptores de pared</text>
+    </svg>
+    <div class="ctrl">
+      <div class="calc">
+        <div>Fuente 12 V · LED blanco Vf 3.0 V</div>
+        <div>R = (12 − 3) / 0.02 ≈ 470 Ω</div>
+        <div>I_rama = 9 / 470 = 19.1 mA</div>
+        <div data-id="nOn" style="margin-top:6px"></div>
+        <div data-id="iT"></div><div data-id="pT"></div>
+        <div class="state" data-id="st"></div>
+      </div>
+      <div class="btns"><button data-id="brk">Bajar breaker</button><button data-id="all">Apagar todo</button></div>
+    </div>
+  </div>
+  <div class="wide">
+    <svg viewBox="0 0 680 230" role="img" aria-label="Esquema eléctrico paralelo de la iluminación">
+      <path class="wire" d="M60 40 H95 M145 40 H570 M60 205 H570 M60 40 V205"/>
+      <rect class="cut" x="40" y="95" width="40" height="60"/>
+      <line x1="38" y1="105" x2="82" y2="105" class="ink" stroke-width="4"/><line x1="48" y1="117" x2="72" y2="117" class="ink" stroke-width="4"/>
+      <line x1="38" y1="131" x2="82" y2="131" class="ink" stroke-width="4"/><line x1="48" y1="143" x2="72" y2="143" class="ink" stroke-width="4"/>
+      <text x="20" y="128" text-anchor="middle" class="t" style="font-size:12px">12 V</text>
+      <circle cx="95" cy="40" r="4" fill="var(--text-primary)"/><circle cx="145" cy="40" r="4" fill="var(--text-primary)"/>
+      <line data-id="brkL" x1="95" y1="40" x2="145" y2="40" class="ink" stroke-width="4" stroke-linecap="round" style="transform-box:view-box;transform-origin:95px 40px;transition:transform .3s"/>
+      <text x="120" y="24" text-anchor="middle" class="ts">Breaker general</text>
+      <g data-id="sch"></g>
+      <g data-id="dots"></g>
+    </svg>
+  </div>
+  <div class="caps">
+    <div class="cap" data-k="par"><h3>Instalación en paralelo</h3><p>En una casa, cada luminaria es una rama. Todas reciben la misma tensión y cada una se controla sola. Por eso apagar la cocina no apaga la sala.</p></div>
+    <div class="cap" data-k="3v"><h3>Conmutador de 3 vías</h3><p>Dos interruptores unidos por dos hilos viajeros. La luz enciende cuando ambos eligen el mismo viajero; cualquiera de los dos la cambia. Típico en pasillos y escaleras.</p></div>
+    <div class="cap" data-k="brk"><h3>Breaker general</h3><p>Está en serie con todas las ramas, antes del reparto. Si se abre, toda la casa queda sin corriente, sin importar la posición de los interruptores.</p></div>
+  </div>
+  <p class="note">Modelo didáctico en DC de baja tensión. La instalación real es AC 120 V y se rige por el RETIE.</p>
+</section>
+
+<!-- ============ TEORÍA 6 ============ -->
+<section class="view card theory" data-step="l6-teo" hidden>
+  <div class="lhead"><div class="eyebrow">Lección 6 · Antes del ejercicio</div><h2>Procedimiento para diseñar una instalación LED</h2>
+  <p>El ejercicio te pide diseñar tres ramas de iluminación en paralelo. Cada vez que lo abras los datos cambian. Sigue este procedimiento y verifica tus resultados.</p></div>
+  <div class="tgrid">
+    <div class="tblock"><h3>Paso 1 · Identifica los datos</h3><p>Tensión de la fuente V, corriente de trabajo I y color de cada LED. Busca el Vf correspondiente a cada color.</p></div>
+    <div class="tblock"><h3>Paso 2 · Calcula cada rama</h3><p>Aplica R = (V − Vf) / I en cada rama. Convierte la corriente a amperios antes de dividir (15 mA = 0.015 A).</p></div>
+    <div class="tblock"><h3>Paso 3 · Suma en la fuente</h3><p>Con todas las ramas encendidas, I<sub>T</sub> = I₁ + I₂ + I₃ y la potencia total es P<sub>T</sub> = V · I<sub>T</sub>.</p></div>
+  </div>
+  <div class="worked"><b>Recordatorio de Vf</b>rojo 2.0 V · verde 2.2 V · azul 3.2 V · blanco 3.0 V<br>Tolerancia aceptada al verificar: ±3 %</div>
+  <p class="goal">Escribe tus respuestas con el valor calculado, sin redondear a valores comerciales.</p>
+</section>
+
+<!-- ============ LECCIÓN 6 ============ -->
+<section class="lesson view card" id="leccion-6" data-step="l6-lab" hidden>
+  <div class="lhead">
+    <div class="eyebrow">Lección 6 · Ejercicio</div>
+    <h2>Ejercicio: diseña la iluminación</h2>
+    <p>Cada ejercicio se genera con datos distintos. Calcula, escribe tus resultados y verifica. Si te bloqueas, revisa la solución paso a paso.</p>
+  </div>
+  <div class="ex">
+    <div class="task"><h3>Enunciado</h3><div data-id="enun"></div></div>
+    <div class="fields" data-id="fields"></div>
+    <div class="btns" style="margin:0"><button data-id="chk">Verificar</button><button data-id="sol">Ver solución</button><button data-id="nw">Nuevo ejercicio</button></div>
+    <div class="score" data-id="score" aria-live="polite"></div>
+    <div class="calc" data-id="solbox" hidden></div>
+    <p class="note">Tolerancia aceptada: ±3 %. Vf típicos: rojo 2.0 V, verde 2.2 V, azul 3.2 V, blanco 3.0 V.</p>
+  </div>
+</section>
+
+</main>
+
+<nav class="pager" id="pager" aria-label="Navegación entre pasos" hidden>
+  <button id="prevBtn"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span>Anterior</span></button>
+  <div class="where"><b id="whereT"></b><span id="whereS"></span></div>
+  <button id="nextBtn"><span>Siguiente</span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+</nav>
+
+<footer>
+  <span>© 2026 Ferney Torres Ome · Laboratorio Virtual de Circuitos</span>
+  <span><a href="../electronica/index.html">Curso de Electrónica</a> · <a href="../../index.html">tower-ing.com</a></span>
+</footer>
+</div>
+
+<script>
+const NS="http://www.w3.org/2000/svg";
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+const scope=id=>{const S=document.getElementById(id);return [S,k=>S.querySelector('[data-id="'+k+'"]')]};
+const TICKS=[];
+function reg(S,fn){const t={S,fn,vis:true};TICKS.push(t);
+  if('IntersectionObserver' in window){new IntersectionObserver(es=>es.forEach(e=>t.vis=e.isIntersecting)).observe(S)}}
+(function loop(){TICKS.forEach(t=>{if(t.vis)t.fn()});requestAnimationFrame(loop)})();
+const mkDots=(g,n,r)=>{const a=[];for(let i=0;i<n;i++){const c=mk('circle',{r:r||4,class:'dot'});g.appendChild(c);a.push(c)}return a};
+const place=(dots,path,off,L)=>dots.forEach((d,i)=>{const p=path.getPointAtLength((off+i*L/dots.length)%L);d.setAttribute('cx',p.x);d.setAttribute('cy',p.y)});
+const setCap=(S,attr,val)=>S.querySelectorAll('.cap').forEach(c=>c.classList.toggle('on',c.dataset[attr]===val));
+
+/* ---------- Lección 1 ---------- */
+(function(){const [S,$]=scope('leccion-1');const A=$('loopA'),B=$('loopB'),g=$('dots'),dots=mkDots(g,24);
+const RC=0.05;let s='cerrado',off=0,spd=0;
+function upd(){const V=+$('v').value,R=+$('r').value;
+$('vo').textContent=V+' V';$('ro').textContent=R+' Ω';$('vlab').textContent=V+' V';$('rlab').textContent='R = '+R+' Ω';
+let I=0,P=0,txt,col;
+if(s==='cerrado'){I=V/R;P=V*I;$('ic').textContent=`I = ${V} / ${R} = ${I.toFixed(3)} A`;txt='Circuito cerrado: la lámpara enciende';col='var(--text-success)';$('glow').setAttribute('opacity',Math.min(P/12,1)*0.8);spd=I*6}
+else if(s==='abierto'){$('ic').textContent='I = V / ∞ = 0 A';txt='Circuito abierto: no hay corriente';col='var(--text-secondary)';$('glow').setAttribute('opacity',0);spd=0}
+else{I=V/RC;P=V*I;$('ic').textContent=`I = ${V} / ${RC} = ${Math.round(I)} A`;txt='Cortocircuito: la corriente evita la lámpara. Actúa el fusible';col='var(--text-danger)';$('glow').setAttribute('opacity',0);spd=14}
+$('pc').textContent=`P = ${V} · ${s==='corto'?Math.round(I):I.toFixed(3)} = ${s==='corto'?Math.round(P):P.toFixed(2)} W`;
+$('st').textContent=txt;$('st').style.color=col;
+$('lever').style.transform=s==='abierto'?'rotate(-35deg)':'rotate(0deg)';
+$('bypass').setAttribute('opacity',s==='corto'?1:0);$('bylab').setAttribute('opacity',s==='corto'?1:0);
+g.classList.toggle('hot',s==='corto');g.style.opacity=s==='abierto'?0.25:1;
+setCap(S,'c',s);S.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===s))}
+S.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;upd()});
+$('v').oninput=upd;$('r').oninput=upd;upd();
+reg(S,()=>{const P=s==='corto'?B:A,L=P.getTotalLength();if(!L)return;off=(off+spd)%L;place(dots,P,off,L)});
+})();
+
+/* ---------- Lección 2 ---------- */
+(function(){const [S,$]=scope('leccion-2');const loop=$('loop'),g=$('dots'),dots=mkDots(g,24);
+const C={rojo:{vf:2.0,hex:'#E24B4A'},verde:{vf:2.2,hex:'#639922'},azul:{vf:3.2,hex:'#378ADD'}};
+let col='rojo',closed=true,fwd=true,off=0,spd=0;
+function upd(){const V=+$('v').value,R=+$('r').value,vf=C[col].vf;
+$('vo').textContent=V+' V';$('ro').textContent=R+' Ω';$('vlab').textContent=V+' V';$('rlab').textContent='R = '+R+' Ω';$('ledlab').textContent='LED '+col+' (Vf '+vf.toFixed(1)+' V)';
+let I=0,msg,mc,k='led';
+if(!closed){msg='Circuito abierto: I = 0';mc='var(--text-secondary)'}
+else if(!fwd){msg='Polarización inversa: el LED bloquea';mc='var(--text-warning)';k='pol'}
+else if(V<=vf){msg='V < Vf: no alcanza para encender';mc='var(--text-secondary)'}
+else{I=(V-vf)/R;k='rlim';if(I>0.03){msg='Exceso de corriente: LED quemado';mc='var(--text-danger)'}else if(I>0.02){msg='Sobre 20 mA: brillo alto, vida útil corta';mc='var(--text-warning)'}else{msg='LED encendido dentro de rango';mc='var(--text-success)'}}
+const VR=I*R;
+$('ic').textContent=I>0?`I = (${V} − ${vf.toFixed(1)}) / ${R} = ${(I*1000).toFixed(1)} mA`:'I = 0 mA';
+$('vrc').textContent=`V_R = I · R = ${VR.toFixed(2)} V`;$('vrlab').textContent='V_R = '+VR.toFixed(2)+' V';
+$('pc').textContent=`P_R = ${(VR*I*1000).toFixed(0)} mW · P_LED = ${(vf*I*1000).toFixed(0)} mW`;
+$('rec').textContent=V>vf?`R sugerida (20 mA) = ${Math.round((V-vf)/0.02)} Ω`:'R sugerida: V debe superar Vf';
+$('st').textContent=msg;$('st').style.color=mc;
+const burnt=I>0.03;$('glow').setAttribute('fill',C[col].hex);$('glow').setAttribute('opacity',burnt?0:Math.min(I/0.02,1)*0.75);
+$('tri').setAttribute('fill',burnt?'var(--text-muted)':(I>0?C[col].hex:'var(--surface-2)'));
+$('led').style.transform=fwd?'rotate(0deg)':'rotate(180deg)';
+$('alab').textContent=fwd?'Ánodo +':'Cátodo';$('klab').textContent=fwd?'Cátodo −':'Ánodo';
+$('lever').style.transform=closed?'rotate(0deg)':'rotate(-35deg)';$('btnSw').textContent=closed?'Abrir':'Cerrar';
+spd=burnt?0:Math.min(I*300,10);g.style.opacity=I>0&&!burnt?1:0.25;
+setCap(S,'k',k);S.querySelectorAll('button[data-c]').forEach(b=>b.classList.toggle('on',b.dataset.c===col))}
+S.querySelectorAll('button[data-c]').forEach(b=>b.onclick=()=>{col=b.dataset.c;upd()});
+$('btnSw').onclick=()=>{closed=!closed;upd()};$('btnPol').onclick=()=>{fwd=!fwd;upd()};
+$('v').oninput=upd;$('r').oninput=upd;upd();
+reg(S,()=>{const L=loop.getTotalLength();if(!L)return;off=(off+spd)%L;place(dots,loop,off,L)});
+})();
+
+/* ---------- Lección 3 ---------- */
+(function(){const [S,$]=scope('leccion-3');const loop=$('loop'),g=$('dots'),lg=$('leds');
+const LED=[{n:'rojo',vf:2.0,hex:'#E24B4A',x:340},{n:'verde',vf:2.2,hex:'#639922',x:240},{n:'azul',vf:3.2,hex:'#378ADD',x:140}];
+LED.forEach(d=>{const x=d.x,gg=mk('g',{style:'cursor:pointer',tabindex:0,role:'button','aria-label':'Fundir o reparar LED '+d.n});
+gg.appendChild(mk('rect',{x:x-26,y:226,width:52,height:48,class:'cut'}));
+d.glow=mk('circle',{cx:x,cy:250,r:30,fill:d.hex,opacity:0});gg.appendChild(d.glow);
+gg.appendChild(mk('line',{x1:x-26,y1:250,x2:x+26,y2:250,class:'ink','stroke-width':2.5}));
+d.tri=mk('path',{d:`M${x+13} 236 V264 L${x-13} 250 Z`,fill:'var(--surface-2)',class:'ink','stroke-width':2.5,'stroke-linejoin':'round'});gg.appendChild(d.tri);
+gg.appendChild(mk('line',{x1:x-13,y1:236,x2:x-13,y2:264,class:'ink','stroke-width':2.5}));
+gg.appendChild(mk('path',{d:`M${x-4} 230 l-8 -12 M${x-12} 224 v-6 h6 M${x+8} 230 l-8 -12 M${x} 224 v-6 h6`,fill:'none',class:'ink','stroke-width':1.8}));
+d.xm=mk('path',{d:`M${x-16} 238 l32 24 M${x+16} 238 l-32 24`,stroke:'#E24B4A','stroke-width':3,opacity:0});gg.appendChild(d.xm);
+d.lab=mk('text',{x:x,y:290,'text-anchor':'middle',class:'ts'});gg.appendChild(d.lab);
+d.vlab=mk('text',{x:x,y:305,'text-anchor':'middle',class:'ts'});gg.appendChild(d.vlab);
+d.ok=true;const tg=()=>{d.ok=!d.ok;upd()};gg.addEventListener('click',tg);gg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}});lg.appendChild(gg)});
+const dots=mkDots(g,26);let off=0,spd=0;
+function upd(){const V=+$('v').value,R=+$('r').value,Sm=LED.reduce((a,d)=>a+d.vf,0),allOk=LED.every(d=>d.ok);
+$('vo').textContent=V+' V';$('ro').textContent=R+' Ω';$('vlab').textContent=V+' V';$('rlab').textContent='R = '+R+' Ω';
+let I=0,msg,mc,k='serie';
+$('sf').textContent=`ΣVf = 2.0 + 2.2 + 3.2 = ${Sm.toFixed(1)} V`;
+if(!allOk){msg='Un LED abierto: se corta el único camino';mc='var(--text-danger)';k='falla'}
+else if(V<=Sm){msg=`V < ΣVf (${Sm.toFixed(1)} V): ningún LED enciende`;mc='var(--text-secondary)';k='lkv'}
+else{I=(V-Sm)/R;if(I>0.03){msg='Exceso de corriente: LEDs en riesgo';mc='var(--text-danger)'}else if(I>0.02){msg='Sobre 20 mA: reduce la corriente';mc='var(--text-warning)'}else{msg='Los tres encienden con la misma I';mc='var(--text-success)'}}
+const VR=I*R;
+$('ic').textContent=I>0?`I = (${V} − ${Sm.toFixed(1)}) / ${R} = ${(I*1000).toFixed(1)} mA`:'I = 0 mA';
+$('kv').textContent=I>0?`${V} = ${VR.toFixed(2)} + 2.0 + 2.2 + 3.2 ✓`:'Sin corriente, sin caídas';
+$('vrlab').textContent='V_R = '+VR.toFixed(2)+' V';$('ilab').textContent='I = '+(I*1000).toFixed(1)+' mA (igual en todo el lazo)';
+$('rec').textContent=V>Sm?`R sugerida (20 mA) = ${Math.round((V-Sm)/0.02)} Ω`:'R sugerida: V debe superar ΣVf';
+$('st').textContent=msg;$('st').style.color=mc;
+LED.forEach(d=>{const on=I>0;d.glow.setAttribute('opacity',on?Math.min(I/0.02,1)*0.7:0);d.tri.setAttribute('fill',on?d.hex:(d.ok?'var(--surface-2)':'var(--text-muted)'));d.xm.setAttribute('opacity',d.ok?0:1);
+d.lab.textContent=d.n+(d.ok?'':' (abierto)');d.vlab.textContent=on?d.vf.toFixed(1)+' V':(!allOk&&!d.ok&&V>0?V+' V':'0 V')});
+spd=Math.min(I*300,10);g.style.opacity=I>0?1:0.25;setCap(S,'k',k)}
+$('rst').onclick=()=>{LED.forEach(d=>d.ok=true);upd()};$('v').oninput=upd;$('r').oninput=upd;upd();
+reg(S,()=>{const L=loop.getTotalLength();if(!L)return;off=(off+spd)%L;place(dots,loop,off,L)});
+})();
+
+/* ---------- Lección 4 ---------- */
+(function(){const [S,$]=scope('leccion-4');const bg=$('br'),dg=$('dots');
+const B=[{n:'rojo',vf:2.0,hex:'#E24B4A',x:190},{n:'verde',vf:2.2,hex:'#639922',x:295},{n:'azul',vf:3.2,hex:'#378ADD',x:400}];
+let shared=false;
+B.forEach(b=>{const x=b.x,gg=mk('g',{});
+gg.appendChild(mk('line',{x1:x,y1:60,x2:x,y2:270,class:'wire'}));
+b.rg=mk('g',{});b.rg.appendChild(mk('rect',{x:x-14,y:85,width:28,height:70,class:'cut'}));
+b.rg.appendChild(mk('path',{d:`M${x} 85 V95 L${x-12} 101 L${x+12} 109 L${x-12} 117 L${x+12} 125 L${x-12} 133 L${x+12} 141 L${x} 147 V155`,fill:'none',class:'ink','stroke-width':2.5,'stroke-linejoin':'round'}));gg.appendChild(b.rg);
+b.rl=mk('text',{x:x-18,y:124,'text-anchor':'end',class:'ts'});gg.appendChild(b.rl);
+const lg=mk('g',{style:'cursor:pointer',tabindex:0,role:'button','aria-label':'Fundir o reparar LED '+b.n});
+lg.appendChild(mk('rect',{x:x-24,y:180,width:48,height:52,class:'cut'}));
+b.glow=mk('circle',{cx:x,cy:206,r:28,fill:b.hex,opacity:0});lg.appendChild(b.glow);
+lg.appendChild(mk('line',{x1:x,y1:180,x2:x,y2:232,class:'ink','stroke-width':2.5}));
+b.tri=mk('path',{d:`M${x-13} 193 H${x+13} L${x} 218 Z`,fill:'var(--surface-2)',class:'ink','stroke-width':2.5,'stroke-linejoin':'round'});lg.appendChild(b.tri);
+lg.appendChild(mk('line',{x1:x-13,y1:218,x2:x+13,y2:218,class:'ink','stroke-width':2.5}));
+lg.appendChild(mk('path',{d:`M${x+16} 198 l10 -8 M${x+20} 190 h6 v6 M${x+16} 210 l10 -8 M${x+20} 202 h6 v6`,fill:'none',class:'ink','stroke-width':1.8}));
+b.xm=mk('path',{d:`M${x-16} 192 l32 28 M${x+16} 192 l-32 28`,stroke:'#E24B4A','stroke-width':3,opacity:0});lg.appendChild(b.xm);
+b.ok=true;const tg=()=>{b.ok=!b.ok;upd()};lg.addEventListener('click',tg);lg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}});gg.appendChild(lg);
+b.lab=mk('text',{x:x,y:290,'text-anchor':'middle',class:'ts'});gg.appendChild(b.lab);
+bg.appendChild(gg);
+b.path=mk('path',{d:`M60 270 V60 H${x} V270 H60`,fill:'none',stroke:'none'});dg.appendChild(b.path);
+b.dots=mkDots(dg,16,3.5);b.off=0;b.spd=0;b.I=0});
+function upd(){const V=+$('v').value,R=+$('r').value;$('vo').textContent=V+' V';$('ro').textContent=R+' Ω';$('vlab').textContent=V+' V';
+$('rshared').setAttribute('opacity',shared?1:0);$('rslab').textContent='R común = '+R+' Ω';
+B.forEach(b=>{b.rg.setAttribute('opacity',shared?0:1);b.rl.textContent=shared?'':R+' Ω';b.I=0});
+let k='par',msg,mc;const ok=B.filter(b=>b.ok);
+if(!shared){ok.forEach(b=>{if(V>b.vf)b.I=(V-b.vf)/R})}
+else if(ok.length){const m=ok.reduce((a,b)=>b.vf<a.vf?b:a);if(V>m.vf)m.I=(V-m.vf)/R;k='comun'}
+const IT=B.reduce((a,b)=>a+b.I,0);
+B.forEach((b,i)=>{const t=b.I>0.03?' (quemado)':'';$('i'+(i+1)).textContent=`I${i+1} ${b.n} = ${(b.I*1000).toFixed(1)} mA${t}`;
+const on=b.I>0&&b.I<=0.03;b.glow.setAttribute('opacity',on?Math.min(b.I/0.02,1)*0.7:0);b.tri.setAttribute('fill',on?b.hex:(b.ok&&b.I<=0.03?'var(--surface-2)':'var(--text-muted)'));
+b.xm.setAttribute('opacity',b.ok?0:1);b.lab.textContent=b.n+(b.ok?' · '+(b.I*1000).toFixed(1)+' mA':' (abierto)');b.spd=on?Math.min(b.I*250,8):0});
+$('it').textContent=`I_T = ${B.map(b=>(b.I*1000).toFixed(1)).join(' + ')} = ${(IT*1000).toFixed(1)} mA`;$('itlab').textContent='I_T = '+(IT*1000).toFixed(1)+' mA';
+if(shared){msg='R común: solo enciende el LED de menor Vf';mc='var(--text-danger)'}
+else if(B.some(b=>b.I>0.03)){msg='Una rama supera 30 mA: sube R';mc='var(--text-danger)'}
+else if(ok.length<3&&IT>0){msg='Una rama abierta: las demás siguen encendidas';mc='var(--text-success)';k='par'}
+else if(IT>0){msg='Misma V en cada rama, corrientes distintas';mc='var(--text-success)';k='lkc'}
+else{msg='V insuficiente: ninguna rama conduce';mc='var(--text-secondary)'}
+$('st').textContent=msg;$('st').style.color=mc;$('mode').textContent=shared?'Una R por rama':'Usar R común';$('mode').classList.toggle('on',shared);setCap(S,'k',k)}
+$('mode').onclick=()=>{shared=!shared;upd()};$('rst').onclick=()=>{B.forEach(b=>b.ok=true);upd()};$('v').oninput=upd;$('r').oninput=upd;upd();
+reg(S,()=>B.forEach(b=>{const L=b.path.getTotalLength();if(!L)return;b.off=(b.off+b.spd)%L;place(b.dots,b.path,b.off,L);b.dots.forEach(d=>d.setAttribute('opacity',b.spd>0?1:0))}));
+})();
+
+/* ---------- Lección 5 ---------- */
+(function(){const [S,$]=scope('leccion-5');const rg=$('rooms'),sg=$('sch'),dg=$('dots');
+const IB=9/470;
+const R=[
+{id:'sala',n:'Sala',r:[10,10,200,140],l:[110,80],sw:[[200,128]],x:190},
+{id:'cocina',n:'Cocina',r:[210,10,180,140],l:[300,80],sw:[[212,128]],x:280},
+{id:'hab',n:'Habitación',r:[10,190,220,80],l:[120,232],sw:[[220,196]],x:370},
+{id:'bano',n:'Baño',r:[230,190,160,80],l:[310,232],sw:[[232,196]],x:460},
+{id:'pas',n:'Pasillo',r:[10,150,380,40],l:[200,170],sw:[[12,163],[378,163]],x:570}];
+let brk=true,last='par';const SW={sala:0,cocina:0,hab:0,bano:0,pas:[0,1]};
+const on=r=>brk&&(r.id==='pas'?SW.pas[0]===SW.pas[1]:SW[r.id]===1);
+R.forEach(r=>{const [x,y,w,h]=r.r;
+r.fill=mk('rect',{x,y,width:w,height:h,fill:'#FAC775',opacity:0});rg.appendChild(r.fill);
+rg.appendChild(mk('rect',{x,y,width:w,height:h,fill:'none',stroke:'var(--text-secondary)','stroke-width':2}));
+const t=mk('text',{x:x+8,y:y+16,class:'ts'});t.textContent=r.n;rg.appendChild(t);
+const [lx,ly]=r.l;r.glow=mk('circle',{cx:lx,cy:ly,r:h<50?16:26,fill:'#EF9F27',opacity:0});rg.appendChild(r.glow);
+rg.appendChild(mk('circle',{cx:lx,cy:ly,r:8,fill:'var(--surface-2)',class:'ink','stroke-width':1.8}));
+rg.appendChild(mk('path',{d:`M${lx-5.6} ${ly-5.6} l11.2 11.2 M${lx+5.6} ${ly-5.6} l-11.2 11.2`,class:'ink','stroke-width':1.6}));
+r.swEl=r.sw.map((p,i)=>{const b=mk('rect',{x:p[0]-6,y:p[1]-9,width:12,height:18,rx:2,class:'ink','stroke-width':1.5,style:'cursor:pointer',tabindex:0,role:'button','aria-label':'Interruptor '+r.n+(r.sw.length>1?' '+(i+1):'')});
+const tg=()=>{if(r.id==='pas')SW.pas[i]^=1;else SW[r.id]^=1;last=r.id==='pas'?'3v':'par';upd()};
+b.addEventListener('click',tg);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}});rg.appendChild(b);return b});
+const X=r.x;
+if(r.id!=='pas'){sg.appendChild(mk('line',{x1:X,y1:40,x2:X,y2:55,class:'wire'}));
+sg.appendChild(mk('circle',{cx:X,cy:55,r:3.5,fill:'var(--text-primary)'}));sg.appendChild(mk('circle',{cx:X,cy:80,r:3.5,fill:'var(--text-primary)'}));
+r.lev=[mk('line',{x1:X,y1:55,x2:X,y2:80,class:'ink','stroke-width':3,'stroke-linecap':'round',style:`transform-box:view-box;transform-origin:${X}px 55px;transition:transform .3s`})];sg.appendChild(r.lev[0]);
+sg.appendChild(mk('line',{x1:X,y1:80,x2:X,y2:95,class:'wire'}));r.ry=95}
+else{sg.appendChild(mk('line',{x1:X,y1:40,x2:X,y2:50,class:'wire'}));
+sg.appendChild(mk('path',{d:`M${X-15} 70 V90 M${X+15} 70 V90`,class:'wire','stroke-width':2.5}));
+[[X,50],[X-15,70],[X+15,70],[X-15,90],[X+15,90],[X,110]].forEach(p=>sg.appendChild(mk('circle',{cx:p[0],cy:p[1],r:3,fill:'var(--text-primary)'})));
+r.lev=[mk('line',{x1:X,y1:50,x2:X,y2:70,class:'ink','stroke-width':3,'stroke-linecap':'round'}),mk('line',{x1:X,y1:110,x2:X,y2:90,class:'ink','stroke-width':3,'stroke-linecap':'round'})];
+r.lev.forEach(l=>sg.appendChild(l));const tl=mk('text',{x:X+24,y:84,class:'tm'});tl.textContent='viajeros';sg.appendChild(tl);r.ry=110}
+const ry=r.ry,re=ry+30;
+sg.appendChild(mk('path',{d:`M${X} ${ry} V${ry+4} L${X-8} ${ry+8} L${X+8} ${ry+13} L${X-8} ${ry+18} L${X+8} ${ry+23} L${X} ${ry+26} V${re}`,fill:'none',class:'ink','stroke-width':2.2,'stroke-linejoin':'round'}));
+const ly2=re+8;sg.appendChild(mk('line',{x1:X,y1:re,x2:X,y2:ly2,class:'wire'}));
+r.sglow=mk('circle',{cx:X,cy:ly2+12,r:18,fill:'#EF9F27',opacity:0});sg.appendChild(r.sglow);
+r.tri=mk('path',{d:`M${X-10} ${ly2+2} H${X+10} L${X} ${ly2+20} Z`,fill:'var(--surface-2)',class:'ink','stroke-width':2.2,'stroke-linejoin':'round'});sg.appendChild(r.tri);
+sg.appendChild(mk('line',{x1:X-10,y1:ly2+20,x2:X+10,y2:ly2+20,class:'ink','stroke-width':2.2}));
+sg.appendChild(mk('line',{x1:X,y1:ly2+20,x2:X,y2:205,class:'wire'}));
+const lb=mk('text',{x:X+14,y:ly2+16,class:'ts',style:'font-size:11px'});lb.textContent=r.n;sg.appendChild(lb);
+r.path=mk('path',{d:`M60 205 V40 H${X} V205 H60`,fill:'none',stroke:'none'});dg.appendChild(r.path);
+r.dots=mkDots(dg,14,3);r.off=0});
+function upd(){let n=0;R.forEach(r=>{const o=on(r);if(o)n++;
+r.fill.setAttribute('opacity',o?0.28:0);r.glow.setAttribute('opacity',o?0.7:0);r.sglow.setAttribute('opacity',o?0.6:0);r.tri.setAttribute('fill',o?'#FAC775':'var(--surface-2)');
+r.swEl.forEach((b,i)=>{const st=r.id==='pas'?SW.pas[i]:SW[r.id];b.setAttribute('fill',st?'var(--accent)':'var(--surface-2)')});
+if(r.id==='pas'){const X=r.x;r.lev[0].setAttribute('x2',SW.pas[0]?X+15:X-15);r.lev[1].setAttribute('x2',SW.pas[1]?X+15:X-15)}
+else r.lev[0].style.transform=SW[r.id]?'rotate(0deg)':'rotate(-35deg)'});
+const I=n*IB;$('nOn').textContent=`Luminarias encendidas: ${n} de 5`;
+$('iT').textContent=`I_T = ${n} × 19.1 = ${(I*1000).toFixed(1)} mA`;$('pT').textContent=`P_T = 12 × ${I.toFixed(4)} = ${(12*I).toFixed(2)} W`;
+$('brkL').style.transform=brk?'rotate(0deg)':'rotate(-35deg)';$('brk').textContent=brk?'Bajar breaker':'Subir breaker';$('brk').classList.toggle('on',!brk);
+$('st').textContent=!brk?'Breaker abierto: casa sin energía':n?'Cada rama funciona de forma independiente':'Todas las luminarias apagadas';
+$('st').style.color=!brk?'var(--text-danger)':n?'var(--text-success)':'var(--text-secondary)';
+setCap(S,'k',!brk?'brk':last)}
+$('brk').onclick=()=>{brk=!brk;upd()};
+$('all').onclick=()=>{SW.sala=SW.cocina=SW.hab=SW.bano=0;SW.pas=[0,1];upd()};
+SW.sala=1;SW.cocina=1;upd();
+reg(S,()=>R.forEach(r=>{const o=on(r),L=r.path.getTotalLength();if(!L)return;r.off=(r.off+(o?3:0))%L;place(r.dots,r.path,r.off,L);r.dots.forEach(d=>d.setAttribute('opacity',o?1:0))}));
+})();
+
+/* ---------- Lección 6 ---------- */
+(function(){const [S,$]=scope('leccion-6');
+const COL={rojo:2.0,verde:2.2,azul:3.2,blanco:3.0},ROOMS=['Sala','Cocina','Habitación','Baño','Estudio','Pasillo'];
+const pick=a=>a[Math.floor(Math.random()*a.length)];let P;
+function gen(){const V=pick([5,9,12,15]),I=pick([10,15,20]);const rs=[...ROOMS].sort(()=>Math.random()-.5).slice(0,3);
+const br=rs.map(n=>{const c=pick(Object.keys(COL));return{n,c,vf:COL[c],R:(V-COL[c])/(I/1000)}});
+const IT=3*I,PT=V*IT/1000;P={V,I,br,IT,PT};
+$('enun').innerHTML=`Una casa se alimenta con una fuente de <b>${V} V DC</b>. Tiene tres luminarias LED en paralelo, cada una con su resistencia limitadora, y todas deben trabajar a <b>${I} mA</b>:<br>`+br.map((b,i)=>`· Rama ${i+1}: ${b.n}, LED ${b.c}`).join('<br>')+`<br>Calcula R de cada rama, la corriente total con todas encendidas y la potencia total.`;
+P.defs=[...br.map((b,i)=>({id:'r'+i,lab:`R${i+1} ${b.n} (Ω)`,val:b.R})),{id:'it',lab:'I_T (mA)',val:IT},{id:'pt',lab:'P_T (W)',val:PT}];
+$('fields').innerHTML=P.defs.map(d=>`<div><label for="l6-${d.id}">${d.lab}</label><input id="l6-${d.id}" type="number" step="any" inputmode="decimal"><div class="msg" id="l6-${d.id}m"></div></div>`).join('');
+P.defs.forEach(d=>document.getElementById('l6-'+d.id).oninput=()=>{document.getElementById('l6-'+d.id+'m').textContent=''});
+$('score').textContent='';$('solbox').hidden=true}
+$('chk').onclick=()=>{let ok=0,empty=false;P.defs.forEach(d=>{const inp=document.getElementById('l6-'+d.id),m=document.getElementById('l6-'+d.id+'m');
+if(inp.value.trim()===''){m.textContent='Ingresa un valor primero';m.style.color='var(--text-danger)';empty=true;return}
+const x=parseFloat(inp.value);if(isNaN(x)){m.textContent='Valor no válido';m.style.color='var(--text-danger)';empty=true;return}
+if(Math.abs(x-d.val)/d.val<=0.03){ok++;m.textContent='Correcto';m.style.color='var(--text-success)'}else{m.textContent='Revisa el cálculo';m.style.color='var(--text-danger)'}});
+if(empty){$('score').textContent='Completa todos los campos para calificar';$('score').style.color='var(--text-danger)';return}
+$('score').textContent=`Resultado: ${ok} de ${P.defs.length} correctos`;$('score').style.color=ok===P.defs.length?'var(--text-success)':'var(--text-warning)';if(ok===P.defs.length&&window.onL6Pass)window.onL6Pass()};
+$('sol').onclick=()=>{const I=P.I/1000;$('solbox').hidden=false;
+$('solbox').innerHTML=P.br.map((b,i)=>`R${i+1} = (${P.V} − ${b.vf.toFixed(1)}) / ${I} = ${b.R.toFixed(0)} Ω`).join('<br>')+`<br>I_T = 3 × ${P.I} = ${P.IT} mA<br>P_T = ${P.V} × ${(P.IT/1000).toFixed(3)} = ${P.PT.toFixed(3)} W`};
+$('nw').onclick=gen;gen();
+})();
+
+/* ---------- Navegación y progreso ---------- */
+(function(){
+const LESSONS=[
+ {t:'Ley de Ohm',d:'Fuente, interruptor y lámpara. Circuito cerrado, abierto y cortocircuito.',tags:['V = I·R','P = V·I']},
+ {t:'Resistencia y LED',d:'Por qué un LED necesita resistencia, tensión directa por color y polarización.',tags:['Vf','R limitadora']},
+ {t:'LEDs en serie',d:'Un solo camino: misma corriente, tensiones que se suman y la falla en serie.',tags:['LKV','ΣVf']},
+ {t:'LEDs en paralelo',d:'Ramas independientes, corrientes que se suman y el error de la R común.',tags:['LKC','I_T']},
+ {t:'Iluminación residencial',d:'Plano de una casa con interruptores, conmutador de 3 vías y breaker general.',tags:['3 vías','Breaker']},
+ {t:'Ejercicio',d:'Diseña tres ramas de iluminación con datos aleatorios y verifica tus cálculos.',tags:['Autoevaluable']}];
+const STEPS=['home'];LESSONS.forEach((_,i)=>STEPS.push(`l${i+1}-teo`,`l${i+1}-lab`));
+const VIEWS={};document.querySelectorAll('.view').forEach(v=>VIEWS[v.dataset.step]=v);
+const KEY='lvc-m1-progreso';let st={v:[],pass:false};
+try{const raw=localStorage.getItem(KEY);if(raw)st=Object.assign(st,JSON.parse(raw))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const visited=s=>st.v.includes(s);
+let cur='home';
+function lessonState(i){const a=visited(`l${i}-teo`),b=visited(`l${i}-lab`);const done=i===6?st.pass:(a&&b);return done?'done':(a||b)?'prog':'todo'}
+function pct(){let n=0;for(let i=1;i<=6;i++){const a=visited(`l${i}-teo`),b=visited(`l${i}-lab`);n+=(a?1:0)+(i===6?(st.pass?1:0):(b?1:0))}return Math.round(n/12*100)}
+function renderCards(){const c=document.getElementById('cards');c.innerHTML='';
+LESSONS.forEach((L,k)=>{const i=k+1,s=lessonState(i);
+const pill=s==='done'?'<span class="pill done">Completada</span>':s==='prog'?'<span class="pill prog-on">En curso</span>':'<span class="pill">Pendiente</span>';
+const btn=s==='done'?'Repasar':s==='prog'?'Continuar':'Empezar';
+const a=visited(`l${i}-teo`),b=i===6?st.pass:visited(`l${i}-lab`);
+const el=document.createElement('article');el.className='lcard';
+el.innerHTML=`<div class="top"><span class="num">${String(i).padStart(2,'0')}</span>${pill}</div><h3>${L.t}</h3><p>${L.d}</p><div class="foot"><div class="tags">${L.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="mini" aria-hidden="true"><i class="${a?'on':''}"></i><i class="${b?'on':''}"></i></div></div><button class="${s==='todo'&&i===firstTodo()?'primary':''}" data-go="${i}">${btn}</button>`;
+c.appendChild(el)});
+c.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const i=+b.dataset.go;go(visited(`l${i}-teo`)&&lessonState(i)!=='done'?`l${i}-lab`:`l${i}-teo`)})}
+function firstTodo(){for(let i=1;i<=6;i++)if(lessonState(i)!=='done')return i;return 0}
+function renderProg(){const p=pct();document.getElementById('progBar').style.width=p+'%';document.getElementById('progTxt').textContent=p+' %';
+const f=firstTodo(),cb=document.getElementById('continueBtn');
+cb.textContent=p===0?'Empezar el módulo':f?`Continuar con la lección ${f}`:'Módulo completado · repasar';}
+function go(step,push){if(!VIEWS[step])step='home';cur=step;
+Object.entries(VIEWS).forEach(([k,v])=>v.hidden=k!==step);
+if(step!=='home'&&!visited(step)&&!(step==='l6-lab')){st.v.push(step);save()}
+if(step==='l6-lab'&&!visited(step)){st.v.push(step);save()}
+const pg=document.getElementById('pager');pg.hidden=step==='home';
+if(step!=='home'){const idx=STEPS.indexOf(step),[l,kind]=step.split('-'),n=+l.slice(1);
+document.getElementById('whereT').textContent=`Lección ${n} · ${kind==='teo'?'Teoría':(n===6?'Ejercicio':'Laboratorio')}`;
+document.getElementById('whereS').textContent=`Paso ${idx} de 12`;
+document.getElementById('prevBtn').querySelector('span').textContent=idx===1?'Inicio':'Anterior';
+document.getElementById('nextBtn').querySelector('span').textContent=idx===12?'Finalizar':'Siguiente'}
+renderProg();renderCards();
+try{if(push!==false)history.replaceState(null,'','#'+step)}catch(e){}
+window.scrollTo({top:0})}
+document.getElementById('prevBtn').onclick=()=>{const i=STEPS.indexOf(cur);go(STEPS[Math.max(0,i-1)])};
+document.getElementById('nextBtn').onclick=()=>{const i=STEPS.indexOf(cur);go(i>=STEPS.length-1?'home':STEPS[i+1])};
+document.getElementById('goHome').onclick=()=>go('home');
+document.getElementById('continueBtn').onclick=()=>{const f=firstTodo();if(!f){go('l1-teo');return}go(visited(`l${f}-teo`)?`l${f}-lab`:`l${f}-teo`)};
+let armed=false;const rb=document.getElementById('resetBtn'),rm=document.getElementById('resetMsg');
+rb.onclick=()=>{if(!armed){armed=true;rb.textContent='Confirmar reinicio';rm.textContent='Se borrará tu avance en este navegador.';setTimeout(()=>{armed=false;rb.textContent='Reiniciar progreso';rm.textContent=''},4000);return}
+armed=false;st={v:[],pass:false};save();rb.textContent='Reiniciar progreso';rm.textContent='Progreso reiniciado';go('home')};
+window.onL6Pass=()=>{if(!st.pass){st.pass=true;save();renderProg()}};
+document.addEventListener('keydown',e=>{if(cur==='home'||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+if(e.key==='ArrowRight')document.getElementById('nextBtn').click();if(e.key==='ArrowLeft')document.getElementById('prevBtn').click()});
+const h=(location.hash||'').slice(1);go(VIEWS[h]?h:'home',false);
+})();
+</script>
+
+</body>
+</html>
