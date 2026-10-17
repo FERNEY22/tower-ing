@@ -133,6 +133,24 @@ const proyectos = [
     link: "batalla-bots/index.html",
     destacado: true,
     variante: "bots"
+  },
+  {
+    id: "invernadero",
+    titulo: "Control de Variables del Invernadero",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026",
+    descripcion:
+      "Caso de estudio de computación cognitiva: un invernadero de rosas de exportación lee temperatura, humedad y pH de la tierra, clasifica cada variable como baja, normal o alta y expresa su estado en lenguaje natural, escrito y hablado, en español o inglés mediante la API Text-to-Speech del navegador. Incluye el informe del proyecto con la corrección de rangos del proyecto base, el paso a paso y las pruebas de valores límite.",
+    tecnologias: ["JavaScript", "Web Speech API", "Text-to-Speech", "Lenguaje natural", "ES / EN"],
+    link: "invernadero/index.html",
+    destacado: true,
+    variante: "invernadero",
+    stats: [
+      { n: "3", l: "Variables controladas" },
+      { n: "2", l: "Idiomas de reporte" },
+      { n: "6/6", l: "Pruebas límite" }
+    ]
   }
 
   // =====================================================

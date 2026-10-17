@@ -279,6 +279,29 @@
         </article>`;
     }
 
+    // INVERNADERO — caso de estudio (papel, filete verde, rangos bajo/normal/alto como firma)
+    function renderInvernadero(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      const stats = (p.stats || [])
+        .map(s => `<div class="fi-stat"><div class="fi-n">${s.n}</div><div class="fi-l">${s.l}</div></div>`)
+        .join('');
+      return `
+        <article class="feat-invernadero">
+          <div class="fi-head">
+            <span class="fi-kicker">
+              <span class="fi-rango" aria-hidden="true"><i></i><i></i><i></i></span>
+              Caso de estudio · API cognitiva
+            </span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          ${stats ? `<div class="fi-stats">${stats}</div>` : ''}
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-invernadero">Ver proyecto <span class="arrow">→</span></a>
+        </article>`;
+    }
+
     function renderCard(p) {
       const linkHtml = p.link !== '#'
         ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
@@ -294,7 +317,7 @@
     }
 
     // Cada destacado elige su plantilla según 'variante'
-    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl, semaforo: renderSemaforo, bots: renderBots };
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl, semaforo: renderSemaforo, bots: renderBots, invernadero: renderInvernadero };
 
     const destacados = proyectos.filter(p => p.destacado);
     const resto      = proyectos.filter(p => !p.destacado);

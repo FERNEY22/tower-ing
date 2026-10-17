@@ -546,6 +546,32 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
 .feat-bots .btn-bots .arrow { transition: transform .25s var(--ease); }
 .feat-bots .btn-bots:hover .arrow { transform: translateX(4px); }
 
+/* INVERNADERO — caso de estudio (papel, filete verde, rangos bajo/normal/alto como firma) */
+.feat-invernadero {
+  border: 1px solid var(--line-2); border-top: 3px solid #1E8449;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+}
+.feat-invernadero .fi-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-invernadero .fi-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: #1E8449; }
+.feat-invernadero .fi-rango { display: inline-flex; align-items: center; gap: 3px; padding: 3px 5px; border: 1px solid rgba(30, 132, 73, .28); border-radius: var(--r-pill); background: rgba(30, 132, 73, .06); }
+.feat-invernadero .fi-rango i { width: 12px; height: 5px; border-radius: 2px; }
+.feat-invernadero .fi-rango i:nth-child(1) { background: #3498DB; }
+.feat-invernadero .fi-rango i:nth-child(2) { background: #1E8449; }
+.feat-invernadero .fi-rango i:nth-child(3) { background: #E67E22; }
+.feat-invernadero h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-invernadero .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-invernadero .fi-stats { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; margin: 4px 0 20px; }
+.feat-invernadero .fi-stat { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid var(--line); }
+.feat-invernadero .fi-stat:last-child { border-right: none; }
+.feat-invernadero .fi-n { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); line-height: 1; }
+.feat-invernadero .fi-l { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
+.feat-invernadero .btn-invernadero { display: inline-flex; align-items: center; gap: 9px; background: #1E8449; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-invernadero .btn-invernadero:hover { background: #25a05a; }
+.feat-invernadero .btn-invernadero:active { transform: translateY(1px); }
+.feat-invernadero .btn-invernadero .arrow { transition: transform .25s var(--ease); }
+.feat-invernadero .btn-invernadero:hover .arrow { transform: translateX(4px); }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
@@ -553,6 +579,7 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
   .feat-apreciacion .fa-stat { min-width: 100px; }
   .feat-electro .fe-stat { min-width: 100px; }
   .feat-control .fc-stat { min-width: 100px; }
+  .feat-invernadero .fi-stat { min-width: 100px; }
   .feat-semaforo::after { display: none; }
   .feat-bots::after { display: none; }
 }
