@@ -1,59 +1,386 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>INVERNADERO</title>
-	<link rel="stylesheet" type="text/css" href="estilo.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ferney Torres Ome">
+<title>Informe – Control de variables del invernadero</title>
+<!-- Informe elaborado por Ferney Torres Ome (2026-10-17) -->
+<style>
+:root { --oscuro:#2c3e50; --azul:#3498db; --naranja:#e67e22; --fondo:#f4f6f8; --borde:#dde3e8; --suave:#eaf2fa; --texto:#2c3e50; --gris:#5d6d7e; }
+* { box-sizing: border-box; }
+body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--texto); background:var(--fondo); line-height:1.6; }
+a { color:var(--azul); }
+
+/* Encabezado y pestañas */
+.encabezado { background:var(--oscuro); color:#fff; text-align:center; padding:34px 16px 0; }
+.encabezado h1 { margin:0 0 8px; font-size:1.9rem; }
+.encabezado p { margin:0 0 22px; opacity:.9; }
+.pestanas { display:flex; justify-content:center; gap:4px; }
+.pestanas a { padding:12px 26px; color:#fff; text-decoration:none; font-weight:bold; border-radius:8px 8px 0 0; opacity:.75; }
+.pestanas a:hover { opacity:1; }
+.pestanas a.activa { background:var(--fondo); color:var(--oscuro); opacity:1; }
+
+main { max-width:1080px; margin:0 auto; padding:28px 16px 40px; }
+
+/* Indicadores */
+.indicadores { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:34px; }
+.indicador { background:#fff; border-radius:10px; padding:16px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.06); border-bottom:4px solid var(--azul); }
+.indicador:nth-child(2n) { border-bottom-color:var(--naranja); }
+.indicador b { display:block; font-size:1.7rem; color:var(--oscuro); }
+.indicador span { font-size:.88rem; color:var(--gris); }
+
+/* Secciones */
+.seccion { margin-bottom:38px; }
+.titulo { display:flex; align-items:center; gap:12px; margin:0 0 16px; }
+.titulo .num { flex:none; width:38px; height:38px; border-radius:50%; background:var(--oscuro); color:#fff; display:grid; place-items:center; font-weight:bold; }
+.titulo h2 { margin:0; font-size:1.4rem; }
+.tarjeta { min-width:0; background:#fff; border-radius:10px; padding:20px 22px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.tarjeta h3 { margin:0 0 8px; font-size:1.08rem; }
+.tarjeta p { margin:0 0 10px; }
+.tarjeta p:last-child { margin-bottom:0; }
+.rejilla { display:grid; gap:16px; }
+.r2 { grid-template-columns:repeat(2,1fr); }
+.r3 { grid-template-columns:repeat(3,1fr); }
+.r4 { grid-template-columns:repeat(4,1fr); }
+.acento { border-top:4px solid var(--azul); }
+.acento-n { border-top:4px solid var(--naranja); }
+.etiqueta { display:inline-block; font-size:.75rem; font-weight:bold; text-transform:uppercase; letter-spacing:.5px; color:var(--naranja); margin-bottom:6px; }
+code, pre { font-family: Consolas, "Courier New", monospace; }
+code { background:var(--suave); padding:1px 5px; border-radius:4px; font-size:.9em; }
+pre { background:#f2f4f6; padding:12px 14px; border-radius:6px; overflow-x:auto; font-size:.84rem; margin:10px 0 0; }
+
+/* Tabla */
+table { width:100%; border-collapse:collapse; font-size:.92rem; }
+th, td { border:1px solid var(--borde); padding:7px 9px; text-align:center; }
+th { background:var(--suave); }
+.ok { color:#1e8449; font-weight:bold; }
+
+/* Flujo */
+.flujo { display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:stretch; gap:8px; margin-top:16px; }
+.paso-flujo { background:#fff; border-radius:10px; padding:16px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.06); border-top:4px solid var(--azul); }
+.paso-flujo:last-child { border-top-color:var(--naranja); }
+.paso-flujo b { display:block; margin-bottom:4px; }
+.paso-flujo span { font-size:.88rem; color:var(--gris); }
+.flecha { display:grid; place-items:center; color:var(--azul); font-size:1.6rem; font-weight:bold; }
+
+/* Paso a paso */
+.selector { display:inline-flex; background:#fff; border-radius:8px; padding:4px; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:16px; }
+.selector button { border:none; background:none; padding:8px 18px; border-radius:6px; font:inherit; font-weight:bold; color:var(--gris); cursor:pointer; }
+.selector button.activo { background:var(--oscuro); color:#fff; }
+.paso { display:flex; flex-direction:column; }
+.paso .cab { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.paso .cab i { font-style:normal; flex:none; width:30px; height:30px; border-radius:50%; background:var(--naranja); color:#fff; display:grid; place-items:center; font-weight:bold; }
+.paso .cab h3 { margin:0; }
+.paso img { width:100%; border:1px solid var(--borde); border-radius:8px; margin-top:auto; }
+.captura { width:100%; border:1px solid var(--borde); border-radius:8px; display:block; }
+.pie { font-size:.85rem; font-style:italic; color:var(--gris); text-align:center; margin-top:6px; }
+
+/* Botones */
+.botones { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+.boton { display:inline-block; padding:11px 20px; border-radius:6px; text-decoration:none; font-weight:bold; }
+.b1 { background:var(--naranja); color:#fff; }
+.b2 { background:#fff; color:var(--oscuro); border:2px solid var(--azul); }
+
+ul { margin:0; padding-left:20px; }
+li { margin-bottom:6px; }
+.refs p { overflow-wrap:anywhere; padding-left:2em; text-indent:-2em; font-size:.92rem; margin:0 0 6px; }
+footer { text-align:center; font-size:.85rem; color:#7f8c8d; padding:0 16px 30px; }
+
+
+/* Navegación por pantallas */
+.progreso { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:26px; }
+.progreso button { border:none; font:inherit; font-size:.85rem; font-weight:bold; cursor:pointer; padding:8px 14px; border-radius:20px; background:#fff; color:var(--gris); box-shadow:0 2px 6px rgba(0,0,0,.06); }
+.progreso button.hecho { color:var(--oscuro); }
+.progreso button.actual { background:var(--oscuro); color:#fff; }
+.seccion, .indicadores { display:none; }
+.seccion.visible { display:block; animation:entrar .35s ease; }
+.indicadores.visible { display:grid; animation:entrar .35s ease; }
+@keyframes entrar { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+.navegacion { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:8px; }
+.navegacion button { border:none; font:inherit; font-weight:bold; cursor:pointer; padding:12px 24px; border-radius:6px; }
+#anterior { background:#fff; color:var(--oscuro); border:2px solid var(--azul); }
+#siguiente { background:var(--naranja); color:#fff; }
+.navegacion button:disabled { opacity:.35; cursor:default; }
+#contador { color:var(--gris); font-weight:bold; }
+
+@media (max-width: 860px) {
+  .r3, .r4, .indicadores { grid-template-columns:repeat(2,1fr); }
+  .flujo { grid-template-columns:1fr; }
+  .flecha { transform:rotate(90deg); }
+}
+@media (max-width: 560px) {
+  .progreso button { padding:6px 10px; font-size:.78rem; }
+  .navegacion button { padding:10px 16px; }
+  table { display:block; overflow-x:auto; }
+  .titulo h2 { font-size:1.2rem; }
+  .r2, .r3, .r4 { grid-template-columns:1fr; }
+  .encabezado h1 { font-size:1.4rem; }
+  .pestanas a { padding:10px 16px; }
+}
+</style>
 </head>
 <body>
-	<!-- Modificado por Ferney Torres Ome (2026-10-17): textos con id para traducción ES/EN -->
-	<!-- Modificado por Ferney Torres Ome: encabezado con subtítulo -->
-	<header class="encabezado">
-		<h1 id="titulo">CONTROL DE VARIABLES DEL INVERNADERO</h1>
-		<p id="subtitulo">Monitoreo de cultivo de rosas con reporte en lenguaje natural</p>
-	</header>
 
-	<!-- Modificado por Ferney Torres Ome: contenedor de dos columnas (instrucciones a la izquierda, datos a la derecha) -->
-	<main class="contenido">
-	<!-- Modificado por Ferney Torres Ome: cuadro de instrucciones de uso (se traduce con el idioma) -->
-	<section class="instrucciones" id="instrucciones">
-		<p><strong>¿Qué es?</strong> Prototipo que convierte las lecturas de los sensores de un invernadero de rosas en un reporte en lenguaje natural, escrito y hablado, mediante la API Text-to-Speech del navegador.</p>
-		<ol>
-			<li>Pulse <strong>Leer datos</strong>: simula la lectura de la red de sensores y genera valores aleatorios de temperatura, humedad y pH. Cada clic es una nueva lectura.</li>
-			<li>Revise el <strong>reporte escrito</strong> con el estado del invernadero.</li>
-			<li>Pulse <strong>Reporte</strong> para escucharlo en voz.</li>
-			<li>Cambie el idioma a <strong>English</strong> para obtener el reporte en inglés.</li>
-		</ol>
-		<p class="rangos">Rangos normales: temperatura 21–35 °C · humedad 41–80 % · pH 5,5–6,5</p>
-	</section>
+<header class="encabezado">
+  <h1>CONTROL DE VARIABLES DEL INVERNADERO</h1>
+  <p>Informe del proyecto · Uso de API cognitiva – Caso de estudio · Ferney Torres Ome</p>
+  <nav class="pestanas">
+    <a href="app.html">Aplicación</a>
+    <a href="index.html" class="activa">Informe</a>
+  </nav>
+</header>
 
-<div class="panel">
-	<!-- Modificado por Ferney Torres Ome: selector de idioma del reporte (español / inglés) -->
-	<h3 id="lblIdioma">Idioma del reporte:</h3>
-	<select id="idioma">
-		<option value="es">Español</option>
-		<option value="en">English</option>
-	</select>
+<main>
 
-	<h3 id="lblTemp">Temperatura:</h3>
-	<input type="text" id="temp">
-	<h3 id="lblHume">Humedad:</h3>
-	<input type="text" id="hume">
+  <!-- Navegación por pantallas -->
+  <nav class="progreso"><button data-i="0">1 · Caso</button><button data-i="1">2 · Proyecto</button><button data-i="2">3 · Trabajo realizado</button><button data-i="3">4 · Paso a paso</button><button data-i="4">5 · Pruebas</button><button data-i="5">6 · Bondades</button><button data-i="6">7 · Descarga</button><button data-i="7">8 · Conclusiones</button></nav>
 
-	<!-- Modificado por Ferney Torres Ome: nueva variable pH de la tierra -->
-	<h3 id="lblPh">pH de la tierra:</h3>
-	<input type="text" id="ph">
+  <div class="indicadores">
+    <div class="indicador"><b>3</b><span>variables controladas</span></div>
+    <div class="indicador"><b>2</b><span>idiomas de reporte</span></div>
+    <div class="indicador"><b>TTS</b><span>API cognitiva de voz</span></div>
+    <div class="indicador"><b>6 / 6</b><span>pruebas superadas</span></div>
+  </div>
 
-	<h3 id="lblTexto">Reporte escrito:</h3>
-	<!-- Modificado por Ferney Torres Ome: textarea para que el reporte completo sea legible -->
-	<textarea id="texto" rows="4"></textarea>
-	<input type="button" id="datos" value="Leer datos">
-	<input type="button" id="hablar" value="Reporte">
-	<!-- Modificado por Ferney Torres Ome: enlace de descarga del proyecto (Google Drive) -->
-	<a id="descargar" class="descarga" href="https://drive.google.com/drive/folders/1vUhYvg0Kpl6DAFsjeBvx1hMt2JMDtI2f?usp=sharing" target="_blank" rel="noopener">Descargar proyecto</a>
-</div>
-	</main>
-<script src="script.js"></script>
+  <!-- 1. Caso de estudio -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">1</span><h2>Caso de estudio</h2></div>
+    <div class="rejilla r2">
+      <div class="tarjeta acento">
+        <span class="etiqueta">El problema</span>
+        <h3>Un invernadero de rosas de exportación</h3>
+        <p>El invernadero controla la temperatura, la humedad y el pH de la tierra mediante una red de sensores que lee constantemente las tres variables.</p>
+        <p>La empresa no quiere que los ingenieros interpreten los datos a su juicio: busca que <strong>una máquina exprese en lenguaje natural el estado del invernadero</strong>.</p>
+      </div>
+      <div class="tarjeta acento-n">
+        <span class="etiqueta">El requerimiento</span>
+        <h3>Completar el proyecto base</h3>
+        <p>El proyecto entregado reportaba la temperatura y la humedad. La empresa solicitó:</p>
+        <ul>
+          <li>Incorporar la variable <strong>pH</strong> de la tierra.</li>
+          <li>Emitir el reporte en <strong>otro idioma</strong> (inglés).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tarjeta" style="margin-top:16px">
+      <h3>Rangos con los que el sistema interpreta cada variable</h3>
+      <table>
+        <tr><th>Variable</th><th>Bajo</th><th>Normal</th><th>Alto</th></tr>
+        <tr><td>Temperatura (°C)</td><td>≤ 20</td><td>21 – 35</td><td>&gt; 35</td></tr>
+        <tr><td>Humedad (%)</td><td>≤ 40</td><td>41 – 80</td><td>&gt; 80</td></tr>
+        <tr><td>pH de la tierra</td><td>&lt; 5,5 · suelo ácido</td><td>5,5 – 6,5</td><td>&gt; 6,5 · suelo alcalino</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2. El proyecto -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">2</span><h2>Descripción del proyecto</h2></div>
+    <div class="tarjeta" style="margin-bottom:16px">
+      <p>Es una aplicación web que simula la lectura de la red de sensores, interpreta cada valor y genera un reporte en lenguaje natural, escrito y hablado, en español o en inglés. La voz se produce con la <strong>Web Speech API</strong>, un servicio cognitivo de conversión de texto a voz (Text-to-Speech) incorporado en el navegador, que no requiere clave ni servidor.</p>
+    </div>
+    <div class="rejilla r4">
+      <div class="tarjeta acento"><span class="etiqueta">Estructura</span><h3>index.html</h3><p>Interfaz: selector de idioma, campos de las tres variables, reporte escrito, botones e instrucciones de uso.</p></div>
+      <div class="tarjeta acento"><span class="etiqueta">Lógica</span><h3>script.js</h3><p>Simula los sensores, clasifica cada variable, construye la frase en el idioma elegido y la envía a la API de voz.</p></div>
+      <div class="tarjeta acento"><span class="etiqueta">Diseño</span><h3>estilo.css</h3><p>Encabezado, tarjetas, botones diferenciados y distribución adaptable a teléfono.</p></div>
+      <div class="tarjeta acento-n"><span class="etiqueta">API cognitiva</span><h3>speechSynthesis</h3><p>Convierte el reporte escrito en voz con un idioma asignado: <code>es-ES</code> o <code>en-US</code>.</p></div>
+    </div>
+    <div class="flujo">
+      <div class="paso-flujo"><b>Datos</b><span>Lectura de temperatura, humedad y pH</span></div>
+      <div class="flecha">→</div>
+      <div class="paso-flujo"><b>Interpretación</b><span>Cada valor se clasifica como bajo, normal o alto</span></div>
+      <div class="flecha">→</div>
+      <div class="paso-flujo"><b>Lenguaje natural</b><span>Se construye la frase en el idioma elegido</span></div>
+      <div class="flecha">→</div>
+      <div class="paso-flujo"><b>Voz</b><span>La API Text-to-Speech reproduce el reporte</span></div>
+    </div>
+  </section>
+
+  <!-- 3. Trabajo realizado -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">3</span><h2>Trabajo realizado</h2></div>
+    <div class="rejilla r2">
+      <div class="tarjeta acento-n">
+        <span class="etiqueta">Nueva variable</span>
+        <h3>pH de la tierra</h3>
+        <p>Se agregó el campo en la interfaz, la simulación de lecturas entre 4,0 y 8,0 y la función que lo clasifica:</p>
+<pre>function estado_ph(L) {
+    if (ph &lt; 5.5) return L.pAcido;
+    if (ph &lt;= 6.5) return L.pNormal;
+    return L.pAlcalino;
+}</pre>
+      </div>
+      <div class="tarjeta acento-n">
+        <span class="etiqueta">Segundo idioma</span>
+        <h3>Reporte en inglés</h3>
+        <p>Un diccionario reúne todos los textos en español e inglés. Al cambiar el selector se traducen la interfaz, las instrucciones y el reporte, y la voz habla en el idioma elegido:</p>
+<pre>var mensaje = new SpeechSynthesisUtterance(texto);
+mensaje.lang = idioma().voz;  // "es-ES" o "en-US"
+speechSynthesis.speak(mensaje);</pre>
+      </div>
+      <div class="tarjeta acento">
+        <span class="etiqueta">Corrección</span>
+        <h3>Error en los rangos del proyecto base</h3>
+        <p>Las condiciones del tipo <code>14&lt;temperatura&lt;=20</code> no funcionan en JavaScript: <code>14&lt;temperatura</code> da verdadero o falso (1 o 0), que siempre es ≤ 20. El sistema nunca reportaba valores bajos: con 18 °C y 11 % decía «normal».</p>
+        <img class="captura" src="img/antes.jpg" alt="Proyecto base con el error">
+        <p class="pie">Proyecto base: 18 °C y 11 % reportados como normales</p>
+        <p>Se reescribieron las condiciones en orden (≤ 20, ≤ 35, mayor) y las lecturas se generan de nuevo en cada clic.</p>
+      </div>
+      <div class="tarjeta acento">
+        <span class="etiqueta">Interfaz</span>
+        <h3>Diseño e instrucciones de uso</h3>
+        <p>El proyecto base enlazaba una hoja de estilos que no existía y se mostraba sin formato. Se creó <code>estilo.css</code>, se añadió un cuadro de instrucciones (también traducido) y un botón de descarga del proyecto.</p>
+        <img class="captura" src="img/publicado.jpg" alt="Interfaz final publicada">
+        <p class="pie">Interfaz final publicada en tower-ing.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Paso a paso -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">4</span><h2>Funcionamiento paso a paso</h2></div>
+    <div class="selector">
+      <button class="activo" data-l="es">Español</button>
+      <button data-l="en">English</button>
+    </div>
+    <div class="rejilla r3">
+      <div class="tarjeta paso">
+        <div class="cab"><i>1</i><h3>Leer datos</h3></div>
+        <p data-es="Se pulsa «Leer datos»: el sistema simula la lectura de la red de sensores y muestra temperatura, humedad y pH." data-en="Press «Read data»: the system simulates the sensor network and shows temperature, humidity and pH."></p>
+        <img data-src="paso1" alt="Paso 1">
+      </div>
+      <div class="tarjeta paso">
+        <div class="cab"><i>2</i><h3>Reporte escrito</h3></div>
+        <p data-es="El sistema interpreta las tres variables y escribe el estado en lenguaje natural: «temperatura alta, humedad alta y suelo ácido»." data-en="The system interprets the three variables and writes the status in natural language: «normal temperature, normal humidity and normal pH»."></p>
+        <img data-src="paso2" alt="Paso 2">
+      </div>
+      <div class="tarjeta paso">
+        <div class="cab"><i>3</i><h3>Reporte hablado</h3></div>
+        <p data-es="Al pulsar «Reporte», la API Text-to-Speech lee la frase en voz alta con una voz en español." data-en="Pressing «Report», the Text-to-Speech API reads the sentence aloud with an English voice."></p>
+        <img data-src="paso3" alt="Paso 3">
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Pruebas -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">5</span><h2>Pruebas de valores límite</h2></div>
+    <div class="tarjeta">
+      <p>Como las lecturas son aleatorias, se verificó cada frontera de los rangos asignando los valores directamente. Los seis casos dieron el reporte esperado, y sin errores en la consola del navegador.</p>
+      <table>
+        <tr><th>T (°C)</th><th>H (%)</th><th>pH</th><th>Reporte obtenido</th><th>Resultado</th></tr>
+        <tr><td>15</td><td>10</td><td>4,0</td><td>temperatura baja, humedad baja y suelo ácido</td><td class="ok">Correcto</td></tr>
+        <tr><td>20</td><td>40</td><td>5,4</td><td>temperatura baja, humedad baja y suelo ácido</td><td class="ok">Correcto</td></tr>
+        <tr><td>21</td><td>41</td><td>5,5</td><td>temperatura normal, humedad normal y pH normal</td><td class="ok">Correcto</td></tr>
+        <tr><td>35</td><td>80</td><td>6,5</td><td>temperatura normal, humedad normal y pH normal</td><td class="ok">Correcto</td></tr>
+        <tr><td>36</td><td>81</td><td>6,6</td><td>temperatura alta, humedad alta y suelo alcalino</td><td class="ok">Correcto</td></tr>
+        <tr><td>40</td><td>100</td><td>8,0</td><td>temperatura alta, humedad alta y suelo alcalino</td><td class="ok">Correcto</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6. Análisis -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">6</span><h2>Bondades de la computación cognitiva en la empresa</h2></div>
+    <div class="rejilla r4">
+      <div class="tarjeta acento"><h3>Objetividad</h3><p>Una sola regla interpreta cada lectura. Desaparece el criterio individual de cada ingeniero, que es lo que pidió la empresa.</p></div>
+      <div class="tarjeta acento"><h3>Accesibilidad</h3><p>El reporte hablado llega a operarios con las manos ocupadas o lejos de una pantalla, sin conocer los rangos técnicos.</p></div>
+      <div class="tarjeta acento-n"><h3>Multilingüe</h3><p>Una empresa exportadora puede comunicar el estado del cultivo a clientes y auditores internacionales.</p></div>
+      <div class="tarjeta acento-n"><h3>Bajo costo</h3><p>La capacidad cognitiva se consume como servicio (API), sin desarrollar modelos de voz propios.</p></div>
+    </div>
+    <div class="rejilla r2" style="margin-top:16px">
+      <div class="tarjeta">
+        <h3>Relación con los recursos de la unidad</h3>
+        <p>La conferencia de CENTRUM PUCP (2017) aborda la transformación de las organizaciones en la era cognitiva, y el documental de DW Español (2021) muestra cómo las redes de sensores generan datos de forma continua que deben convertirse en decisiones. El invernadero reproduce ese esquema a menor escala: sensores que producen datos y un sistema que los traduce en un mensaje útil para quien debe actuar.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Limitaciones y mejoras</h3>
+        <ul>
+          <li>Las lecturas son simuladas: el siguiente paso es conectar sensores reales que publiquen en la nube.</li>
+          <li>La interpretación usa reglas fijas; con un histórico de datos podrían entrenarse modelos que anticipen riesgos.</li>
+          <li>Las voces dependen del navegador; servicios en la nube como Google Cloud Text-to-Speech ampliarían idiomas y calidad.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Descarga -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">7</span><h2>Aplicación y descarga</h2></div>
+    <div class="tarjeta acento-n">
+      <p>El proyecto está publicado en tower-ing.com y puede descargarse completo (<code>index.html</code>, <code>script.js</code> y <code>estilo.css</code>) desde Google Drive.</p>
+      <div class="botones">
+        <a class="boton b1" href="app.html">Abrir la aplicación</a>
+        <a class="boton b2" href="https://drive.google.com/drive/folders/1vUhYvg0Kpl6DAFsjeBvx1hMt2JMDtI2f?usp=sharing" target="_blank" rel="noopener">Descargar proyecto (Drive)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Conclusiones -->
+  <section class="seccion">
+    <div class="titulo"><span class="num">8</span><h2>Conclusiones</h2></div>
+    <div class="tarjeta">
+      <ul>
+        <li>El proyecto cumple lo solicitado por la empresa: incorpora el pH y reporta el estado del invernadero en español y en inglés, por escrito y en voz.</li>
+        <li>Revisar el código base permitió corregir un error que ocultaba las condiciones de temperatura y humedad baja, precisamente las que el sistema debía advertir.</li>
+        <li>La API Text-to-Speech convierte la interpretación de los datos en un mensaje que cualquier persona del equipo puede recibir.</li>
+        <li>Consumir capacidades cognitivas como servicio permite resolver un requerimiento real con poco código; su evolución natural es integrarse con sensores reales y servicios en la nube.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion refs">
+    <div class="titulo"><span class="num">R</span><h2>Referencias</h2></div>
+    <div class="tarjeta">
+      <p>CENTRUM PUCP. (2017). <em>IBM Perú y su transformación digital en la era cognitiva – XII Semana Internacional</em> [Video]. YouTube.</p>
+      <p>DW Español. (2021). <em>La ciudad que lo sabe todo sobre ti | Big Data: ciudades del futuro</em> [Video]. YouTube.</p>
+      <p>MDN Web Docs. (s. f.). <em>Web Speech API</em>. Mozilla. https://developer.mozilla.org/es/docs/Web/API/Web_Speech_API</p>
+    </div>
+  </section>
+
+
+  <div class="navegacion">
+    <button id="anterior">← Anterior</button>
+    <span id="contador">1 / 8</span>
+    <button id="siguiente">Siguiente →</button>
+  </div>
+
+</main>
+<footer>© 2026 Ferney Torres Ome · tower-ing.com</footer>
+
+<script>
+// Selector de idioma de las capturas del paso a paso
+function mostrar(l) {
+  document.querySelectorAll(".selector button").forEach(function (b) { b.classList.toggle("activo", b.dataset.l === l); });
+  document.querySelectorAll(".paso img").forEach(function (i) { i.src = "img/" + i.dataset.src + "_" + l + ".jpg"; });
+  document.querySelectorAll(".paso p").forEach(function (p) { p.textContent = p.dataset[l]; });
+}
+document.querySelectorAll(".selector button").forEach(function (b) { b.addEventListener("click", function () { mostrar(b.dataset.l); }); });
+mostrar("es");
+
+// Navegación por pantallas: una sección a la vez
+var secciones = document.querySelectorAll("main > .seccion");
+var pantallas = [[0],[1],[2],[3],[4],[5],[6],[7,8]]; // la 8 incluye conclusiones y referencias
+var actual = 0;
+function ir(n) {
+  actual = Math.max(0, Math.min(pantallas.length - 1, n));
+  secciones.forEach(function (s, k) { s.classList.toggle("visible", pantallas[actual].indexOf(k) >= 0); });
+  document.querySelector(".indicadores").classList.toggle("visible", actual === 0);
+  document.querySelectorAll(".progreso button").forEach(function (b, k) {
+    b.classList.toggle("actual", k === actual); b.classList.toggle("hecho", k < actual);
+  });
+  document.getElementById("anterior").disabled = actual === 0;
+  document.getElementById("siguiente").disabled = actual === pantallas.length - 1;
+  document.getElementById("contador").textContent = (actual + 1) + " / " + pantallas.length;
+  try { history.replaceState(null, "", "#" + (actual + 1)); } catch (e) {}
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.getElementById("anterior").addEventListener("click", function () { ir(actual - 1); });
+document.getElementById("siguiente").addEventListener("click", function () { ir(actual + 1); });
+document.querySelectorAll(".progreso button").forEach(function (b) { b.addEventListener("click", function () { ir(+b.dataset.i); }); });
+document.addEventListener("keydown", function (e) { if (e.key === "ArrowRight") ir(actual + 1); if (e.key === "ArrowLeft") ir(actual - 1); });
+ir((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
 </body>
 </html>
