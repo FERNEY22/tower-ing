@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>INVERNADERO</title>
+	<link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+<body>
+	<!-- Modificado por Ferney Torres Ome (2026-10-17): textos con id para traducción ES/EN -->
+	<!-- Modificado por Ferney Torres Ome: encabezado con subtítulo -->
+	<header class="encabezado">
+		<h1 id="titulo">CONTROL DE VARIABLES DEL INVERNADERO</h1>
+		<p id="subtitulo">Monitoreo de cultivo de rosas con reporte en lenguaje natural</p>
+	</header>
+
+	<!-- Modificado por Ferney Torres Ome: contenedor de dos columnas (instrucciones a la izquierda, datos a la derecha) -->
+	<main class="contenido">
+	<!-- Modificado por Ferney Torres Ome: cuadro de instrucciones de uso (se traduce con el idioma) -->
+	<section class="instrucciones" id="instrucciones">
+		<p><strong>¿Qué es?</strong> Prototipo que convierte las lecturas de los sensores de un invernadero de rosas en un reporte en lenguaje natural, escrito y hablado, mediante la API Text-to-Speech del navegador.</p>
+		<ol>
+			<li>Pulse <strong>Leer datos</strong>: simula la lectura de la red de sensores y genera valores aleatorios de temperatura, humedad y pH. Cada clic es una nueva lectura.</li>
+			<li>Revise el <strong>reporte escrito</strong> con el estado del invernadero.</li>
+			<li>Pulse <strong>Reporte</strong> para escucharlo en voz.</li>
+			<li>Cambie el idioma a <strong>English</strong> para obtener el reporte en inglés.</li>
+		</ol>
+		<p class="rangos">Rangos normales: temperatura 21–35 °C · humedad 41–80 % · pH 5,5–6,5</p>
+	</section>
+
+<div class="panel">
+	<!-- Modificado por Ferney Torres Ome: selector de idioma del reporte (español / inglés) -->
+	<h3 id="lblIdioma">Idioma del reporte:</h3>
+	<select id="idioma">
+		<option value="es">Español</option>
+		<option value="en">English</option>
+	</select>
+
+	<h3 id="lblTemp">Temperatura:</h3>
+	<input type="text" id="temp">
+	<h3 id="lblHume">Humedad:</h3>
+	<input type="text" id="hume">
+
+	<!-- Modificado por Ferney Torres Ome: nueva variable pH de la tierra -->
+	<h3 id="lblPh">pH de la tierra:</h3>
+	<input type="text" id="ph">
+
+	<h3 id="lblTexto">Reporte escrito:</h3>
+	<!-- Modificado por Ferney Torres Ome: textarea para que el reporte completo sea legible -->
+	<textarea id="texto" rows="4"></textarea>
+	<input type="button" id="datos" value="Leer datos">
+	<input type="button" id="hablar" value="Reporte">
+</div>
+	</main>
+<script src="script.js"></script>
+</body>
+</html>
