@@ -10,6 +10,7 @@ var textos = {
         lblTexto: "Reporte escrito:",
         datos: "Leer datos",
         hablar: "Reporte",
+        descargar: "Descargar proyecto",
         tBaja: "temperatura baja", tNormal: "temperatura normal", tAlta: "temperatura alta",
         hBaja: "humedad baja", hNormal: "humedad normal", hAlta: "humedad alta",
         pAcido: "suelo ácido", pNormal: "pH normal", pAlcalino: "suelo alcalino",
@@ -32,6 +33,7 @@ var textos = {
         lblTexto: "Written report:",
         datos: "Read data",
         hablar: "Report",
+        descargar: "Download project",
         tBaja: "low temperature", tNormal: "normal temperature", tAlta: "high temperature",
         hBaja: "low humidity", hNormal: "normal humidity", hAlta: "high humidity",
         pAcido: "acidic soil", pNormal: "normal pH", pAlcalino: "alkaline soil",
@@ -90,6 +92,7 @@ function traducir_interfaz() {
     // Modificado por Ferney Torres Ome: traducción del cuadro de instrucciones
     document.getElementById("instrucciones").innerHTML = L.instrucciones;
     document.getElementById("hablar").value = L.hablar;
+    document.getElementById("descargar").textContent = L.descargar;
     if (temperatura !== undefined) escribir_reporte(); // rehace el reporte en el nuevo idioma
 }
 
