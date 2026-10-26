@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Connection - Towers Ing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/towers.css">
+  <style>
+    body { background: var(--paper); min-height: 100vh; }
+    main { max-width: 1240px; margin: 0 auto; padding: 24px clamp(20px, 5vw, 56px) 64px; }
+    @media (max-width: 720px) {
+      main { padding-left: 18px; padding-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR (sistema v3) -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Data · tiempo real</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../index.html">Inicio</a>
+        <a href="../proyectos/index.html">Proyectos</a>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../dashboard/index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="section-head">
+        <h2>Data <em>Connection</em></h2>
+        <span class="meta">Tableros en vivo</span>
+      </div>
+      <!-- Tarjetas generadas por render-hub.js desde tableros.js -->
+      <div class="tiles" id="tableros"></div>
+    </section>
+  </main>
+
+  <script src="tableros.js"></script>
+  <script src="render-hub.js"></script>
+</body>
+</html>

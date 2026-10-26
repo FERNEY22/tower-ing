@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Ferney Torres Ome">
+<title>TREND+TECH · Avance de equipos</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/towers.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  .tt { --tt-ink:#1d2433; --tt-mute:#5b6577; --tt-line:#e3e7ee; --tt-bg:#ffffff; --tt-soft:#f5f7fa;
+        --tt-g18:#1f6feb; --tt-g20:#d9480f; --tt-done:#2f9e44; --tt-prog:#f2a900; --tt-pend:#dee2e6; --tt-late:#c92a2a;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--tt-ink);
+        background:var(--tt-bg); max-width:1200px; margin:0 auto; padding:16px; }
+  .tt h1 { font-size:1.4rem; margin:0 0 4px; }
+  .tt h2 { font-size:1.05rem; margin:0 0 12px; }
+  .tt .tt-sub { color:var(--tt-mute); font-size:.85rem; margin:0 0 16px; }
+  .tt .tt-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:16px; }
+  .tt .tt-kpi { background:var(--tt-soft); border:1px solid var(--tt-line); border-radius:10px; padding:12px; }
+  .tt .tt-kpi b { display:block; font-size:1.5rem; }
+  .tt .tt-kpi span { color:var(--tt-mute); font-size:.8rem; }
+  .tt .tt-card { border:1px solid var(--tt-line); border-radius:10px; padding:16px; margin-bottom:16px; }
+  .tt .tt-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:820px){ .tt .tt-grid2 { grid-template-columns:1fr; } }
+  .tt .tt-chart { position:relative; height:340px; }
+  .tt .tt-scroll { overflow-x:auto; }
+  .tt table { border-collapse:collapse; width:100%; font-size:.8rem; }
+  .tt th, .tt td { border-bottom:1px solid var(--tt-line); padding:6px 4px; text-align:center; white-space:nowrap; }
+  .tt th:first-child, .tt td:first-child { text-align:left; position:sticky; left:0; background:var(--tt-bg); }
+  .tt .tt-cell { display:inline-block; width:22px; height:22px; line-height:22px; border-radius:5px; font-weight:600; font-size:.7rem; }
+  .tt .s-H { background:var(--tt-done); color:#fff; }
+  .tt .s-P { background:var(--tt-prog); color:#1d2433; }
+  .tt .s-N { background:var(--tt-pend); color:#868e96; }
+  .tt .s-L { background:#fff; color:var(--tt-late); border:2px solid var(--tt-late); line-height:18px; }
+  .tt .tt-tag { font-size:.7rem; font-weight:700; padding:2px 6px; border-radius:4px; color:#fff; }
+  .tt .tag-G18 { background:var(--tt-g18); } .tt .tag-G20 { background:var(--tt-g20); }
+  .tt .tt-legend { display:flex; flex-wrap:wrap; gap:12px; font-size:.78rem; color:var(--tt-mute); margin-top:10px; }
+  .tt .tt-legend i { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; }
+  .tt .tt-dl { list-style:none; margin:0; padding:0; }
+  .tt .tt-dl li { border-left:4px solid var(--tt-pend); padding:8px 12px; margin-bottom:10px; background:var(--tt-soft); border-radius:0 8px 8px 0; }
+  .tt .tt-dl li.st-late { border-color:var(--tt-late); }
+  .tt .tt-dl li.st-now { border-color:var(--tt-prog); }
+  .tt .tt-dl li.st-next { border-color:var(--tt-g18); }
+  .tt .tt-dl .tt-when { font-weight:700; }
+  .tt .tt-dl .tt-items { font-size:.82rem; margin-top:4px; }
+  .tt .tt-dl .tt-miss { font-size:.75rem; color:var(--tt-mute); margin-top:2px; }
+  .tt a { color:var(--tt-g18); text-decoration:none; }
+  .tt .tt-err { background:#fff5f5; border:1px solid #ffc9c9; color:var(--tt-late); padding:12px; border-radius:8px; }
+</style>
+<style>
+  /* Marco del sitio (header y botón de regreso), igual que roles.html */
+  body { background: var(--paper); min-height: 100vh; }
+  #tt-root { margin-top: 24px; }  /* mismo respiro bajo el header que main en roles.html */
+  .back-wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px 48px; }
+  .back-home {
+    display: inline-block; margin: 24px 0; padding: 10px 18px;
+    background: transparent; color: var(--ink); border: 1px solid var(--line-2); border-radius: var(--r-pill);
+    text-decoration: none; font-weight: 600; font-size: var(--t-sm); transition: .2s;
+  }
+  .back-home:hover { background: var(--paper-2); border-color: var(--line-strong); }
+
+  /* Selector "Ver datos de:", igual que dashboard/index.html */
+  .selector-bar {
+    max-width: 1240px; margin: 18px auto 0; padding: 0 clamp(20px, 5vw, 56px);
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: transparent; border: none;
+  }
+  .selector-bar label { font-family: var(--font-mono); font-weight: 400; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-size: var(--t-xs); }
+  .selector-bar label i { color: var(--electric); }
+  .selector-bar select {
+    padding: 9px 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm);
+    font-size: var(--t-base); font-family: var(--font-body); color: var(--ink); font-weight: 500;
+    background: var(--surface-2); cursor: pointer; outline: none; min-width: 300px; box-shadow: var(--shadow-sm);
+  }
+  .selector-bar select:focus { border-color: var(--electric); box-shadow: 0 0 0 3px var(--electric-soft); }
+  @media (max-width: 860px) {
+    .selector-bar { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR (sistema v3) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+      <span class="live"><span class="live-dot"></span> Data · tiempo real</span>
+    </div>
+    <nav class="top-nav">
+      <a href="../index.html">Inicio</a>
+      <a href="../proyectos/index.html">Proyectos</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../dashboard/index.html">Dashboard</a>
+    </nav>
+  </div>
+</header>
+
+<div class="tt" id="tt-root">
+  <h1>TREND+TECH · Avance de equipos</h1>
+  <p class="tt-sub" id="tt-meta">Cargando datos…</p>
+  <div class="selector-bar">
+    <label><i class="fas fa-filter"></i> Ver datos de:</label>
+    <select id="tt-filter">
+      <option value="ALL">Todos los grupos</option>
+      <option value="G18">G18</option>
+      <option value="G20">G20</option>
+    </select>
+  </div>
+
+  <div class="tt-kpis" id="tt-kpis"></div>
+
+  <div class="tt-grid2">
+    <div class="tt-card">
+      <h2>% de avance por equipo</h2>
+      <div class="tt-chart"><canvas id="tt-chart-teams"></canvas></div>
+    </div>
+    <div class="tt-card">
+      <h2 id="tt-cmp-title">G18 vs G20 · % de equipos con el issue en “Hecho”</h2>
+      <div class="tt-chart"><canvas id="tt-chart-groups"></canvas></div>
+    </div>
+  </div>
+
+  <div class="tt-card">
+    <h2>Estado por issue (01–18)</h2>
+    <div class="tt-scroll"><table id="tt-matrix"></table></div>
+    <div class="tt-legend">
+      <span><i style="background:var(--tt-done)"></i>Hecho</span>
+      <span><i style="background:var(--tt-prog)"></i>En progreso</span>
+      <span><i style="background:var(--tt-pend)"></i>Pendiente</span>
+      <span><i style="border:2px solid var(--tt-late)"></i>Vencido sin cerrar</span>
+    </div>
+  </div>
+
+  <div class="tt-card">
+    <h2>Próximos vencimientos</h2>
+    <ul class="tt-dl" id="tt-deadlines"></ul>
+  </div>
+</div>
+
+<div class="back-wrap">
+  <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Volver a Data</a>
+</div>
+
+<script>
+(function () {
+  // ===== Configuración =====
+  // Pegar aquí la URL de "Publicar en la Web → Repositorios → CSV"
+  var CSV_URL = 'https://docs.google.com/spreadsheets/d/1UPfX9gTCait9w6JO8WzNSa6rLHWoKUVVuKCoPSJTD8M/gviz/tq?tqx=out:csv&sheet=Repositorios&range=A3:Z';
+  var N_ISSUES = 18;
+
+  // Vencimientos (fecha = inicio de la semana o día de entrega). issues: números 1–18; extra: hitos sin issue.
+  var DEADLINES = [
+    { fecha: '2026-10-25', etiqueta: 'Vencido 25-oct',   issues: [5, 6],        extra: [] },
+    { fecha: '2026-10-26', etiqueta: 'Semana 26-oct',    issues: [7, 10],       extra: ['FabLab'] },
+    { fecha: '2026-11-02', etiqueta: 'Semana 2-nov',     issues: [11, 14, 15],  extra: [] },
+    { fecha: '2026-11-10', etiqueta: 'Semana 10-nov',    issues: [16, 18],      extra: ['Pre-sustentación'] },
+    { fecha: '2026-11-18', etiqueta: 'Sustentación 18-nov', issues: [],         extra: ['Sustentación'] }
+  ];
+
+  // ===== Utilidades =====
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+  function safeUrl(u) { return /^https:\/\/github\.com\//.test(u || '') ? u : ''; }
+  function norm(s) { return String(s || '').trim().toLowerCase(); }
+
+  function parseCSV(text) {
+    var rows = [], row = [], cell = '', q = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (q) {
+        if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+        else cell += c;
+      } else if (c === '"') q = true;
+      else if (c === ',') { row.push(cell); cell = ''; }
+      else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+      else if (c !== '\r') cell += c;
+    }
+    if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+    return rows;
+  }
+
+  function statusCode(v) {
+    var s = norm(v);
+    if (s === 'hecho') return 'H';
+    if (s === 'en progreso') return 'P';
+    return 'N';
+  }
+
+  // Ubica columnas por encabezado (no por letra) para tolerar columnas movidas.
+  function buildModel(rows) {
+    var h = rows.findIndex(function (r) { return norm(r[0]).indexOf('equipo') === 0; });
+    if (h < 0) throw new Error('No se encontró la fila de encabezados ("Equipo…").');
+    var head = rows[h];
+    var col = function (pred) { return head.findIndex(function (x) { return pred(norm(x)); }); };
+    var cTeam = 0, cGroup = col(function (x) { return x.indexOf('grupo') === 0; }),
+        cLead = col(function (x) { return x.indexOf('líder') === 0 || x.indexOf('lider') === 0; }),
+        cOrg = col(function (x) { return x.indexOf('organiza') === 0; }),
+        cRepo = col(function (x) { return x.indexOf('repositorio') === 0; }),
+        cBoard = col(function (x) { return x.indexOf('tablero') === 0; }),
+        cPct = col(function (x) { return x.indexOf('% avance') === 0; });
+    var issues = [];
+    for (var n = 1; n <= N_ISSUES; n++) {
+      var pre = (n < 10 ? '0' : '') + n + ' ';
+      var ci = head.findIndex(function (x) { return String(x).trim().indexOf(pre) === 0; });
+      if (ci < 0) throw new Error('Falta la columna del issue ' + pre.trim() + '.');
+      issues.push({ n: n, col: ci, nombre: String(head[ci]).trim() });
+    }
+    var teams = rows.slice(h + 1).filter(function (r) { return r[cTeam] && r[cTeam].trim(); }).map(function (r) {
+      var st = issues.map(function (it) { return statusCode(r[it.col]); });
+      var done = st.filter(function (s) { return s === 'H'; }).length;
+      var pctSheet = cPct >= 0 ? parseFloat(String(r[cPct]).replace('%', '').replace(',', '.')) : NaN;
+      return {
+        equipo: r[cTeam].trim(), grupo: (r[cGroup] || '').trim().toUpperCase(),
+        lider: (r[cLead] || '').replace(/\s*\(due[ñn]a? repo\)/i, '').trim(),
+        org: (r[cOrg] || '').trim(), repo: safeUrl(r[cRepo]), tablero: safeUrl(r[cBoard]),
+        st: st, pct: isNaN(pctSheet) ? Math.round(done / N_ISSUES * 100) : pctSheet
+      };
+    });
+    return { issues: issues, teams: teams };
+  }
+
+  function today() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function toDate(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+
+  // Issue vencido = su fecha límite ya pasó (fecha + 6 días para las semanas; mismo día para fechas puntuales).
+  function overdueIssues() {
+    var t = today(), set = {};
+    DEADLINES.forEach(function (d) {
+      var end = toDate(d.fecha);
+      if (/^Semana/.test(d.etiqueta)) end.setDate(end.getDate() + 6);
+      if (end < t || /^Vencido/.test(d.etiqueta)) d.issues.forEach(function (n) { set[n] = true; });
+    });
+    return set;
+  }
+
+  // ===== Render =====
+  function avg(a) { return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : 0; }
+
+  function renderKPIs(m, late, full) {
+    var g18 = full.teams.filter(function (t) { return t.grupo === 'G18'; }),
+        g20 = full.teams.filter(function (t) { return t.grupo === 'G20'; });
+    var lateOpen = 0;
+    m.teams.forEach(function (t) { t.st.forEach(function (s, i) { if (late[i + 1] && s !== 'H') lateOpen++; }); });
+    var k = [
+      [m.teams.length, 'Equipos en vista (' + g18.length + ' G18 · ' + g20.length + ' G20 en total)'],
+      [Math.round(avg(m.teams.map(function (t) { return t.pct; }))) + '%', 'Avance promedio'],
+      [Math.round(avg(g18.map(function (t) { return t.pct; }))) + '%', 'Promedio G18'],
+      [Math.round(avg(g20.map(function (t) { return t.pct; }))) + '%', 'Promedio G20'],
+      [lateOpen, 'Entregas vencidas sin cerrar']
+    ];
+    document.getElementById('tt-kpis').innerHTML = k.map(function (x) {
+      return '<div class="tt-kpi"><b>' + esc(x[0]) + '</b><span>' + esc(x[1]) + '</span></div>'; }).join('');
+  }
+
+  function renderTeamsChart(m) {
+    var css = getComputedStyle(document.getElementById('tt-root'));
+    var c18 = css.getPropertyValue('--tt-g18').trim(), c20 = css.getPropertyValue('--tt-g20').trim();
+    var t = m.teams.slice().sort(function (a, b) { return b.pct - a.pct; });
+    return new Chart(document.getElementById('tt-chart-teams'), {
+      type: 'bar',
+      data: { labels: t.map(function (x) { return x.equipo; }),
+              datasets: [{ data: t.map(function (x) { return x.pct; }),
+                           backgroundColor: t.map(function (x) { return x.grupo === 'G20' ? c20 : c18; }) }] },
+      options: { indexAxis: 'y', maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+                   tooltip: { callbacks: { label: function (c) { return c.raw + '% · ' + t[c.dataIndex].grupo; } } } },
+        scales: { x: { min: 0, max: 100, ticks: { callback: function (v) { return v + '%'; } } } } }
+    });
+  }
+
+  function renderGroupsChart(m) {
+    var css = getComputedStyle(document.getElementById('tt-root'));
+    function share(g) {
+      var tg = m.teams.filter(function (t) { return t.grupo === g; });
+      return m.issues.map(function (it, i) {
+        if (!tg.length) return 0;
+        return Math.round(tg.filter(function (t) { return t.st[i] === 'H'; }).length / tg.length * 100);
+      });
+    }
+    return new Chart(document.getElementById('tt-chart-groups'), {
+      type: 'bar',
+      data: { labels: m.issues.map(function (it) { return (it.n < 10 ? '0' : '') + it.n; }),
+              datasets: [
+                { label: 'G18', data: share('G18'), backgroundColor: css.getPropertyValue('--tt-g18').trim() },
+                { label: 'G20', data: share('G20'), backgroundColor: css.getPropertyValue('--tt-g20').trim() } ] },
+      options: { maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { title: function (c) { return m.issues[c[0].dataIndex].nombre; },
+                                           label: function (c) { return c.dataset.label + ': ' + c.raw + '%'; } } } },
+        scales: { y: { min: 0, max: 100, ticks: { callback: function (v) { return v + '%'; } } } } }
+    });
+  }
+
+  function renderIssueStatusChart(m) {
+    var css = getComputedStyle(document.getElementById('tt-root'));
+    function count(code) { return m.issues.map(function (it, i) {
+      return m.teams.filter(function (t) { return t.st[i] === code; }).length; }); }
+    return new Chart(document.getElementById('tt-chart-groups'), {
+      type: 'bar',
+      data: { labels: m.issues.map(function (it) { return (it.n < 10 ? '0' : '') + it.n; }),
+              datasets: [
+                { label: 'Hecho', data: count('H'), backgroundColor: css.getPropertyValue('--tt-done').trim() },
+                { label: 'En progreso', data: count('P'), backgroundColor: css.getPropertyValue('--tt-prog').trim() },
+                { label: 'Pendiente', data: count('N'), backgroundColor: css.getPropertyValue('--tt-pend').trim() } ] },
+      options: { maintainAspectRatio: false,
+        plugins: { tooltip: { callbacks: { title: function (c) { return m.issues[c[0].dataIndex].nombre; } } } },
+        scales: { x: { stacked: true },
+                  y: { stacked: true, min: 0, max: m.teams.length, ticks: { stepSize: 1 },
+                       title: { display: true, text: 'Equipos' } } } }
+    });
+  }
+  function renderMatrix(m, late) {
+    var head = '<tr><th>Equipo</th><th>Grupo</th>' + m.issues.map(function (it) {
+      return '<th title="' + esc(it.nombre) + '">' + (it.n < 10 ? '0' : '') + it.n + '</th>'; }).join('') +
+      '<th>%</th><th>Enlaces</th></tr>';
+    var lab = { H: '✓', P: '…', N: '' };
+    var body = m.teams.map(function (t) {
+      var cells = t.st.map(function (s, i) {
+        var cls = (late[i + 1] && s !== 'H') ? 's-L' : 's-' + s;
+        return '<td><span class="tt-cell ' + cls + '" title="' + esc(m.issues[i].nombre) + '">' +
+               (cls === 's-L' ? '!' : lab[s]) + '</span></td>'; }).join('');
+      var links = [t.repo ? '<a href="' + esc(t.repo) + '" target="_blank" rel="noopener">Repo</a>' : '',
+                   t.tablero ? '<a href="' + esc(t.tablero) + '" target="_blank" rel="noopener">Tablero</a>' : '']
+                  .filter(Boolean).join(' · ');
+      return '<tr><td title="' + esc(t.lider + ' · ' + t.org) + '">' + esc(t.equipo) + '</td>' +
+             '<td><span class="tt-tag tag-' + esc(t.grupo) + '">' + esc(t.grupo) + '</span></td>' +
+             cells + '<td><b>' + esc(t.pct) + '%</b></td><td>' + links + '</td></tr>';
+    }).join('');
+    document.getElementById('tt-matrix').innerHTML = '<thead>' + head + '</thead><tbody>' + body + '</tbody>';
+  }
+
+  function renderDeadlines(m) {
+    var t = today();
+    var html = DEADLINES.map(function (d) {
+      var start = toDate(d.fecha), end = new Date(start);
+      if (/^Semana/.test(d.etiqueta)) end.setDate(end.getDate() + 6);
+      var st = (end < t || /^Vencido/.test(d.etiqueta)) ? 'late' : (start <= t ? 'now' : 'next');
+      var stTxt = { late: 'Vencido', now: 'Esta semana', next: 'Próximo' }[st];
+      var items = d.issues.map(function (n) {
+        var it = m.issues[n - 1], i = n - 1;
+        var done = m.teams.filter(function (x) { return x.st[i] === 'H'; }).length;
+        var miss = m.teams.filter(function (x) { return x.st[i] !== 'H'; }).map(function (x) { return x.equipo; });
+        return '<div class="tt-items"><b>' + esc(it.nombre) + '</b> — ' + done + '/' + m.teams.length + ' equipos en Hecho</div>' +
+               (st === 'late' && miss.length ? '<div class="tt-miss">Sin cerrar: ' + esc(miss.join(', ')) + '</div>' : '');
+      }).join('') + d.extra.map(function (e) { return '<div class="tt-items"><b>' + esc(e) + '</b></div>'; }).join('');
+      return '<li class="st-' + st + '"><span class="tt-when">' + esc(d.etiqueta) + '</span> · ' + stTxt + items + '</li>';
+    }).join('');
+    document.getElementById('tt-deadlines').innerHTML = html;
+  }
+
+  function fail(msg) {
+    document.getElementById('tt-meta').innerHTML = '<div class="tt-err">No se pudieron cargar los datos: ' + esc(msg) + '</div>';
+  }
+
+  if (CSV_URL.indexOf('http') !== 0) { fail('falta configurar CSV_URL.'); return; }
+  fetch(CSV_URL + (CSV_URL.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now())
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function (txt) {
+      var full = buildModel(parseCSV(txt)), late = overdueIssues(), teamsChart = null;
+      document.getElementById('tt-meta').textContent =
+        'Fuente: hoja “Repositorios” · Datos consultados el ' +
+        new Date().toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }) +
+        ' · La hoja se actualiza a diario a las 5:00 a. m.';
+      var cmpChart = null;
+      function draw(g) {
+        var m = { issues: full.issues,
+                  teams: g === 'ALL' ? full.teams : full.teams.filter(function (t) { return t.grupo === g; }) };
+        if (teamsChart) teamsChart.destroy();
+        if (cmpChart) cmpChart.destroy();
+        cmpChart = g === 'ALL' ? renderGroupsChart(full) : renderIssueStatusChart(m);
+        document.getElementById('tt-cmp-title').textContent = g === 'ALL'
+          ? 'G18 vs G20 · % de equipos con el issue en “Hecho”'
+          : g + ' · estado de cada issue (número de equipos)';
+        renderKPIs(m, late, full); teamsChart = renderTeamsChart(m); renderMatrix(m, late); renderDeadlines(m);
+      }
+      var sel = document.getElementById('tt-filter');
+      sel.addEventListener('change', function () { draw(sel.value); });
+      draw('ALL');
+    })
+    .catch(function (e) { fail(e.message); });
+})();
+</script>
+</body>
+</html>
