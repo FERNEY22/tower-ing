@@ -302,6 +302,29 @@
         </article>`;
     }
 
+    // GEMELOS DIGITALES — laboratorio PLC (escalón Ladder como firma)
+    function renderGemelos(p) {
+      const ext = p.externo ? ' target="_blank" rel="noopener"' : '';
+      const stats = (p.stats || [])
+        .map(s => `<div class="fgm-stat"><div class="fgm-n">${s.n}</div><div class="fgm-l">${s.l}</div></div>`)
+        .join('');
+      return `
+        <article class="feat-gemelos">
+          <div class="fgm-head">
+            <span class="fgm-kicker">
+              <span class="fgm-rung" aria-hidden="true"><i></i><b>┤ ├</b><i></i><b>( )</b><i></i></span>
+              Laboratorio virtual · PLC
+            </span>
+            <span class="estado ${getEstadoClass(p.estado)}">${p.estado}</span>${periodoDe(p)}
+          </div>
+          <h2>${p.titulo}</h2>
+          <p class="desc">${p.descripcion}</p>
+          ${stats ? `<div class="fgm-stats">${stats}</div>` : ''}
+          <div class="tags">${tagsDe(p)}</div>
+          <a href="${p.link}"${ext} class="btn-gemelos">Entrar al laboratorio <span class="arrow">→</span></a>
+        </article>`;
+    }
+
     function renderCard(p) {
       const linkHtml = p.link !== '#'
         ? `<a href="${p.link}" class="card-link">Ver detalles <span class="arrow">→</span></a>`
@@ -317,7 +340,7 @@
     }
 
     // Cada destacado elige su plantilla según 'variante'
-    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl, semaforo: renderSemaforo, bots: renderBots, invernadero: renderInvernadero };
+    const PLANTILLAS = { ferim: renderFerim, biomo: renderBiomo, geo: renderGeo, obs: renderObs, yuncar: renderYuncar, apreciacion: renderApreciacion, electro: renderElectro, control: renderControl, semaforo: renderSemaforo, bots: renderBots, invernadero: renderInvernadero, gemelos: renderGemelos };
 
     const destacados = proyectos.filter(p => p.destacado);
     const resto      = proyectos.filter(p => !p.destacado);

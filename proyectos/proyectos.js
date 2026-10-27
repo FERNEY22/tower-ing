@@ -151,6 +151,24 @@ const proyectos = [
       { n: "2", l: "Idiomas de reporte" },
       { n: "6/6", l: "Pruebas límite" }
     ]
+  },
+  {
+    id: "gemelos",
+    titulo: "Gemelos Digitales PLC",
+    estado: "En desarrollo",
+    fecha: "",
+    periodo: "2026",
+    descripcion:
+      "Nueve procesos industriales a escala —banda clasificadora, semáforo peatonal, estación electroneumática, bombeo entre tanques, seguidor solar, clasificador por color, llenado de botellas, almacén vertical y ascensor— con su planta 3D y un PLC virtual Delta DVP. El estudiante programa en Ladder, FUP o SFC, opera la pantalla HMI, sigue la secuencia de eventos y exporta las instrucciones para pegarlas en WPLSoft. Requiere registro con autorización de datos (Ley 1581 de 2012).",
+    tecnologias: ["JavaScript", "PLC Delta DVP", "Ladder", "FUP", "SFC", "HMI", "Netlify Functions", "MongoDB Atlas"],
+    link: "../training/gemelos/index.html",
+    destacado: true,
+    variante: "gemelos",
+    stats: [
+      { n: "9", l: "Procesos simulados" },
+      { n: "3", l: "Lenguajes IEC" },
+      { n: "20 ms", l: "Ciclo de scan" }
+    ]
   }
 
   // =====================================================

@@ -337,7 +337,7 @@ table.io tr.mod td{color:var(--muted)}
 <main class="home" id="home" hidden>
   <div class="home-in">
     <div class="home-hero">
-      <div class="eyebrow">IFA00117 · Automatización de Procesos y Control Distribuido</div>
+      <div class="eyebrow">Automatización de Procesos y Control Distribuido</div>
       <h1 class="home-t">Gemelos digitales para PLC</h1>
       <p class="home-p">Nueve procesos industriales a escala con su planta 3D, PLC virtual Delta, editores Ladder, FUP y SFC, pantalla HMI y secuencia de eventos. Elige una aplicación para empezar.</p>
     </div>
@@ -2446,11 +2446,11 @@ SCENES.edificios={
 })();
 </script>
 <script>
-/* Registro de uso. En tower-ing.com (o con ?registro=1) pide nombre y cédula, y envía los eventos
+/* Registro de uso. Siempre pide autorización, nombre y cédula; en tower-ing.com (o con ?registro=1) envía los eventos
    a /api/gemelos/registro (Netlify Functions → MongoDB Atlas). En cualquier otro sitio queda solo local. */
 (function(){
   const host=location.hostname;
-  const ON=/(^|\.)tower-ing\.com$/.test(host)||host==='localhost'||host==='127.0.0.1'||/[?&]registro=1/.test(location.search);
+  const ON=/(^|\.)tower-ing\.com$/.test(host)||location.port==='8888'||/[?&]registro=1/.test(location.search); // 8888 = netlify dev
   const API='/api/gemelos/registro';
   const ss=k=>{try{return sessionStorage.getItem(k);}catch(_){return null;}}, ssSet=(k,v)=>{try{sessionStorage.setItem(k,v);}catch(_){}};
   const ls=k=>{try{return localStorage.getItem(k);}catch(_){return null;}}, lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}}, lsDel=k=>{try{localStorage.removeItem(k);}catch(_){}};
@@ -2462,9 +2462,9 @@ SCENES.edificios={
       this.events.push(e); if(this.events.length>500) this.events.shift();
       if(ON&&this.user){ e._sent=1; queue.push(e); }
     }};
-  if(!ON) return;
+  // El formulario se muestra siempre; sin ON (archivo local u otro sitio) el ingreso queda solo en este navegador.
   function flush(beacon){
-    if(!REG.user||!queue.length) return;
+    if(!ON||!REG.user||!queue.length) return;
     const body=JSON.stringify({accion:'eventos',cedula:REG.user.cedula,sesion,eventos:queue.splice(0,50)});
     if(beacon&&navigator.sendBeacon){ navigator.sendBeacon(API,new Blob([body],{type:'application/json'})); return; }
     fetch(API,{method:'POST',headers:{'content-type':'application/json'},body,keepalive:true}).catch(()=>{});
@@ -2478,26 +2478,84 @@ SCENES.edificios={
 
   // ventana de registro
   const css=document.createElement('style');
-  css.textContent=`#reg-ov{position:fixed;inset:0;z-index:9999;background:color-mix(in srgb,var(--bg,#fff) 70%,transparent);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px}
-  #reg-box{background:var(--surface,#fff);color:var(--fg,#111);border:1px solid var(--line,#ccd);border-radius:12px;max-width:440px;width:100%;padding:22px;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-  #reg-box h2{margin:0;font:700 1.15rem var(--f-display,system-ui)} #reg-box p{margin:0;font-size:.86rem;line-height:1.45;opacity:.85}
-  #reg-box label{display:grid;gap:4px;font-size:.8rem;font-weight:600} #reg-box input[type=text]{font:inherit;font-size:.95rem;padding:9px 10px;border:1px solid var(--line,#ccd);border-radius:8px;background:var(--bg,#fff);color:inherit}
-  #reg-box .acep{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:.8rem;line-height:1.4} #reg-box details{font-size:.78rem;line-height:1.45;opacity:.9}
-  #reg-err{color:#c0392b;font-size:.82rem;min-height:1em} #reg-chip{position:fixed;right:12px;bottom:12px;z-index:50;font:600 .76rem system-ui;background:var(--surface,#fff);border:1px solid var(--line,#ccd);border-radius:999px;padding:6px 12px;display:flex;gap:8px;align-items:center}
+  css.textContent=`#reg-ov{position:fixed;inset:0;z-index:9999;background:var(--bg,#EDF0F3);overflow:auto;padding:24px 16px}
+  #reg-box{max-width:620px;margin:0 auto;background:var(--surface,#fff);color:var(--fg,#111);border:1px solid var(--line,#ccd);border-radius:16px;box-shadow:0 8px 30px rgba(16,38,64,.10);overflow:hidden}
+  #reg-box .rg-head{padding:24px 28px 18px;border-bottom:1px solid var(--line,#ccd)}
+  #reg-box .rg-eye{font:700 .74rem var(--f-display,system-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--accent,#c8930a)}
+  #reg-box h2{margin:6px 0 0;font:700 1.45rem/1.2 var(--f-display,system-ui)}
+  #reg-box .rg-sub{margin:6px 0 0;font-size:.84rem;color:var(--muted,#586779)}
+  #reg-box .rg-prog{height:6px;background:var(--surface-2,#E4E9EE)} #reg-box .rg-bar{height:100%;width:0;background:var(--accent,#c8930a);transition:width .35s ease}
+  #reg-box .rg-body{padding:26px 28px}
+  #reg-box .rg-step{font-size:.8rem;font-weight:600;color:var(--muted,#586779);margin:0 0 12px}
+  #reg-box .rg-intro{font-size:.9rem;color:var(--muted,#586779);margin:0 0 18px;line-height:1.55}
+  #reg-box .rg-consent{background:var(--bg,#EDF0F3);border:1px solid var(--line,#ccd);border-radius:12px;padding:16px 18px;font-size:.8rem;color:var(--muted,#586779);line-height:1.6;max-height:260px;overflow:auto;margin:0 0 14px}
+  #reg-box .rg-consent p{margin:0 0 10px} #reg-box .rg-consent p:last-child{margin:0} #reg-box .rg-consent b{color:var(--fg,#111)}
+  #reg-box .rg-check{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:.88rem;padding:6px 2px;line-height:1.45}
+  #reg-box .rg-check input{margin-top:2px;width:18px;height:18px;flex:none;accent-color:var(--accent,#c8930a)}
+  #reg-box .rg-field{margin:0 0 14px} #reg-box .rg-field label{display:block;font-weight:600;font-size:.9rem;margin:0 0 7px}
+  #reg-box .rg-field input{width:100%;box-sizing:border-box;font:inherit;font-size:.95rem;padding:12px 14px;border:1.5px solid var(--line,#ccd);border-radius:12px;background:var(--bg,#EDF0F3);color:inherit}
+  #reg-box .rg-field input:focus{outline:none;border-color:var(--accent,#c8930a);background:var(--surface,#fff)}
+  #reg-box .rg-hint{font-size:.75rem;color:var(--muted,#586779);margin:4px 2px 0}
+  #reg-box .rg-err{font-size:.75rem;color:var(--alarm,#c0392b);margin:5px 2px 0;min-height:1em}
+  #reg-box .rg-nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}
+  #reg-box .rg-btn{font:inherit;font-weight:600;border-radius:11px;padding:11px 22px;cursor:pointer;border:1.5px solid var(--line,#ccd);background:none;color:inherit}
+  #reg-box .rg-btn.pri{margin-left:auto;background:var(--accent,#c8930a);border-color:var(--accent,#c8930a);color:var(--accent-ink,#1C1500)}
+  #reg-box .rg-btn:disabled{opacity:.4;cursor:not-allowed}
+  #reg-box .rg-foot{text-align:center;font-size:.72rem;color:var(--muted,#586779);padding:14px;border-top:1px solid var(--line,#ccd)}
+  #reg-err{color:var(--alarm,#c0392b);font-size:.82rem;min-height:1em;margin-top:6px} #reg-chip{position:fixed;right:12px;bottom:12px;z-index:50;font:600 .76rem system-ui;background:var(--surface,#fff);border:1px solid var(--line,#ccd);border-radius:999px;padding:6px 12px;display:flex;gap:8px;align-items:center}
   #reg-chip button{font:inherit;border:0;background:none;color:var(--accent,#c8930a);cursor:pointer;padding:0}`;
   document.head.appendChild(css);
   const ov=document.createElement('div'); ov.id='reg-ov'; ov.hidden=true;
   ov.innerHTML=`<form id="reg-box" novalidate>
-    <h2>Laboratorio de gemelos digitales</h2>
-    <p>Regístrate para usar el simulador. Tu profesor verá qué escenas usaste y cuánto tiempo.</p>
-    <label>Nombre completo<input type="text" id="reg-nom" autocomplete="name" maxlength="80" required></label>
-    <label>Cédula<input type="text" id="reg-ced" inputmode="numeric" autocomplete="off" maxlength="12" required></label>
-    <label class="acep"><input type="checkbox" id="reg-ok"> <span>Autorizo el tratamiento de mis datos personales según el aviso de privacidad.</span></label>
-    <details><summary>Aviso de privacidad (Ley 1581 de 2012)</summary>
-      Responsable: Ferney Torres Ome, docente. Datos recogidos: nombre, cédula y registro de uso del simulador (escenas abiertas, tiempo activo, lenguaje usado, ejecuciones del PLC). Finalidad: seguimiento académico del curso y mejora del laboratorio. Los datos no se comparten con terceros ni se usan con fines comerciales; solo el docente accede al panel. Puedes conocer, actualizar o pedir la supresión de tus datos escribiendo al docente.</details>
-    <div id="reg-err" role="alert"></div>
-    <button class="btn primary" type="submit" id="reg-go">Entrar</button>
+    <div class="rg-head">
+      <div class="rg-eye">Registro de acceso</div>
+      <h2>Laboratorio de gemelos digitales</h2>
+      <p class="rg-sub" id="reg-sub">Autorización de tratamiento de datos personales</p>
+    </div>
+    <div class="rg-prog"><div class="rg-bar" id="reg-bar"></div></div>
+    <div class="rg-body">
+      <div id="reg-p1">
+        <p class="rg-step">Antes de empezar · Autorización de datos</p>
+        <p class="rg-intro">Este laboratorio te permite programar y operar procesos industriales con un PLC virtual. Para registrar tu uso y orientarte necesitamos tus datos personales.</p>
+        <div class="rg-consent">
+          <p><b>Autorización para el tratamiento de datos personales</b></p>
+          <p>De conformidad con la <b>Ley 1581 de 2012</b>, el <b>Decreto 1377 de 2013</b> y demás normas colombianas sobre protección de datos personales, se solicita su autorización previa, expresa e informada para recolectar y tratar los siguientes datos: <b>nombre completo y número de identificación</b>.</p>
+          <p><b>Finalidad:</b> registrar el uso del laboratorio, generar reportes académicos agregados y orientar acciones de refuerzo pedagógico. Sus datos no serán vendidos ni compartidos con terceros con fines comerciales, y se conservarán únicamente por el tiempo necesario para esta finalidad.</p>
+          <p><b>Sus derechos como titular</b> (art. 8, Ley 1581 de 2012): conocer, actualizar y rectificar sus datos; solicitar prueba de esta autorización; ser informado sobre el uso dado a sus datos; presentar quejas ante la Superintendencia de Industria y Comercio; y revocar la autorización o solicitar la supresión de sus datos cuando no exista un deber legal de conservarlos.</p>
+          <p><b>Carácter voluntario:</b> otorgar esta autorización es libre y voluntario. Al marcar la casilla y continuar, usted declara que ha leído esta autorización y otorga su consentimiento libre, previo, expreso e informado.</p>
+        </div>
+        <label class="rg-check"><input type="checkbox" id="reg-ok"><span>He leído y <b>autorizo</b> el tratamiento de mis datos personales conforme a la Ley 1581 de 2012.</span></label>
+        <div class="rg-nav"><button class="rg-btn pri" type="button" id="reg-cont" disabled>Acepto y continúo</button></div>
+      </div>
+      <div id="reg-p2" hidden>
+        <p class="rg-step">Tus datos</p>
+        <div class="rg-field">
+          <label for="reg-nom">Nombre completo</label>
+          <input type="text" id="reg-nom" autocomplete="name" maxlength="80" placeholder="Nombres y apellidos">
+          <div class="rg-err" id="reg-e-nom"></div>
+        </div>
+        <div class="rg-field">
+          <label for="reg-ced">Número de identificación</label>
+          <input type="text" id="reg-ced" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Documento">
+          <div class="rg-hint">Se usa para registrar tu uso del laboratorio.</div>
+          <div class="rg-err" id="reg-e-ced"></div>
+        </div>
+        <div id="reg-err" role="alert"></div>
+        <div class="rg-nav"><button class="rg-btn" type="button" id="reg-back">← Volver</button><button class="rg-btn pri" type="submit" id="reg-go">Entrar al laboratorio</button></div>
+      </div>
+    </div>
+    <div class="rg-foot">Laboratorio con fines pedagógicos · Sus datos se tratan conforme a la Ley 1581 de 2012.</div>
   </form>`;
+  const $r=id=>ov.querySelector('#'+id);
+  function paso(n){
+    $r('reg-p1').hidden=n!==1; $r('reg-p2').hidden=n!==2;
+    $r('reg-bar').style.width=n===1?'10%':'60%';
+    $r('reg-sub').textContent=n===1?'Autorización de tratamiento de datos personales':'Datos del estudiante';
+    if(n===2) setTimeout(()=>$r('reg-nom').focus(),50);
+  }
+  $r('reg-ok').onchange=()=>{ $r('reg-cont').disabled=!$r('reg-ok').checked; };
+  $r('reg-cont').onclick=()=>{ if($r('reg-ok').checked) paso(2); };
+  $r('reg-back').onclick=()=>paso(1);
   const chip=document.createElement('div'); chip.id='reg-chip'; chip.hidden=true;
   function mount(){ document.body.appendChild(ov); document.body.appendChild(chip); }
   if(document.body) mount(); else document.addEventListener('DOMContentLoaded',mount);
@@ -2513,30 +2571,37 @@ SCENES.edificios={
     flush(false);
   }
   async function registrar(nombre,cedula){
-    const r=await fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({accion:'registro',nombre,cedula,acepta:true})});
-    const j=await r.json().catch(()=>({ok:false,error:'Sin respuesta del servidor'}));
-    if(!j.ok) throw new Error(j.error||'No se pudo registrar');
+    let j={ok:true,usuario:{nombre}};
+    if(ON){
+      const r=await fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({accion:'registro',nombre,cedula,acepta:true})});
+      j=await r.json().catch(()=>({ok:false,error:'Sin respuesta del servidor'}));
+      if(!j.ok) throw new Error(j.error||'No se pudo registrar');
+    }
     ssSet('gemelo-ingreso','1');
     queue.unshift({t:new Date().toISOString(),escena:null,tipo:'ingreso',datos:{}});
     setUser({cedula,nombre:j.usuario.nombre});
   }
   function abrir(){
-    ov.hidden=false; const err=ov.querySelector('#reg-err'); err.textContent='';
-    setTimeout(()=>ov.querySelector('#reg-nom').focus(),50);
+    ov.hidden=false; ['reg-err','reg-e-nom','reg-e-ced'].forEach(id=>{ $r(id).textContent=''; });
+    paso($r('reg-ok').checked?2:1);
   }
   ov.addEventListener('submit',async ev=>{
     ev.preventDefault();
-    const nom=ov.querySelector('#reg-nom').value.trim(), ced=ov.querySelector('#reg-ced').value.replace(/\D/g,''), ok=ov.querySelector('#reg-ok').checked, err=ov.querySelector('#reg-err'), go=ov.querySelector('#reg-go');
-    if(nom.length<3){ err.textContent='Escribe tu nombre completo.'; return; }
-    if(!/^[0-9]{5,12}$/.test(ced)){ err.textContent='La cédula debe tener solo números (5 a 12 dígitos).'; return; }
-    if(!ok){ err.textContent='Debes aceptar el tratamiento de datos para continuar.'; return; }
-    go.disabled=true; err.textContent='';
-    try{ await registrar(nom,ced); }catch(e){ err.textContent=e.message; } finally{ go.disabled=false; }
+    const nom=$r('reg-nom').value.trim(), ced=$r('reg-ced').value.replace(/\D/g,''), ok=$r('reg-ok').checked, err=$r('reg-err'), go=$r('reg-go');
+    if(!ok){ paso(1); return; }
+    const eNom=nom.length>=5&&nom.includes(' ')?'':'Escribe tus nombres y apellidos completos.';
+    const eCed=/^[0-9]{5,12}$/.test(ced)?'':'Ingresa una cédula válida (solo números, 5 a 12 dígitos).';
+    $r('reg-e-nom').textContent=eNom; $r('reg-e-ced').textContent=eCed;
+    if(eNom||eCed) return;
+    go.disabled=true; err.textContent=''; $r('reg-bar').style.width='90%';
+    try{ await registrar(nom,ced); }catch(e){ err.textContent=e.message; $r('reg-bar').style.width='60%'; } finally{ go.disabled=false; }
   });
   const saved=(()=>{try{return JSON.parse(ls('gemelo-usuario')||'null');}catch(_){return null;}})();
   function start(){
-    if(saved&&saved.cedula&&saved.nombre){ if(ss('gemelo-ingreso')) setUser(saved); else registrar(saved.nombre,saved.cedula).catch(()=>abrir()); }
-    else abrir();
+    // Dentro de la misma pestaña (recargas) no se vuelve a pedir; cada visita nueva pasa por autorización y datos.
+    if(saved&&saved.cedula&&saved.nombre&&ss('gemelo-ingreso')){ setUser(saved); return; }
+    if(saved&&saved.nombre){ $r('reg-nom').value=saved.nombre; $r('reg-ced').value=saved.cedula||''; }
+    abrir();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 })();

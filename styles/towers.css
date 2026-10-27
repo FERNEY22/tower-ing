@@ -572,6 +572,30 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
 .feat-invernadero .btn-invernadero .arrow { transition: transform .25s var(--ease); }
 .feat-invernadero .btn-invernadero:hover .arrow { transform: translateX(4px); }
 
+/* Gemelos digitales — ámbar industrial, escalón Ladder como firma */
+.feat-gemelos {
+  border: 1px solid var(--line-2); border-top: 3px solid #B7860B;
+  border-radius: var(--r-lg); padding: clamp(28px, 4vw, 44px);
+  box-shadow: var(--shadow-sm); margin-bottom: 24px; background: var(--surface);
+}
+.feat-gemelos .fgm-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feat-gemelos .fgm-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: .08em; text-transform: uppercase; color: #9A6F00; }
+.feat-gemelos .fgm-rung { display: inline-flex; align-items: center; gap: 2px; padding: 3px 8px; border: 1px solid rgba(183, 134, 11, .32); border-radius: var(--r-pill); background: rgba(183, 134, 11, .07); }
+.feat-gemelos .fgm-rung b { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: #9A6F00; }
+.feat-gemelos .fgm-rung i { width: 7px; height: 1px; background: rgba(154, 111, 0, .5); }
+.feat-gemelos h2 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(24px, 3vw, 36px); letter-spacing: var(--display-spacing); line-height: 1.05; margin: 14px 0 14px; max-width: 22ch; }
+.feat-gemelos .desc { color: var(--ink-2); line-height: 1.65; margin-bottom: 20px; max-width: 64ch; }
+.feat-gemelos .fgm-stats { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; margin: 4px 0 20px; }
+.feat-gemelos .fgm-stat { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid var(--line); }
+.feat-gemelos .fgm-stat:last-child { border-right: none; }
+.feat-gemelos .fgm-n { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); line-height: 1; }
+.feat-gemelos .fgm-l { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
+.feat-gemelos .btn-gemelos { display: inline-flex; align-items: center; gap: 9px; background: #B7860B; color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body); font-weight: 600; font-size: var(--t-base); text-decoration: none; transition: background .2s var(--ease-soft), transform .15s var(--ease); }
+.feat-gemelos .btn-gemelos:hover { background: #9A6F00; }
+.feat-gemelos .btn-gemelos:active { transform: translateY(1px); }
+.feat-gemelos .btn-gemelos .arrow { transition: transform .25s var(--ease); }
+.feat-gemelos .btn-gemelos:hover .arrow { transform: translateX(4px); }
+
 @media (max-width: 720px) {
   .feat-biomo, .feat-geo { grid-template-columns: 1fr; }
   .feat-biomo .fb-side, .feat-geo .fg-map { display: none; }
@@ -580,6 +604,7 @@ nav.top-nav a.active { color: var(--electric-ink); background: var(--electric-so
   .feat-electro .fe-stat { min-width: 100px; }
   .feat-control .fc-stat { min-width: 100px; }
   .feat-invernadero .fi-stat { min-width: 100px; }
+  .feat-gemelos .fgm-stat { min-width: 100px; }
   .feat-semaforo::after { display: none; }
   .feat-bots::after { display: none; }
 }
