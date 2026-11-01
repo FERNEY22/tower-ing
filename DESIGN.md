@@ -1,270 +1,293 @@
 ---
-name: Towers Ing — v3
-description: Sistema de diseño "Papel & Voltaje" — editorial técnico sobre papel crema con tinta casi-negra, una señal azul eléctrica y una chispa amarilla. Fuente de verdad extraída de towers-ing-v3.html.
-source: towers-ing-v3.html
-version: 3.0
+name: Towers Ing — v3.1
+description: Sistema de diseño "Papel & Voltaje" suavizado — papel crema, tinta suave, hairlines en lugar de rejilla de tinta, elevación suave y un conmutador de tipografía. Fuente de verdad extraída de styles/towers.css.
+source: styles/towers.css
+version: 3.1
+active-type: grotesk      # <html data-type="grotesk"> en index.html
 colors:
-  paper: "#F1ECDF"
-  paper-2: "#E8E2D1"
-  ink: "#0A0E1A"
-  ink-soft: "#3A3D48"
+  paper: "#F3EEE2"         # fondo base
+  paper-2: "#ECE6D8"       # hover / banda secundaria
+  surface: "#FBF8F1"       # superficie elevada (paneles, cards)
+  surface-2: "#FFFFFFEE"   # superficie más clara (dashboard, inputs)
+  ink: "#15171F"           # texto principal
+  ink-2: "#474A55"         # texto secundario (AA en cuerpo)
+  ink-3: "#5A5D69"         # terciario: etiquetas / meta
+  line: "rgba(21, 23, 31, 0.09)"
+  line-2: "rgba(21, 23, 31, 0.16)"
+  line-strong: "rgba(21, 23, 31, 0.28)"
   electric: "#1F3DFF"
-  electric-glow: "#4D66FF"
-  spark: "#FFE94A"
-  rule: "#1A1D28"          # usado con alfa 0x99 (~60%) → rgba(26,29,40,.6)
-  pos-text: "#1A7F4E"      # cambio positivo (indicadores)
-  pos-bg: "#6BFFB8"        # verde, fondo/tinte al ~13%
-  neg-text: "#B83247"      # cambio negativo (indicadores)
-  neg-bg: "#FF8FA3"        # rojo-rosa, fondo/tinte al ~13%
-  tick-flat: "#BFC2CC"     # ticker neutro
+  electric-2: "#4D66FF"
+  electric-ink: "#1A33D6"  # azul para texto sobre claro (AA)
+  electric-soft: "rgba(31, 61, 255, 0.10)"
+  electric-softer: "rgba(31, 61, 255, 0.05)"
+  spark: "#FFD21A"
+  pos: "#15803D"
+  pos-soft: "rgba(34, 160, 90, 0.12)"
+  neg: "#BE2D44"
+  neg-soft: "rgba(214, 64, 90, 0.12)"
+  warn: "#B45309"
+  warn-soft: "rgba(217, 119, 6, 0.13)"
 typography:
   fonts:
-    serif: "'Fraunces', serif"           # display, títulos, valores
-    sans: "'Geist', system-ui, sans-serif" # cuerpo, UI
-    mono: "'JetBrains Mono', monospace"    # etiquetas, metadatos, datos
+    display: "var(--font-display)"   # lo define data-type
+    body: "'Geist', system-ui, sans-serif"
+    mono: "'JetBrains Mono', ui-monospace, monospace"
+  type-switcher:
+    clean:   { display: "'Geist', system-ui, sans-serif", spacing: "-0.025em", weight: 600 }
+    grotesk: { display: "'Bricolage Grotesque', 'Geist', system-ui, sans-serif", spacing: "-0.02em", weight: 600 }   # activo
+    serif:   { display: "'Spectral', Georgia, serif", spacing: "-0.015em", weight: 500 }
   scale:
-    hero-h1:    { font: serif, weight: 300, size: "clamp(48px,7vw,110px)", lineHeight: 0.95, letterSpacing: "-0.04em" }
-    footer-big: { font: serif, weight: 300, size: "56px",  lineHeight: 0.95, letterSpacing: "-0.03em" }
-    h2:         { font: serif, weight: 400, size: "38px",  letterSpacing: "-0.02em" }
-    stat-num:   { font: serif, weight: 400, size: "36px",  lineHeight: 1 }
-    ed-title:   { font: serif, weight: 400, size: "28px",  letterSpacing: "-0.01em" }
-    auth-h4:    { font: serif, weight: 400, size: "24px",  letterSpacing: "-0.02em" }
-    act-title:  { font: serif, weight: 400, size: "22px",  lineHeight: 1.2, letterSpacing: "-0.01em" }
-    panel-h4:   { font: serif, weight: 400, size: "18px",  letterSpacing: "-0.01em" }
-    ind-val:    { font: serif, weight: 400, size: "17px",  lineHeight: 1 }
-    body:       { font: sans,  weight: 400, size: "16px",  lineHeight: 1.5 }
-    input:      { font: sans,  weight: 400, size: "14px" }
-    desc:       { font: sans,  weight: 400, size: "13px" }
-    ind-name:   { font: sans,  weight: 500, size: "12px" }
-    mono-base:  { font: mono,  weight: 400, size: "11px",  letterSpacing: "0.04em", transform: "uppercase" }
-    submit:     { font: mono,  weight: 400, size: "11px",  letterSpacing: "0.1em",  transform: "uppercase" }
-    footer-h5:  { font: mono,  weight: 400, size: "11px",  letterSpacing: "0.12em", transform: "uppercase" }
-    field-label:{ font: mono,  weight: 400, size: "9px",   letterSpacing: "0.08em", transform: "uppercase" }
-    micro:      { font: mono,  weight: 400, size: "9px" }
+    t-xs: "0.75rem"
+    t-sm: "0.8125rem"
+    t-base: "0.9375rem"
+    t-md: "1.0625rem"
+    t-lg: "1.25rem"
+    t-xl: "1.5rem"
+    hero-h1: { size: "clamp(40px, 6.5vw, 88px)", lineHeight: 1.0, letterSpacing: "var(--display-spacing)" }
+    page-h1: { size: "clamp(34px, 5vw, 60px)", lineHeight: 1.02, letterSpacing: "var(--display-spacing)" }
+    section-h2: { size: "clamp(26px, 3.2vw, 38px)", letterSpacing: "var(--display-spacing)" }
+    stat-num: { size: "clamp(34px, 4vw, 48px)", lineHeight: 1, letterSpacing: "-0.02em" }
+    body: { size: "1rem", lineHeight: 1.55, weight: 400 }
 rounded:
-  none: "0"        # default — bordes rectos (grid editorial)
-  pill: "100px"    # badges, chips de cambio, tabs, botones tipo cápsula
-  dot: "50%"       # puntos de estado (live-dot)
-borders:
-  hard: "1px solid #0A0E1A"            # rejilla estructural (--ink)
-  soft: "1px solid rgba(26,29,40,.6)"  # separadores internos (--rule)
+  xs: "6px"
+  sm: "9px"
+  md: "12px"
+  lg: "18px"
+  pill: "100px"
 shadows:
-  none: "none"     # diseño plano — la profundidad viene de bordes, no de sombras
-  pulse: "0 0 0 0 → 0 0 0 10px rgba(31,61,255,0.55→0)"  # anillo animado (puntos en vivo)
-spacing:
-  section-pad: "40px"   # padding horizontal de secciones principales
-  side-pad: "24px"      # padding horizontal del panel lateral
-  layout-side: "360px"  # ancho de la columna lateral
-  dot-grid: "28px"      # paso del fondo punteado
-components:
-  submit-btn: { bg: "{colors.ink}", text: "{colors.paper}", hover-bg: "{colors.electric}", accent: "{colors.spark}", padding: "14px 22px", rounded: none }
-  source-badge: { border: "{borders.hard}", text: "{colors.electric}", rounded: pill, padding: "3px 10px" }
-  chg-pill: { rounded: pill, padding: "2px 7px", border: "1px solid" }
-  auth-tab: { border: "{borders.hard}", rounded: pill, padding: "6px 14px", active-bg: "{colors.ink}", active-text: "{colors.paper}" }
-  field-input: { border-bottom: "{borders.hard}", focus-border: "{colors.electric}", padding: "8px 0" }
+  sm: "0 1px 2px rgba(21,23,31,.05), 0 1px 1px rgba(21,23,31,.03)"
+  md: "0 6px 20px -8px rgba(21,23,31,.12), 0 2px 6px -3px rgba(21,23,31,.06)"
+  lg: "0 20px 48px -16px rgba(21,23,31,.20), 0 6px 16px -8px rgba(21,23,31,.10)"
+  focus: "0 0 0 3px var(--electric-soft)"
+motion:
+  ease: "cubic-bezier(.22, 1, .36, 1)"      # ease-out-quint
+  ease-soft: "cubic-bezier(.4, 0, .2, 1)"
+z-index:
+  sticky: 100
+  switcher: 400
+  modal: 600
+  toast: 800
+layout:
+  shell-max: "1240px"
+  shell-pad: "clamp(20px, 5vw, 56px)"
+  breakpoints: ["940px", "720px"]
 ---
 
-# Sistema de Diseño — Towers Ing v3
+# Sistema de Diseño — Towers Ing v3.1
 
-> **Fuente de verdad:** `towers-ing-v3.html`. Esta versión reemplaza cualquier propuesta anterior (incluido el sistema navy/azure "El Tablero de Ingeniería"). Todo nuevo trabajo se alinea a lo aquí documentado.
+> **Fuente de verdad:** `styles/towers.css` («Papel & Voltaje» · v3.1, versión suavizada). Todo valor de este documento existe en ese archivo; si cambia el CSS, se actualiza este documento.
 
-## 1. Concepto — "Papel & Voltaje"
+## 1. Concepto — "Papel & Voltaje", suavizado
 
-Un editorial técnico impreso sobre **papel crema**, con **tinta casi-negra**, organizado por una **rejilla rígida de 1px** como una página de periódico o un cuaderno de ingeniería. Sobre esa base sobria, dos colores eléctricos hacen el trabajo expresivo: un **azul voltaje** que señala acción/foco/enlace, y una **chispa amarilla** que aparece como destello puntual (el ⚡). Texturas sutiles —cuadrícula de puntos y ruido fractal— dan grano de papel real, no de pantalla.
-
-El resultado se siente **analógico y de alta tensión a la vez**: tipografía serif elegante (Fraunces) para la voz editorial, monoespaciada (JetBrains Mono) para los datos e instrumentos, y una sans neutra (Geist) para el cuerpo. Plano por diseño: no hay sombras de tarjeta; la jerarquía y la profundidad se construyen con bordes, color y movimiento.
+Sigue siendo un editorial técnico sobre **papel crema** con **tinta oscura** y una **señal azul eléctrica**, pero con menos rigidez: la rejilla de tinta de 1px se reemplaza por **hairlines** translúcidas y **aire**, y las superficies de producto ganan **elevación suave** (estilo Stripe/Grafana) y **esquinas redondeadas** de 6 a 18 px.
 
 **Características clave**
-- Lienzo de **papel** (`#F1ECDF`) + **tinta** (`#0A0E1A`); contraste casi tipográfico.
-- **Rejilla de 1px** omnipresente como sistema estructural (no decoración).
-- **Azul eléctrico** = única señal de acción/foco/enlace. **Amarillo** = chispa puntual, nunca relleno.
-- **Plano**: cero sombras de elevación; profundidad por borde + textura.
-- Mezcla deliberada de tres familias por rol: **serif (voz)**, **mono (dato)**, **sans (cuerpo)**.
+- Lienzo `--paper` (`#F3EEE2`) + tinta `--ink` (`#15171F`), suave y no negro puro.
+- Separación por **hairlines** (`--line`, `--line-2`, `--line-strong`) y cambio de superficie, no por bordes de tinta.
+- **Azul = acción.** **Amarillo = chispa.** **Verde/rojo/ámbar = solo estado.**
+- **Elevación suave** con tres sombras (`--shadow-sm/md/lg`).
+- **Conmutador de tipografía** `data-type` para el display; el cuerpo es siempre Geist.
 
 ## 2. Color
 
-Definidos como variables CSS en `:root`.
+Variables CSS en `:root`.
 
-### Base — Papel & Tinta
-| Token | Hex | Uso |
-|---|---|---|
-| `--paper` | `#F1ECDF` | Fondo de página y de la columna lateral. Lienzo crema. |
-| `--paper-2` | `#E8E2D1` | Superficie secundaria: cabeceras de panel, pie de panel, fondo del bloque de acceso, **hover** de filas e ítems. |
-| `--ink` | `#0A0E1A` | Texto principal, **todos los bordes de la rejilla**, fondo de secciones oscuras (ticker, footer, botón). |
-| `--ink-soft` | `#3A3D48` | Texto secundario: descripciones, fechas, unidades, labels de apoyo. |
-
-### Señal — Voltaje
-| Token | Hex | Uso |
-|---|---|---|
-| `--electric` | `#1F3DFF` | **La señal.** Acción, enlaces, números de índice, foco de input, barra de hover, énfasis `<em>` en títulos, punto en vivo. |
-| `--electric-glow` | `#4D66FF` | Variante más clara del azul para sobre fondo oscuro: títulos `h5` del footer, marca y `<em>` del footer. |
-| `--spark` | `#FFE94A` | **La chispa.** Destello puntual: el ⚡ del hero, la flecha ⚡ del botón Entrar. Nunca como relleno de área. |
-
-### Estructura sutil
+### Lienzo y tinta
 | Token | Valor | Uso |
 |---|---|---|
-| `--rule` | `#1A1D2899` (≈ `rgba(26,29,40,.6)`) | Separadores **internos** suaves dentro de paneles (filas de indicadores, group-labels, pie). Más tenue que `--ink`. |
+| `--paper` | `#F3EEE2` | Fondo base de página. |
+| `--paper-2` | `#ECE6D8` | Hover, banda secundaria, tags, fondo de tabs y segmentados, `userbar`. |
+| `--surface` | `#FBF8F1` | Superficie elevada: tiles, cards, `auth`, ticker, tarjetas destacadas. |
+| `--surface-2` | `#FFFFFFEE` | Superficie más clara: KPI, paneles de dashboard, inputs, tab activa. |
+| `--ink` | `#15171F` | Texto principal. |
+| `--ink-2` | `#474A55` | Texto secundario (AA en cuerpo): descripciones, lead, nav. |
+| `--ink-3` | `#5A5D69` | Terciario: etiquetas, meta, fechas, flechas en reposo, placeholders. |
 
-### Semánticos — solo estado de dato
-Aparecen en indicadores y en el ticker para comunicar dirección de cambio; **nunca decoran**.
+### Hairlines
+| Token | Valor | Uso |
+|---|---|---|
+| `--line` | `rgba(21, 23, 31, 0.09)` | Separador por defecto: topbar, filas, cards, footer. |
+| `--line-2` | `rgba(21, 23, 31, 0.16)` | Borde de hover, inputs, `btn-ghost`, tarjetas destacadas, cabecera de tabla. |
+| `--line-strong` | `rgba(21, 23, 31, 0.28)` | Borde de `btn-ghost` en hover. |
 
-| Contexto | Texto | Borde | Fondo/Tinte |
+### Señal
+| Token | Valor | Uso |
+|---|---|---|
+| `--electric` | `#1F3DFF` | Relleno de acción: `btn-primary`, `live-dot`, foco de input, `bar-mini`, punto de timeline, `::selection`. |
+| `--electric-2` | `#4D66FF` | Hover de `btn-primary`. |
+| `--electric-ink` | `#1A33D6` | Azul para **texto** sobre claro (AA): enlaces, `<em>` en títulos, índices, nav activa. |
+| `--electric-soft` | `rgba(31, 61, 255, 0.10)` | Fondos tintados: nav activa, badge `.source`, `estado-desarrollo`, anillo de foco. |
+| `--electric-softer` | `rgba(31, 61, 255, 0.05)` | Halo del fondo del `body`, textura del geovisor. |
+| `--spark` | `#FFD21A` | La chispa ⚡ (con `-webkit-text-stroke: .5px var(--ink)` sobre claro). |
+
+### Estado
+| Token | Texto | Fondo | Uso |
 |---|---|---|---|
-| Positivo (chip `.chg.up`) | `#1A7F4E` | `#1A7F4E33` | `#6BFFB822` |
-| Negativo (chip `.chg.down`) | `#B83247` | `#B8324733` | `#FF8FA322` |
-| Neutro (chip `.chg.flat`) | `--ink-soft` | `--rule` | transparente |
-| Ticker sube | `#6BFFB8` | — | — |
-| Ticker baja | `#FF8FA3` | — | — |
-| Ticker plano | `#BFC2CC` (op .7) | — | — |
+| `--pos` / `--pos-soft` | `#15803D` | `rgba(34, 160, 90, 0.12)` | `delta.up`, ticker `.up`, `estado-finalizado`. |
+| `--neg` / `--neg-soft` | `#BE2D44` | `rgba(214, 64, 90, 0.12)` | `delta.down`, ticker `.down`, mensajes de error. |
+| `--warn` / `--warn-soft` | `#B45309` | `rgba(217, 119, 6, 0.13)` | `estado-prototipo`, filete de `.feat-obs`. |
+| neutro | `--ink-3` | `--paper-2` | `delta.flat`, ticker `.flat`. |
 
-> **Nota sobre verde/rojo:** los hex "vivos" (`#6BFFB8`, `#FF8FA3`) se usan a tono pleno solo sobre el fondo oscuro del ticker; en los chips claros del panel van como tinte al ~13% (sufijo `22`) con texto en versiones más oscuras y legibles (`#1A7F4E`, `#B83247`).
+### Reglas de uso de color
+- **Azul = acción.** `--electric` / `--electric-ink` marcan lo que se puede pulsar, el foco y el énfasis. Si está en todo, deja de señalar.
+- **Amarillo = chispa.** `--spark` solo como el ⚡ puntual (marca, hero, stats, `btn-primary`); nunca relleno ni texto extenso.
+- **Verde / rojo / ámbar = solo estado.** `--pos`, `--neg`, `--warn` comunican dirección o estado de un dato; nunca decoran.
+- **Texto azul sobre claro** siempre con `--electric-ink`, no con `--electric`.
 
-### Reglas de color
-- **Señal única:** el azul eléctrico marca acción y foco. Si está en todo, deja de señalar.
-- **Chispa, no pintura:** el amarillo `--spark` es un acento de 1–2 apariciones por vista; jamás fondo ni texto extenso.
-- **Bordes = tinta:** la rejilla estructural siempre es `--ink` a 1px; los separadores internos, `--rule`.
+### Excepción única — tarjetas destacadas de proyecto
+Las tarjetas `.feat-*` de la página de Proyectos son la **única** excepción a las reglas anteriores: cada una lleva una identidad propia con colores fijos (no tokens). Fuera de estas clases no se usan.
+
+| Clase | Proyecto | Colores |
+|---|---|---|
+| `.feat-biomo` | BIOMO | panel lateral `linear-gradient(160deg, #1f7a4d, #14532d)`, texto `#eafff3` |
+| `.feat-geo` | Geovisor | sin colores propios: `--electric-softer`, `--line`, `--electric` |
+| `.feat-obs` | Observatorio | sin colores propios: filete `--warn` |
+| `.feat-yuncar` | Yuncar | fondo `linear-gradient(150deg, #1A3A5C, #102338)`; naranja `#E8500A` (botón, punto), hover `#ff6a2a`; en vivo `#F5A623`; texto `#eaf1f8`, `#b9c7d6`, `#cdd9e6`, `#8aa0b6` |
+| `.feat-apreciacion` | Apreciación | fondo `linear-gradient(145deg, #2FA36B 0%, #17724A 42%, #0B3826 100%)`; botón `#34D399` / texto `#06301F`, hover `#56e6b0`; kicker `#6EE7A8`; texto `#e9fbf1`, `#c3e6d3`, `#9fd4b7`, `#eafff3`, `#d5f2e2`, `#bfe8d1` |
+| `.feat-electro` | Electrónica | cian `#0E7490` (filete, kicker, botón), hover `#1291b3`; bandas de resistencia `#D8C9A3`, `#7B4A21`, `#14181C`, `#C62F2F`, `#C9A227` |
+| `.feat-control` | Diagnóstico y Control | violeta `#6D28D9` (filete, kicker, botón), hover `#8b4df0`; texto del lazo `#5B21B6` |
+| `.feat-semaforo` | Semáforo IA | verde `#15803D` (filete, botón), hover `#1A9A4A`; luces `#15803D`, `#C2700A`, `#BE2D44`; texto de regla ámbar `#A35E08` |
+| `.feat-bots` | Batalla de Bots | terracota `#C15F3C` (filete, botón), hover `#A84F30`; luces `#23262E`, `#C15F3C`, `#6A4BD8`, `#1C7D88`; texto de regla `#A84F30`, `#5A3DC4`, `#176A74` |
+| `.feat-invernadero` | Invernadero | verde `#1E8449` (filete, kicker, botón), hover `#25a05a`; rangos `#3498DB`, `#1E8449`, `#E67E22` |
+| `.feat-gemelos` | Gemelos digitales | ámbar `#B7860B` (filete, botón), hover y texto `#9A6F00` |
+
+> Estas tarjetas comparten la estructura del sistema (`--r-lg`, `--shadow-sm`/`--shadow-md`, `--surface`, `--line-2`, `--font-display`); solo cambia el color de identidad.
 
 ## 3. Tipografía
 
-Tres familias cargadas desde Google Fonts, cada una con un rol fijo:
+### Familias y conmutador `data-type`
+El display se elige con un atributo en `<html>`; el cuerpo y el mono no cambian.
 
-```
-Fraunces (serif, opsz 9..144) — pesos 300, 400, 500, 600 + itálica 400
-Geist (sans)                  — pesos 300, 400, 500, 600
-JetBrains Mono                — pesos 400, 500
-```
+| `data-type` | `--font-display` | `--display-spacing` | `--display-weight` |
+|---|---|---|---|
+| `clean` | `'Geist', system-ui, sans-serif` | `-0.025em` | 600 |
+| **`grotesk`** (activo) | `'Bricolage Grotesque', 'Geist', system-ui, sans-serif` | `-0.02em` | 600 |
+| `serif` | `'Spectral', Georgia, serif` | `-0.015em` | 500 |
 
-- **Fraunces — la voz editorial.** Display y todos los títulos, además de los **valores numéricos** (stats, valores de indicador). Se usa en pesos ligeros (300 en hero/footer, 400 en el resto) con tracking negativo para un aire elegante. La itálica (`<em>` / `.ital`) marca énfasis, casi siempre coloreada en azul eléctrico.
-- **Geist — el cuerpo.** Texto corrido, párrafos, inputs, nombres de indicador. Neutra y legible. `body` por defecto: 400 / 16px / lh 1.5.
-- **JetBrains Mono — el instrumento.** Etiquetas, metadatos, unidades, badges, botones, navegación, datos del ticker. Siempre en MAYÚSCULAS con letter-spacing positivo. Clase base `.mono`: 11px / ls .04em / uppercase.
+- **Activo:** `index.html` declara `<html lang="es" data-type="grotesk">`.
+- **Cuerpo:** `--font-body: 'Geist', system-ui, sans-serif` en los tres temas.
+- **Mono:** `--font-mono: 'JetBrains Mono', ui-monospace, monospace`.
+- Sin atributo, `:root` usa Geist con `-0.02em` / 600.
+- En `serif`, los `<em>` de títulos pasan a itálica; en `clean` y `grotesk` van en `font-style: normal` y color `--electric-ink`.
 
-### Escala de tamaños
-| Rol | Familia | Peso | Tamaño | Line-height | Letter-spacing |
-|---|---|---|---|---|---|
-| Hero H1 | Fraunces | 300 | `clamp(48px, 7vw, 110px)` | 0.95 | -0.04em |
-| Footer "big" | Fraunces | 300 | 56px | 0.95 | -0.03em |
-| Sección H2 | Fraunces | 400 | 38px | — | -0.02em |
-| Stat número | Fraunces | 400 | 36px | 1 | — |
-| Editorial título | Fraunces | 400 | 28px | — | -0.01em |
-| Auth H4 | Fraunces | 400 | 24px | — | -0.02em |
-| Actividad título | Fraunces | 400 | 22px | 1.2 | -0.01em |
-| Panel H4 | Fraunces | 400 | 18px | — | -0.01em |
-| Indicador valor | Fraunces | 400 | 17px | 1 | — |
-| Cuerpo / hero-p | Geist | 400 | 16px | 1.5 | — |
-| Input | Geist | 400 | 14px | — | — |
-| Descripción | Geist | 400 | 13px | — | — |
-| Indicador nombre | Geist | 500 | 12px | — | — |
-| Mono base / nav / ticker | JetBrains Mono | 400 | 11px | — | .04em (uppercase) |
-| Botón submit | JetBrains Mono | 400 | 11px | — | .1em (uppercase) |
-| Footer H5 | JetBrains Mono | 400 | 11px | — | .12em (uppercase) |
-| Indicador cambio | JetBrains Mono | 400 | 10px | — | — |
-| Unidad indicador | JetBrains Mono | 400 | 9px | — | .06em (uppercase) |
-| Label de campo | JetBrains Mono | 400 | 9px | — | .08em (uppercase) |
-| Micro (live-stamp, group-label, foot) | JetBrains Mono | 400 | 9px | — | — |
+Fuentes de Google Fonts según la cabecera de `towers.css`: Geist 300–700; Bricolage Grotesque opsz 12..96, 400–800; Spectral 300–600 + itálica 400; JetBrains Mono 400, 500.
+
+> **Nota:** `index.html` carga Geist, Bricolage Grotesque y JetBrains Mono, pero **no Spectral**; con `data-type="serif"` el display caería en Georgia.
+
+### Escala de producto
+| Token | Valor |
+|---|---|
+| `--t-xs` | `0.75rem` |
+| `--t-sm` | `0.8125rem` |
+| `--t-base` | `0.9375rem` |
+| `--t-md` | `1.0625rem` |
+| `--t-lg` | `1.25rem` |
+| `--t-xl` | `1.5rem` |
+
+### Títulos y valores
+| Rol | Tamaño | Line-height | Tracking |
+|---|---|---|---|
+| Hero H1 | `clamp(40px, 6.5vw, 88px)` | 1.0 | `--display-spacing` |
+| Page-head H1 | `clamp(34px, 5vw, 60px)` | 1.02 | `--display-spacing` |
+| Featured H2 | `clamp(26px, 3.4vw, 40px)` | 1.05 | `--display-spacing` |
+| Section H2 | `clamp(26px, 3.2vw, 38px)` | — | `--display-spacing` |
+| Footer `.big` | `clamp(28px, 3.4vw, 40px)` | 1.05 | `--display-spacing` |
+| Stat número | `clamp(34px, 4vw, 48px)` | 1 | -0.02em, `tabular-nums` |
+| KPI valor | `2rem` / 600 | 1 | -0.02em, `tabular-nums` |
+| Auth H3 | `--t-xl` | — | -0.01em |
+| Tile / card / timeline H3 | `--t-lg` | — | -0.01em |
+| Hero lead | `clamp(16px, 1.6vw, 19px)` | 1.6 | — |
+| Cuerpo | `1rem` / 400 | 1.55 | — |
+
+### Mono
+- `.mono`: `--t-xs`, letter-spacing `.02em`, **sin mayúsculas**.
+- `.kicker`: `--t-xs`, letter-spacing `.08em`, **mayúsculas**, color `--ink-3`.
+- Fechas, índices, meta de cards y footer-bottom en mono `--t-xs`.
 
 ### Reglas tipográficas
-- **Tres roles, no mezcla libre:** serif = voz/título/valor, mono = etiqueta/dato, sans = cuerpo. No intercambiar roles.
-- **Énfasis en itálica azul:** `<em>` dentro de títulos serif va en itálica + color de señal (`--electric`, o `--electric-glow` sobre oscuro).
-- **Mono siempre en mayúsculas** con tracking; nunca frases largas en mono.
+- Display (`--font-display` + `--display-weight`) para `h1–h4`, stats y títulos de lista; cuerpo en Geist.
+- **Dashboard: solo sans.** En la interfaz de datos (`.panel-head h3` y demás) se usa `--font-body`, nunca el display. En gráficos SVG, los ticks van en mono y los valores (`text.val`) en sans.
+- `text-wrap: balance` en `h1–h3`; `text-wrap: pretty` en `p`.
 
 ## 4. Radios
-
-El sistema es deliberadamente **rectangular** — la rejilla editorial vive de esquinas a 90°.
-
 | Token | Valor | Uso |
 |---|---|---|
-| (default) | `0` | Secciones, paneles, inputs, tarjetas, botón submit — sin redondeo. |
-| pill | `100px` | Badge de fuente, chips de cambio, tabs de acceso, botones tipo cápsula. |
-| dot | `50%` | Puntos de estado en vivo (`live-dot`, `live-stamp::before`). |
+| `--r-xs` | `6px` | Botones internos de segmentados y tabs. |
+| `--r-sm` | `9px` | Inputs, `dash-select`, contenedor de segmentados y tabs. |
+| `--r-md` | `12px` | KPI, paneles, ítems de actividad, franjas de stats, reglas. |
+| `--r-lg` | `18px` | Tiles, cards, `auth`, tarjetas destacadas. |
+| `--r-pill` | `100px` | Botones, nav, tags, estados, deltas, badges, conmutador. |
+| — | `50%` | Puntos de estado (`live-dot`, `.estado::before`, timeline). |
 
 ## 5. Sombras y elevación
+| Token | Valor | Uso |
+|---|---|---|
+| `--shadow-sm` | `0 1px 2px rgba(21,23,31,.05), 0 1px 1px rgba(21,23,31,.03)` | Reposo de KPI, paneles, `auth`, destacadas; tab activa; hover de `act-item`. |
+| `--shadow-md` | `0 6px 20px -8px rgba(21,23,31,.12), 0 2px 6px -3px rgba(21,23,31,.06)` | Hover de tiles y cards; `.feat-yuncar`, `.feat-apreciacion`. |
+| `--shadow-lg` | `0 20px 48px -16px rgba(21,23,31,.20), 0 6px 16px -8px rgba(21,23,31,.10)` | Conmutador flotante `.fontswitch`. |
+| Foco | `0 0 0 3px var(--electric-soft)` | `.field input:focus`, `.dash-select:focus` (con borde `--electric`). |
+| Botón primario | `0 1px 2px rgba(31,61,255,.3)` → hover `0 4px 14px -2px rgba(31,61,255,.4)` | `.btn-primary`. |
 
-**Diseño plano.** No hay `box-shadow` de elevación en tarjetas, paneles ni superficies: la profundidad y la separación se logran con la rejilla de 1px (`--ink`), los separadores `--rule` y los cambios de superficie (`--paper` ↔ `--paper-2`).
-
-La única sombra del sistema es **funcional, no estética**: el anillo pulsante de los indicadores "en vivo".
-
-```css
-/* anillo de pulso — live-dot / live-stamp::before */
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0  rgba(31,61,255,0.55); }
-  70%  { box-shadow: 0 0 0 10px rgba(31,61,255,0); }
-  100% { box-shadow: 0 0 0 0  rgba(31,61,255,0); }
-}
-```
-
-> **Regla:** si algo necesita "despegarse", se resuelve con borde o cambio de superficie, no con sombra difusa.
-
-## 6. Texturas de fondo
-
-Dos capas dan el grano de "papel" sobre el lienzo crema:
-
-1. **Cuadrícula de puntos** (en `body`): `radial-gradient(circle at 1px 1px, rgba(10,14,26,0.08) 1px, transparent 0)` con `background-size: 28px 28px`. Retícula técnica tenue.
-2. **Ruido fractal** (en `body::before`, `position: fixed; inset:0`): SVG `feTurbulence` (`baseFrequency 0.9`, 2 octavas) al `opacity: .55` con `mix-blend-mode: multiply` y `pointer-events: none`. Da grano analógico. Vive en `z-index: 1`; el contenido va por encima.
+## 6. Fondo
+Sin rejilla de puntos ni ruido. El `body` lleva un halo azul fijo:
+`radial-gradient(1200px 600px at 80% -10%, var(--electric-softer), transparent 60%)` con `background-attachment: fixed`.
 
 ## 7. Layout
-
-- **Rejilla principal** (`.layout`): dos columnas `1fr 360px`, con borde inferior y divisorias de 1px (`--ink`). La columna principal lleva `border-right`.
-- **Columna lateral** (`.side-col`): `position: sticky; top: 0`, fondo `--paper`.
-- **Z-index:** ruido `1` → footer `3` → layout `4` → topbar/ticker/panel `5`.
-- **Padding de sección:** 40px horizontal en bloques principales; 24px en el panel lateral.
+- **`.shell`:** `max-width: 1240px`, padding `0 clamp(20px, 5vw, 56px)`.
+- **Secciones:** `.section` con padding vertical `clamp(40px, 6vw, 72px)`; `.hero` `clamp(56px, 9vw, 120px) 0 clamp(40px, 6vw, 72px)`.
+- **Home:** `.explorar-grid` `minmax(0,1.7fr) minmax(0,1fr)` (tiles + auth); `.hero-bottom` `1.1fr 1fr`.
+- **Rejillas:** `.tiles` `auto-fit minmax(280px, 1fr)`; `.card-grid` `auto-fill minmax(300px, 1fr)`; `.kpi-grid` `auto-fit minmax(210px, 1fr)`; `.panel-grid.cols-2` `1fr 1fr`, `.split` `1.6fr 1fr`.
+- **Z-index:** `--z-sticky 100` (topbar), `--z-switcher 400`, `--z-modal 600`, `--z-toast 800`.
 - **Breakpoints:**
-  - `≤1100px`: el layout colapsa a 1 columna; la lateral deja de ser sticky.
-  - `≤720px`: paddings a 20px; el hero, el footer-grid, los ítems de actividad/editorial y el formulario se reflujan; H1/H2 reducen tamaño.
+  - `≤940px`: `hero-bottom`, `explorar-grid` y `panel-grid` pasan a 1 columna.
+  - `≤720px`: la topbar se apila y oculta `.live`; tiles a 1 columna; `act-item` se reorganiza y oculta la flecha; footer a 2 columnas; las destacadas ocultan su panel lateral y su decoración.
 
 ## 8. Componentes
+- **Topbar:** sticky, `color-mix(in srgb, var(--paper) 82%, transparent)` + `backdrop-filter: blur(12px)`, borde inferior `--line`. Marca en display 700 con ⚡ `--electric`. Nav en pill: hover `--paper-2`, activo `--electric-soft` + `--electric-ink`.
+- **Ticker:** fondo `--surface`, borde `--line`, `scroll 60s linear infinite`, se pausa al pasar el cursor. `.up`/`.down`/`.flat` en mono con `--pos`/`--neg`/`--ink-3`.
+- **Hero:** kicker con `//` en `--electric-ink`; H1 con `.accent` en `--electric` y ⚡ `--spark`; lead `--ink-2`; CTA `btn-primary` + `btn-ghost`; tres stats.
+- **Section-head:** H2 display + `.meta` `--ink-3`, sin borde inferior.
+- **Activity (`.act-item`):** rejilla `96px 110px 1fr auto`, separador `--line`, `--r-md`. Hover: fondo `--surface`, `translateX(4px)`, `--shadow-sm`; la flecha avanza 5px y pasa a `--electric-ink`. `.source` en pill `--electric-soft`.
+- **Tiles / cards:** `--surface`, borde `--line`, `--r-lg`. Hover: `translateY(-3px)`, `--shadow-md`, borde `--line-2`; la flecha del tile se mueve en diagonal.
+- **Botones:** `.btn` en pill, Geist 600 `--t-base`, `:active` baja 1px. `.btn-primary` azul con ⚡ `--spark`; `.btn-ghost` transparente con `--line-2`.
+- **Tags y estados:** `.tag` pill `--paper-2`; `.estado` pill con punto `currentColor`: `-finalizado` (pos), `-desarrollo` (electric), `-prototipo` (warn).
+- **Dashboard:** segmentado `.seg` (`--paper-2`, `--r-sm`; activo `--surface-2` + `--shadow-sm`), `.dash-select`, `.kpi` con `.delta`, `.panel` + `.panel-head` sans, `.legend`, `table.dt` (cabecera `--line-2`, filas `--line`, hover `--paper-2`, números `tabular-nums`), `.pill`, `.bar-mini`.
+- **Auth:** `--surface`, `--r-lg`, `--shadow-sm`; tabs segmentadas; `.field input` en `--surface-2` con borde `--line-2` y foco azul + anillo; botón a ancho completo.
+- **Footer:** hairline `--line` (no bloque oscuro); rejilla `2fr 1fr 1fr 1fr`; `.big` display con `<em>` `--electric-ink`; h5 mono mayúsculas `--ink-3`; enlaces con hover `--electric-ink`.
+- **Timeline (CV):** línea `--line-2`, puntos `--electric` con anillo `--paper`, fechas mono `--electric-ink`.
+- **Userbar:** banda `--paper-2` bajo la topbar, visible solo con sesión.
+- **Conmutador `.fontswitch`** (solo demo): fijo abajo a la derecha, pill `--surface-2` + `--shadow-lg`; botón activo `--ink` / `--paper`.
 
-### Topbar
-Barra superior con `border-bottom` de tinta. Izquierda: estado del sistema con punto pulsante (`live-dot`) + coordenadas, todo en `.mono`. Derecha: navegación `.mono` con **subrayado animado** (`::after` que crece de 0 a 100% de ancho en azul, `transition .35s cubic-bezier(.7,0,.2,1)`).
-
-### Ticker / Marquee
-Banda de ancho completo en fondo `--ink`, texto `--paper`. Pista (`.marquee-track`) con `animation: scroll 50s linear infinite` (translateX 0 → -50%, contenido duplicado para bucle continuo). Valores en `<strong>` 500; dirección coloreada con clases `.up` / `.down` / `.flat`.
-
-### Hero
-`padding 72px 40px 56px`. Etiqueta superior `.mono` con número en azul. **H1** Fraunces 300 gigante con `.ital` (itálica) y `.accent` (azul) que lleva un ⚡ amarillo pseudo-elemento rotado 12° con contorno de tinta. Abajo: rejilla 1fr/1fr con párrafo (16px, ink-soft) y **stats** (3 columnas: número Fraunces 36px + label mono).
-
-### Section-head
-Cabecera reutilizable: H2 Fraunces 38px (con `<em>` azul itálico) a la izquierda + etiqueta `.mono` a la derecha, `border-bottom` de tinta. En móvil pasa a columna.
-
-### Activity feed (`.act-item`)
-Enlaces en rejilla `90px 130px 1fr auto` (fecha · fuente · título · flecha), separados por borde inferior. **Hover:** fondo `--paper-2`, `padding-left` aumenta (22→56px) y una **barra azul de 3px** entra deslizándose por la izquierda (`::before`, translateX -100%→0, `.35s cubic-bezier(.7,0,.2,1)`); la flecha → se desplaza 6px. `.source` es un badge pill con borde de tinta y texto azul. Título en Fraunces 22px; placeholders en itálica ink-soft.
-
-### Editorial list (`.ed-item`)
-Mismo patrón de hover (barra azul + padding + fondo) en rejilla `60px 1fr auto`: índice azul `.mono`, título Fraunces 28px + descripción 13px, flecha →. En hover la flecha hace `translateX(6px) rotate(-45deg)` y se vuelve azul (gesto de "abrir/salir").
-
-### Panel de indicadores (`.panel`)
-- **panel-head:** fondo `--paper-2`, H4 Fraunces 18px (con `<em>` azul) + `live-stamp` con punto pulsante.
-- **ind-group-label:** franja `.mono` 9px en azul, separa grupos (§ Mercado & macro, § Energía & clima).
-- **ind-row:** rejilla `1fr auto auto`: etiqueta (nombre 12px/500 + unidad mono 9px) · valor Fraunces 17px alineado a la derecha · **chip de cambio** pill. Separadores `--rule`; hover sube a `--paper-2`.
-- **chg:** pill mono 10px con borde, `min-width 60px`; variantes `.up` / `.down` / `.flat` (ver §2 semánticos).
-- **panel-foot:** mono 9px, fuentes de datos, fondo `--paper-2`.
-
-### Acceso / Auth (`.auth-side`)
-Bloque sobre `--paper-2`. Etiqueta `// Acceso` en azul, H4 Fraunces 24px. **Tabs** tipo cápsula (borde de tinta; `.active` invierte a fondo tinta/texto papel). **Campos** con label mono 9px uppercase e input de **solo borde inferior** que pasa a azul en `:focus`. **Botón submit:** fondo tinta, texto papel, mono 11px ls .1em uppercase, flecha ⚡ amarilla; **hover** cambia el fondo a azul eléctrico.
-
-### Footer
-Sección sobre `--ink`, texto `--paper`. Rejilla `1.5fr 1fr 1fr 1fr`: marca (etiqueta mono + "big" Fraunces 300/56px con `<em>` en electric-glow) y tres columnas de enlaces con H5 mono en electric-glow. Enlaces a `opacity .85` → hover `1` + color `--spark`. Línea inferior mono con copyright y versión.
-
-## 9. Animaciones y movimiento
-
+## 9. Movimiento
 | Animación | Dónde | Definición |
 |---|---|---|
-| `pulse` 1.6s infinite | `live-dot`, `live-stamp::before` | anillo `box-shadow` que se expande y desvanece (azul) |
-| `scroll` 50s linear infinite | `marquee-track` | `translateX(0 → -50%)` para cinta continua |
-| Subrayado nav | `nav.top-nav a::after` | ancho 0→100%, `transition .35s cubic-bezier(.7,0,.2,1)` |
-| Barra de hover | `act-item::before`, `ed-item::before` | `translateX(-100% → 0)`, `.35s cubic-bezier(.7,0,.2,1)` |
-| Desplazamiento de ítem | `act-item`, `ed-item` | `padding-left` + `background`, `.25–.3s ease` |
-| Flecha | `.act-item .arrow`, `.ed-item .arrow` | `translateX(6px)` (+ `rotate(-45deg)` en editorial), `.3s ease` |
-| Foco de input | `.field input` | `border-bottom-color` → azul, `.25s ease` |
-| Hover de botón | `.submit-btn`, tabs | `background` → azul / inversión, `.25s ease` |
+| `pulse` 2s infinite | `live-dot`, `.feat-geo .fg-pin` | anillo `box-shadow` 0 → 8px, `rgba(31, 61, 255, 0.45)` → 0 |
+| `pulse-orange` 2s infinite | `.feat-yuncar .fy-live .dot` | igual con `rgba(232, 80, 10, .5)` |
+| `scroll` 60s linear infinite | `.marquee-track` | `translateX(0 → -50%)`; se pausa con el cursor encima |
+| Elevación | tiles, cards | `transform .28s var(--ease)`, `box-shadow .28s var(--ease)` |
+| Desplazamiento | `act-item` | `background .22s var(--ease-soft)`, `transform .22s var(--ease)` |
+| Botones | `.btn` | `background .2s var(--ease-soft)`, `transform .15s var(--ease)` |
+| Flechas | `.arrow` | `transform .2–.28s var(--ease)` |
+| Foco | inputs | `border-color .18s`, `box-shadow .18s` |
 
-**Curva de marca:** `cubic-bezier(.7,0,.2,1)` para las entradas deslizantes (barra de hover, subrayado) — arranque rápido, salida suave. El resto usa `ease` corto (.2–.35s).
-
-> El archivo v3 no define un bloque `prefers-reduced-motion`. Al implementar en producción, añadir uno que detenga el marquee y el pulso, y reduzca los desplazamientos, para accesibilidad.
+- **Curvas:** `--ease: cubic-bezier(.22, 1, .36, 1)` (ease-out-quint) para movimiento; `--ease-soft: cubic-bezier(.4, 0, .2, 1)` para color y fondo.
+- **`prefers-reduced-motion: reduce`:** detiene marquee y `live-dot`, y reduce toda transición o animación a `.01ms`.
 
 ## 10. Notas de implementación
+- Usar siempre los tokens de `:root`; los hex sueltos solo se permiten dentro de las tarjetas `.feat-*` (§2).
+- Separar con hairline o cambio de superficie; elevar con `--shadow-*`, no con bordes de tinta.
+- Texto azul con `--electric-ink`; rellenos azules con `--electric`.
+- Cambiar de tipografía solo con `data-type` en `<html>`; nunca fijar `font-family` de display a mano.
+- Al activar `serif` en una página, cargar Spectral en su `<head>`.
 
-- Variables CSS centralizadas en `:root`; reutilizar siempre los tokens en vez de hex sueltos.
-- La identidad nace del **contraste papel/tinta + rejilla de 1px**; mantener ese andamiaje antes de añadir color.
-- Azul = acción/foco; amarillo = chispa puntual; verde/rojo = solo dirección de dato. No ampliar el rol de ningún color.
-- Plano por defecto: resolver separación con borde/superficie, no con sombra.
-- Conservar la jerarquía de tres fuentes por rol (serif/mono/sans) en cualquier página nueva para que se reconozca la marca.
+## Historial
+
+**v3 — «Papel & Voltaje»** (fuente: `towers-ing-v3.html`)
+- Papel `#F1ECDF` / `#E8E2D1`, tinta `#0A0E1A` / `#3A3D48`, separador `--rule` `#1A1D2899`; spark `#FFE94A`.
+- Rejilla estructural de 1px en tinta; esquinas rectas (solo pill `100px` y dot `50%`).
+- Diseño plano: sin sombras de elevación, solo el anillo `pulse` (1.6s, 10px).
+- Tipografía fija por rol: Fraunces (títulos y valores), Geist (cuerpo), JetBrains Mono en mayúsculas (datos).
+- Fondo con cuadrícula de puntos de 28px + ruido fractal `feTurbulence`.
+- Curva `cubic-bezier(.7,0,.2,1)`, barra azul de 3px en hover, ticker y footer sobre bloque de tinta.
+- Sin bloque `prefers-reduced-motion`.
+- **Pendiente:** el comentario de `index.html` (línea 9) aún dice «sistema v3 · Grotesk»; debe decir v3.1.
