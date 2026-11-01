@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M8 Hacer · Trend &amp; Tech – Towers Ing</title>
+  <meta name="description" content="El prototipo crece en tres versiones. Cada una se muestra, se prueba y mejora la anterior hasta llegar a un prototipo funcional (MPV).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../styles/towers.css">
+  <meta name="author" content="Ferney Torres Ome">
+  <link rel="stylesheet" href="../trend-tech.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../../../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../../../index.html">Inicio</a>
+        <a href="../../../proyectos/index.html">Proyectos</a>
+        <a href="../../../blog/index.html">Blog</a>
+        <a href="../../../dashboard/index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <nav class="tt-crumbs" aria-label="Ruta"><a href="../../index.html">Capacitación</a><span>/</span><a href="../index.html">Trend &amp; Tech</a><span>/</span><span>M8</span></nav>
+
+    <header class="tt-mhead">
+      <div class="tt-mhead-meta"><span class="phase">Fase 2 · Proyecto Lean UX</span><span class="tt-mod">M8 de 10</span></div>
+      <h1>Hacer</h1>
+      <p class="tt-lead">El prototipo crece en tres versiones. Cada una se muestra, se prueba y mejora la anterior hasta llegar a un prototipo funcional (MPV).</p>
+      <p class="tt-cut"><strong>Corte 2</strong> 60 % · semana 9</p>
+    </header>
+
+    <!-- RECORRIDO DEL MÓDULO: lección + actividades en tarjetas -->
+    <section class="tt-msec tt-tour" aria-labelledby="tt-tour-h" data-tour>
+      <div class="tt-tour-head">
+        <h2 id="tt-tour-h">Recorrido del módulo</h2>
+        <p class="tt-tour-count" aria-live="polite"><span data-tour-part>Lección</span> <span class="n"><b data-tour-now>1</b> de <span data-tour-total>6</span></span></p>
+      </div>
+      <div class="tt-tour-bar" aria-hidden="true"><i data-tour-fill></i></div>
+
+      <div class="tt-tour-track" data-tour-track>
+
+        <!-- 1 · VIDEO-LECCIÓN -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 1 de 6: video-lección">
+          <h3>Video-lección</h3>
+          <p class="tt-step-lead">Cómo construir el prototipo en tres versiones —v0.1, v0.5 y v1.0— y documentar lo que se aprende en cada una. Dura 3 minutos y 1 segundos; los subtítulos dicen lo mismo que la voz.</p>
+          <div class="tt-video">
+            <video controls preload="metadata" playsinline poster="media/leccion-hacer.jpg" width="1280" height="720">
+              <source src="media/leccion-hacer.mp4" type="video/mp4">
+              Tu navegador no reproduce el video. <a href="media/leccion-hacer.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <details class="tt-more">
+            <summary>Leer la transcripción</summary>
+            <div class="tt-more-body">
+              <p>Llegó el momento de construir. Pero no de una vez: el prototipo crece en tres versiones, y cada una se muestra, se prueba y mejora la anterior. En este módulo vas a ver qué es cada versión, con qué herramientas hacerla y cómo documentar lo que aprendes en cada paso, hasta llegar a un prototipo funcional.</p>
+              <p>La fidelidad es qué tanto se parece el prototipo al producto final. Al principio conviene baja fidelidad, porque cambiar un dibujo es barato y rápido. A medida que aprendes, subes la fidelidad. Así no gastas tiempo puliendo algo que los usuarios todavía no han probado. La regla es simple: cada versión responde una pregunta, y la respuesta define la siguiente versión.</p>
+              <p>La versión 0.1, la actividad diez, es la idea dibujada: las pantallas o los pasos principales, aunque sea en papel. Sirve para comprobar que el equipo y la organización entienden lo mismo. En el ejemplo de la panadería, son tres bocetos: los datos del pedido, el mensaje de la torta con una vista previa y la confirmación. Se muestran a la administradora y se ajustan en el momento.</p>
+              <p>La versión 0.5, la actividad once, es navegable: se puede hacer clic y recorrer el flujo principal, aunque todavía no funcione de verdad. Es la versión que pruebas con usuarios. En el ejemplo, algunos clientes recorren el formulario en una herramienta de diseño y aparece un hallazgo: no entienden los tamaños de torta. Con eso se agregan fotos de referencia. Después de esta versión viene la validación con cinco métodos, en el módulo nueve.</p>
+              <p>La versión 1.0, la actividad dieciséis, es el prototipo funcional, o producto mínimo viable: la versión más simple que funciona de verdad y permite comprobar la hipótesis con usuarios reales. En el ejemplo, un formulario real conectado a una hoja de cálculo, con una vista para la cocina y una confirmación automática para el cliente. No necesita ser perfecto; necesita funcionar con lo que aprendiste.</p>
+              <p>Cada versión deja rastro. Los archivos van en la carpeta prototipo del repositorio, una subcarpeta por versión. Y en el archivo 07-prototipo.md, dentro de docs, registras para cada versión qué es, qué se probó, con quién, qué se aprendió y qué cambia en la siguiente. Ese registro es la prueba de que el prototipo creció con evidencia y no por intuición.</p>
+              <p>En la página del módulo tienes el ejemplo resuelto de la Panadería Trigal, una organización ficticia, con sus tres versiones, y la plantilla para descargar. Antes de empezar, repasa la presentación y responde el quiz.</p>
+            </div>
+          </details>
+        </article>
+        <!-- 2 · CONCEPTOS + PRESENTACIÓN -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 2 de 6: prototipo en tres versiones" hidden>
+          <h3>Prototipo en tres versiones</h3>
+          <p class="tt-step-lead">Cada versión se muestra, se prueba y mejora la anterior, hasta llegar a un prototipo funcional (MPV).</p>
+          <h4>Ideas clave</h4>
+          <div class="tt-notes">
+            <div><h5>Fidelidad</h5><p>Qué tanto se parece el prototipo al producto final. Se empieza baja, porque cambiar un dibujo es barato, y se sube a medida que se aprende.</p></div>
+            <div><h5>v0.1 · Actividad 10</h5><p>La idea dibujada: pantallas o pasos principales, aunque sea en papel.</p></div>
+            <div><h5>v0.5 · Actividad 11</h5><p>Navegable: se puede recorrer el flujo principal. Es la versión que se prueba con usuarios antes de la validación del Módulo 9.</p></div>
+            <div><h5>v1.0 · Actividad 16</h5><p>El prototipo funcional o producto mínimo viable: lo más simple que funciona de verdad y permite comprobar la hipótesis.</p></div>
+            <div><h5>Registro</h5><p>Archivos en prototipo/ (una subcarpeta por versión) y, en docs/07-prototipo.md, qué se probó, qué se aprendió y qué cambia.</p></div>
+          </div>
+
+          <h4>Presentación: ejercicio resuelto paso a paso</h4>
+          <div class="tt-slides" data-slides='["Hacer: el prototipo en tres versiones", "Enunciado", "Repaso: fidelidad", "Paso 1 · v0.1: las pantallas", "Paso 2 · v0.1: probar y ajustar", "Paso 3 · v0.5: navegable", "Paso 4 · v0.5: probar con usuarios", "Paso 5 · v1.0: lo mínimo que funciona", "Paso 6 · v1.0: prueba de punta a punta", "Paso 7 · ¿Se cumplió la señal?", "Paso 8 · Organizar prototipo/", "Resultado · docs/07-prototipo.md", "Errores frecuentes", "Síntesis y ejercicio propuesto"]' data-slides-dir="media/diapositivas/diapositiva-" tabindex="0" aria-label="Diapositivas de la presentación; usa las flechas para cambiar">
+            <div class="tt-slides-frame"><img data-slide-img src="media/diapositivas/diapositiva-01.jpg" alt="Diapositiva 1 de 14: Hacer: el prototipo en tres versiones" width="1280" height="720" decoding="async"></div>
+            <div class="tt-slides-bar">
+              <button type="button" class="btn btn-ghost" data-slide-prev disabled><span class="arrow" aria-hidden="true">←</span> Diapositiva anterior</button>
+              <span class="n" aria-live="polite"><b data-slide-now>1</b> de <span data-slide-total>14</span></span>
+              <button type="button" class="btn btn-ghost" data-slide-next>Diapositiva siguiente <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <a class="btn btn-ghost tt-dl" href="media/hacer-prototipo.pptx" download>Descargar la presentación <small>.pptx · 63 KB · con animaciones</small></a>
+        </article>
+        <!-- 3 · QUIZ -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 3 de 6: quiz" hidden>
+          <h3>Quiz: 5 preguntas</h3>
+          <p class="tt-step-lead">Una pregunta a la vez. Al responder verás la explicación; al final, tu resultado.</p>
+          <div class="tt-quiz" data-quiz>
+            <div class="tt-quiz-head" data-q-head>
+              <span class="n">Pregunta <b data-q-now>1</b> de <span data-q-total>5</span></span>
+              <div class="tt-quiz-bar" aria-hidden="true"><i data-q-fill></i></div>
+            </div>
+
+            <fieldset class="tt-q" data-answer="b" data-correct="La versión más simple que funciona y permite comprobar la hipótesis con usuarios reales" data-ok="Correcto. El MPV es lo más simple que funciona de verdad y permite comprobar la hipótesis." data-no="No. El MPV es la versión más simple que funciona de verdad y permite comprobar la hipótesis con usuarios reales.">
+              <legend><b>1</b> <span>¿Qué es un producto mínimo viable (MPV)?</span></legend>
+              <button type="button" data-v="a">La versión final con todas las funciones</button>
+              <button type="button" data-v="b">La versión más simple que funciona y permite comprobar la hipótesis con usuarios reales</button>
+              <button type="button" data-v="c">Un dibujo en papel</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q tt-q-match wide" data-match data-correct="Bocetos → v0.1 · Recorrido con clics → v0.5 · Funcional → v1.0 · Archivos → prototipo/ · Registro → docs/07-prototipo.md" data-ok="Correcto. v0.1 son bocetos, v0.5 es navegable y v1.0 funcional; los archivos van en prototipo/ y el registro en docs/07-prototipo.md." data-no="No del todo. v0.1 son bocetos, v0.5 es navegable y v1.0 funcional; los archivos van en prototipo/ y el registro en docs/07-prototipo.md.">
+              <legend><b>2</b> <span>Asocia cada elemento con lo que corresponde.</span></legend>
+              <label><span>Bocetos de las pantallas principales</span><select data-answer="v01"><option value="">Elige…</option><option value="v01">v0.1</option><option value="v05">v0.5</option><option value="v10">v1.0</option><option value="pro">prototipo/</option><option value="doc">docs/07-prototipo.md</option></select></label>
+              <label><span>Prototipo que se recorre con clics</span><select data-answer="v05"><option value="">Elige…</option><option value="v01">v0.1</option><option value="v05">v0.5</option><option value="v10">v1.0</option><option value="pro">prototipo/</option><option value="doc">docs/07-prototipo.md</option></select></label>
+              <label><span>Prototipo funcional</span><select data-answer="v10"><option value="">Elige…</option><option value="v01">v0.1</option><option value="v05">v0.5</option><option value="v10">v1.0</option><option value="pro">prototipo/</option><option value="doc">docs/07-prototipo.md</option></select></label>
+              <label><span>Archivos de cada versión</span><select data-answer="pro"><option value="">Elige…</option><option value="v01">v0.1</option><option value="v05">v0.5</option><option value="v10">v1.0</option><option value="pro">prototipo/</option><option value="doc">docs/07-prototipo.md</option></select></label>
+              <label><span>Registro de las tres versiones</span><select data-answer="doc"><option value="">Elige…</option><option value="v01">v0.1</option><option value="v05">v0.5</option><option value="v10">v1.0</option><option value="pro">prototipo/</option><option value="doc">docs/07-prototipo.md</option></select></label>
+              <button type="button" class="btn btn-ghost tt-check" data-check>Comprobar</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="a" data-correct="Porque cambiarlo es barato y rápido" data-ok="Correcto. Con baja fidelidad, cambiar es barato: no se pule algo que nadie ha probado." data-no="No. Se empieza en papel porque cambiar un dibujo es barato y rápido.">
+              <legend><b>3</b> <span>¿Por qué conviene empezar con un prototipo en papel?</span></legend>
+              <button type="button" data-v="a">Porque cambiarlo es barato y rápido</button>
+              <button type="button" data-v="b">Porque se ve más profesional</button>
+              <button type="button" data-v="c">Porque no hace falta mostrarlo a nadie</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="b" data-correct="Qué se probó, con quién, qué se aprendió y qué cambia" data-ok="Correcto. Ese registro demuestra que el prototipo creció con evidencia." data-no="No. Se registra qué se probó, con quién, qué se aprendió y qué cambia en la siguiente versión.">
+              <legend><b>4</b> <span>¿Qué se registra después de cada versión?</span></legend>
+              <button type="button" data-v="a">Solo el nombre de la herramienta</button>
+              <button type="button" data-v="b">Qué se probó, con quién, qué se aprendió y qué cambia</button>
+              <button type="button" data-v="c">Nada: basta con el archivo</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="c" data-correct="Entre v0.5 y v1.0" data-ok="Correcto. La validación (#15, Módulo 9) se hace sobre la v0.5 y sus hallazgos alimentan la v1.0." data-no="No. La validación (#15) va entre v0.5 y v1.0: sus hallazgos alimentan la versión funcional.">
+              <legend><b>5</b> <span>¿Entre qué versiones va la validación con cinco métodos de testeo (#15)?</span></legend>
+              <button type="button" data-v="a">Antes de v0.1</button>
+              <button type="button" data-v="b">Después de v1.0</button>
+              <button type="button" data-v="c">Entre v0.5 y v1.0</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary tt-q-next" data-q-next hidden>Siguiente pregunta <span class="arrow" aria-hidden="true">→</span></button>
+
+            <div class="tt-result" data-q-result hidden tabindex="-1">
+              <p class="tt-result-score"><b data-q-score>0</b> de <span data-q-of>5</span></p>
+              <p class="tt-result-msg" data-q-msg></p>
+              <ul class="tt-missed" data-q-missed></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Intentar de nuevo</button>
+            </div>
+          </div>
+        </article>
+        <!-- 4 · ACTIVIDAD 10 -->
+        <article class="tt-step" data-part="Actividad 10" aria-label="Tarjeta 4 de 6: actividad 10 · prototipo v0.1" hidden>
+          <h3>Actividad 10 · Prototipo v0.1</h3>
+          <p class="tt-step-lead">Dibuja la idea: las pantallas o los pasos principales, aunque sea en papel.</p>
+          <ol class="tt-flow"><li><span class="act">Prototipo v0.1</span><span class="tt-chip">#10</span><code class="file">prototipo/</code></li></ol>
+
+          <h4>Los pasos</h4>
+          <ol class="tt-steps"><li>Parte de la casilla 8 del canvas</li><li>Dibuja las pantallas o pasos principales</li><li>Muéstralo a la organización</li><li>Ajusta y fotografía los bocetos</li><li>Súbelos a prototipo/v0.1/</li></ol>
+
+          <h4>Herramienta sugerida</h4>
+          <dl class="tt-tools"><div><dt>Bocetos</dt><dd>Papel y lápiz (y una foto con el celular)</dd></div></dl>
+
+          <h4>Ejemplo resuelto · organización ficticia</h4>
+          <div class="tt-example">
+            <table class="tt-table">
+              <tr><th>Qué es</th><td>Tres bocetos en papel: datos del pedido, mensaje con vista previa y confirmación; más un dibujo del tablero de la cocina</td></tr>
+              <tr><th>Se probó con</th><td>La administradora y la pastelera</td></tr>
+              <tr><th>Aprendimos</th><td>La cocina necesita ver primero la fecha de entrega</td></tr>
+              <tr><th>Cambia</th><td>El tablero se ordena por fecha de entrega</td></tr>
+            </table>
+          </div>
+
+        </article>
+        <!-- 5 · ACTIVIDAD 11 -->
+        <article class="tt-step" data-part="Actividad 11" aria-label="Tarjeta 5 de 6: actividad 11 · prototipo v0.5" hidden>
+          <h3>Actividad 11 · Prototipo v0.5</h3>
+          <p class="tt-step-lead">Haz una versión navegable del flujo principal y pruébala con usuarios.</p>
+          <ol class="tt-flow"><li><span class="act">Prototipo v0.5</span><span class="tt-chip">#11</span><code class="file">prototipo/</code></li></ol>
+
+          <h4>Los pasos</h4>
+          <ol class="tt-steps"><li>Pasa los bocetos a una versión navegable</li><li>Conecta las pantallas del flujo principal</li><li>Pruébala con algunos usuarios</li><li>Registra los hallazgos</li><li>Súbela a prototipo/v0.5/ con su enlace</li></ol>
+
+          <h4>Herramienta sugerida</h4>
+          <dl class="tt-tools"><div><dt>Prototipo navegable (plan gratuito)</dt><dd>Figma</dd></div></dl>
+          <p class="tt-step-note">Después de esta versión viene la validación con cinco métodos de testeo (#15, Módulo 9).</p>
+
+          <h4>Ejemplo resuelto · organización ficticia</h4>
+          <div class="tt-example">
+            <table class="tt-table">
+              <tr><th>Qué es</th><td>El formulario navegable: se hace clic y se recorren las tres pantallas</td></tr>
+              <tr><th>Se probó con</th><td>Algunos clientes que encargan tortas</td></tr>
+              <tr><th>Aprendimos</th><td>No entienden los tamaños de torta (pequeña, mediana, grande)</td></tr>
+              <tr><th>Cambia</th><td>Se agregan fotos de referencia con el número de porciones</td></tr>
+            </table>
+          </div>
+
+        </article>
+        <!-- 6 · ACTIVIDAD 16 -->
+        <article class="tt-step" data-part="Actividad 16" aria-label="Tarjeta 6 de 6: actividad 16 · prototipo v1.0" hidden>
+          <h3>Actividad 16 · Prototipo v1.0</h3>
+          <p class="tt-step-lead">Construye el prototipo funcional (MPV) con lo que aprendiste en las pruebas.</p>
+          <ol class="tt-flow"><li><span class="act">Prototipo v1.0</span><span class="tt-chip">#16</span><code class="file">prototipo/</code></li><li><span class="act">Registro de las tres versiones</span><span class="tt-chip">#16</span><code class="file">docs/07-prototipo.md</code></li></ol>
+
+          <h4>Los pasos</h4>
+          <ol class="tt-steps"><li>Revisa los hallazgos de v0.5 y de la validación</li><li>Construye lo mínimo que funcione de verdad</li><li>Pruébalo de punta a punta</li><li>Súbelo a prototipo/v1.0/</li><li>Completa docs/07-prototipo.md</li></ol>
+
+          <h4>Ejemplo resuelto · organización ficticia</h4>
+          <div class="tt-example">
+            <table class="tt-table">
+              <tr><th>Qué es</th><td>Un formulario real conectado a una hoja de cálculo, con una vista filtrada para la cocina y confirmación automática por correo al cliente</td></tr>
+              <tr><th>Se probó con</th><td>La administradora, la cocina y algunos clientes, con pedidos de prueba</td></tr>
+              <tr><th>Aprendimos</th><td>Ningún pedido de prueba llegó sin fecha, sabor o mensaje: la señal de la hipótesis se cumplió en la prueba</td></tr>
+              <tr><th>Siguiente paso</th><td>Evaluar riesgos y preparar la campaña (Módulo 9)</td></tr>
+            </table>
+          </div>
+          <div class="tt-dls">
+            <a class="btn btn-primary tt-dl" href="plantillas/07-prototipo.md" download="07-prototipo.md">Descargar plantilla <small>.md</small></a>
+            <a class="btn btn-ghost tt-dl" href="ejemplos/07-prototipo-ejemplo.md" download="07-prototipo-ejemplo.md">Descargar el ejemplo <small>.md</small></a>
+          </div>
+          <h4>Herramientas sugeridas</h4>
+          <dl class="tt-tools"><div><dt>Formulario funcional</dt><dd>Google Forms</dd></div><div><dt>Datos y vista de cocina</dt><dd>Google Sheets</dd></div></dl>
+
+          <h4>Entregables del módulo</h4>
+          <ol class="tt-flow">
+            <li><span class="act">Prototipo v0.1</span><span class="tt-chip">#10</span><code class="file">prototipo/</code></li>
+            <li><span class="act">Prototipo v0.5</span><span class="tt-chip">#11</span><code class="file">prototipo/</code></li>
+            <li><span class="act">Prototipo v1.0</span><span class="tt-chip">#16</span><code class="file">prototipo/</code></li>
+            <li><span class="act">Registro de las tres versiones</span><span class="tt-chip">#16</span><code class="file">docs/07-prototipo.md</code></li>
+          </ol>
+          <p class="tt-step-note">Cuentan para el Corte 2 (60 %, semana 9). Incluye en cada archivo la declaración de uso de IA según el numeral 5.3 del <a href="https://universidadean.edu.co/sites/default/files/convocatorias/SIAC/05_Acuerdo-006-de-2025.pdf" target="_blank" rel="noopener">Acuerdo 006 de 2025</a>.</p>
+
+          <a class="btn btn-primary tt-next-mod" href="../modulo-9/index.html">Ir al Módulo 9 <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+
+      </div>
+
+      <div class="tt-tour-nav">
+        <button type="button" class="btn btn-ghost" data-tour-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+        <button type="button" class="btn btn-primary" data-tour-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <div class="tt-mnav">
+      <nav class="tt-map" aria-label="Módulos del curso">
+        <div class="tt-map-group"><span>Fase 1</span><a href="../modulo-1/index.html" title="Revoluciones industriales">M1</a><a href="../modulo-2/index.html" title="Fundamentos de IA y prompts">M2</a><a href="../modulo-3/index.html" title="IA responsable">M3</a><a href="../modulo-4/index.html" title="Tecnologías emergentes">M4</a></div>
+        <div class="tt-map-group"><span>Fase 2</span><a href="../modulo-5/index.html" title="Planear">M5</a><a href="../modulo-6/index.html" title="Idear">M6</a><a href="../modulo-7/index.html" title="Pensar">M7</a><a href="../modulo-8/index.html" title="Hacer" aria-current="page">M8</a><a href="../modulo-9/index.html" title="Evaluar y lanzar">M9</a><a href="../modulo-10/index.html" title="Presentar">M10</a></div>
+      </nav>
+      <div class="tt-pn"><a class="prev" href="../modulo-7/index.html"><small>← M7</small><strong>Pensar</strong></a><a class="next" href="../modulo-9/index.html"><small>M9 →</small><strong>Evaluar y lanzar</strong></a></div>
+    </div>
+
+  </main>
+
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../../../index.html">Inicio</a><a href="../../../blog/index.html">Blog</a><a href="../../../proyectos/index.html">Proyectos</a><a href="../../../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../../../training/index.html">Capacitación</a><a href="../../../cv/index.html">Currículum</a><a href="../../../forms/index.html">Formularios</a><a href="../../../data/index.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../trend-tech.js" defer></script>
+
+</body>
+</html>

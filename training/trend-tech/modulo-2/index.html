@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M2 Fundamentos de IA y prompts · Trend &amp; Tech – Towers Ing</title>
+  <meta name="description" content="Para usar bien la IA en un negocio hay que entender qué hay detrás de una respuesta y cómo pedirla. Este módulo da el vocabulario mínimo y las técnicas para escribir mejores prompts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../styles/towers.css">
+  <meta name="author" content="Ferney Torres Ome">
+  <link rel="stylesheet" href="../trend-tech.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../../../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="live"><span class="live-dot"></span> Sistema activo</span>
+      </div>
+      <nav class="top-nav">
+        <a href="../../../index.html">Inicio</a>
+        <a href="../../../proyectos/index.html">Proyectos</a>
+        <a href="../../../blog/index.html">Blog</a>
+        <a href="../../../dashboard/index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <nav class="tt-crumbs" aria-label="Ruta"><a href="../../index.html">Capacitación</a><span>/</span><a href="../index.html">Trend &amp; Tech</a><span>/</span><span>M2</span></nav>
+
+    <header class="tt-mhead">
+      <div class="tt-mhead-meta"><span class="phase">Fase 1 · Contextualización</span><span class="tt-mod">M2 de 10</span></div>
+      <h1>Fundamentos de IA y prompts</h1>
+      <p class="tt-lead">Para usar bien la IA en un negocio hay que entender qué hay detrás de una respuesta y cómo pedirla. Este módulo da el vocabulario mínimo y las técnicas para escribir mejores prompts.</p>
+      <p class="tt-cut"><strong>Corte 1</strong> 40 % · semana 4</p>
+    </header>
+
+    <!-- RECORRIDO DEL MÓDULO: lección + actividades en tarjetas -->
+    <section class="tt-msec tt-tour" aria-labelledby="tt-tour-h" data-tour>
+      <div class="tt-tour-head">
+        <h2 id="tt-tour-h">Recorrido del módulo</h2>
+        <p class="tt-tour-count" aria-live="polite"><span data-tour-part>Lección</span> <span class="n"><b data-tour-now>1</b> de <span data-tour-total>5</span></span></p>
+      </div>
+      <div class="tt-tour-bar" aria-hidden="true"><i data-tour-fill></i></div>
+
+      <div class="tt-tour-track" data-tour-track>
+
+        <!-- 1 · VIDEO-LECCIÓN -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 1 de 5: video-lección">
+          <h3>Video-lección</h3>
+          <p class="tt-step-lead">Qué hay detrás de una respuesta de la IA y cómo pedirla mejor. Dura 3 minutos y 10 segundos; los subtítulos dicen lo mismo que la voz.</p>
+          <div class="tt-video">
+            <video controls preload="metadata" playsinline poster="media/leccion-ia-prompts.jpg" width="1280" height="720">
+              <source src="media/leccion-ia-prompts.mp4" type="video/mp4">
+              Tu navegador no reproduce el video. <a href="media/leccion-ia-prompts.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <details class="tt-more">
+            <summary>Leer la transcripción</summary>
+            <div class="tt-more-body">
+              <p>Le pides a una inteligencia artificial un eslogan y en segundos te entrega diez. ¿Cómo lo hace? ¿Y por qué a veces responde algo brillante y otras veces algo que no sirve? En este video vas a entender qué hay detrás de esa respuesta y cómo pedirla mejor.</p>
+              <p>Empecemos por lo básico. Un algoritmo es una secuencia de pasos para resolver un problema, como una receta. Los sistemas de inteligencia artificial también siguen algoritmos, pero con una diferencia: no todos sus pasos los escribe una persona. Muchos los aprenden a partir de datos.</p>
+              <p>Un modelo de lenguaje grande, o LLM, es un sistema que aprendió patrones de enormes cantidades de texto. Cuando le escribes, no busca la respuesta en una lista: predice, fragmento por fragmento, cuál es la continuación más probable. GPT es una familia de estos modelos. Su nombre en inglés significa transformador generativo preentrenado: genera texto, fue entrenado antes de que lo uses y se basa en una arquitectura llamada transformador.</p>
+              <p>Pero el modelo no lee palabras como tú. Lee tokens, que son fragmentos de texto. Una palabra corta puede ser un solo token, y una larga puede partirse en varios. Los tokens importan porque cada modelo tiene un límite de cuántos puede procesar a la vez, y porque muchos servicios cobran por token. Con un tokenizador puedes ver cómo se parte cualquier texto.</p>
+              <p>El prompt es la instrucción que le das al modelo. Y aquí está la clave para el mercadeo: la calidad de la respuesta depende mucho de la calidad de la instrucción. Un buen prompt dice quién debe ser el modelo, qué tarea debe hacer, con qué contexto y en qué formato entregar el resultado.</p>
+              <p>Hay cinco técnicas que vas a practicar. Con la técnica de rol, le asignas un papel, como estratega de marca. Con la cadena de pensamiento, le pides que razone paso a paso. Con pocos ejemplos, le muestras el tipo de resultado que esperas. Con la técnica reflexiva, le pides que critique su propia respuesta. Y con la iterativa, mejoras el resultado en rondas cortas.</p>
+              <p>Por último, no toda la inteligencia artificial es igual. Por su capacidad, hablamos de IA estrecha, que hace bien una tarea concreta; de IA general, que igualaría a una persona en muchas tareas; y de superinteligencia, que la superaría. Todo lo que usamos hoy es IA estrecha. Por su forma de aprender y lo que produce, hablamos de aprendizaje automático, aprendizaje profundo e IA generativa.</p>
+              <p>En la actividad tres vas a practicar estas técnicas con un caso de mercadeo, y en la actividad cuatro vas a construir tu propio mapa conceptual de la inteligencia artificial. Antes, repasa la presentación y responde el quiz.</p>
+            </div>
+          </details>
+        </article>
+
+        <!-- 2 · CONCEPTOS + PRESENTACIÓN -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 2 de 5: conceptos clave y presentación" hidden>
+          <h3>Conceptos clave</h3>
+          <p class="tt-step-lead">El vocabulario mínimo para usar la IA en mercadeo con criterio.</p>
+          <h4>Ideas clave</h4>
+          <div class="tt-notes">
+            <div><h5>Algoritmo</h5><p>Una secuencia finita de pasos para resolver un problema. En la IA, muchos pasos se aprenden a partir de datos.</p></div>
+            <div><h5>LLM</h5><p>Modelo de lenguaje grande: aprende patrones de enormes cantidades de texto y predice la continuación más probable.</p></div>
+            <div><h5>GPT</h5><p>Generative Pre-trained Transformer: una familia de LLM que genera texto a partir de un entrenamiento previo.</p></div>
+            <div><h5>Token</h5><p>El fragmento de texto que el modelo procesa. Una palabra puede ser uno o varios tokens.</p></div>
+            <div><h5>Prompt</h5><p>La instrucción que le das al modelo. Un buen prompt tiene rol, tarea, contexto y formato.</p></div>
+          </div>
+          <p class="tt-step-note">Las cinco técnicas de prompt —role, chain-of-thought, few-shot, reflexive e iterative— están en la presentación y las practicas en la Actividad 3.</p>
+          <h4>Presentación</h4>
+          <div class="tt-slides" data-slides='["Fundamentos de IA y prompts", "Mapa de la sesión", "1. Algoritmo", "2. LLM y GPT", "3. Tokens", "4. Anatomía de un prompt", "5. Técnicas de prompt", "6. Tipos de IA por capacidad", "6. Tipos de IA por forma de aprender", "7. Síntesis: errores frecuentes", "7. Síntesis: mapa conceptual", "8. Actividades 3 y 4", "Referencias"]' data-slides-dir="media/diapositivas/diapositiva-" tabindex="0" aria-label="Diapositivas de la presentación; usa las flechas para cambiar">
+            <div class="tt-slides-frame"><img data-slide-img src="media/diapositivas/diapositiva-01.jpg" alt="Diapositiva 1 de 13: Fundamentos de IA y prompts" width="1280" height="720" decoding="async"></div>
+            <div class="tt-slides-bar">
+              <button type="button" class="btn btn-ghost" data-slide-prev disabled><span class="arrow" aria-hidden="true">←</span> Diapositiva anterior</button>
+              <span class="n" aria-live="polite"><b data-slide-now>1</b> de <span data-slide-total>13</span></span>
+              <button type="button" class="btn btn-ghost" data-slide-next>Diapositiva siguiente <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <a class="btn btn-ghost tt-dl" href="media/fundamentos-ia-prompts.pptx" download>Descargar la presentación <small>.pptx · 269 KB</small></a>
+        </article>
+
+        <!-- 3 · QUIZ -->
+        <article class="tt-step" data-part="Lección" aria-label="Tarjeta 3 de 5: quiz" hidden>
+          <h3>Quiz: 5 preguntas</h3>
+          <p class="tt-step-lead">Una pregunta a la vez. Al responder verás la explicación; al final, tu resultado.</p>
+          <div class="tt-quiz" data-quiz>
+            <div class="tt-quiz-head" data-q-head>
+              <span class="n">Pregunta <b data-q-now>1</b> de <span data-q-total>5</span></span>
+              <div class="tt-quiz-bar" aria-hidden="true"><i data-q-fill></i></div>
+            </div>
+
+            <fieldset class="tt-q" data-answer="b" data-correct="Predice la continuación más probable" data-ok="Correcto. Un LLM no busca la respuesta en una lista: predice, fragmento por fragmento, la continuación más probable. Por eso puede equivocarse con seguridad." data-no="No. Un LLM no busca ni copia la respuesta: predice, fragmento por fragmento, la continuación más probable. Por eso puede equivocarse con seguridad.">
+              <legend><b>1</b> <span>¿Qué hace un LLM cuando le escribes?</span></legend>
+              <button type="button" data-v="a">Busca la respuesta exacta en una base de datos</button>
+              <button type="button" data-v="b">Predice la continuación más probable</button>
+              <button type="button" data-v="c">Copia la respuesta de un sitio web</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="b" data-correct="Un fragmento de texto que el modelo procesa" data-ok="Correcto. Un token es un fragmento de texto: una palabra corta puede ser un token y una larga, varios." data-no="No. Un token es un fragmento de texto que el modelo procesa; una palabra puede ser uno o varios tokens.">
+              <legend><b>2</b> <span>¿Qué es un token?</span></legend>
+              <button type="button" data-v="a">Siempre una palabra completa</button>
+              <button type="button" data-v="b">Un fragmento de texto que el modelo procesa</button>
+              <button type="button" data-v="c">Una contraseña para usar la IA</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q tt-q-match wide" data-match data-correct="“Actúa como estratega de marca…” → Role · “Analiza paso a paso…” → Chain-of-thought · “Ejemplo 1… Ejemplo 2…” → Few-shot · “Revisa tu propuesta…” → Reflexive · “Hazlo más corto…” → Iterative" data-ok="Correcto. Role asigna un papel; chain-of-thought pide razonar paso a paso; few-shot da ejemplos; reflexive pide revisar la propia respuesta; iterative mejora en rondas." data-no="No del todo. Role asigna un papel; chain-of-thought pide razonar paso a paso; few-shot da ejemplos; reflexive pide revisar la propia respuesta; iterative mejora en rondas.">
+              <legend><b>3</b> <span>Asocia cada prompt con su técnica.</span></legend>
+              <label><span>“Actúa como estratega de marca y propón tres nombres.”</span><select data-answer="role"><option value="">Elige…</option><option value="role">Role</option><option value="cot">Chain-of-thought</option><option value="few">Few-shot</option><option value="ref">Reflexive</option><option value="ite">Iterative</option></select></label>
+              <label><span>“Analiza paso a paso por qué un cliente dejaría de comprar.”</span><select data-answer="cot"><option value="">Elige…</option><option value="role">Role</option><option value="cot">Chain-of-thought</option><option value="few">Few-shot</option><option value="ref">Reflexive</option><option value="ite">Iterative</option></select></label>
+              <label><span>“Ejemplo 1: … Ejemplo 2: … Ahora escribe uno igual.”</span><select data-answer="few"><option value="">Elige…</option><option value="role">Role</option><option value="cot">Chain-of-thought</option><option value="few">Few-shot</option><option value="ref">Reflexive</option><option value="ite">Iterative</option></select></label>
+              <label><span>“Revisa tu propuesta y corrige sus supuestos débiles.”</span><select data-answer="ref"><option value="">Elige…</option><option value="role">Role</option><option value="cot">Chain-of-thought</option><option value="few">Few-shot</option><option value="ref">Reflexive</option><option value="ite">Iterative</option></select></label>
+              <label><span>“Hazlo más corto. Ahora para Instagram.”</span><select data-answer="ite"><option value="">Elige…</option><option value="role">Role</option><option value="cot">Chain-of-thought</option><option value="few">Few-shot</option><option value="ref">Reflexive</option><option value="ite">Iterative</option></select></label>
+              <button type="button" class="btn btn-ghost tt-check" data-check>Comprobar</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="a" data-correct="Rol, contexto y formato" data-ok="Correcto. “Escribe un eslogan” solo tiene la tarea; faltan el rol, el contexto (para qué marca y público) y el formato." data-no="No. “Escribe un eslogan” solo tiene la tarea; le faltan el rol, el contexto (para qué marca y público) y el formato.">
+              <legend><b>4</b> <span>¿Qué le falta al prompt “Escribe un eslogan”?</span></legend>
+              <button type="button" data-v="a">Rol, contexto y formato</button>
+              <button type="button" data-v="b">Nada: está completo</button>
+              <button type="button" data-v="c">Más signos de puntuación</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <fieldset class="tt-q" data-answer="c" data-correct="IA estrecha" data-ok="Correcto. Todo lo que usamos hoy es IA estrecha: hace bien tareas concretas, aunque algunas herramientas parezcan muy generales." data-no="No. La IA general y la superinteligencia no existen hoy; todo lo que usamos es IA estrecha.">
+              <legend><b>5</b> <span>¿Qué tipo de IA, por capacidad, usamos hoy?</span></legend>
+              <button type="button" data-v="a">IA general</button>
+              <button type="button" data-v="b">Superinteligencia</button>
+              <button type="button" data-v="c">IA estrecha</button>
+              <p class="tt-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary tt-q-next" data-q-next hidden>Siguiente pregunta <span class="arrow" aria-hidden="true">→</span></button>
+
+            <div class="tt-result" data-q-result hidden tabindex="-1">
+              <p class="tt-result-score"><b data-q-score>0</b> de <span data-q-of>5</span></p>
+              <p class="tt-result-msg" data-q-msg></p>
+              <ul class="tt-missed" data-q-missed></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Intentar de nuevo</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4 · ACTIVIDAD 3 -->
+        <article class="tt-step" data-part="Actividad 3" aria-label="Tarjeta 4 de 5: actividad 3, conceptos y técnicas de prompt" hidden>
+          <h3>Actividad 3 · Conceptos y técnicas de prompt</h3>
+          <p class="tt-step-lead">Pasa de la definición a la práctica: explica los conceptos con tus palabras, prueba las cinco técnicas con un caso de mercadeo y mira cómo un tokenizador parte el texto.</p>
+
+          <h4>1. Glosario</h4>
+          <p class="tt-step-note">Define con tus palabras LLM, GPT, token, algoritmo y prompt. Para cada uno, agrega un ejemplo de cómo aparece en el mercadeo.</p>
+
+          <h4>2. Laboratorio de técnicas</h4>
+          <ol class="tt-list">
+            <li>Elige un caso: un producto o una marca, real o inventada.</li>
+            <li>Escribe un prompt base con rol, tarea, contexto y formato.</li>
+            <li>Aplica cada técnica sobre el mismo caso: role, chain-of-thought, few-shot, reflexive e iterative.</li>
+            <li>Registra cada intento y compara los resultados.</li>
+          </ol>
+          <pre class="tt-code">Técnica: [role, chain-of-thought, few-shot, reflexive o iterative]
+Prompt: [copia el prompt completo]
+Resumen de la respuesta: [dos o tres líneas]
+Qué mejoró o empeoró: [tu análisis]</pre>
+
+          <h4>3. Prueba con un tokenizador</h4>
+          <ol class="tt-list">
+            <li>Escribe un mensaje de marca de dos o tres frases.</li>
+            <li>Pégalo en el tokenizador y anota cuántas palabras y cuántos tokens tiene.</li>
+            <li>Prueba el mismo mensaje traducido al inglés y compara los dos resultados.</li>
+          </ol>
+
+          <h4>Herramientas sugeridas</h4>
+          <p class="tt-step-note">Gratuitas. Una por tarea.</p>
+          <dl class="tt-tools">
+            <div><dt>Practicar los prompts</dt><dd>Gemini</dd></div>
+            <div><dt>Contar tokens</dt><dd>Tokenizer de OpenAI</dd></div>
+          </dl>
+
+          <h4>Dónde cargarlo</h4>
+          <ol class="tt-list">
+            <li>En <code>docs/</code> del repositorio del equipo, crea un archivo para la actividad, por ejemplo <code>docs/act3-prompts.md</code>, con el glosario, la tabla de técnicas y la prueba del tokenizador.</li>
+            <li>Agrega la declaración de uso de IA: el numeral 5.3 del Reglamento de IA de la universidad (<a href="https://universidadean.edu.co/sites/default/files/convocatorias/SIAC/05_Acuerdo-006-de-2025.pdf" target="_blank" rel="noopener">Acuerdo 006 de 2025</a>) establece el deber de declarar y referenciar las herramientas de IA que usaste y cómo las empleaste.</li>
+            <li>Mueve la tarjeta de la actividad a <i>Hecho</i> en el tablero Kanban.</li>
+          </ol>
+        </article>
+
+        <!-- 5 · ACTIVIDAD 4 -->
+        <article class="tt-step" data-part="Actividad 4" aria-label="Tarjeta 5 de 5: actividad 4, clasificación de la IA" hidden>
+          <h3>Actividad 4 · Clasificación de la IA</h3>
+          <p class="tt-step-lead">Construye un mapa conceptual que organice los tipos de IA y conéctalo con usos reales en el mercadeo.</p>
+
+          <h4>Los pasos del mapa</h4>
+          <ol class="tt-steps"><li>Parte del mapa base de la presentación</li><li>Agrega un ejemplo de mercadeo en cada rama</li><li>Une los nodos con frases de enlace</li><li>Exporta el mapa como imagen PNG</li></ol>
+
+          <h4>Qué debe incluir</h4>
+          <ul class="tt-checks">
+            <li>Por capacidad: IA estrecha, IA general y superinteligencia.</li>
+            <li>Por forma de aprender: aprendizaje automático, aprendizaje profundo e IA generativa.</li>
+            <li>Cómo la usamos: LLM, tokens y prompt.</li>
+            <li>Frases de enlace claras, como “es un tipo de” o “se usa para”.</li>
+            <li>Al menos un ejemplo de mercadeo en cada rama.</li>
+          </ul>
+
+          <h4>Herramienta sugerida</h4>
+          <dl class="tt-tools">
+            <div><dt>Mapa conceptual</dt><dd>diagrams.net</dd></div>
+          </dl>
+
+          <h4>Dónde cargarlo</h4>
+          <ol class="tt-list">
+            <li>Sube la imagen a <code>assets/</code>, por ejemplo <code>assets/act4-mapa-ia.png</code>.</li>
+            <li>En <code>docs/</code>, crea un archivo para la actividad con el enlace a la imagen y la declaración de uso de IA.</li>
+            <li>Mueve la tarjeta de la actividad a <i>Hecho</i> en el tablero Kanban.</li>
+          </ol>
+
+          <h4>Entregables</h4>
+          <ol class="tt-flow">
+            <li><span class="act">Conceptos y técnicas de prompt<small>Glosario, laboratorio de las 5 técnicas y prueba con un tokenizador.</small></span><span class="tt-chip act">act. 3</span><span class="file none">Corte 1</span></li>
+            <li><span class="act">Clasificación de la IA<small>Mapa conceptual con ejemplos de mercadeo.</small></span><span class="tt-chip act">act. 4</span><span class="file none">Corte 1</span></li>
+          </ol>
+
+          <a class="btn btn-primary tt-next-mod" href="../modulo-3/index.html">Ir al Módulo 3 <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+
+      </div>
+
+      <div class="tt-tour-nav">
+        <button type="button" class="btn btn-ghost" data-tour-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+        <button type="button" class="btn btn-primary" data-tour-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <div class="tt-mnav">
+      <nav class="tt-map" aria-label="Módulos del curso">
+        <div class="tt-map-group"><span>Fase 1</span><a href="../modulo-1/index.html" title="Revoluciones industriales">M1</a><a href="../modulo-2/index.html" title="Fundamentos de IA y prompts" aria-current="page">M2</a><a href="../modulo-3/index.html" title="IA responsable">M3</a><a href="../modulo-4/index.html" title="Tecnologías emergentes">M4</a></div>
+        <div class="tt-map-group"><span>Fase 2</span><a href="../modulo-5/index.html" title="Planear">M5</a><a href="../modulo-6/index.html" title="Idear">M6</a><a href="../modulo-7/index.html" title="Pensar">M7</a><a href="../modulo-8/index.html" title="Hacer">M8</a><a href="../modulo-9/index.html" title="Evaluar y lanzar">M9</a><a href="../modulo-10/index.html" title="Presentar">M10</a></div>
+      </nav>
+      <div class="tt-pn"><a class="prev" href="../modulo-1/index.html"><small>← M1</small><strong>Revoluciones industriales</strong></a><a class="next" href="../modulo-3/index.html"><small>M3 →</small><strong>IA responsable</strong></a></div>
+    </div>
+
+  </main>
+
+  <footer class="site">
+    <div class="shell">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="kicker" style="text-transform:none; letter-spacing:.02em;">Towers Ing · est. 2025</span>
+          <div class="big">Medir, construir, <em>iterar</em>.</div>
+        </div>
+        <div><h5>Navegar</h5><a href="../../../index.html">Inicio</a><a href="../../../blog/index.html">Blog</a><a href="../../../proyectos/index.html">Proyectos</a><a href="../../../dashboard/index.html">Dashboard</a></div>
+        <div><h5>Aprender</h5><a href="../../../training/index.html">Capacitación</a><a href="../../../cv/index.html">Currículum</a><a href="../../../forms/index.html">Formularios</a><a href="../../../data/index.html">Data Live</a></div>
+        <div><h5>Contacto</h5><a href="#">hola@tower-ing.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">RSS</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Towers Ing — Todos los derechos reservados</span>
+        <span>Diseño inspirado en ingeniería y educación</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../trend-tech.js" defer></script>
+
+</body>
+</html>

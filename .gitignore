@@ -4,3 +4,6 @@ proyectos/apreciacion/Fuente/
 expressions.txt
 .venv/
 __pycache__/
+
+# Local Netlify folder
+.netlify
