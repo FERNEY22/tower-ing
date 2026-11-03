@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M1 Fuente de alimentación de 12 V · Electrónica · Proyecto integrador</title>
+  <meta name="description" content="Tres fuentes, red, paneles y batería, alimentan un mismo bus de 12 V a través de un OR de diodos.">
+  <meta name="author" content="Ferney Torres Ome">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../recursos/curso.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="cv-brand-sub">Electrónica · Proyecto integrador</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="cv-crumbs" aria-label="Ruta"><a href="../index.html">Electrónica · Proyecto integrador</a><span>/</span><span>M1</span></nav>
+
+    <header class="cv-mhead">
+      <div class="cv-mhead-meta"><span class="phase">Módulo 1 de 4</span></div>
+      <h1>Fuente de alimentación de 12 V</h1>
+      <p class="cv-lead">Tres fuentes, red, paneles y batería, alimentan un mismo bus de 12 V a través de un OR de diodos.</p>
+      <ul class="cv-topics" style="margin-top:18px" aria-label="Temas"><li>Rectificación</li><li>Rizado</li><li>OR de diodos</li><li>Rama solar</li><li>Escenarios</li></ul>
+    </header>
+
+    <section class="cv-msec cv-tour" aria-labelledby="cv-tour-h" data-tour>
+      <div class="cv-tour-head">
+        <h2 id="cv-tour-h">Recorrido del módulo</h2>
+        <p class="cv-tour-count" aria-live="polite"><span data-tour-part>Lección</span> <span class="n"><b data-tour-now>1</b> de <span data-tour-total>7</span></span></p>
+      </div>
+      <div class="cv-tour-bar" aria-hidden="true"><i data-tour-fill></i></div>
+
+      <div class="cv-tour-track" data-tour-track>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 1 de 7: video-lección">
+          <h3>Video-lección</h3>
+          <p class="cv-step-lead">Tres fuentes, red, paneles y batería, alimentan un mismo bus de 12 V a través de un OR de diodos. Dura 2 minutos y 6 segundos. Los subtítulos dicen lo mismo que la voz.</p>
+          <div class="cv-video">
+            <video controls preload="metadata" playsinline poster="media/poster.jpg" width="1280" height="720">
+              <source src="media/leccion.mp4" type="video/mp4">
+              Tu navegador no reproduce el video. <a href="media/leccion.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <details class="cv-more">
+            <summary>Leer la transcripción</summary>
+            <div class="cv-more-body"><p>Hola, soy Ferney Torres. En este módulo vas a entender la fuente de 12 V que alimenta la banda y el ascensor del proyecto.</p><p>Fíjate en el esquema. Tres fuentes llegan a un mismo bus, V_BUS: la red, los paneles solares y la batería. Cuatro interruptores, de SW1 a SW4, eligen qué fuentes participan.</p><p>La clave es el OR de diodos. Cada rama llega al bus por un diodo. Conduce la rama de mayor voltaje, y la otra queda con su diodo en inversa. Así ninguna fuente se descarga en la otra.</p><p>En la rama de red, el secundario entrega 12 V eficaces. El voltaje pico es raíz de dos por doce: 16,97 V. El puente y el condensador C1 lo convierten en continua.</p><p>Pero cuidado. Con 0,8 A, el rizado del condensador llega a unos 6,7 V. Por eso la red sola da un bus de 9,37 V en promedio, y el motor vibra.</p><p>Ahora la rama solar. Son tres paneles de 6 V y 70 mA en serie. El diodo de bloqueo impide que la batería se descargue en los paneles durante la noche. El zener recorta el voltaje de la batería cerca de 13,8 V. Y la batería es de plomo ácido sellada, de 12 V y 1,3 Ah.</p><p>Veamos un caso: de día y sin red. Solo la batería alimenta la carga de 15 Ω. La corriente es doce menos 0,9, dividido entre 15,1: 0,735 A. El bus queda en 11,03 V, y la simulación da 11,04.</p><p>Todo esto va en una tarjeta de 100 × 100 mm, de una sola cara. Los cuatro interruptores van fuera, en serie con los cables de cada bornera.</p><p>En resumen: con batería, la fuente entrega unos 11 V a 0,8 A. La red sola tiene mucho rizado, y el panel solo carga la batería. Ahora repasa la presentación y resuelve el quiz. Gracias.</p></div>
+          </details>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 2 de 7: presentación e ideas clave" hidden>
+          <h3>Presentación e ideas clave</h3>
+          <p class="cv-step-lead">Las ideas del módulo en pocas líneas y las diapositivas para repasar.</p>
+          <h4>Ideas clave</h4>
+          <div class="cv-notes"><div><h5>OR de diodos</h5><p>Cada fuente llega al bus por su diodo; conduce la de mayor voltaje y ninguna se descarga en la otra.</p></div><div><h5>Rizado</h5><p>Con 0,8 A, C1 de 1000 µF deja ≈ 6,7 V de rizado: la red sola da 9,37 V promedio.</p></div><div><h5>Batería</h5><p>Con batería el bus queda en ≈ 11,0 V y la batería aporta cerca de dos tercios de la corriente.</p></div><div><h5>Interruptores</h5><p>SW1 paneles, SW2 batería, SW3 red y SW4 salida; van en el panel, en serie con los cables.</p></div></div>
+          <h4>Presentación</h4>
+          <div class="cv-slides" data-slides='[&quot;Etapa 1 — Fuente de alimentación&quot;, &quot;Propósito de la fuente&quot;, &quot;Esquema de la fuente&quot;, &quot;Rama de red: rectificación&quot;, &quot;Rizado del condensador C1&quot;, &quot;Rama solar y batería&quot;, &quot;OR de potencia con diodos&quot;, &quot;Escenarios con interruptores&quot;, &quot;Lista de materiales&quot;, &quot;Tarjeta de circuito impreso&quot;, &quot;Validación: teoría y simulación&quot;, &quot;Ejercicio: escenario 2&quot;, &quot;Solución del escenario 2&quot;, &quot;Conclusiones&quot;, &quot;Referencias&quot;]' data-slides-dir="media/diapositivas/diapositiva-" tabindex="0" aria-label="Diapositivas de la presentación; usa las flechas para cambiar">
+            <div class="cv-slides-frame"><img data-slide-img src="media/diapositivas/diapositiva-01.jpg" alt="Diapositiva 1 de 15: Etapa 1 — Fuente de alimentación" width="1280" height="720" decoding="async"></div>
+            <div class="cv-slides-bar">
+              <button type="button" class="btn btn-ghost" data-slide-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+              <span class="n" aria-live="polite"><b data-slide-now>1</b> de <span data-slide-total>15</span></span>
+              <button type="button" class="btn btn-ghost" data-slide-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <a class="btn btn-ghost cv-dl" href="#" data-b64="media/Etapa1_Fuente.pptx.b64.txt" data-name="Etapa1_Fuente.pptx" data-mime="application/vnd.openxmlformats-officedocument.presentationml.presentation">Descargar la presentación <small>.pptx · 377 KB</small></a>
+        </article>
+        <article class="cv-step" data-part="Productos" aria-label="Tarjeta 3 de 7: productos de la etapa" hidden>
+          <h3>Productos de la etapa</h3>
+          <p class="cv-step-lead">Circuito, archivo de simulación, tarjeta, Gerber, vista 3D e isométrica de la etapa. Todo se puede abrir y descargar.</p>
+          <div class="cv-prod" data-prod><div class="cv-prod-tabs" role="tablist"><button type="button" class="btn btn-ghost" role="tab" aria-selected="true" data-prod-tab="0">Circuito</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="1">PCB</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="2">3D interactivo</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="3">Isométrica</button></div><div class="cv-prod-pane" data-prod-pane="0"><p class="cv-step-lead">Esquema de la etapa. El archivo de LTspice tiene el mismo circuito cableado y validado.</p><div class="cv-prod-img"><a href="media/prod/Circuito_E1_Fuente.png" target="_blank" rel="noopener"><img src="media/prod/Circuito_E1_Fuente.png" alt="Circuito" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/E1_Fuente_LTspice.zip.b64.txt" data-name="E1_Fuente_LTspice.zip" data-mime="application/zip">Descargar LTspice (.asc) <small>1 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Circuito_E1_Fuente.png.b64.txt" data-name="Circuito_E1_Fuente.png" data-mime="image/png">Descargar Circuito .png <small>45 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="1" hidden><p class="cv-step-lead">Pistas de la tarjeta, una sola cara. El Gerber sirve para fabricarla en cualquier servicio de PCB.</p><div class="cv-prod-img"><a href="media/prod/PCB_FINAL_E1_Fuente.png" target="_blank" rel="noopener"><img src="media/prod/PCB_FINAL_E1_Fuente.png" alt="PCB" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Gerber_E1_Fuente.zip.b64.txt" data-name="Gerber_E1_Fuente.zip" data-mime="application/zip">Descargar Gerber .zip <small>38 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/PCB_FINAL_E1_Fuente.png.b64.txt" data-name="PCB_FINAL_E1_Fuente.png" data-mime="image/png">Descargar PCB .png <small>53 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="2" hidden><p class="cv-step-lead">Gira la tarjeta con el dedo o el ratón; acerca con la rueda o con dos dedos.</p><div class="cv-prod-frame" style="height:560px"><iframe data-src="media/prod/PCB_Fuente_3D.html" title="3D interactivo" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/PCB_Fuente_3D.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="3" hidden><p class="cv-step-lead">La tarjeta en la maqueta. Toca los mandos y mira por dónde pasa la corriente.</p><div class="cv-prod-frame" style="height:900px"><iframe data-src="media/prod/Fuente_isometrica.html" title="Isométrica" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/Fuente_isometrica.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div></div>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 4 de 7: quiz" hidden>
+          <h3>Quiz: 5 preguntas</h3>
+          <p class="cv-step-lead">Una pregunta a la vez. Al responder verás la explicación; al final, tu resultado. Cada intento nuevo cambia las preguntas y su orden.</p>
+          <div class="cv-quiz" data-quiz data-quiz-n="5">
+            <div class="cv-quiz-head" data-q-head>
+              <span class="n">Pregunta <b data-q-now>1</b> de <span data-q-total>5</span></span>
+              <div class="cv-quiz-bar" aria-hidden="true"><i data-q-fill></i></div>
+            </div>
+            <fieldset class="cv-q" data-answer="b" data-correct="16,97 V" data-ok="V_pico = √2 · 12 V = 16,97 V." data-no="El valor eficaz no es el pico: V_pico = √2 · V_rms = 16,97 V." hidden>
+              <legend><b>1</b> <span>El secundario entrega 12 V eficaces. ¿Cuál es su voltaje pico?</span></legend>
+              <button type="button" data-v="a">12 V</button>
+              <button type="button" data-v="b">16,97 V</button>
+              <button type="button" data-v="c">8,49 V</button>
+              <button type="button" data-v="d">24 V</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="a" data-correct="La de mayor voltaje" data-ok="Conduce la rama de mayor voltaje; la otra queda con su diodo en inversa." data-no="El diodo de la rama de menor voltaje queda en inversa: conduce la de mayor voltaje." hidden>
+              <legend><b>2</b> <span>En el OR de diodos, ¿qué rama alimenta el bus?</span></legend>
+              <button type="button" data-v="a">La de mayor voltaje</button>
+              <button type="button" data-v="b">Siempre la red</button>
+              <button type="button" data-v="c">La de mayor corriente</button>
+              <button type="button" data-v="d">Las tres por igual</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Para que la batería no se descargue en los paneles de noche" data-ok="D1 bloquea la corriente inversa cuando el panel no genera." data-no="Sin D1, de noche la batería se descargaría a través de los paneles." hidden>
+              <legend><b>3</b> <span>¿Para qué sirve el diodo D1 de la rama solar?</span></legend>
+              <button type="button" data-v="a">Para subir el voltaje del panel</button>
+              <button type="button" data-v="b">Para que la batería no se descargue en los paneles de noche</button>
+              <button type="button" data-v="c">Para filtrar el rizado</button>
+              <button type="button" data-v="d">Para limitar la corriente de carga</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Porque el rizado de C1 es de unos 6,7 V" data-ok="ΔV = I/(f·C) = 0,8/(120 · 1000 µF) ≈ 6,7 V: el bus baja a 9,37 V promedio." data-no="El problema es el rizado: ΔV ≈ 6,7 V con 0,8 A y 1000 µF." hidden>
+              <legend><b>4</b> <span>Con 0,8 A de carga, ¿por qué la red sola mueve mal el motor?</span></legend>
+              <button type="button" data-v="a">Porque el transformador no da 12 V</button>
+              <button type="button" data-v="b">Porque el rizado de C1 es de unos 6,7 V</button>
+              <button type="button" data-v="c">Porque D10 se abre</button>
+              <button type="button" data-v="d">Porque SW4 limita la corriente</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q cv-q-match" data-match data-correct="SW1 → Paneles · SW2 → Batería · SW3 → Red · SW4 → Salida" data-ok="SW1 paneles, SW2 batería, SW3 red y SW4 salida hacia J1." data-no="Repasa: SW1 paneles, SW2 batería, SW3 red y SW4 salida." hidden>
+              <legend><b>5</b> <span>Asocia cada interruptor con lo que controla</span></legend>
+              <label><span>SW1</span><select data-answer="1"><option value="">Elige…</option><option value="1">Paneles</option><option value="2">Batería</option><option value="3">Red</option><option value="4">Salida</option></select></label>
+              <label><span>SW2</span><select data-answer="2"><option value="">Elige…</option><option value="1">Paneles</option><option value="2">Batería</option><option value="3">Red</option><option value="4">Salida</option></select></label>
+              <label><span>SW3</span><select data-answer="3"><option value="">Elige…</option><option value="1">Paneles</option><option value="2">Batería</option><option value="3">Red</option><option value="4">Salida</option></select></label>
+              <label><span>SW4</span><select data-answer="4"><option value="">Elige…</option><option value="1">Paneles</option><option value="2">Batería</option><option value="3">Red</option><option value="4">Salida</option></select></label>
+              <button type="button" class="btn btn-ghost cv-check" data-check>Comprobar</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="El panel solo sirve para cargar la batería" data-ok="70 mA × 15 Ω ≈ 1,05 V: el panel no mueve la carga, carga la batería." data-no="Con 70 mA el panel no puede sostener la carga de 0,8 A; su papel es cargar la batería." hidden>
+              <legend><b>6</b> <span>Solo con el panel (70 mA) y la carga de 15 Ω, el bus queda en 1,05 V. ¿Qué concluyes?</span></legend>
+              <button type="button" data-v="a">El panel sí mueve el motor</button>
+              <button type="button" data-v="b">El panel solo sirve para cargar la batería</button>
+              <button type="button" data-v="c">Hay un corto en D1</button>
+              <button type="button" data-v="d">Falta subir C1</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Unos 1,6 h" data-ok="t ≈ 1,3 Ah / 0,8 A ≈ 1,6 h; en la práctica es menos." data-no="t = capacidad / corriente = 1,3/0,8 ≈ 1,6 h (valor ideal)." hidden>
+              <legend><b>7</b> <span>La batería de 1,3 Ah entrega 0,8 A. ¿Cuánto dura, en el caso ideal?</span></legend>
+              <button type="button" data-v="a">Unas 16 h</button>
+              <button type="button" data-v="b">Unos 1,6 h</button>
+              <button type="button" data-v="c">Unos 10 min</button>
+              <button type="button" data-v="d">Unas 6 h</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary cv-q-next" data-q-next hidden>Siguiente pregunta <span class="arrow" aria-hidden="true">→</span></button>
+
+            <div class="cv-result" data-q-result hidden tabindex="-1">
+              <p class="cv-result-score"><b data-q-score>0</b> de <span data-q-of>5</span></p>
+              <p class="cv-result-msg" data-q-msg></p>
+              <ul class="cv-missed" data-q-missed></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Intentar de nuevo</button>
+            </div>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 1" aria-label="Tarjeta 5 de 7: caso con decisiones" hidden>
+          <h3>Actividad 1 · La banda va lenta en el laboratorio</h3>
+          <p class="cv-step-lead">Lee la situación y decide. Cada elección tiene una consecuencia y te lleva a la siguiente decisión. Al final verás el camino que tomaste.</p>
+          <div class="cv-case" data-case data-label="Actividad 1 · La banda va lenta en el laboratorio">
+            <p class="cv-case-ctx">Tu grupo conecta la fuente a la banda transportadora. Hoy la batería quedó en la casa de un compañero y solo hay red. La banda arranca, pero va lenta y vibra.</p>
+            <div class="cv-case" data-case-stage style="margin-top:0"></div>
+            <div class="cv-case-end" data-case-end hidden tabindex="-1">
+              <p class="cv-result-score"><b data-case-score>0</b></p>
+              <p class="cv-result-msg" data-case-msg></p>
+              <ul class="cv-path" data-case-path></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Recorrer el caso de nuevo</button>
+            </div>
+            <script type="application/json">{"titulo": "La banda va lenta en el laboratorio", "contexto": "Tu grupo conecta la fuente a la banda transportadora. Hoy la batería quedó en la casa de un compañero y solo hay red. La banda arranca, pero va lenta y vibra.", "inicio": "d1", "nodos": {"d1": {"etapa": "Decisión 1", "texto": "¿Qué haces primero?", "opciones": [{"texto": "Medir V_BUS con el multímetro en DC y luego con el osciloscopio", "q": 2, "retro": "El multímetro marca cerca de 9,4 V y el osciloscopio muestra un rizado de varios voltios. Ya sabes que el problema es la fuente, no el motor.", "va": "d2"}, {"texto": "Cambiar el motor por otro igual", "q": 0, "retro": "El otro motor hace lo mismo. Perdiste veinte minutos y sigues sin saber la causa.", "va": "d1b"}, {"texto": "Medir solo con el multímetro", "q": 1, "retro": "Ves 9,4 V, pero el multímetro no muestra el rizado. Sabes que el voltaje está bajo, no por qué.", "va": "d2"}]}, "d1b": {"etapa": "Decisión 1b", "texto": "El problema sigue. ¿Ahora qué?", "opciones": [{"texto": "Medir V_BUS con el osciloscopio", "q": 2, "retro": "Aparece un rizado de varios voltios: la red sola no sostiene la carga.", "va": "d2"}, {"texto": "Apretar las borneras y volver a probar", "q": 0, "retro": "Las borneras estaban bien. La banda sigue lenta.", "va": "d2"}]}, "d2": {"etapa": "Decisión 2", "texto": "Con 0,8 A, el rizado de C1 es de unos 6,7 V. ¿Qué propones para la clase de hoy?", "opciones": [{"texto": "Conseguir la batería y cerrar SW2 para que comparta la carga", "q": 2, "retro": "Con la batería, el bus sube a unos 11 V y la batería aporta cerca de dos tercios de la corriente. La banda se mueve bien.", "va": "d3"}, {"texto": "Abrir SW4 y seguir trabajando", "q": 0, "retro": "Con SW4 abierto no llega nada a la salida: la banda se detiene.", "va": "d3"}, {"texto": "Trabajar con la banda lenta y anotar el problema en el informe", "q": 1, "retro": "Avanzas, pero los tiempos que midas no sirven para el clasificador.", "va": "d3"}]}, "d3": {"etapa": "Decisión 3", "texto": "Para el informe, ¿cómo justificas la batería?", "opciones": [{"texto": "Con ΔV = I/(f·C) y la tabla de escenarios simulados", "q": 2, "retro": "Tu informe muestra el cálculo y lo contrasta con la simulación: 9,37 V con red sola frente a 11,1 V con red y batería.", "va": "fin"}, {"texto": "Diciendo que «así funcionó mejor»", "q": 0, "retro": "El docente te pide el cálculo. Sin él, la decisión no está justificada.", "va": "fin"}]}, "fin": {"fin": true, "texto": "Una fuente se diagnostica midiendo el bus con el instrumento adecuado y comparando con el cálculo. Con 0,8 A, la red sola tiene demasiado rizado; la batería en el OR de diodos lo resuelve."}}}</script>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 2" aria-label="Tarjeta 6 de 7: resolver y verificar" hidden>
+          <h3>Actividad 2 · Escenario 2: de día, sin red</h3>
+          <p class="cv-step-lead">Están cerrados SW1, SW2 y SW4. No hay red. Desprecia el aporte del panel. Calcula la corriente de la batería, el voltaje del bus y la potencia que entrega la batería.</p>
+          <div class="cv-solve" data-solve data-label="Actividad 2 · Escenario 2: de día, sin red">
+            <ul class="cv-given" aria-label="Datos"><li>V_BAT = 12 V</li><li>R_int = 0,1 Ω</li><li>D10: V_f = 0,90 V</li><li>R_L = 15 Ω</li></ul>
+            <div class="cv-item">
+              <label for="r0">1. Corriente de la batería I<small>en A, con tres decimales</small></label>
+              <div class="cv-entry"><input id="r0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">A</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r1">2. Voltaje del bus V_BUS<small>en V, con dos decimales</small></label>
+              <div class="cv-entry"><input id="r1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">V</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r2">3. Potencia que entrega la batería<small>en W, con dos decimales</small></label>
+              <div class="cv-entry"><input id="r2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">W</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-solve-done" data-solve-done hidden tabindex="-1">
+              <p class="cv-result-score"><b data-solve-score>0</b></p>
+              <p class="cv-result-msg">Cada pista resta un cuarto de punto; un ítem sin resolver vale cero.</p>
+              <button type="button" class="btn btn-ghost" data-reset>Resolver de nuevo</button>
+            </div>
+            <script type="application/json">{"intentos": 3, "items": [{"pregunta": "Corriente de la batería I", "ayuda": "en A, con tres decimales", "tipo": "numero", "valor": 0.735, "tol": 0.02, "unidad": "A", "pistas": ["Es una sola malla: batería, R_int, D10 y R_L.", "LVK: I = (V_BAT − V_f)/(R_int + R_L).", "I = (12 − 0,9)/(0,1 + 15)."], "explica": "LVK en la malla con D10 como fuente de 0,9 V.", "solucion": "I = 11,1/15,1 = 0,735 A"}, {"pregunta": "Voltaje del bus V_BUS", "ayuda": "en V, con dos decimales", "tipo": "numero", "valor": 11.03, "tol": 0.02, "unidad": "V", "pistas": ["V_BUS es el voltaje en la carga.", "V_BUS = I · R_L.", "V_BUS = 0,735 · 15."], "explica": "Ley de Ohm en la carga.", "solucion": "V_BUS = 0,735 · 15 = 11,03 V (simulación: 11,04 V)"}, {"pregunta": "Potencia que entrega la batería", "ayuda": "en W, con dos decimales", "tipo": "numero", "valor": 8.82, "tol": 0.02, "unidad": "W", "pistas": ["La batería entrega V_BAT · I.", "P = 12 · I.", "P = 12 · 0,735."], "explica": "Se reparte en D10, R_int y la carga.", "solucion": "P = 12 · 0,735 = 8,82 W"}]}</script>
+          </div>
+          <p class="cv-step-note">Escribe los números con coma o punto decimal. Tienes 3 intentos por ítem.</p>
+        </article>
+        <article class="cv-step" data-part="Constancia" aria-label="Tarjeta 7 de 7: constancia del módulo" hidden>
+          <h3>Constancia del módulo</h3>
+          <p class="cv-step-lead">Cuando veas el video, recorras la presentación y los productos y termines el quiz y las dos actividades, escribe tu nombre y descarga la constancia en PDF con tus resultados y la fecha de realización.</p>
+          <div class="cv-cert" data-cert data-curso="Electrónica · Proyecto integrador" data-modulo="Fuente de alimentación de 12 V" data-autor="Ferney Torres Ome" data-num="1" data-total="4" data-corto="ELECTRONICA">
+            <ul class="cv-status">
+              <li data-key="video"><span>Video-lección vista</span><b>Pendiente</b></li>
+              <li data-key="pres"><span>Presentación recorrida</span><b>Pendiente</b></li>
+              <li data-key="prod"><span>Productos de la etapa revisados</span><b>Pendiente</b></li>
+              <li data-key="quiz"><span>Quiz</span><b>Pendiente</b></li>
+              <li data-key="caso"><span>Actividad 1 · La banda va lenta en el laboratorio</span><b>Pendiente</b></li>
+              <li data-key="resolver"><span>Actividad 2 · Escenario 2: de día, sin red</span><b>Pendiente</b></li>
+            </ul>
+            <label class="cv-name"><span>Nombre completo</span><input type="text" autocomplete="name" maxlength="80"></label>
+            <button type="button" class="btn btn-primary" data-cert-btn disabled>Descargar constancia <small>PDF</small></button>
+            <p class="cv-cert-msg" data-cert-msg aria-live="polite"></p>
+          </div>
+          <p class="cv-step-note">Los resultados viven solo en esta página: si la recargas, se pierden. Descarga la constancia antes de salir.</p>
+          <a class="btn btn-primary cv-next-mod" href="../modulo-02-potencia/index.html">Ir al módulo 2 <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+      </div>
+
+      <div class="cv-tour-nav">
+        <button type="button" class="btn btn-ghost" data-tour-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+        <button type="button" class="btn btn-primary" data-tour-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <div class="cv-mnav">
+      <nav class="cv-map" aria-label="Módulos del curso"><div class="cv-map-group"><span>Módulos</span><a href="../modulo-01-fuente/index.html" title="Fuente de alimentación de 12 V" aria-current="page">M1</a><a href="../modulo-02-potencia/index.html" title="Potencia: banda y ascensor">M2</a><a href="../modulo-03-control/index.html" title="Control con LM358">M3</a><a href="../modulo-04-sensores/index.html" title="Sensores: clasificador y ascensor">M4</a></div></nav>
+      <div class="cv-pn"><a class="prev" href="../index.html"><small>← Anterior</small><strong>Introducción</strong></a><a class="next" href="../modulo-02-potencia/index.html"><small>M2 →</small><strong>Potencia: banda y ascensor</strong></a></div>
+    </div>
+    <footer class="cv-foot"><span>Electrónica · Proyecto integrador</span><span>Ferney Torres Ome</span></footer>
+  </main>
+
+  <script src="../recursos/jspdf.umd.min.js"></script>
+  <script src="../recursos/curso.js"></script>
+  <script src="../recursos/productos.js"></script>
+</body>
+</html>

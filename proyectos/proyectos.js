@@ -169,6 +169,19 @@ const proyectos = [
       { n: "3", l: "Lenguajes IEC" },
       { n: "20 ms", l: "Ciclo de scan" }
     ]
+  },
+  {
+    id: "electronica-integrador",
+    titulo: "Electrónica · Proyecto integrador",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026 – Presente",
+    descripcion:
+      "De la fuente al gemelo: cuatro etapas analógicas con transistores y LM358 que mueven una banda clasificadora y un ascensor de tres pisos.",
+    tecnologias: ["Electrónica", "EAN", "Curso virtual"],
+    link: "electronica-integrador/",
+    destacado: true,
+    variante: "electro"
   }
 
   // =====================================================

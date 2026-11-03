@@ -1,0 +1,97 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="Ferney Torres Ome"><title>Etapa 4-B · Clasificador de piezas</title><style>
+:root{--paper:#f6f5f1;--card:#fff;--ink:#141414;--mute:#6b6b6b;--line:#cfcdc6;--azul:#1f3dff}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#121212;--card:#1a1a1a;--ink:#ececec;--mute:#9a9a9a;--line:#333;--azul:#7d8fff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:22px 16px 40px}
+h1{font:600 24px/1.2 Georgia,"Times New Roman",serif;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.fig{display:flex;justify-content:space-between;gap:8px;font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--mute);margin-bottom:6px;flex-wrap:wrap}
+.fig b{color:var(--ink)}
+.read{font:13px ui-monospace,Menlo,Consolas,monospace;color:var(--azul);min-height:20px;margin:6px 2px}
+svg{display:block;width:100%;height:auto;max-height:82vh;touch-action:manipulation}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px;font:12px ui-monospace,Menlo,Consolas,monospace}
+.ctl .l{align-self:center;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;font-size:11px;margin-right:2px}
+.ctl .sep{flex-basis:100%;height:0}
+.ctl button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:7px 10px}
+.ctl button[aria-pressed=true]{border-color:var(--azul);color:var(--azul)}
+.ctl button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.est{font-size:14px;margin:8px 2px 0}
+.est .n{color:var(--mute);font-size:13px}
+.cap{color:var(--mute);font-size:13px;margin:12px 2px 0}
+/* sólidos: blanco y negro, tres tonos */
+.b polygon,.c polygon{stroke:#141414;stroke-width:.35;stroke-linejoin:round}
+.ft{fill:#ffffff}.fx{fill:#e3e3e0}.fy{fill:#c9c9c5}
+.c .fx{fill:#dcdcd8}.c .ft{fill:#f2f2ef}
+.pcb .ft{fill:#eeeeea}.pcb .fx{fill:#bdbdb8}.pcb .fy{fill:#a9a9a4}
+.blk .ft{fill:#4a4a4a}.blk .fx{fill:#2a2a2a}.blk .fy{fill:#1b1b1b}
+.met .ft{fill:#f4f4f4}.met .fx{fill:#d0d0d0}.met .fy{fill:#b8b8b8}
+.tb .ft{fill:#d8d8d4}.tb .fx{fill:#a7a7a2}.tb .fy{fill:#8f8f8a}
+.dio .fx{fill:#2a2a2a}.dio .ft{fill:#444}.cap .fx{fill:#3b3b3b}.cap .ft{fill:#6a6a6a}
+.res .fx{fill:#e9dfc8}.res .ft{fill:#f3ecdb}
+.band{fill:#7a7a7a;stroke:none!important}.dio .band{fill:#e6e6e6}
+.sep .fx{fill:#bbb}.scr{fill:#9c9c9c;stroke:#141414;stroke-width:.3}
+.pad{fill:#b9b9b4;stroke:#7d7d78;stroke-width:.2}
+.tr{fill:none;stroke:#8b8b86;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.ld,.jp{fill:none;stroke:#555;stroke-width:.5;stroke-linecap:round}.jp{stroke:#222;stroke-width:.7}
+.cab{fill:none;stroke:#141414;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cab2{fill:none;stroke:#fafafa;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.fl,.flc{fill:none;stroke:var(--azul);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:.01 6;opacity:0}
+.flc{stroke-width:1.8}
+.fl.on,.flc.on{opacity:1}
+.on>polygon.ft,.on>polygon.fx{stroke:var(--azul)!important;stroke-width:.9!important}
+.lb{text-anchor:middle;font:600 6.5px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);paint-order:stroke;stroke:var(--card);stroke-width:2px}
+.lbs{text-anchor:middle;font:500 5.2px ui-monospace,Menlo,Consolas,monospace;fill:var(--mute);paint-order:stroke;stroke:var(--card);stroke-width:1.6px}
+.btn{cursor:pointer}.btn:hover polygon.ft{fill:#dfe4ff}
+.pres>polygon.ft{fill:var(--azul)!important}
+@media (prefers-reduced-motion:reduce){.fl,.flc{stroke-dasharray:none;stroke-width:1.1}}
+.haz{fill:none;stroke:#c8c8c8;stroke-width:1.2;stroke-dasharray:3 2}.haz.on{stroke:var(--azul);stroke-dasharray:none;stroke-width:1.8}.haz.cut{stroke:#9a9a9a;opacity:.35}</style></head><body><main>
+<h1>Etapa 4-B · Clasificador de piezas</h1><p class="sub">Universidad EAN · Electrónica IFA00112. La banda lleva piezas bajas y altas hacia la estación de 18 cm: mira qué haz cortan y cuándo actúa el solenoide.</p>
+<div class="card"><div class="fig"><b>Fig 1 · Banda de 30 cm con dos barreras infrarrojas</b><span>Elige el tipo de pieza</span></div>
+<div class="stage"><svg viewBox="-126.6 -94.0 435.9 303.5" role="img"><g class="c m" ><polygon class="fx" points="-45.90,-2.50 -45.77,-3.76 -45.38,-4.81 -44.77,-5.59 1.09,-32.06 2.08,-32.21 3.17,-32.02 4.33,-31.50 5.49,-30.68 6.58,-29.60 7.57,-28.32 8.39,-26.89 9.01,-25.40 9.40,-23.91 9.53,-22.50 9.40,-21.24 9.01,-20.19 8.39,-19.41 -37.46,7.06 -38.45,7.21 -39.55,7.02 -40.70,6.50 -41.86,5.68 -42.96,4.60 -43.94,3.32 -44.77,1.90 -45.38,0.40 -45.77,-1.09"/><polygon class="ft" points="-35.51,3.50 -35.64,4.76 -36.02,5.81 -36.64,6.59 -37.46,7.06 -38.45,7.21 -39.55,7.02 -40.70,6.50 -41.86,5.68 -42.96,4.60 -43.94,3.32 -44.77,1.90 -45.38,0.40 -45.77,-1.09 -45.90,-2.50 -45.77,-3.76 -45.38,-4.81 -44.77,-5.59 -43.94,-6.06 -42.96,-6.21 -41.86,-6.02 -40.70,-5.50 -39.55,-4.68 -38.45,-3.60 -37.46,-2.32 -36.64,-0.90 -36.02,0.60 -35.64,2.09"/></g><g class="b m" ><polygon class="fy" points="1.73,11.00 6.93,14.00 6.93,-8.00 1.73,-11.00"/><polygon class="fx" points="12.12,11.00 6.93,14.00 6.93,-8.00 12.12,-11.00"/><polygon class="ft" points="6.93,-14.00 12.12,-11.00 6.93,-8.00 1.73,-11.00"/></g><g class="b m" ><polygon class="fy" points="-29.44,29.00 -24.25,32.00 -24.25,10.00 -29.44,7.00"/><polygon class="fx" points="-19.05,29.00 -24.25,32.00 -24.25,10.00 -19.05,7.00"/><polygon class="ft" points="-24.25,4.00 -19.05,7.00 -24.25,10.00 -29.44,7.00"/></g><g class="b m" ><polygon class="fy" points="179.27,73.50 205.25,88.50 205.25,85.50 179.27,70.50"/><polygon class="fx" points="239.89,68.50 205.25,88.50 205.25,85.50 239.89,65.50"/><polygon class="ft" points="213.91,50.50 239.89,65.50 205.25,85.50 179.27,70.50"/></g><g class="b m" ><polygon class="fy" points="-43.30,3.00 216.51,153.00 216.51,143.00 -43.30,-7.00"/><polygon class="fx" points="259.81,128.00 216.51,153.00 216.51,143.00 259.81,118.00"/><polygon class="ft" points="0.00,-32.00 259.81,118.00 216.51,143.00 -43.30,-7.00"/></g><g class="b blk" ><polygon class="fy" points="-39.84,-7.00 216.51,141.00 216.51,139.50 -39.84,-8.50"/><polygon class="fx" points="256.34,118.00 216.51,141.00 216.51,139.50 256.34,116.50"/><polygon class="ft" points="0.00,-31.50 256.34,116.50 216.51,139.50 -39.84,-8.50"/></g><g id="piezas"><g class="pz" data-k="baja"><g class="b m" ><polygon class="fy" points="-17.32,10.00 0.00,20.00 0.00,-0.00 -17.32,-10.00"/><polygon class="fx" points="17.32,10.00 0.00,20.00 0.00,-0.00 17.32,-10.00"/><polygon class="ft" points="0.00,-20.00 17.32,-10.00 0.00,-0.00 -17.32,-10.00"/></g></g><g class="pz" data-k="alta"><g class="b m" ><polygon class="fy" points="-17.32,10.00 0.00,20.00 0.00,-20.00 -17.32,-30.00"/><polygon class="fx" points="17.32,10.00 0.00,20.00 0.00,-20.00 17.32,-30.00"/><polygon class="ft" points="0.00,-40.00 17.32,-30.00 0.00,-20.00 -17.32,-30.00"/></g></g></g><g class="c sep" ><polygon class="fx" points="-46.47,57.79 -46.31,57.39 -46.00,57.02 -45.55,56.70 -44.99,56.44 -44.35,56.27 -43.66,56.17 -42.95,56.17 -42.25,56.27 -41.61,56.44 -41.05,56.70 -40.60,57.02 -40.30,57.39 -40.14,57.79 -40.14,68.21 -40.30,68.61 -40.60,68.98 -41.05,69.30 -41.61,69.56 -42.25,69.73 -42.95,69.83 -43.66,69.83 -44.35,69.73 -44.99,69.56 -45.55,69.30 -46.00,68.98 -46.31,68.61 -46.47,68.21"/><polygon class="ft" points="-45.55,59.30 -46.00,58.98 -46.31,58.61 -46.47,58.21 -46.47,57.79 -46.31,57.39 -46.00,57.02 -45.55,56.70 -45.00,56.44 -44.35,56.26 -43.66,56.17 -42.94,56.17 -42.25,56.26 -41.61,56.44 -41.05,56.70 -40.61,57.02 -40.30,57.39 -40.14,57.79 -40.14,58.21 -40.30,58.61 -40.61,58.98 -41.05,59.30 -41.61,59.56 -42.25,59.74 -42.94,59.83 -43.66,59.83 -44.35,59.74 -45.00,59.56"/></g><g class="b pcb" ><polygon class="fy" points="-112.58,95.00 -17.32,150.00 -17.32,148.40 -112.58,93.40"/><polygon class="fx" points="51.96,110.00 -17.32,150.00 -17.32,148.40 51.96,108.40"/><polygon class="ft" points="-43.30,53.40 51.96,108.40 -17.32,148.40 -112.58,93.40"/></g><g class="b m" ><polygon class="fy" points="156.75,64.50 161.95,67.50 161.95,23.50 156.75,20.50"/><polygon class="fx" points="168.87,63.50 161.95,67.50 161.95,23.50 168.87,19.50"/><polygon class="ft" points="163.68,16.50 168.87,19.50 161.95,23.50 156.75,20.50"/></g><g class="b m" ><polygon class="fy" points="156.75,64.50 161.95,67.50 161.95,3.50 156.75,0.50"/><polygon class="fx" points="168.87,63.50 161.95,67.50 161.95,3.50 168.87,-0.50"/><polygon class="ft" points="163.68,-3.50 168.87,-0.50 161.95,3.50 156.75,0.50"/></g><g class="b blk" ><polygon class="fy" points="-45.03,94.40 -37.24,98.90 -37.24,94.90 -45.03,90.40"/><polygon class="fx" points="-26.85,92.90 -37.24,98.90 -37.24,94.90 -26.85,88.90"/><polygon class="ft" points="-34.64,84.40 -26.85,88.90 -37.24,94.90 -45.03,90.40"/></g><polyline class="haz" data-h="bajo" points="159.35,44.50 109.12,73.50"/><polyline class="haz" data-h="alto" points="159.35,24.50 109.12,53.50"/><g class="b tb" data-r="K1"><polygon class="fy" points="-9.53,113.90 7.79,123.90 7.79,108.90 -9.53,98.90"/><polygon class="fx" points="21.65,115.90 7.79,123.90 7.79,108.90 21.65,100.90"/><polygon class="ft" points="4.33,90.90 21.65,100.90 7.79,108.90 -9.53,98.90"/></g><polyline class="cab"  points="-51.96,54.40 60.62,99.00 105.66,97.00"/><polyline class="cab2"  points="-51.96,54.40 60.62,99.00 105.66,97.00"/><g class="b m" ><polygon class="fy" points="99.59,97.50 104.79,100.50 104.79,56.50 99.59,53.50"/><polygon class="fx" points="111.72,96.50 104.79,100.50 104.79,56.50 111.72,52.50"/><polygon class="ft" points="106.52,49.50 111.72,52.50 104.79,56.50 99.59,53.50"/></g><g class="b m" ><polygon class="fy" points="99.59,97.50 104.79,100.50 104.79,36.50 99.59,33.50"/><polygon class="fx" points="111.72,96.50 104.79,100.50 104.79,36.50 111.72,32.50"/><polygon class="ft" points="106.52,29.50 111.72,32.50 104.79,36.50 99.59,33.50"/></g><g class="b met" data-r="VAST"><polygon class="fy" points="116.05,91.00 119.51,93.00 119.51,89.00 116.05,87.00"/><polygon class="fx" points="126.44,89.00 119.51,93.00 119.51,89.00 126.44,85.00"/><polygon class="ft" points="122.98,83.00 126.44,85.00 119.51,89.00 116.05,87.00"/></g><g class="b m" data-r="SOL"><polygon class="fy" points="98.73,101.00 112.58,109.00 112.58,93.00 98.73,85.00"/><polygon class="fx" points="124.71,102.00 112.58,109.00 112.58,93.00 124.71,86.00"/><polygon class="ft" points="110.85,78.00 124.71,86.00 112.58,93.00 98.73,85.00"/></g><polyline class="cab"  points="34.64,114.40 96.99,130.00 112.58,101.00"/><polyline class="cab2"  points="34.64,114.40 96.99,130.00 112.58,101.00"/><g class="c m" ><polygon class="fx" points="206.98,143.50 207.11,142.24 207.50,141.19 208.11,140.41 208.94,139.94 253.15,114.41 253.97,113.94 254.96,113.79 256.05,113.98 257.21,114.50 258.37,115.32 259.46,116.40 260.45,117.68 261.27,119.11 261.89,120.60 262.27,122.09 262.41,123.50 262.27,124.76 261.89,125.81 261.27,126.59 216.24,152.59 215.42,153.06 214.43,153.21 213.33,153.02 212.18,152.50 211.02,151.68 209.92,150.60 208.94,149.32 208.11,147.90 207.50,146.40 207.11,144.91"/><polygon class="ft" points="217.37,149.50 217.24,150.76 216.86,151.81 216.24,152.59 215.42,153.06 214.43,153.21 213.33,153.02 212.18,152.50 211.02,151.68 209.92,150.60 208.94,149.32 208.11,147.90 207.49,146.40 207.11,144.91 206.98,143.50 207.11,142.24 207.49,141.19 208.11,140.41 208.94,139.94 209.92,139.79 211.02,139.98 212.18,140.50 213.33,141.32 214.43,142.40 215.42,143.68 216.24,145.10 216.86,146.60 217.24,148.09"/></g><g class="b m" ><polygon class="fy" points="235.56,146.00 240.76,149.00 240.76,127.00 235.56,124.00"/><polygon class="fx" points="245.95,146.00 240.76,149.00 240.76,127.00 245.95,124.00"/><polygon class="ft" points="240.76,121.00 245.95,124.00 240.76,127.00 235.56,124.00"/></g><g class="b m" ><polygon class="fy" points="226.03,175.50 260.67,195.50 260.67,175.50 226.03,155.50"/><polygon class="fx" points="295.31,175.50 260.67,195.50 260.67,175.50 295.31,155.50"/><polygon class="ft" points="260.67,135.50 295.31,155.50 260.67,175.50 226.03,155.50"/></g><g class="b m" ><polygon class="fy" points="204.38,164.00 209.58,167.00 209.58,145.00 204.38,142.00"/><polygon class="fx" points="214.77,164.00 209.58,167.00 209.58,145.00 214.77,142.00"/><polygon class="ft" points="209.58,139.00 214.77,142.00 209.58,145.00 204.38,142.00"/></g><text class="lbs" x="-50.2" y="-5.0">0 cm</text><text class="lbs" x="209.6" y="145.0">30 cm</text><text class="lbs" x="188.8" y="37.0">haz bajo · 10 mm</text><text class="lbs" x="188.8" y="5.0">haz alto · 30 mm</text><text class="lbs" x="162.8" y="-6.0">LED IR</text><text class="lbs" x="86.6" y="32.0">PT334-6C</text><text class="lbs" x="129.9" y="107.0">solenoide</text><text class="lbs" x="235.6" y="56.0">rampa A (altas)</text><text class="lbs" x="260.7" y="147.5">contenedor B (bajas)</text><text class="lbs" x="-65.0" y="112.5">Tarjeta E4-B (LM358 · Y · relé K1)</text><text class="lb" x="6.1" y="96.5">K1</text></svg></div><div class="read" aria-live="polite"></div>
+<div class="ctl" role="group" aria-label="Mandos"><span class="l">Pieza</span>
+<button type="button" data-c="baja" aria-pressed="true">Baja 20 mm</button><button type="button" data-c="alta" aria-pressed="false">Alta 40 mm</button>
+<button type="button" data-c="pausa">Pausa</button><span class="sep"></span><span class="l">V_BUS</span>
+<button type="button" data-c="11" aria-pressed="true">11 V</button><button type="button" data-c="15.5" aria-pressed="false">15,5 V</button></div><p class="est" aria-live="polite"></p></div>
+<p class="cap">Banda de 30 cm a ≈ 5 cm/s. Estación a 18 cm con dos barreras IR (LED de 940 nm y fototransistor PT334-6C): haz bajo a 10 mm y haz alto a 30 mm. La pieza baja (20 mm) corta solo el haz bajo y sigue al contenedor B; la alta (40 mm) corta los dos, la función Y con Q1 y Q2 cierra el relé K1 y el solenoide JF-0530B la tumba a la rampa A. Corrientes del solenoide de la simulación validada. Proporciones de la maqueta aproximadas.</p>
+<p class="cap">Ferney Torres Ome · Electrónica IFA00112 · Universidad EAN</p>
+</main><script>
+const P=(x,y,z)=>[(x-y)*0.8660254,(x+y)*0.5-z];
+const svg=document.querySelector('svg'),rd=document.querySelector('.read'),est=document.querySelector('.est');
+const haz={bajo:svg.querySelector('[data-h=bajo]'),alto:svg.querySelector('[data-h=alto]')};
+const sol=svg.querySelector('[data-r=SOL]'), vast=svg.querySelector('[data-r=VAST]'), k1=svg.querySelector('[data-r=K1]');
+const pz={baja:svg.querySelector('[data-k=baja]'),alta:svg.querySelector('[data-k=alta]')};
+const S={tipo:'baja',x:-30,run:true,fase:'banda',t:0,vb:'11'};
+const I={"11":"0,91 A","15.5":"1,29 A"};
+const still=matchMedia('(prefers-reduced-motion: reduce)');
+function pon(el,x,y,z){const [a,b]=P(x,y,z);el.setAttribute('transform','translate('+a.toFixed(2)+','+b.toFixed(2)+')');}
+function estado(){
+ const x=S.x, h=S.tipo==='alta'?40:20, en=x+20>=180&&x<=180;
+ const cB=en&&h>10, cA=en&&h>30, act=cB&&cA;
+ haz.bajo.classList.toggle('cut',cB); haz.bajo.classList.toggle('on',!cB);
+ haz.alto.classList.toggle('cut',cA); haz.alto.classList.toggle('on',!cA);
+ return {cB,cA,act};
+}
+function frame(dt){
+ const sp=50; // 5 cm/s = 50 mm/s
+ if(S.fase==='banda'){S.x+=sp*dt; if(S.tipo==='alta'&&S.x>=172){S.fase='empuje';S.t=0;} if(S.x>330){S.x=-30;S.tipo=S.tipo==='baja'?'alta':'baja';}}
+ else if(S.fase==='empuje'){S.t+=dt; if(S.t>1.2){S.fase='banda';S.x=-30;S.tipo='baja';}}
+ const e=estado(); const empuje=S.fase==='empuje';
+ sol.classList.toggle('on',empuje||e.act); k1.classList.toggle('on',empuje||e.act);
+ pon(vast,0,empuje?-Math.min(1,S.t*3)*40:0,0);
+ const y=empuje?10-Math.min(1,S.t*1.5)*55:15, z=empuje?33.5-Math.min(1,S.t*1.5)*26:33.5;
+ pz.baja.style.display=S.tipo==='baja'?'':'none'; pz.alta.style.display=S.tipo==='alta'?'':'none';
+ pon(pz[S.tipo],S.x,y,z);
+ rd.textContent='Pieza '+(S.tipo==='alta'?'alta (40 mm)':'baja (20 mm)')+' a '+(Math.max(0,S.x)/10).toFixed(1).replace('.',',')+' cm · haz bajo '+(e.cB?'CORTADO':'libre')+' · haz alto '+(e.cA?'CORTADO':'libre')+' · solenoide '+((empuje||e.act)?'ACTIVO '+I[S.vb]:'reposo');
+ est.innerHTML=(empuje||e.act)?'<b>Función Y:</b> los dos haces cortados, Q1 y Q2 conducen, K1 cierra y el solenoide tumba la pieza a la rampa A.':(e.cB?'<b>Solo el haz bajo cortado:</b> Q2 en corte, el relé no actúa; la pieza baja sigue al contenedor B.':'<b>Haces libres:</b> los comparadores están en bajo.');
+}
+let last=0;
+function tick(now){const dt=last?Math.min((now-last)/1000,.05):0;last=now; if(S.run&&!still.matches) frame(dt); requestAnimationFrame(tick);}
+document.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.c;
+ if(c==='baja'||c==='alta'){S.tipo=c;S.x=-30;S.fase='banda';} else if(c==='pausa'){S.run=!S.run;b.textContent=S.run?'Pausa':'Seguir';} else S.vb=c;
+ document.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===S.tipo||x.dataset.c===S.vb?'true':'false')); frame(0);}));
+if(still.matches){S.x=175;S.tipo='alta';}
+frame(0); requestAnimationFrame(tick);
+</script></body></html>

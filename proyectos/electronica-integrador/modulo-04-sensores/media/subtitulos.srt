@@ -1,0 +1,131 @@
+1
+00:00:00,650 --> 00:00:02,366
+Hola, soy Ferney Torres.
+
+2
+00:00:02,366 --> 00:00:06,515
+En este módulo vas a ver cómo los sensores le dan decisiones al proyecto:
+
+3
+00:00:06,515 --> 00:00:09,891
+clasificar piezas y llevar el ascensor al piso.
+
+4
+00:00:10,556 --> 00:00:12,520
+La banda mide 30 cm.
+
+5
+00:00:12,520 --> 00:00:15,590
+A los 18 cm hay dos barreras infrarrojas:
+
+6
+00:00:15,590 --> 00:00:19,551
+un haz bajo a 10 mm y uno alto a 30 mm.
+
+7
+00:00:20,298 --> 00:00:22,149
+La pieza baja mide 20 mm:
+
+8
+00:00:22,149 --> 00:00:24,704
+corta el haz bajo, pero no el alto.
+
+9
+00:00:24,766 --> 00:00:27,651
+La pieza alta mide 40 mm:
+
+10
+00:00:27,651 --> 00:00:29,575
+corta los dos.
+
+11
+00:00:29,670 --> 00:00:34,823
+Por eso se usa una función Y con dos transistores 2N2222A en serie.
+
+12
+00:00:34,823 --> 00:00:39,191
+Solo con los dos haces cortados se activa el relé del solenoide.
+
+13
+00:00:39,816 --> 00:00:42,938
+La banda avanza a unos 5 cm/s.
+
+14
+00:00:42,938 --> 00:00:47,946
+Una pieza que entra al inicio llega a la estación en 3,6 s.
+
+15
+00:00:48,720 --> 00:00:51,712
+En el ascensor, un potenciómetro en la polea convierte
+
+16
+00:00:51,712 --> 00:00:53,148
+la altura en voltaje.
+
+17
+00:00:53,148 --> 00:00:54,369
+Hay tres paradas:
+
+18
+00:00:54,369 --> 00:00:58,400
+0 cm, 15 cm y 30 cm.
+
+19
+00:00:59,044 --> 00:01:03,445
+Un LM358 compara la posición con la del piso elegido.
+
+20
+00:01:03,445 --> 00:01:06,624
+Si la cabina está abajo, da la orden SUBIR.
+
+21
+00:01:06,780 --> 00:01:09,098
+Si está arriba, da la orden BAJAR.
+
+22
+00:01:09,310 --> 00:01:12,156
+Y dentro de ±1 cm no da ninguna:
+
+23
+00:01:12,156 --> 00:01:14,207
+la cabina está EN_PISO.
+
+24
+00:01:14,852 --> 00:01:16,734
+La puerta tiene dos pulsadores.
+
+25
+00:01:16,734 --> 00:01:20,065
+ABRIR solo actúa cuando la cabina está EN_PISO.
+
+26
+00:01:20,140 --> 00:01:24,843
+CERRAR suelta el enclavamiento y el relé deja de alimentar la cerradura.
+
+27
+00:01:25,028 --> 00:01:27,639
+Mientras la puerta está abierta, la señal PARO llega a
+
+28
+00:01:27,639 --> 00:01:30,765
+la etapa de control y el motor no puede arrancar.
+
+29
+00:01:31,408 --> 00:01:32,385
+En resumen:
+
+30
+00:01:32,385 --> 00:01:35,290
+dos haces y una función Y clasifican las piezas,
+
+31
+00:01:35,290 --> 00:01:38,632
+y un comparador de ventana lleva el ascensor al piso.
+
+32
+00:01:38,632 --> 00:01:41,691
+Ahora repasa las ideas clave y resuelve el quiz.
+
+33
+00:01:41,691 --> 00:01:43,068
+Gracias.

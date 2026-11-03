@@ -1,0 +1,115 @@
+1
+00:00:00,650 --> 00:00:02,296
+Hola, soy Ferney Torres.
+
+2
+00:00:02,296 --> 00:00:06,664
+En este módulo vas a ver cómo un solo LM358 controla la
+
+3
+00:00:06,664 --> 00:00:09,224
+velocidad del motor y lo detiene.
+
+4
+00:00:09,944 --> 00:00:12,282
+Todo empieza con una referencia estable.
+
+5
+00:00:12,282 --> 00:00:17,167
+Un zener de 5,1 V, con una resistencia de 470 Ω desde
+
+6
+00:00:17,167 --> 00:00:19,996
+el bus, alimenta el potenciómetro de velocidad.
+
+7
+00:00:19,996 --> 00:00:25,215
+Así la referencia no cambia aunque V_BUS vaya de 11 a 15,5 V.
+
+8
+00:00:25,878 --> 00:00:29,034
+El primer amplificador, U1A, es no inversor.
+
+9
+00:00:29,034 --> 00:00:32,118
+Su ganancia es uno más cuatro coma siete entre diez:
+
+10
+00:00:32,118 --> 00:00:33,828
+1,47.
+
+11
+00:00:33,828 --> 00:00:39,186
+Si el cursor está en dos voltios, la salida es 2,94 V.
+
+12
+00:00:39,832 --> 00:00:40,376
+Ojo:
+
+13
+00:00:40,376 --> 00:00:44,613
+el LM358 no llega al voltaje de alimentación.
+
+14
+00:00:44,613 --> 00:00:49,132
+Su salida alta queda cerca de V_CC − 1,5 V.
+
+15
+00:00:49,766 --> 00:00:53,972
+El segundo amplificador, U1B, es un comparador con histéresis.
+
+16
+00:00:53,972 --> 00:00:59,239
+Cuando la señal PARO supera 2,66 V, la salida cambia.
+
+17
+00:00:59,500 --> 00:01:02,659
+Y solo vuelve cuando PARO baja de unos 2,2 V.
+
+18
+00:01:02,659 --> 00:01:06,453
+Esa diferencia evita que el ruido encienda y apague el motor.
+
+19
+00:01:06,638 --> 00:01:09,730
+La salida activa a Q1, que lleva la compuerta del MOSFET
+
+20
+00:01:09,730 --> 00:01:12,942
+a tierra aunque U1A siga mandando velocidad.
+
+21
+00:01:13,566 --> 00:01:16,421
+Una limitación que medimos en la simulación:
+
+22
+00:01:16,421 --> 00:01:18,805
+como el MOSFET trabaja en zona lineal,
+
+23
+00:01:18,805 --> 00:01:21,948
+la corriente del motor cambia solo en una franja corta
+
+24
+00:01:21,948 --> 00:01:24,627
+del recorrido del potenciómetro.
+
+25
+00:01:25,350 --> 00:01:26,220
+En resumen:
+
+26
+00:01:26,220 --> 00:01:29,289
+una referencia con zener, un no inversor para la velocidad
+
+27
+00:01:29,289 --> 00:01:31,694
+y un comparador con histéresis para parar.
+
+28
+00:01:31,694 --> 00:01:34,420
+Ahora repasa las ideas clave y resuelve el quiz.
+
+29
+00:01:34,420 --> 00:01:35,724
+Gracias.

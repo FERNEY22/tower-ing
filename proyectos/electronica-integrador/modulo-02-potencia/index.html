@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M2 Potencia: banda y ascensor · Electrónica · Proyecto integrador</title>
+  <meta name="description" content="El MOSFET IRLZ44N mueve la banda con arranque y parada enclavados; un puente H discreto sube y baja el ascensor.">
+  <meta name="author" content="Ferney Torres Ome">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../recursos/curso.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="cv-brand-sub">Electrónica · Proyecto integrador</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="cv-crumbs" aria-label="Ruta"><a href="../index.html">Electrónica · Proyecto integrador</a><span>/</span><span>M2</span></nav>
+
+    <header class="cv-mhead">
+      <div class="cv-mhead-meta"><span class="phase">Módulo 2 de 4</span></div>
+      <h1>Potencia: banda y ascensor</h1>
+      <p class="cv-lead">El MOSFET IRLZ44N mueve la banda con arranque y parada enclavados; un puente H discreto sube y baja el ascensor.</p>
+      <ul class="cv-topics" style="margin-top:18px" aria-label="Temas"><li>IRLZ44N</li><li>Enclavamiento</li><li>Clamp de STOP</li><li>Puente H</li><li>Finales de carrera</li></ul>
+    </header>
+
+    <section class="cv-msec cv-tour" aria-labelledby="cv-tour-h" data-tour>
+      <div class="cv-tour-head">
+        <h2 id="cv-tour-h">Recorrido del módulo</h2>
+        <p class="cv-tour-count" aria-live="polite"><span data-tour-part>Lección</span> <span class="n"><b data-tour-now>1</b> de <span data-tour-total>7</span></span></p>
+      </div>
+      <div class="cv-tour-bar" aria-hidden="true"><i data-tour-fill></i></div>
+
+      <div class="cv-tour-track" data-tour-track>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 1 de 7: video-lección">
+          <h3>Video-lección</h3>
+          <p class="cv-step-lead">El MOSFET IRLZ44N mueve la banda con arranque y parada enclavados; un puente H discreto sube y baja el ascensor. Dura 2 minutos y 21 segundos. Los subtítulos dicen lo mismo que la voz.</p>
+          <div class="cv-video">
+            <video controls preload="metadata" playsinline poster="media/poster.jpg" width="1280" height="720">
+              <source src="media/leccion.mp4" type="video/mp4">
+              Tu navegador no reproduce el video. <a href="media/leccion.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <details class="cv-more">
+            <summary>Leer la transcripción</summary>
+            <div class="cv-more-body"><p>Hola, soy Ferney Torres. En este módulo vas a ver cómo se mueve el motor de la banda y el del ascensor, solo con transistores.</p><p>Empecemos por la banda. El transistor Q4, un IRLZ44N, conecta el motor a tierra. Su compuerta recibe la señal de velocidad desde la etapa de control.</p><p>Los pulsadores actúan sobre dos transistores 2N2222A cruzados. Con START conduce Q2, y el motor gira. Con STOP conduce Q1, y Q3 lleva la compuerta de Q4 a tierra. El motor se detiene aunque llegue la señal de velocidad. Un condensador de 1 µF retrasa a Q2 al encender. Por eso la tarjeta siempre arranca detenida. Y el giro de la banda se invierte con un interruptor DPDT en los cables del motor.</p><p>Con 4,5 V en la compuerta, el motor de quince ohmios toma 0,733 A con 11 V, y 1,033 A con 15,5 V.</p><p>Ahora el ascensor. Necesita girar en los dos sentidos, así que usa un puente hache: dos TIP42C arriba y dos IRLZ44N abajo.</p><p>Para subir conduce una diagonal del puente: el transistor alto de la izquierda y el bajo de la derecha. Para bajar conduce la otra diagonal, y la corriente pasa por el motor al revés.</p><p>Fíjate en las protecciones. Si llegan las dos órdenes a la vez, los transistores de enclavamiento apagan los dos lados y el motor no gira. En cada rama, el transistor bajo se apaga cuando conduce el alto. Así nunca hay corto entre el bus y tierra. Y cada final de carrera tiene un diodo en paralelo: detiene el motor en el extremo y solo deja salir en sentido contrario.</p><p>La simulación confirma el cálculo: 0,721 A en cada sentido, y 0,664 A cuando la cabina sale de un extremo por el diodo.</p><p>Las dos tarjetas son de una sola cara. En los productos del módulo puedes girarlas en tres dimensiones y probar la maqueta isométrica.</p><p>En resumen: un MOSFET con enclavamiento mueve la banda, y un puente hache discreto sube y baja el ascensor. Ahora repasa la presentación y resuelve el quiz. Gracias.</p></div>
+          </details>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 2 de 7: presentación e ideas clave" hidden>
+          <h3>Presentación e ideas clave</h3>
+          <p class="cv-step-lead">Las ideas del módulo en pocas líneas y las diapositivas para repasar.</p>
+          <h4>Ideas clave</h4>
+          <div class="cv-notes"><div><h5>Enclavamiento START/STOP</h5><p>Q1 y Q2 (2N2222A) se cruzan: la tarjeta recuerda la última orden y siempre arranca en STOP.</p></div><div><h5>Clamp de compuerta</h5><p>En STOP, Q3 lleva la compuerta de Q4 a tierra aunque llegue señal de velocidad.</p></div><div><h5>Puente H discreto</h5><p>TIP42C arriba e IRLZ44N abajo: SUBIR usa QHA+QLB y BAJAR usa QHB+QLA.</p></div><div><h5>Finales de carrera con diodo</h5><p>Detienen el motor en el extremo y dejan salir en sentido contrario.</p></div></div>
+          <h4>Presentación</h4>
+          <div class="cv-slides" data-slides='[&quot;E2-B · Etapa 2-B — Potencia de la banda&quot;, &quot;E2-B · Propósito de la etapa&quot;, &quot;E2-B · Esquema de la etapa&quot;, &quot;E2-B · Enclavamiento START / STOP&quot;, &quot;E2-B · Compuerta de Q4 y clamp de STOP&quot;, &quot;E2-B · Estados de la tarjeta&quot;, &quot;E2-B · Lista de materiales&quot;, &quot;E2-B · Tarjeta de circuito impreso&quot;, &quot;E2-B · Vista 3D de la tarjeta&quot;, &quot;E2-B · Validación: teoría y simulación&quot;, &quot;E2-B · Ejercicio&quot;, &quot;E2-B · Solución&quot;, &quot;E2-B · Conclusiones&quot;, &quot;E2-B · Referencias&quot;, &quot;E2-E · Etapa 2-E — Puente H del ascensor&quot;, &quot;E2-E · Propósito de la etapa&quot;, &quot;E2-E · Esquema de la etapa&quot;, &quot;E2-E · Funcionamiento del puente H&quot;, &quot;E2-E · Cálculos de los drivers&quot;, &quot;E2-E · Finales de carrera&quot;, &quot;E2-E · Lista de materiales&quot;, &quot;E2-E · Tarjeta de circuito impreso&quot;, &quot;E2-E · Vista 3D de la tarjeta&quot;, &quot;E2-E · Validación: teoría y simulación&quot;, &quot;E2-E · Ejercicio&quot;, &quot;E2-E · Solución&quot;, &quot;E2-E · Conclusiones&quot;, &quot;E2-E · Referencias&quot;]' data-slides-dir="media/diapositivas/diapositiva-" tabindex="0" aria-label="Diapositivas de la presentación; usa las flechas para cambiar">
+            <div class="cv-slides-frame"><img data-slide-img src="media/diapositivas/diapositiva-01.jpg" alt="Diapositiva 1 de 28: E2-B · Etapa 2-B — Potencia de la banda" width="1280" height="720" decoding="async"></div>
+            <div class="cv-slides-bar">
+              <button type="button" class="btn btn-ghost" data-slide-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+              <span class="n" aria-live="polite"><b data-slide-now>1</b> de <span data-slide-total>28</span></span>
+              <button type="button" class="btn btn-ghost" data-slide-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <a class="btn btn-ghost cv-dl" href="#" data-b64="media/Etapa2B_Potencia_Banda.pptx.b64.txt" data-name="Etapa2B_Potencia_Banda.pptx" data-mime="application/vnd.openxmlformats-officedocument.presentationml.presentation">Descargar la presentación <small>.pptx · 594 KB</small></a>
+        </article>
+        <article class="cv-step" data-part="Productos" aria-label="Tarjeta 3 de 7: productos de la etapa" hidden>
+          <h3>Productos de la etapa</h3>
+          <p class="cv-step-lead">Circuito, archivo de simulación, tarjeta, Gerber, vista 3D e isométrica de la etapa. Todo se puede abrir y descargar.</p>
+          <div class="cv-prod" data-prod><div class="cv-prod-tabs" role="tablist"><button type="button" class="btn btn-ghost" role="tab" aria-selected="true" data-prod-tab="0">Banda · Circuito</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="1">Banda · PCB</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="2">Banda · 3D interactivo</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="3">Banda · Isométrica</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="4">Ascensor · Circuito</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="5">Ascensor · PCB</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="6">Ascensor · 3D interactivo</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="7">Ascensor · Isométrica</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="8">PPT del ascensor</button></div><div class="cv-prod-pane" data-prod-pane="0"><p class="cv-step-lead">Esquema de la etapa. El archivo de LTspice tiene el mismo circuito cableado y validado.</p><div class="cv-prod-img"><a href="media/prod/Circuito_E2B_Potencia_Banda.png" target="_blank" rel="noopener"><img src="media/prod/Circuito_E2B_Potencia_Banda.png" alt="Banda · Circuito" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/E2B_Potencia_Banda_LTspice.zip.b64.txt" data-name="E2B_Potencia_Banda_LTspice.zip" data-mime="application/zip">Descargar LTspice (.asc) <small>1 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Circuito_E2B_Potencia_Banda.png.b64.txt" data-name="Circuito_E2B_Potencia_Banda.png" data-mime="image/png">Descargar Circuito .png <small>38 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="1" hidden><p class="cv-step-lead">Pistas de la tarjeta, una sola cara. El Gerber sirve para fabricarla en cualquier servicio de PCB.</p><div class="cv-prod-img"><a href="media/prod/PCB_FINAL_E2B_Potencia_Banda.png" target="_blank" rel="noopener"><img src="media/prod/PCB_FINAL_E2B_Potencia_Banda.png" alt="Banda · PCB" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Gerber_E2B_Potencia_Banda.zip.b64.txt" data-name="Gerber_E2B_Potencia_Banda.zip" data-mime="application/zip">Descargar Gerber .zip <small>22 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/PCB_FINAL_E2B_Potencia_Banda.png.b64.txt" data-name="PCB_FINAL_E2B_Potencia_Banda.png" data-mime="image/png">Descargar PCB .png <small>82 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="2" hidden><p class="cv-step-lead">Gira la tarjeta con el dedo o el ratón; acerca con la rueda o con dos dedos.</p><div class="cv-prod-frame" style="height:560px"><iframe data-src="media/prod/PCB_E2B_3D.html" title="Banda · 3D interactivo" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/PCB_E2B_3D.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="3" hidden><p class="cv-step-lead">La tarjeta en la maqueta. Toca los mandos y mira por dónde pasa la corriente.</p><div class="cv-prod-frame" style="height:900px"><iframe data-src="media/prod/E2B_isometrica.html" title="Banda · Isométrica" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/E2B_isometrica.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="4" hidden><p class="cv-step-lead">Esquema de la etapa. El archivo de LTspice tiene el mismo circuito cableado y validado.</p><div class="cv-prod-img"><a href="media/prod/Circuito_E2E_Potencia_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/Circuito_E2E_Potencia_Ascensor.png" alt="Ascensor · Circuito" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/E2E_Potencia_Ascensor_LTspice.zip.b64.txt" data-name="E2E_Potencia_Ascensor_LTspice.zip" data-mime="application/zip">Descargar LTspice (.asc) <small>2 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Circuito_E2E_Potencia_Ascensor.png.b64.txt" data-name="Circuito_E2E_Potencia_Ascensor.png" data-mime="image/png">Descargar Circuito .png <small>81 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="5" hidden><p class="cv-step-lead">Pistas de la tarjeta, una sola cara. El Gerber sirve para fabricarla en cualquier servicio de PCB.</p><div class="cv-prod-img"><a href="media/prod/PCB_FINAL_E2E_Potencia_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/PCB_FINAL_E2E_Potencia_Ascensor.png" alt="Ascensor · PCB" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Gerber_E2E_Potencia_Ascensor.zip.b64.txt" data-name="Gerber_E2E_Potencia_Ascensor.zip" data-mime="application/zip">Descargar Gerber .zip <small>117 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/PCB_FINAL_E2E_Potencia_Ascensor.png.b64.txt" data-name="PCB_FINAL_E2E_Potencia_Ascensor.png" data-mime="image/png">Descargar PCB .png <small>130 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="6" hidden><p class="cv-step-lead">Gira la tarjeta con el dedo o el ratón; acerca con la rueda o con dos dedos.</p><div class="cv-prod-frame" style="height:560px"><iframe data-src="media/prod/PCB_E2E_3D.html" title="Ascensor · 3D interactivo" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/PCB_E2E_3D.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="7" hidden><p class="cv-step-lead">La tarjeta en la maqueta. Toca los mandos y mira por dónde pasa la corriente.</p><div class="cv-prod-frame" style="height:900px"><iframe data-src="media/prod/E2E_isometrica.html" title="Ascensor · Isométrica" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/E2E_isometrica.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="8" hidden><p class="cv-step-lead">Presentación de la etapa 2-E (puente H del ascensor).</p><div class="cv-prod-img"><a href="media/prod/diapositiva-01.jpg" target="_blank" rel="noopener"><img src="media/prod/diapositiva-01.jpg" alt="PPT del ascensor" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Etapa2E_Puente_H_Ascensor.pptx.b64.txt" data-name="Etapa2E_Puente_H_Ascensor.pptx" data-mime="application/vnd.openxmlformats-officedocument.presentationml.presentation">Descargar PPT 2-E .pptx <small>792 KB</small></a></div></div></div>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 4 de 7: quiz" hidden>
+          <h3>Quiz: 5 preguntas</h3>
+          <p class="cv-step-lead">Una pregunta a la vez. Al responder verás la explicación; al final, tu resultado. Cada intento nuevo cambia las preguntas y su orden.</p>
+          <div class="cv-quiz" data-quiz data-quiz-n="5">
+            <div class="cv-quiz-head" data-q-head>
+              <span class="n">Pregunta <b data-q-now>1</b> de <span data-q-total>5</span></span>
+              <div class="cv-quiz-bar" aria-hidden="true"><i data-q-fill></i></div>
+            </div>
+            <fieldset class="cv-q" data-answer="b" data-correct="Porque CPU retrasa la base de Q2 y Q1 gana" data-ok="CPU (1 µF) retrasa a Q2 al energizar; Q1 conduce primero y queda en STOP." data-no="El que decide es CPU: retrasa la base de Q2 y Q1 gana el arranque." hidden>
+              <legend><b>1</b> <span>¿Por qué la tarjeta E2-B siempre arranca en STOP?</span></legend>
+              <button type="button" data-v="a">Porque Q4 es de nivel lógico</button>
+              <button type="button" data-v="b">Porque CPU retrasa la base de Q2 y Q1 gana</button>
+              <button type="button" data-v="c">Porque D1 descarga el motor</button>
+              <button type="button" data-v="d">Porque START es NC</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Lleva la compuerta de Q4 a tierra" data-ok="Q3 satura y deja V_G ≈ 0,04 V: el motor se detiene aunque llegue GATE." data-no="Q3 es el clamp: lleva V_G a ≈ 0 V en STOP." hidden>
+              <legend><b>2</b> <span>En STOP, ¿qué hace Q3?</span></legend>
+              <button type="button" data-v="a">Enciende el motor</button>
+              <button type="button" data-v="b">Lleva la compuerta de Q4 a tierra</button>
+              <button type="button" data-v="c">Invierte el giro</button>
+              <button type="button" data-v="d">Carga el condensador</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="a" data-correct="A Q4 del pico inductivo del motor al apagar" data-ok="Al apagar, D1 lleva la energía de la inductancia al bus: V_MM ≈ V_BUS + 0,9 V." data-no="D1 es el diodo volante: sin él, el pico al apagar dañaría a Q4." hidden>
+              <legend><b>3</b> <span>¿Qué protege D1 en la etapa 2-B?</span></legend>
+              <button type="button" data-v="a">A Q4 del pico inductivo del motor al apagar</button>
+              <button type="button" data-v="b">A la batería de la sobrecarga</button>
+              <button type="button" data-v="c">Al LM358</button>
+              <button type="button" data-v="d">A los pulsadores</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="QHA y QLB" data-ok="La diagonal QHA–QLB lleva la corriente de MA a MB a través del motor." data-no="Es una diagonal: QHA arriba y QLB abajo. QHA con QLA sería un corto." hidden>
+              <legend><b>4</b> <span>En el puente H, durante SUBIR conducen…</span></legend>
+              <button type="button" data-v="a">QHA y QLA</button>
+              <button type="button" data-v="b">QHA y QLB</button>
+              <button type="button" data-v="c">QHB y QLB</button>
+              <button type="button" data-v="d">Los cuatro</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="c" data-correct="El motor no gira: QIA y QIB anulan los drivers" data-ok="Cada orden apaga el driver de la otra; con las dos, ninguno conduce." data-no="Los enclavamientos QIA y QIB anulan los dos drivers: 0 A." hidden>
+              <legend><b>5</b> <span>¿Qué pasa si llegan SUBIR y BAJAR a la vez?</span></legend>
+              <button type="button" data-v="a">El motor sube</button>
+              <button type="button" data-v="b">El motor baja</button>
+              <button type="button" data-v="c">El motor no gira: QIA y QIB anulan los drivers</button>
+              <button type="button" data-v="d">Hay un corto en el puente</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="BAJAR, a través de DU" data-ok="DU bloquea SUBIR y deja pasar BAJAR: la cabina sale del extremo (≈ 0,66 A a 11 V)." data-no="El diodo en paralelo deja pasar solo el sentido que aleja la cabina del extremo: BAJAR." hidden>
+              <legend><b>6</b> <span>La cabina está arriba y FC arriba está abierto. ¿Qué orden mueve el motor?</span></legend>
+              <button type="button" data-v="a">SUBIR</button>
+              <button type="button" data-v="b">BAJAR, a través de DU</button>
+              <button type="button" data-v="c">Ninguna</button>
+              <button type="button" data-v="d">Las dos</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Porque con 15,5 V disipan cerca de 0,96 W" data-ok="I ≈ 66 mA en 220 Ω: P ≈ 0,96 W." data-no="Calcula P = I²R con ≈ 66 mA y 220 Ω: casi 1 W." hidden>
+              <legend><b>7</b> <span>¿Por qué RBA y RBB son de 1 W?</span></legend>
+              <button type="button" data-v="a">Por estética</button>
+              <button type="button" data-v="b">Porque con 15,5 V disipan cerca de 0,96 W</button>
+              <button type="button" data-v="c">Porque llevan la corriente del motor</button>
+              <button type="button" data-v="d">Porque son de compuerta</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary cv-q-next" data-q-next hidden>Siguiente pregunta <span class="arrow" aria-hidden="true">→</span></button>
+
+            <div class="cv-result" data-q-result hidden tabindex="-1">
+              <p class="cv-result-score"><b data-q-score>0</b> de <span data-q-of>5</span></p>
+              <p class="cv-result-msg" data-q-msg></p>
+              <ul class="cv-missed" data-q-missed></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Intentar de nuevo</button>
+            </div>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 1" aria-label="Tarjeta 5 de 7: caso con decisiones" hidden>
+          <h3>Actividad 1 · El ascensor no sale del piso alto</h3>
+          <p class="cv-step-lead">Lee la situación y decide. Cada elección tiene una consecuencia y te lleva a la siguiente decisión. Al final verás el camino que tomaste.</p>
+          <div class="cv-case" data-case data-label="Actividad 1 · El ascensor no sale del piso alto">
+            <p class="cv-case-ctx">En la prueba del ascensor la cabina subió hasta arriba y se detuvo. Ahora nadie logra bajarla y el grupo está por desarmar la tarjeta.</p>
+            <div class="cv-case" data-case-stage style="margin-top:0"></div>
+            <div class="cv-case-end" data-case-end hidden tabindex="-1">
+              <p class="cv-result-score"><b data-case-score>0</b></p>
+              <p class="cv-result-msg" data-case-msg></p>
+              <ul class="cv-path" data-case-path></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Recorrer el caso de nuevo</button>
+            </div>
+            <script type="application/json">{"titulo": "El ascensor no sale del piso alto", "contexto": "En la prueba del ascensor la cabina subió hasta arriba y se detuvo. Ahora nadie logra bajarla y el grupo está por desarmar la tarjeta.", "inicio": "d1", "nodos": {"d1": {"etapa": "Decisión 1", "texto": "¿Qué revisas primero?", "opciones": [{"texto": "Qué orden llega a J3 y en qué estado está FC arriba", "q": 2, "retro": "J3 recibe SUBIR, no BAJAR. FC arriba está abierto, como debe estar en el extremo.", "va": "d2"}, {"texto": "Cambiar los TIP42C", "q": 0, "retro": "Los transistores estaban bien. Ahora hay que volver a soldarlos.", "va": "d2"}, {"texto": "Medir V_BUS", "q": 1, "retro": "V_BUS está en 11 V. La fuente no es el problema, pero aún no sabes cuál es.", "va": "d2"}]}, "d2": {"etapa": "Decisión 2", "texto": "Llega SUBIR con FC arriba abierto. ¿Qué haces?", "opciones": [{"texto": "Dar la orden BAJAR", "q": 2, "retro": "DU conduce en ese sentido y la cabina baja (≈ 0,66 A). El sistema estaba bien: solo pedía la orden correcta.", "va": "d3"}, {"texto": "Puentear el final de carrera", "q": 0, "retro": "La cabina sube contra el tope y el motor se frena. Quitaste la protección.", "va": "d3"}]}, "d3": {"etapa": "Decisión 3", "texto": "¿Qué dejas escrito para el siguiente grupo?", "opciones": [{"texto": "Que en un extremo solo funciona la orden que aleja la cabina, y por qué", "q": 2, "retro": "El siguiente grupo entiende el diodo en paralelo y no desarma nada.", "va": "fin"}, {"texto": "«No tocar el ascensor»", "q": 0, "retro": "Nadie aprende cómo funciona y el problema se repite.", "va": "fin"}]}, "fin": {"fin": true, "texto": "Antes de cambiar piezas, lee el estado: qué orden llega y qué final de carrera está abierto. El diodo en paralelo solo deja salir del extremo."}}}</script>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 2" aria-label="Tarjeta 6 de 7: resolver y verificar" hidden>
+          <h3>Actividad 2 · Banda a 15,5 V y salida del extremo</h3>
+          <p class="cv-step-lead">La fuente está con red y sin carga: V_BUS = 15,5 V. Primero la banda (E2-B), después el ascensor (E2-E) a 11 V con FC abajo abierto y orden SUBIR.</p>
+          <div class="cv-solve" data-solve data-label="Actividad 2 · Banda a 15,5 V y salida del extremo">
+            <ul class="cv-given" aria-label="Datos"><li>GATE = 5 V con 1 kΩ en serie</li><li>R1 = 100 Ω, R2 = 10 kΩ</li><li>Motor R_M = 15 Ω</li><li>D1 y DD: V_f = 0,9 V</li><li>TIP42C: V_EC = 0,18 V</li></ul>
+            <div class="cv-item">
+              <label for="r0">1. Voltaje de compuerta V_G de Q4<small>en V, con dos decimales</small></label>
+              <div class="cv-entry"><input id="r0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">V</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r1">2. Corriente del motor de la banda<small>en A, con tres decimales</small></label>
+              <div class="cv-entry"><input id="r1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">A</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r2">3. Corriente del ascensor al salir por DD<small>en A, con tres decimales</small></label>
+              <div class="cv-entry"><input id="r2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">A</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-solve-done" data-solve-done hidden tabindex="-1">
+              <p class="cv-result-score"><b data-solve-score>0</b></p>
+              <p class="cv-result-msg">Cada pista resta un cuarto de punto; un ítem sin resolver vale cero.</p>
+              <button type="button" class="btn btn-ghost" data-reset>Resolver de nuevo</button>
+            </div>
+            <script type="application/json">{"intentos": 3, "items": [{"pregunta": "Voltaje de compuerta V_G de Q4", "ayuda": "en V, con dos decimales", "tipo": "numero", "valor": 4.5, "tol": 0.02, "unidad": "V", "pistas": ["Es un divisor de voltaje.", "V_G = 5 · R2/(1 kΩ + R1 + R2).", "V_G = 5 · 10/(1 + 0,1 + 10)."], "explica": "Divisor entre la resistencia serie, R1 y R2.", "solucion": "V_G = 5 · 10/11,1 = 4,50 V"}, {"pregunta": "Corriente del motor de la banda", "ayuda": "en A, con tres decimales", "tipo": "numero", "valor": 1.033, "tol": 0.02, "unidad": "A", "pistas": ["Q4 encendido se toma como interruptor ideal.", "I_M = V_BUS/R_M.", "I_M = 15,5/15."], "explica": "Toda la tensión del bus cae en el motor.", "solucion": "I_M = 15,5/15 = 1,033 A"}, {"pregunta": "Corriente del ascensor al salir por DD", "ayuda": "en A, con tres decimales", "tipo": "numero", "valor": 0.661, "tol": 0.02, "unidad": "A", "pistas": ["La corriente pasa por QHA, DD, el motor y QLB.", "I = (V_BUS − V_EC − V_f)/R_M.", "I = (11 − 0,18 − 0,9)/15."], "explica": "LVK en la malla con DD en directa.", "solucion": "I = 9,92/15 = 0,661 A (simulación 0,664 A)"}]}</script>
+          </div>
+          <p class="cv-step-note">Escribe los números con coma o punto decimal. Tienes 3 intentos por ítem.</p>
+        </article>
+        <article class="cv-step" data-part="Constancia" aria-label="Tarjeta 7 de 7: constancia del módulo" hidden>
+          <h3>Constancia del módulo</h3>
+          <p class="cv-step-lead">Cuando veas el video, recorras la presentación y los productos y termines el quiz y las dos actividades, escribe tu nombre y descarga la constancia en PDF con tus resultados y la fecha de realización.</p>
+          <div class="cv-cert" data-cert data-curso="Electrónica · Proyecto integrador" data-modulo="Potencia: banda y ascensor" data-autor="Ferney Torres Ome" data-num="2" data-total="4" data-corto="ELECTRONICA">
+            <ul class="cv-status">
+              <li data-key="video"><span>Video-lección vista</span><b>Pendiente</b></li>
+              <li data-key="pres"><span>Presentación recorrida</span><b>Pendiente</b></li>
+              <li data-key="prod"><span>Productos de la etapa revisados</span><b>Pendiente</b></li>
+              <li data-key="quiz"><span>Quiz</span><b>Pendiente</b></li>
+              <li data-key="caso"><span>Actividad 1 · El ascensor no sale del piso alto</span><b>Pendiente</b></li>
+              <li data-key="resolver"><span>Actividad 2 · Banda a 15,5 V y salida del extremo</span><b>Pendiente</b></li>
+            </ul>
+            <label class="cv-name"><span>Nombre completo</span><input type="text" autocomplete="name" maxlength="80"></label>
+            <button type="button" class="btn btn-primary" data-cert-btn disabled>Descargar constancia <small>PDF</small></button>
+            <p class="cv-cert-msg" data-cert-msg aria-live="polite"></p>
+          </div>
+          <p class="cv-step-note">Los resultados viven solo en esta página: si la recargas, se pierden. Descarga la constancia antes de salir.</p>
+          <a class="btn btn-primary cv-next-mod" href="../modulo-03-control/index.html">Ir al módulo 3 <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+      </div>
+
+      <div class="cv-tour-nav">
+        <button type="button" class="btn btn-ghost" data-tour-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+        <button type="button" class="btn btn-primary" data-tour-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <div class="cv-mnav">
+      <nav class="cv-map" aria-label="Módulos del curso"><div class="cv-map-group"><span>Módulos</span><a href="../modulo-01-fuente/index.html" title="Fuente de alimentación de 12 V">M1</a><a href="../modulo-02-potencia/index.html" title="Potencia: banda y ascensor" aria-current="page">M2</a><a href="../modulo-03-control/index.html" title="Control con LM358">M3</a><a href="../modulo-04-sensores/index.html" title="Sensores: clasificador y ascensor">M4</a></div></nav>
+      <div class="cv-pn"><a class="prev" href="../modulo-01-fuente/index.html"><small>← M1</small><strong>Fuente de alimentación de 12 V</strong></a><a class="next" href="../modulo-03-control/index.html"><small>M3 →</small><strong>Control con LM358</strong></a></div>
+    </div>
+    <footer class="cv-foot"><span>Electrónica · Proyecto integrador</span><span>Ferney Torres Ome</span></footer>
+  </main>
+
+  <script src="../recursos/jspdf.umd.min.js"></script>
+  <script src="../recursos/curso.js"></script>
+  <script src="../recursos/productos.js"></script>
+</body>
+</html>

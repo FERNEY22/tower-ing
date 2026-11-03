@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es" data-type="grotesk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M4 Sensores: clasificador y ascensor · Electrónica · Proyecto integrador</title>
+  <meta name="description" content="Barreras infrarrojas clasifican piezas altas y bajas; un comparador de ventana lleva el ascensor al piso elegido.">
+  <meta name="author" content="Ferney Torres Ome">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../recursos/curso.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a class="brand-mark" href="../index.html">Towers<span class="bolt">⚡</span>Ing</a>
+        <span class="cv-brand-sub">Electrónica · Proyecto integrador</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="cv-crumbs" aria-label="Ruta"><a href="../index.html">Electrónica · Proyecto integrador</a><span>/</span><span>M4</span></nav>
+
+    <header class="cv-mhead">
+      <div class="cv-mhead-meta"><span class="phase">Módulo 4 de 4</span></div>
+      <h1>Sensores: clasificador y ascensor</h1>
+      <p class="cv-lead">Barreras infrarrojas clasifican piezas altas y bajas; un comparador de ventana lleva el ascensor al piso elegido.</p>
+      <ul class="cv-topics" style="margin-top:18px" aria-label="Temas"><li>Barreras IR</li><li>Función Y</li><li>Relé y solenoide</li><li>Comparador de ventana</li><li>Puerta y PARO</li></ul>
+    </header>
+
+    <section class="cv-msec cv-tour" aria-labelledby="cv-tour-h" data-tour>
+      <div class="cv-tour-head">
+        <h2 id="cv-tour-h">Recorrido del módulo</h2>
+        <p class="cv-tour-count" aria-live="polite"><span data-tour-part>Lección</span> <span class="n"><b data-tour-now>1</b> de <span data-tour-total>7</span></span></p>
+      </div>
+      <div class="cv-tour-bar" aria-hidden="true"><i data-tour-fill></i></div>
+
+      <div class="cv-tour-track" data-tour-track>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 1 de 7: video-lección">
+          <h3>Video-lección</h3>
+          <p class="cv-step-lead">Barreras infrarrojas clasifican piezas altas y bajas; un comparador de ventana lleva el ascensor al piso elegido. Dura 1 minuto y 44 segundos. Los subtítulos dicen lo mismo que la voz.</p>
+          <div class="cv-video">
+            <video controls preload="metadata" playsinline poster="media/poster.jpg" width="1280" height="720">
+              <source src="media/leccion.mp4" type="video/mp4">
+              Tu navegador no reproduce el video. <a href="media/leccion.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <details class="cv-more">
+            <summary>Leer la transcripción</summary>
+            <div class="cv-more-body"><p>Hola, soy Ferney Torres. En este módulo vas a ver cómo los sensores le dan decisiones al proyecto: clasificar piezas y llevar el ascensor al piso.</p><p>La banda mide 30 cm. A los 18 cm hay dos barreras infrarrojas: un haz bajo a 10 mm y uno alto a 30 mm.</p><p>La pieza baja mide 20 mm: corta el haz bajo, pero no el alto. La pieza alta mide 40 mm: corta los dos. Por eso se usa una función Y con dos transistores 2N2222A en serie. Solo con los dos haces cortados se activa el relé del solenoide.</p><p>La banda avanza a unos 5 cm/s. Una pieza que entra al inicio llega a la estación en 3,6 s.</p><p>En el ascensor, un potenciómetro en la polea convierte la altura en voltaje. Hay tres paradas: 0 cm, 15 cm y 30 cm.</p><p>Un LM358 compara la posición con la del piso elegido. Si la cabina está abajo, da la orden SUBIR. Si está arriba, da la orden BAJAR. Y dentro de ±1 cm no da ninguna: la cabina está EN_PISO.</p><p>La puerta tiene dos pulsadores. ABRIR solo actúa cuando la cabina está EN_PISO. CERRAR suelta el enclavamiento y el relé deja de alimentar la cerradura. Mientras la puerta está abierta, la señal PARO llega a la etapa de control y el motor no puede arrancar.</p><p>En resumen: dos haces y una función Y clasifican las piezas, y un comparador de ventana lleva el ascensor al piso. Ahora repasa las ideas clave y resuelve el quiz. Gracias.</p></div>
+          </details>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 2 de 7: presentación e ideas clave" hidden>
+          <h3>Presentación e ideas clave</h3>
+          <p class="cv-step-lead">Las ideas del módulo en pocas líneas y las diapositivas para repasar.</p>
+          <h4>Ideas clave</h4>
+          <div class="cv-notes"><div><h5>Dos haces</h5><p>Haz bajo a 10 mm y alto a 30 mm: la pieza de 20 mm corta uno, la de 40 mm corta los dos.</p></div><div><h5>Función Y</h5><p>Dos 2N2222A en serie: solo con los dos haces cortados se activa el relé del solenoide.</p></div><div><h5>Ventana de ±1 cm</h5><p>El LM358 compara la posición con la del piso y da SUBIR, BAJAR o EN_PISO.</p></div><div><h5>Puerta segura</h5><p>ABRIR solo actúa en el piso; mientras la puerta está abierta, PARO detiene el motor.</p></div></div>
+          <h4>Presentación</h4>
+          <div class="cv-slides" data-slides='[&quot;Etapa 4 — Sensores&quot;, &quot;Propósito de la etapa&quot;, &quot;E4-B: esquema del clasificador&quot;, &quot;E4-B: barreras y comparadores&quot;, &quot;E4-B: función Y y solenoide&quot;, &quot;E4-B: los cuatro casos&quot;, &quot;E4-B: tarjeta&quot;, &quot;E4-E: esquema del ascensor&quot;, &quot;E4-E: posición y ventana de ±1 cm&quot;, &quot;E4-E: ventana medida&quot;, &quot;E4-E: puerta y PARO&quot;, &quot;E4-E: tarjeta&quot;, &quot;Ejercicio&quot;, &quot;Solución&quot;, &quot;Conclusiones&quot;, &quot;Referencias&quot;]' data-slides-dir="media/diapositivas/diapositiva-" tabindex="0" aria-label="Diapositivas de la presentación; usa las flechas para cambiar">
+            <div class="cv-slides-frame"><img data-slide-img src="media/diapositivas/diapositiva-01.jpg" alt="Diapositiva 1 de 16: Etapa 4 — Sensores" width="1280" height="720" decoding="async"></div>
+            <div class="cv-slides-bar">
+              <button type="button" class="btn btn-ghost" data-slide-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+              <span class="n" aria-live="polite"><b data-slide-now>1</b> de <span data-slide-total>16</span></span>
+              <button type="button" class="btn btn-ghost" data-slide-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <a class="btn btn-ghost cv-dl" href="#" data-b64="media/Etapa4_Sensores.pptx.b64.txt" data-name="Etapa4_Sensores.pptx" data-mime="application/vnd.openxmlformats-officedocument.presentationml.presentation">Descargar la presentación <small>.pptx · 2,2 MB</small></a>
+        </article>
+        <article class="cv-step" data-part="Productos" aria-label="Tarjeta 3 de 7: productos de la etapa" hidden>
+          <h3>Productos de la etapa</h3>
+          <p class="cv-step-lead">Circuito, archivo de simulación, tarjeta, Gerber, vista 3D e isométrica de la etapa. Todo se puede abrir y descargar.</p>
+          <div class="cv-prod" data-prod><div class="cv-prod-tabs" role="tablist"><button type="button" class="btn btn-ghost" role="tab" aria-selected="true" data-prod-tab="0">Clasificador · Circuito</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="1">Clasificador · PCB</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="2">Clasificador · 3D superior</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="3">Clasificador · 3D inferior</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="4">Clasificador · Isométrica</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="5">Ascensor · Circuito</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="6">Ascensor · PCB</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="7">Ascensor · 3D superior</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="8">Ascensor · 3D inferior</button><button type="button" class="btn btn-ghost" role="tab" aria-selected="false" data-prod-tab="9">Ascensor · Isométrica</button></div><div class="cv-prod-pane" data-prod-pane="0"><p class="cv-step-lead">Esquema de la placa. El archivo de LTspice tiene el mismo circuito cableado y validado; el LEEME trae la lista de materiales y las tablas de validación.</p><div class="cv-prod-img"><a href="media/prod/Circuito_E4B_Sensores_Clasificador.png" target="_blank" rel="noopener"><img src="media/prod/Circuito_E4B_Sensores_Clasificador.png" alt="Clasificador · Circuito" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/E4B_Sensores_Clasificador_LTspice.zip.b64.txt" data-name="E4B_Sensores_Clasificador_LTspice.zip" data-mime="application/zip">Descargar LTspice (.asc) <small>2 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/LEEME_E4B_Sensores_Clasificador.md.b64.txt" data-name="LEEME_E4B_Sensores_Clasificador.md" data-mime="text/markdown">Descargar LEEME .md <small>11 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Circuito_E4B_Sensores_Clasificador.png.b64.txt" data-name="Circuito_E4B_Sensores_Clasificador.png" data-mime="image/png">Descargar Circuito .png <small>436 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="1" hidden><p class="cv-step-lead">Pistas de la tarjeta, una sola cara.</p><div class="cv-prod-img"><a href="media/prod/PCB_FINAL_E4B_Sensores_Clasificador.png" target="_blank" rel="noopener"><img src="media/prod/PCB_FINAL_E4B_Sensores_Clasificador.png" alt="Clasificador · PCB" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Gerber_E4B_Sensores_Clasificador.zip.b64.txt" data-name="Gerber_E4B_Sensores_Clasificador.zip" data-mime="application/zip">Descargar Gerber .zip <small>39 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/PCB_FINAL_E4B_Sensores_Clasificador.png.b64.txt" data-name="PCB_FINAL_E4B_Sensores_Clasificador.png" data-mime="image/png">Descargar PCB .png <small>243 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="2" hidden><p class="cv-step-lead">Tarjeta armada, cara de componentes.</p><div class="cv-prod-img"><a href="media/prod/Pcb_3D_superior_E4B_Sensores_Clasificador.png" target="_blank" rel="noopener"><img src="media/prod/Pcb_3D_superior_E4B_Sensores_Clasificador.png" alt="Clasificador · 3D superior" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Pcb_3D_superior_E4B_Sensores_Clasificador.png.b64.txt" data-name="Pcb_3D_superior_E4B_Sensores_Clasificador.png" data-mime="image/png">Descargar 3D superior .png <small>320 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="3" hidden><p class="cv-step-lead">Tarjeta armada, cara de pistas.</p><div class="cv-prod-img"><a href="media/prod/Pcb_3D_inferior_E4B_Sensores_Clasificador.png" target="_blank" rel="noopener"><img src="media/prod/Pcb_3D_inferior_E4B_Sensores_Clasificador.png" alt="Clasificador · 3D inferior" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Pcb_3D_inferior_E4B_Sensores_Clasificador.png.b64.txt" data-name="Pcb_3D_inferior_E4B_Sensores_Clasificador.png" data-mime="image/png">Descargar 3D inferior .png <small>349 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="4" hidden><p class="cv-step-lead">La banda con las dos barreras infrarrojas: mira qué haz corta cada pieza y cuándo actúa el solenoide.</p><div class="cv-prod-frame" style="height:900px"><iframe data-src="media/prod/E4B_isometrica.html" title="Clasificador · Isométrica" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/E4B_isometrica.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div><div class="cv-prod-pane" data-prod-pane="5" hidden><p class="cv-step-lead">Esquema de la placa. El archivo de LTspice tiene el mismo circuito cableado y validado; el LEEME trae la lista de materiales y las tablas de validación.</p><div class="cv-prod-img"><a href="media/prod/Circuito_E4E_Sensores_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/Circuito_E4E_Sensores_Ascensor.png" alt="Ascensor · Circuito" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/E4E_Sensores_Ascensor_LTspice.zip.b64.txt" data-name="E4E_Sensores_Ascensor_LTspice.zip" data-mime="application/zip">Descargar LTspice (.asc) <small>4 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/LEEME_E4E_Sensores_Ascensor.md.b64.txt" data-name="LEEME_E4E_Sensores_Ascensor.md" data-mime="text/markdown">Descargar LEEME .md <small>14 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Circuito_E4E_Sensores_Ascensor.png.b64.txt" data-name="Circuito_E4E_Sensores_Ascensor.png" data-mime="image/png">Descargar Circuito .png <small>554 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="6" hidden><p class="cv-step-lead">Pistas de la tarjeta, una sola cara.</p><div class="cv-prod-img"><a href="media/prod/PCB_FINAL_E4E_Sensores_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/PCB_FINAL_E4E_Sensores_Ascensor.png" alt="Ascensor · PCB" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Gerber_E4E_Sensores_Ascensor.zip.b64.txt" data-name="Gerber_E4E_Sensores_Ascensor.zip" data-mime="application/zip">Descargar Gerber .zip <small>59 KB</small></a><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/PCB_FINAL_E4E_Sensores_Ascensor.png.b64.txt" data-name="PCB_FINAL_E4E_Sensores_Ascensor.png" data-mime="image/png">Descargar PCB .png <small>377 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="7" hidden><p class="cv-step-lead">Tarjeta armada, cara de componentes.</p><div class="cv-prod-img"><a href="media/prod/Pcb_3D_superior_E4E_Sensores_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/Pcb_3D_superior_E4E_Sensores_Ascensor.png" alt="Ascensor · 3D superior" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Pcb_3D_superior_E4E_Sensores_Ascensor.png.b64.txt" data-name="Pcb_3D_superior_E4E_Sensores_Ascensor.png" data-mime="image/png">Descargar 3D superior .png <small>427 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="8" hidden><p class="cv-step-lead">Tarjeta armada, cara de pistas.</p><div class="cv-prod-img"><a href="media/prod/Pcb_3D_inferior_E4E_Sensores_Ascensor.png" target="_blank" rel="noopener"><img src="media/prod/Pcb_3D_inferior_E4E_Sensores_Ascensor.png" alt="Ascensor · 3D inferior" loading="lazy"></a></div><div class="cv-prod-dl"><a class="btn btn-ghost cv-dl" href="#" data-b64="media/prod/Pcb_3D_inferior_E4E_Sensores_Ascensor.png.b64.txt" data-name="Pcb_3D_inferior_E4E_Sensores_Ascensor.png" data-mime="image/png">Descargar 3D inferior .png <small>410 KB</small></a></div></div><div class="cv-prod-pane" data-prod-pane="9" hidden><p class="cv-step-lead">Elige el piso: la ventana de ±1 cm decide SUBIR, BAJAR o EN_PISO; la puerta solo abre en el piso y PARO frena el motor.</p><div class="cv-prod-frame" style="height:900px"><iframe data-src="media/prod/E4E_isometrica.html" title="Ascensor · Isométrica" loading="lazy"></iframe></div><p class="cv-step-note"><a href="media/prod/E4E_isometrica.html" target="_blank" rel="noopener">Abrir en pantalla completa</a></p><div class="cv-prod-dl"></div></div></div>
+        </article>
+        <article class="cv-step" data-part="Lección" aria-label="Tarjeta 4 de 7: quiz" hidden>
+          <h3>Quiz: 5 preguntas</h3>
+          <p class="cv-step-lead">Una pregunta a la vez. Al responder verás la explicación; al final, tu resultado. Cada intento nuevo cambia las preguntas y su orden.</p>
+          <div class="cv-quiz" data-quiz data-quiz-n="5">
+            <div class="cv-quiz-head" data-q-head>
+              <span class="n">Pregunta <b data-q-now>1</b> de <span data-q-total>5</span></span>
+              <div class="cv-quiz-bar" aria-hidden="true"><i data-q-fill></i></div>
+            </div>
+            <fieldset class="cv-q" data-answer="b" data-correct="Solo el bajo (10 mm)" data-ok="20 mm supera el haz de 10 mm pero no el de 30 mm." data-no="Compara alturas: 20 mm corta el haz de 10 mm y no llega al de 30 mm." hidden>
+              <legend><b>1</b> <span>Pasa una pieza de 20 mm. ¿Qué haces se cortan?</span></legend>
+              <button type="button" data-v="a">Ninguno</button>
+              <button type="button" data-v="b">Solo el bajo (10 mm)</button>
+              <button type="button" data-v="c">Los dos</button>
+              <button type="button" data-v="d">Solo el alto (30 mm)</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Con los dos haces cortados" data-ok="La función Y exige los dos haces: solo la pieza alta." data-no="Es una Y: los dos transistores en serie deben conducir." hidden>
+              <legend><b>2</b> <span>¿Cuándo actúa el solenoide?</span></legend>
+              <button type="button" data-v="a">Con el haz bajo cortado</button>
+              <button type="button" data-v="b">Con los dos haces cortados</button>
+              <button type="button" data-v="c">Con cualquier haz cortado</button>
+              <button type="button" data-v="d">Nunca</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="3,6 s" data-ok="t = 18/5 = 3,6 s." data-no="t = d/v = 18 cm / 5 cm/s = 3,6 s." hidden>
+              <legend><b>3</b> <span>La banda va a 5 cm/s y la estación está a 18 cm. ¿Cuánto tarda la pieza en llegar?</span></legend>
+              <button type="button" data-v="a">0,36 s</button>
+              <button type="button" data-v="b">3,6 s</button>
+              <button type="button" data-v="c">36 s</button>
+              <button type="button" data-v="d">9 s</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="a" data-correct="Porque el solenoide y la cerradura piden más corriente que un 2N2222A" data-ok="El relé solo maneja el actuador (≈ 1 A); toda la lógica sigue siendo analógica." data-no="El relé es solo para el actuador: el solenoide pide ≈ 1 A." hidden>
+              <legend><b>4</b> <span>¿Por qué aquí sí hay relé?</span></legend>
+              <button type="button" data-v="a">Porque el solenoide y la cerradura piden más corriente que un 2N2222A</button>
+              <button type="button" data-v="b">Porque es más barato</button>
+              <button type="button" data-v="c">Porque reemplaza al LM358</button>
+              <button type="button" data-v="d">Porque invierte el giro</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="a" data-correct="Que la cabina está a ±1 cm del piso elegido" data-ok="Ni SUBIR ni BAJAR: la posición está dentro de la ventana." data-no="EN_PISO es la zona muerta de la ventana: ±1 cm alrededor del piso." hidden>
+              <legend><b>5</b> <span>¿Qué indica EN_PISO?</span></legend>
+              <button type="button" data-v="a">Que la cabina está a ±1 cm del piso elegido</button>
+              <button type="button" data-v="b">Que la puerta está abierta</button>
+              <button type="button" data-v="c">Que el motor sube</button>
+              <button type="button" data-v="d">Que falta energía</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="b" data-correct="Nada: ABRIR solo actúa con EN_PISO" data-ok="La puerta solo se habilita en el piso." data-no="ABRIR está condicionado a EN_PISO: en movimiento se ignora." hidden>
+              <legend><b>6</b> <span>La cabina se mueve y presionas ABRIR. ¿Qué pasa?</span></legend>
+              <button type="button" data-v="a">Se abre la puerta</button>
+              <button type="button" data-v="b">Nada: ABRIR solo actúa con EN_PISO</button>
+              <button type="button" data-v="c">El motor se invierte</button>
+              <button type="button" data-v="d">Se activa el solenoide de la banda</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+            <fieldset class="cv-q" data-answer="a" data-correct="Protege el transistor del pico al apagar la bobina" data-ok="Es el diodo volante de la bobina." data-no="Toda bobina conmutada por transistor lleva diodo volante." hidden>
+              <legend><b>7</b> <span>¿Qué lleva el diodo 1N4007 en paralelo con cada bobina?</span></legend>
+              <button type="button" data-v="a">Protege el transistor del pico al apagar la bobina</button>
+              <button type="button" data-v="b">Sube el voltaje del relé</button>
+              <button type="button" data-v="c">Filtra el haz IR</button>
+              <button type="button" data-v="d">Fija la referencia</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary cv-q-next" data-q-next hidden>Siguiente pregunta <span class="arrow" aria-hidden="true">→</span></button>
+
+            <div class="cv-result" data-q-result hidden tabindex="-1">
+              <p class="cv-result-score"><b data-q-score>0</b> de <span data-q-of>5</span></p>
+              <p class="cv-result-msg" data-q-msg></p>
+              <ul class="cv-missed" data-q-missed></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Intentar de nuevo</button>
+            </div>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 1" aria-label="Tarjeta 5 de 7: caso con decisiones" hidden>
+          <h3>Actividad 1 · El clasificador empuja las piezas bajas</h3>
+          <p class="cv-step-lead">Lee la situación y decide. Cada elección tiene una consecuencia y te lleva a la siguiente decisión. Al final verás el camino que tomaste.</p>
+          <div class="cv-case" data-case data-label="Actividad 1 · El clasificador empuja las piezas bajas">
+            <p class="cv-case-ctx">En la prueba, el solenoide tumba también las piezas de 20 mm hacia la rampa A.</p>
+            <div class="cv-case" data-case-stage style="margin-top:0"></div>
+            <div class="cv-case-end" data-case-end hidden tabindex="-1">
+              <p class="cv-result-score"><b data-case-score>0</b></p>
+              <p class="cv-result-msg" data-case-msg></p>
+              <ul class="cv-path" data-case-path></ul>
+              <button type="button" class="btn btn-ghost" data-reset>Recorrer el caso de nuevo</button>
+            </div>
+            <script type="application/json">{"titulo": "El clasificador empuja las piezas bajas", "contexto": "En la prueba, el solenoide tumba también las piezas de 20 mm hacia la rampa A.", "inicio": "d1", "nodos": {"d1": {"etapa": "Decisión 1", "texto": "¿Qué revisas primero?", "opciones": [{"texto": "La altura real de los dos haces sobre la banda", "q": 2, "retro": "El haz alto quedó a 18 mm, no a 30 mm: la pieza baja corta los dos.", "va": "d2"}, {"texto": "Cambiar el relé", "q": 0, "retro": "El relé nuevo actúa igual.", "va": "d2"}, {"texto": "Bajar la velocidad de la banda", "q": 1, "retro": "Va más lenta, pero sigue empujando las bajas.", "va": "d2"}]}, "d2": {"etapa": "Decisión 2", "texto": "¿Cómo lo corriges?", "opciones": [{"texto": "Subir el haz alto a 30 mm y probar con las dos piezas", "q": 2, "retro": "La pieza de 20 mm sigue al contenedor B y la de 40 mm cae a la rampa A.", "va": "fin"}, {"texto": "Desconectar el haz alto", "q": 0, "retro": "Sin el haz alto la función Y nunca se cumple: ya no se clasifica nada.", "va": "fin"}]}, "fin": {"fin": true, "texto": "En la función Y la geometría importa tanto como el circuito: la altura de cada haz define qué pieza se clasifica."}}}</script>
+          </div>
+        </article>
+        <article class="cv-step" data-part="Actividad 2" aria-label="Tarjeta 6 de 7: resolver y verificar" hidden>
+          <h3>Actividad 2 · Tiempos y escala del ascensor</h3>
+          <p class="cv-step-lead">La banda va a 5 cm/s y la estación está a 18 cm. En el ascensor, supón que el potenciómetro da 0 V abajo y 5 V arriba, a lo largo de 30 cm (valores ilustrativos).</p>
+          <div class="cv-solve" data-solve data-label="Actividad 2 · Tiempos y escala del ascensor">
+            <ul class="cv-given" aria-label="Datos"><li>v = 5 cm/s</li><li>d = 18 cm</li><li>0–5 V en 30 cm</li></ul>
+            <div class="cv-item">
+              <label for="r0">1. Tiempo hasta la estación<small>en s, con un decimal</small></label>
+              <div class="cv-entry"><input id="r0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">s</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r1">2. Voltaje del piso 1 (15 cm)<small>en V, con un decimal</small></label>
+              <div class="cv-entry"><input id="r1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">V</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-item">
+              <label for="r2">3. Ancho de media ventana (±1 cm)<small>en V, con tres decimales</small></label>
+              <div class="cv-entry"><input id="r2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="u">V</span><button type="button" class="btn btn-ghost" data-check>Comprobar</button></div>
+              <ol class="cv-hints"></ol>
+              <button type="button" class="btn btn-ghost cv-hint-btn" data-hint>Ver pista 1 de 3</button>
+              <p class="cv-fb" aria-live="polite"></p>
+            </div>
+            <div class="cv-solve-done" data-solve-done hidden tabindex="-1">
+              <p class="cv-result-score"><b data-solve-score>0</b></p>
+              <p class="cv-result-msg">Cada pista resta un cuarto de punto; un ítem sin resolver vale cero.</p>
+              <button type="button" class="btn btn-ghost" data-reset>Resolver de nuevo</button>
+            </div>
+            <script type="application/json">{"intentos": 3, "items": [{"pregunta": "Tiempo hasta la estación", "ayuda": "en s, con un decimal", "tipo": "numero", "valor": 3.6, "tol": 0.02, "unidad": "s", "pistas": ["Movimiento uniforme.", "t = d/v.", "t = 18/5."], "explica": "Distancia entre velocidad.", "solucion": "t = 3,6 s"}, {"pregunta": "Voltaje del piso 1 (15 cm)", "ayuda": "en V, con un decimal", "tipo": "numero", "valor": 2.5, "tol": 0.02, "unidad": "V", "pistas": ["El voltaje es proporcional a la altura.", "V = 5 · h/30.", "V = 5 · 15/30."], "explica": "Regla de tres sobre el recorrido.", "solucion": "V = 2,5 V"}, {"pregunta": "Ancho de media ventana (±1 cm)", "ayuda": "en V, con tres decimales", "tipo": "numero", "valor": 0.167, "tol": 0.02, "unidad": "V", "pistas": ["Cada centímetro vale lo mismo.", "ΔV = 5/30 por cm.", "ΔV = 5/30 · 1."], "explica": "Sensibilidad del potenciómetro.", "solucion": "ΔV = 0,167 V"}]}</script>
+          </div>
+          <p class="cv-step-note">Escribe los números con coma o punto decimal. Tienes 3 intentos por ítem.</p>
+        </article>
+        <article class="cv-step" data-part="Constancia" aria-label="Tarjeta 7 de 7: constancia del módulo" hidden>
+          <h3>Constancia del módulo</h3>
+          <p class="cv-step-lead">Cuando veas el video, recorras la presentación y los productos y termines el quiz y las dos actividades, escribe tu nombre y descarga la constancia en PDF con tus resultados y la fecha de realización.</p>
+          <div class="cv-cert" data-cert data-curso="Electrónica · Proyecto integrador" data-modulo="Sensores: clasificador y ascensor" data-autor="Ferney Torres Ome" data-num="4" data-total="4" data-corto="ELECTRONICA">
+            <ul class="cv-status">
+              <li data-key="video"><span>Video-lección vista</span><b>Pendiente</b></li>
+              <li data-key="pres"><span>Presentación recorrida</span><b>Pendiente</b></li>
+              <li data-key="prod"><span>Productos de la etapa revisados</span><b>Pendiente</b></li>
+              <li data-key="quiz"><span>Quiz</span><b>Pendiente</b></li>
+              <li data-key="caso"><span>Actividad 1 · El clasificador empuja las piezas bajas</span><b>Pendiente</b></li>
+              <li data-key="resolver"><span>Actividad 2 · Tiempos y escala del ascensor</span><b>Pendiente</b></li>
+            </ul>
+            <label class="cv-name"><span>Nombre completo</span><input type="text" autocomplete="name" maxlength="80"></label>
+            <button type="button" class="btn btn-primary" data-cert-btn disabled>Descargar constancia <small>PDF</small></button>
+            <p class="cv-cert-msg" data-cert-msg aria-live="polite"></p>
+          </div>
+          <p class="cv-step-note">Los resultados viven solo en esta página: si la recargas, se pierden. Descarga la constancia antes de salir.</p>
+          <a class="btn btn-primary cv-next-mod" href="../index.html">Volver al inicio del curso</a>
+        </article>
+      </div>
+
+      <div class="cv-tour-nav">
+        <button type="button" class="btn btn-ghost" data-tour-prev disabled><span class="arrow" aria-hidden="true">←</span> Anterior</button>
+        <button type="button" class="btn btn-primary" data-tour-next>Siguiente <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <div class="cv-mnav">
+      <nav class="cv-map" aria-label="Módulos del curso"><div class="cv-map-group"><span>Módulos</span><a href="../modulo-01-fuente/index.html" title="Fuente de alimentación de 12 V">M1</a><a href="../modulo-02-potencia/index.html" title="Potencia: banda y ascensor">M2</a><a href="../modulo-03-control/index.html" title="Control con LM358">M3</a><a href="../modulo-04-sensores/index.html" title="Sensores: clasificador y ascensor" aria-current="page">M4</a></div></nav>
+      <div class="cv-pn"><a class="prev" href="../modulo-03-control/index.html"><small>← M3</small><strong>Control con LM358</strong></a><span class="empty"></span></div>
+    </div>
+    <footer class="cv-foot"><span>Electrónica · Proyecto integrador</span><span>Ferney Torres Ome</span></footer>
+  </main>
+
+  <script src="../recursos/jspdf.umd.min.js"></script>
+  <script src="../recursos/curso.js"></script>
+  <script src="../recursos/productos.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+1
+00:00:00,650 --> 00:00:02,275
+Hola, soy Ferney Torres.
+
+2
+00:00:02,275 --> 00:00:05,682
+En este módulo vas a entender la fuente de 12 V que alimenta
+
+3
+00:00:05,682 --> 00:00:08,368
+la banda y el ascensor del proyecto.
+
+4
+00:00:09,154 --> 00:00:10,601
+Fíjate en el esquema.
+
+5
+00:00:10,601 --> 00:00:13,424
+Tres fuentes llegan a un mismo bus, V_BUS:
+
+6
+00:00:13,424 --> 00:00:16,078
+la red, los paneles solares y la batería.
+
+7
+00:00:16,078 --> 00:00:21,710
+Cuatro interruptores, de SW1 a SW4, eligen qué fuentes participan.
+
+8
+00:00:22,324 --> 00:00:24,108
+La clave es el OR de diodos.
+
+9
+00:00:24,108 --> 00:00:26,287
+Cada rama llega al bus por un diodo.
+
+10
+00:00:26,287 --> 00:00:29,183
+Conduce la rama de mayor voltaje, y la otra queda con
+
+11
+00:00:29,183 --> 00:00:30,528
+su diodo en inversa.
+
+12
+00:00:30,528 --> 00:00:33,597
+Así ninguna fuente se descarga en la otra.
+
+13
+00:00:34,294 --> 00:00:38,558
+En la rama de red, el secundario entrega 12 V eficaces.
+
+14
+00:00:38,558 --> 00:00:41,355
+El voltaje pico es raíz de dos por doce:
+
+15
+00:00:41,355 --> 00:00:44,016
+16,97 V.
+
+16
+00:00:44,016 --> 00:00:48,520
+El puente y el condensador C1 lo convierten en continua.
+
+17
+00:00:49,114 --> 00:00:50,111
+Pero cuidado.
+
+18
+00:00:50,111 --> 00:00:55,331
+Con 0,8 A, el rizado del condensador llega a unos 6,7 V.
+
+19
+00:00:55,331 --> 00:00:59,720
+Por eso la red sola da un bus de 9,37 V en promedio,
+
+20
+00:00:59,720 --> 00:01:01,558
+y el motor vibra.
+
+21
+00:01:02,150 --> 00:01:03,482
+Ahora la rama solar.
+
+22
+00:01:03,482 --> 00:01:07,647
+Son tres paneles de 6 V y 70 mA en serie.
+
+23
+00:01:07,974 --> 00:01:10,392
+El diodo de bloqueo impide que la batería se descargue
+
+24
+00:01:10,392 --> 00:01:12,702
+en los paneles durante la noche.
+
+25
+00:01:12,994 --> 00:01:17,346
+El zener recorta el voltaje de la batería cerca de 13,8 V.
+
+26
+00:01:17,496 --> 00:01:19,605
+Y la batería es de plomo ácido sellada,
+
+27
+00:01:19,605 --> 00:01:22,802
+de 12 V y 1,3 Ah.
+
+28
+00:01:23,376 --> 00:01:24,493
+Veamos un caso:
+
+29
+00:01:24,493 --> 00:01:25,753
+de día y sin red.
+
+30
+00:01:25,753 --> 00:01:28,724
+Solo la batería alimenta la carga de 15 Ω.
+
+31
+00:01:28,724 --> 00:01:33,074
+La corriente es doce menos 0,9, dividido entre 15,1:
+
+32
+00:01:33,074 --> 00:01:35,808
+0,735 A.
+
+33
+00:01:35,808 --> 00:01:41,373
+El bus queda en 11,03 V, y la simulación da 11,04.
+
+34
+00:01:42,238 --> 00:01:45,175
+Todo esto va en una tarjeta de 100 × 100 mm,
+
+35
+00:01:45,175 --> 00:01:46,341
+de una sola cara.
+
+36
+00:01:46,341 --> 00:01:49,389
+Los cuatro interruptores van fuera, en serie con los cables
+
+37
+00:01:49,389 --> 00:01:51,084
+de cada bornera.
+
+38
+00:01:51,880 --> 00:01:52,819
+En resumen:
+
+39
+00:01:52,819 --> 00:01:57,341
+con batería, la fuente entrega unos 11 V a 0,8 A.
+
+40
+00:01:57,341 --> 00:02:01,368
+La red sola tiene mucho rizado, y el panel solo carga la batería.
+
+41
+00:02:01,368 --> 00:02:04,284
+Ahora repasa la presentación y resuelve el quiz.
+
+42
+00:02:04,284 --> 00:02:05,635
+Gracias.

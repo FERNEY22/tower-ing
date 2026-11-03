@@ -1,0 +1,163 @@
+1
+00:00:00,670 --> 00:00:02,480
+Hola, soy Ferney Torres.
+
+2
+00:00:02,480 --> 00:00:05,523
+En este módulo vas a ver cómo se mueve el motor de la
+
+3
+00:00:05,523 --> 00:00:09,135
+banda y el del ascensor, solo con transistores.
+
+4
+00:00:09,814 --> 00:00:11,330
+Empecemos por la banda.
+
+5
+00:00:11,330 --> 00:00:16,777
+El transistor Q4, un IRLZ44N, conecta el motor a tierra.
+
+6
+00:00:16,777 --> 00:00:21,204
+Su compuerta recibe la señal de velocidad desde la etapa de control.
+
+7
+00:00:22,016 --> 00:00:26,465
+Los pulsadores actúan sobre dos transistores 2N2222A cruzados.
+
+8
+00:00:26,465 --> 00:00:29,670
+Con START conduce Q2, y el motor gira.
+
+9
+00:00:29,858 --> 00:00:33,868
+Con STOP conduce Q1, y Q3 lleva la compuerta de Q4 a tierra.
+
+10
+00:00:33,868 --> 00:00:37,356
+El motor se detiene aunque llegue la señal de velocidad.
+
+11
+00:00:37,598 --> 00:00:40,833
+Un condensador de 1 µF retrasa a Q2 al encender.
+
+12
+00:00:40,833 --> 00:00:43,762
+Por eso la tarjeta siempre arranca detenida.
+
+13
+00:00:43,874 --> 00:00:46,801
+Y el giro de la banda se invierte con un interruptor DPDT
+
+14
+00:00:46,801 --> 00:00:48,772
+en los cables del motor.
+
+15
+00:00:49,430 --> 00:00:53,261
+Con 4,5 V en la compuerta, el motor de quince ohmios toma
+
+16
+00:00:53,261 --> 00:01:00,389
+0,733 A con 11 V, y 1,033 A con 15,5 V.
+
+17
+00:01:01,048 --> 00:01:02,400
+Ahora el ascensor.
+
+18
+00:01:02,400 --> 00:01:06,482
+Necesita girar en los dos sentidos, así que usa un puente hache:
+
+19
+00:01:06,482 --> 00:01:12,384
+dos TIP42C arriba y dos IRLZ44N abajo.
+
+20
+00:01:12,976 --> 00:01:15,470
+Para subir conduce una diagonal del puente:
+
+21
+00:01:15,470 --> 00:01:19,417
+el transistor alto de la izquierda y el bajo de la derecha.
+
+22
+00:01:19,636 --> 00:01:22,566
+Para bajar conduce la otra diagonal, y la corriente pasa
+
+23
+00:01:22,566 --> 00:01:24,594
+por el motor al revés.
+
+24
+00:01:25,214 --> 00:01:26,829
+Fíjate en las protecciones.
+
+25
+00:01:26,829 --> 00:01:29,723
+Si llegan las dos órdenes a la vez, los transistores de
+
+26
+00:01:29,723 --> 00:01:33,300
+enclavamiento apagan los dos lados y el motor no gira.
+
+27
+00:01:33,478 --> 00:01:37,067
+En cada rama, el transistor bajo se apaga cuando conduce el alto.
+
+28
+00:01:37,067 --> 00:01:40,041
+Así nunca hay corto entre el bus y tierra.
+
+29
+00:01:40,220 --> 00:01:43,841
+Y cada final de carrera tiene un diodo en paralelo:
+
+30
+00:01:43,841 --> 00:01:49,189
+detiene el motor en el extremo y solo deja salir en sentido contrario.
+
+31
+00:01:49,760 --> 00:01:51,724
+La simulación confirma el cálculo:
+
+32
+00:01:51,724 --> 00:01:58,180
+0,721 A en cada sentido, y 0,664 A cuando la cabina sale
+
+33
+00:01:58,180 --> 00:02:00,459
+de un extremo por el diodo.
+
+34
+00:02:01,102 --> 00:02:03,405
+Las dos tarjetas son de una sola cara.
+
+35
+00:02:03,405 --> 00:02:06,648
+En los productos del módulo puedes girarlas en tres dimensiones
+
+36
+00:02:06,648 --> 00:02:09,121
+y probar la maqueta isométrica.
+
+37
+00:02:09,680 --> 00:02:10,619
+En resumen:
+
+38
+00:02:10,619 --> 00:02:13,115
+un MOSFET con enclavamiento mueve la banda,
+
+39
+00:02:13,115 --> 00:02:16,228
+y un puente hache discreto sube y baja el ascensor.
+
+40
+00:02:16,228 --> 00:02:19,144
+Ahora repasa la presentación y resuelve el quiz.
+
+41
+00:02:19,144 --> 00:02:20,495
+Gracias.
