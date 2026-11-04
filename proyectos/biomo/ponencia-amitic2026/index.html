@@ -154,6 +154,34 @@ p{margin:0 0 12px;color:var(--ink-2);max-width:60ch}
 .tile .v{font-weight:600;font-size:30px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .tile .l{font-size:13px;color:var(--ink-3);line-height:1.35;margin-top:4px}
 
+/* added data blocks */
+.rq{margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid var(--hair-2);background:rgba(92,116,255,.08)}
+.rq .eyebrow{font-size:11px}
+.rq p{margin:6px 0 0;font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.35;color:var(--ink)}
+.bars-h{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:14px}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.mini div{border:1px solid var(--hair);border-radius:12px;padding:10px 12px}
+.mini b{display:block;font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.mini span{font-size:12.5px;color:var(--ink-3);line-height:1.3;display:block}
+.lim{list-style:none;counter-reset:l;padding:0;margin:8px 0 0;display:grid;gap:8px}
+.lim li{counter-increment:l;display:grid;grid-template-columns:26px 1fr;gap:10px;color:var(--ink-2);font-size:15px;line-height:1.4}
+.lim li::before{content:counter(l);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:500 12px var(--mono);color:#0A0C11;background:var(--warn)}
+.qrs{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.qr{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none}
+.qr img{width:92px;height:92px;background:#fff;border-radius:10px;padding:6px}
+.qr span{font:11.5px var(--mono);color:var(--ink-2)}
+.panel.tall{width:min(540px,100%)}
+[data-ch="soil"] .big{font-size:clamp(44px,5vw,70px)}
+[data-ch="soil"] .bars{gap:5px;margin-top:8px}
+[data-ch="soil"] .bar{grid-template-columns:118px 1fr 52px;font-size:12.5px}
+[data-ch="soil"] .bar .t{height:8px}
+[data-ch="soil"] .bars-h{margin-top:10px}
+[data-ch="soil"] p{font-size:15px;margin-bottom:4px}
+[data-ch="soil"] .src{margin-top:10px;font-size:11px}
+@media (max-height:760px){.panel{padding:20px 22px}.big{font-size:clamp(44px,6vw,80px)}.polaroids{height:180px}.pol{width:118px}}
+.steps>.step{display:none}
+.steps>.step.on{display:block;animation:stepIn .6s var(--ease) both}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 /* end */
 .end{position:relative;z-index:3;background:linear-gradient(180deg,transparent,var(--night) 120px);padding:160px max(24px,env(safe-area-inset-right,0px)) 80px max(24px,env(safe-area-inset-left,0px))}
 .end .in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px}
@@ -213,11 +241,28 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
     <h2>The data <em>exist.</em><br>They are scattered.</h2>
     <p>High-mountain municipalities regulate water, form soil, store carbon and connect habitats, yet many lack an operational monitoring system.</p>
     <p>Information sits in IGAC, IDEAM, the Ministry of Environment, UPRA and GBIF, organized by institution rather than by municipality.</p>
-    <div class="src">Abstract · §I · §II-A</div>
+    <div class="rq"><div class="eyebrow">Research question</div><p>How can a map viewer that integrates official layers, soil degradation, GBIF data and participatory protocols become a reproducible baseline for an underrepresented Andean territory?</p></div>
+    <div class="src">Abstract · §I · §II-A · the contribution is the integration architecture, not a numerical contrast</div>
   </div></div>
 </section>
 
-<!-- 2 · ACQUISITION -->
+<!-- 2 · STUDY AREA FLIGHT -->
+<section class="ch" data-ch="vuelo" style="--h:460vh">
+  <div class="sticky"><div class="panel"><div class="steps" id="vSteps">
+    <div class="step"><div class="eyebrow">II-B · Study area · Fig. 1</div><h2>Colombia</h2><p>High-mountain municipalities of the Eastern Cordillera.</p></div>
+    <div class="step"><div class="eyebrow">Department of Boyacá</div><h2><span class="el">123</span> municipalities</h2><p>IGAC municipal boundaries · Table II.</p></div>
+    <div class="step"><div class="eyebrow">DANE code 15763</div><h2>Sotaquirá</h2><p>Central Province of Boyacá, about 39 km northwest of Tunja.</p></div>
+    <div class="step"><div class="eyebrow">Political-administrative division</div><h2><span class="el">30</span> veredas</h2><p>DANE veredas reference level 2024; municipal sources report 26 by grouping four of them. Same territory.</p></div>
+    <div class="step"><div class="eyebrow">Strategic ecosystems · Fig. 2</div><h2>Two páramo <em>complexes</em></h2>
+      <div class="chips"><span class="chip">Guantiva–La Rusia · Res. <b>1296/2017</b></span><span class="chip">Iguaque–Merchán · Res. <b>1555/2016</b></span></div></div>
+    <div class="step"><div class="eyebrow">II-B · Study area · Table I</div><h2>Sotaquirá</h2>
+      <div class="chips" style="margin-top:0"><span class="chip"><b>284</b> km²</span><span class="chip"><b>30</b> veredas · DANE 2024</span><span class="chip"><b>2,860</b> m a.s.l.</span><span class="chip">Central Province, Boyacá</span><span class="chip">~<b>39</b> km NW of Tunja · Eastern Cordillera</span></div>
+      <p style="margin-top:14px">Two páramo complexes, Guantiva–La Rusia and Iguaque–Merchán, sit above a rural economy of cattle ranching and agriculture.</p>
+      <div class="src">Table I · Figs. 1–2 · DANE, Boyacá Planning Office, IGAC</div></div>
+  </div></div></div>
+</section>
+
+<!-- 3 · ACQUISITION -->
 <section class="ch" data-ch="acq" style="--h:200vh">
   <div class="sticky"><div class="panel">
     <div class="eyebrow">Stage 1 · Acquisition</div>
@@ -236,17 +281,6 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
     <p>Records without useful coordinates and duplicates are removed. Each source is clipped to DANE code 15763 and reprojected to a common reference system.</p>
     <div class="chips"><span class="chip"><b>123</b> municipalities</span><span class="chip">DANE <b>15763</b></span><span class="chip">EPSG:<b>4326</b></span></div>
     <div class="src">§III-A · §III-D · Table II</div>
-  </div></div>
-</section>
-
-<!-- 4 · SOTAQUIRÁ -->
-<section class="ch" data-ch="sota">
-  <div class="sticky"><div class="panel">
-    <div class="eyebrow">II-B · Study area</div>
-    <h2>Sotaquirá</h2>
-    <div class="chips" style="margin-top:0"><span class="chip"><b>284</b> km²</span><span class="chip"><b>30</b> veredas · DANE 2024</span><span class="chip"><b>2,860</b> m a.s.l.</span><span class="chip">Central Province, Boyacá</span></div>
-    <p style="margin-top:16px">Two páramo complexes, Guantiva–La Rusia and Iguaque–Merchán, sit above a rural economy of cattle ranching and agriculture.</p>
-    <div class="src">Table I · Figs. 1–2</div>
   </div></div>
 </section>
 
@@ -273,13 +307,14 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
 </section>
 
 <!-- 7 · SOIL -->
-<section class="ch" data-ch="soil" style="--h:200vh">
-  <div class="sticky"><div class="panel">
+<section class="ch" data-ch="soil" style="--h:220vh">
+  <div class="sticky"><div class="panel tall">
     <div class="eyebrow">IV-C · Soil degradation</div>
     <div class="big neg" style="margin-top:12px"><span data-count="62.40" data-dec="2" data-from=".05" data-to=".45">0</span><small>%</small></div>
-    <p style="margin-top:8px">of the municipality under water erosion, 17,764.27 ha. Classes VII and VIII cover <b class="warn">71.74 %</b>.</p>
-    <div class="bars" id="soilBars"></div>
-    <div class="src">Table III · official IGAC classes · RUSLE as conceptual frame only</div>
+    <p style="margin-top:8px">of the municipality under water erosion, 17,764.27 ha. Classes VII and VIII, the most restrictive, cover <b class="warn">71.74 %</b>, 20,422.01 ha.</p>
+    <div class="bars-h">Erosion types · % of municipal area</div><div class="bars" id="soilBars"></div>
+    <div class="bars-h">Land-capability classes · %</div><div class="bars" id="classBars"></div>
+    <div class="src">Table III · classes are official IGAC, not derived from NDVI · RUSLE only as conceptual frame, no soil-loss rate · geodesic areas on 28,466.66 ha; three estimates converge within 0.33 %</div>
   </div></div>
 </section>
 
@@ -287,9 +322,10 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
 <section class="ch" data-ch="paramo" style="--h:240vh">
   <div class="sticky"><div class="panel">
     <div class="eyebrow">IV-B · Páramo ∩ agriculture</div>
-    <div class="big neg" style="margin-top:12px"><span data-count="2608.09" data-dec="2" data-from=".45" data-to=".8">0</span><small>ha</small></div>
+    <div class="big neg" style="margin-top:12px"><span data-count="2608.09" data-dec="2" data-from=".42" data-to=".66">0</span><small>ha</small></div>
     <h2 style="font-size:clamp(24px,2.6vw,34px)">Production inside the páramo</h2>
-    <p>Green: páramos. Ochre: agricultural territories, 55.68 % of the municipality. Red: where they overlap, <b class="el">25.72 %</b> of the páramo area; <b class="warn">47.19 %</b> of Guantiva–La Rusia.</p>
+    <p>Green: páramos. Ochre: agricultural territories. Red: where they overlap, <b class="el">25.72 %</b> of the páramo area in the municipality; <b class="warn">47.19 %</b> of Guantiva–La Rusia.</p>
+    <div class="mini"><div><b class="warn">15,851.05 ha</b><span>agricultural territories · 55.68 %</span></div><div><b class="pos">12,457.76 ha</b><span>forests and seminatural areas · 43.76 %</span></div></div>
     <div class="src">§IV-B · depurated layers</div>
   </div></div>
 </section>
@@ -299,22 +335,27 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
   <div class="sticky"><div class="panel">
     <div class="eyebrow">IV-D · Access, not absence</div>
     <div class="big el" style="margin-top:12px"><span data-count="7427" data-from=".05" data-to=".5">0</span><small>records</small></div>
-    <p style="margin-top:8px">Municipal GBIF query, all taxa, 42 datasets [12]. Sotaquirá is not a territory without data, but one whose information was fragmented.</p>
+    <p style="margin-top:8px">Sotaquirá is not a territory without data, but one whose information was fragmented across collections, citizen science and institutions.</p>
+    <div class="mini"><div><b class="el">7,427</b><span>municipal query · all taxa · 42 datasets [12]</span></div><div><b>4,018</b><span>regional selection · 16 Andean taxa · viewer layer (Table IV)</span></div></div>
+    <p style="margin-top:12px;font-size:14.5px">Sources: museum and herbarium collections, citizen science such as iNaturalist, institutional databases.</p>
     <div class="src">§III-D · §IV-D · doi:10.15468/dl.w3cm5z</div>
   </div></div>
 </section>
 
 <!-- 10 · DEMO -->
-<section class="ch demo" data-ch="demo" style="--h:420vh">
+<section class="ch demo" data-ch="demo" style="--h:560vh">
   <div class="sticky">
     <div class="browser" id="browser">
       <div class="bar-top"><i></i><i></i><i></i><div class="url">tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/</div></div>
       <div class="screen" id="screen">
-        <img src="media/visor_portada.jpg" alt="Geoviewer home screen" data-k="0">
-        <img src="media/visor_clases.jpg" alt="Land-capability classes preset" data-k="1" style="opacity:0">
-        <img src="media/visor_erosion.jpg" alt="Erosion preset" data-k="2" style="opacity:0">
-        <img src="media/visor_coberturas.jpg" alt="Land cover preset" data-k="3" style="opacity:0">
-        <img src="media/visor_regional.jpg" alt="Regional biodiversity preset" data-k="4" style="opacity:0">
+        <img src="media/visor_portada.jpg" alt="Geoviewer home screen">
+        <img src="media/visor_modulo.jpg" alt="Soil-degradation module, layer panel and legend" style="opacity:0">
+        <img src="media/visor_clases.jpg" alt="Land-capability classes preset" style="opacity:0">
+        <img src="media/visor_popup.jpg" alt="Attribute window of a Class VIII polygon" style="opacity:0">
+        <img src="media/visor_erosion.jpg" alt="Erosion preset" style="opacity:0">
+        <img src="media/visor_coberturas.jpg" alt="Land cover preset" style="opacity:0">
+        <img src="media/visor_regional.jpg" alt="Regional biodiversity preset" style="opacity:0">
+        <img src="media/visor_monitoreo.jpg" alt="Monitoring preset, illustrative points" style="opacity:0">
         <div class="demo-cap"><div class="lbl" id="demoLbl"><span>Fig. 5</span><b>Home · two thematic modules</b></div>
           <div class="btns" style="margin:0"><button class="btn" id="liveBtn">Load live here</button><a class="btn primary" href="https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/" target="_blank" rel="noopener">Open the geoviewer ↗</a></div></div>
       </div>
@@ -358,10 +399,12 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
     <div class="tiles">
       <div class="tile"><div class="v">3.99 MB</div><div class="l">single HTML, 98.1 % GeoJSON</div></div>
       <div class="tile"><div class="v">4,665</div><div class="l">features in 44 layers</div></div>
-      <div class="tile"><div class="v">405 ms</div><div class="l">first load in Chromium</div></div>
-      <div class="tile"><div class="v sp">133.9 ms</div><div class="l">heaviest preset, 22 layers</div></div>
+      <div class="tile"><div class="v">405 ms</div><div class="l">first load in Chromium · 216–224 ms on later loads</div></div>
+      <div class="tile"><div class="v sp">133.9 ms</div><div class="l">heaviest preset · 22 layers, 4,157 features</div></div>
     </div>
-    <div class="src">§IV-A · open code [25], tag v1.0-amitic2026</div>
+    <div class="qrs"><a class="qr" href="https://github.com/FERNEY22/geovisor-sotaquira" target="_blank" rel="noopener"><img src="media/qr_repo.png" alt="QR to the repository"><span>repository [25]</span></a>
+      <p style="margin:0;align-self:center;font-size:14px;max-width:30ch">Code, GeoJSON layers, area script and audit report under tag <b style="color:var(--ink)">v1.0-amitic2026</b>.</p></div>
+    <div class="src">§IV-A · §III-A</div>
   </div></div>
 </section>
 
@@ -370,7 +413,13 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
   <div class="sticky"><div class="panel">
     <div class="eyebrow">V · Discussion</div>
     <h2>Limitations</h2>
-    <p>Several layers are not yet validated in systematic field campaigns. NDVI is indicative, not a calibrated index. GBIF depends on sampling effort. The 1:100,000 cartography gives municipal, not parcel, precision. One municipality so far.</p>
+    <ol class="lim">
+      <li>Several layers are not yet validated in systematic field campaigns.</li>
+      <li>NDVI is indicative, not a calibrated degradation index.</li>
+      <li>GBIF records depend on sampling effort and accessibility.</li>
+      <li>1:100,000 cartography: municipal, not parcel, precision.</li>
+      <li>One municipality; the access-effort reduction is not yet measured.</li>
+    </ol>
     <div class="src">§V</div>
   </div></div>
 </section>
@@ -392,7 +441,12 @@ dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;bo
     <div class="btns">
       <a class="btn primary" href="https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/" target="_blank" rel="noopener">Open the geoviewer ↗</a>
       <a class="btn" href="https://github.com/FERNEY22/geovisor-sotaquira" target="_blank" rel="noopener">Repository ↗</a>
-      <a class="btn" href="media/Ponencia_AmITIC2026_Sotaquira_WebGIS.pptx" download>Slides .pptx</a>
+      <a class="btn" href="media/Ponencia_TEDUCA2026_Sotaquira_WebGIS.pptx" download>Slides .pptx</a>
+    </div>
+    <div class="qrs">
+      <a class="qr" href="https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/" target="_blank" rel="noopener"><img src="media/qr_geovisor.png" alt="QR to the geoviewer"><span>geoviewer [24]</span></a>
+      <a class="qr" href="https://github.com/FERNEY22/geovisor-sotaquira" target="_blank" rel="noopener"><img src="media/qr_repo.png" alt="QR to the repository"><span>repository [25]</span></a>
+      <a class="qr" href="https://tower-ing.com/proyectos/biomo/ponencia-amitic2026/"><img src="media/qr_ponencia.png" alt="QR to this talk online"><span>this talk</span></a>
     </div>
   </div></div>
 </section>
@@ -449,9 +503,11 @@ st.innerHTML=st.innerHTML.split(/(<span class="key">.*?<\/span>|\s+)/).filter(s=
 const stWords=[...st.querySelectorAll('span')];
 
 /* soil bars */
-const SOIL=[['Water erosion',62.40,'--neg'],['Sheet and rill',46.05,'--neg'],['Class VIII',44.03,'--warn'],['Class VII',27.71,'--warn'],['Class IV',17.12,'--warn']];
+const SOIL=[['Water erosion (total)',62.40,'--neg'],['Sheet and rill',46.05,'--neg'],['Terrace and sheet',9.43,'--neg'],['Sheet',6.93,'--neg'],['Climatic',6.74,'--neg']];
+const CLASSES=[['Class VIII',44.03,'--warn'],['Class VII',27.71,'--warn'],['Class IV',17.12,'--warn'],['Class III',6.74,'--warn'],['Class VI',1.24,'--warn'],['Class V',0.55,'--warn']];
 document.getElementById('soilBars').innerHTML=SOIL.map(([n,v,c])=>`<div class="bar"><span>${n}</span><div class="t"><div class="f" style="background:var(${c})" data-v="${v}"></div></div><span class="v">${v.toFixed(2)}%</span></div>`).join('');
-const soilFills=[...document.querySelectorAll('#soilBars .f')];
+document.getElementById('classBars').innerHTML=CLASSES.map(([n,v,c])=>`<div class="bar"><span>${n}</span><div class="t"><div class="f" style="background:var(${c})" data-v="${v}"></div></div><span class="v">${v.toFixed(2)}%</span></div>`).join('');
+const soilFills=[...document.querySelectorAll('#soilBars .f, #classBars .f')];
 
 /* reel */
 const strip=document.getElementById('strip');
@@ -468,7 +524,7 @@ ring.innerHTML=STAGES.map((s,i)=>`<div class="node" data-i="${i}">${String(i+1).
 const nodes=[...ring.children];
 
 /* demo */
-const DEMO=[['Fig. 5','Home · two thematic modules'],['Fig. 10','Land-capability classes · VII and VIII dominate'],['Fig. 9','Erosion types · where to verify'],['Fig. 8b','CORINE land cover · production meets páramo'],['Fig. 11','Regional biodiversity · GBIF records']];
+const DEMO=[['Fig. 5','Home · two thematic modules'],['Fig. 6 · click «Explorar módulo»','Soil degradation · layer panel and dynamic legend'],['Fig. 10 · click «Clases agrológicas»','Classes VII and VIII dominate'],['Click a polygon','Attribute window · Class VIII'],['Fig. 9 · click «Erosión»','Where to verify in the field'],['Fig. 8b · click «Coberturas»','Forests vs. agricultural territories'],['Fig. 11 · «Biodiversidad regional»','GBIF records by species'],['Click «Monitoreo»','Illustrative points, not field observations']];
 const demoImgs=[...document.querySelectorAll('#screen img')], demoLbl=document.getElementById('demoLbl');
 document.getElementById('liveBtn').onclick=()=>{const sc=document.getElementById('screen');const f=document.createElement('iframe');f.src='https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/';f.title='BIODIVERSIDAD geoviewer';f.allowFullscreen=true;sc.prepend(f);demoImgs.forEach(i=>i.style.display='none');document.getElementById('liveBtn').remove();};
 
@@ -485,13 +541,14 @@ function build(){
 }
 let CAM={};
 /* chapter states: camera [cx,cy,span], screen-x offset for the map center, layer opacities */
-const L0={vec:0,col:0,boy:0,mun:0,sota:0,ver:0,par:0,agr:0,pre:0,ero:0,bos:0,pts:0,ptsIn:0,clean:0,clip:0,glow:0,tilt:0,expl:0,ring:0,dim:0,loop:0};
+const L0={sf:0,vec:0,col:0,boy:0,mun:0,sota:0,ver:0,par:0,agr:0,pre:0,ero:0,bos:0,pts:0,ptsIn:0,clean:0,clip:0,glow:0,tilt:0,expl:0,ring:0,dim:0,loop:0};
 const S=(cam,pad,o)=>Object.assign({},L0,{cam,pad},o);
 let STATES={};
 function defineStates(){
 STATES={
   hero:   S('colombia',1.05,{vec:.7,col:1,boy:.25,glow:.4}),
   problem:S('colombia',1.0,{vec:.7,col:1,boy:.6,mun:.2,glow:.3}),
+  vuelo:  S('colombia',1.0,{vec:.7,col:1,boy:.35,glow:.3}),
   acq:    S('boyaca',1.7,{vec:.4,col:.6,boy:1,mun:.45,pts:1,ptsIn:1}),
   clip:   S('boyaca',1.25,{col:.3,boy:1,mun:.8,pts:.7,ptsIn:1,clean:1,sota:1,clip:1,glow:1}),
   sota:   S('sota',1.35,{boy:.2,mun:.4,sota:1,ver:1,par:.9,glow:1}),
@@ -509,6 +566,19 @@ STATES={
   loop:   S('sota',1.7,{sota:1,ver:.5,par:.6,glow:1,loop:1,pts:.0}),
 };}
 const chapters=[...document.querySelectorAll('.ch')].map(el=>({el,id:el.dataset.ch}));
+let VK=null;
+function vueloKeys(){VK=[
+  [0.00,S('colombia',1.0,{vec:.7,col:1,boy:.35,glow:.3})],
+  [0.12,S('colombia',1.0,{vec:.7,col:1,boy:.35,glow:.3})],
+  [0.27,S('boyaca',1.3,{vec:.3,col:.5,boy:1,mun:.9})],
+  [0.36,S('boyaca',1.3,{vec:.3,col:.5,boy:1,mun:.9})],
+  [0.45,S('boyaca',1.25,{col:.3,boy:1,mun:.8,sota:1,sf:.9,glow:1})],
+  [0.60,S('sota',1.3,{boy:.2,mun:.4,sota:1,sf:.3,glow:1})],
+  [0.70,S('sota',1.3,{sota:1,ver:1,sf:.08,glow:1})],
+  [0.80,S('sota',1.3,{sota:1,ver:1,par:.9,glow:1})],
+  [1.00,S('sota',1.35,{sota:1,ver:1,par:.9,glow:1})]];}
+function vueloState(t){for(let i=0;i<VK.length-1;i++){const [a,A]=VK[i],[b,B]=VK[i+1];if(t<=b)return mix(A,B,ease(seg(t,a,b)));}return mix(VK[VK.length-1][1],VK[VK.length-1][1],0);}
+const vSteps=[...document.querySelectorAll('#vSteps .step')];
 
 function camOf(st){const c=CAM[st.cam];return {x:c[0],y:c[1],s:c[2]*st.pad};}
 function mix(a,b,t){const o={};for(const k in L0)o[k]=lerp(a[k],b[k],t);
@@ -520,6 +590,9 @@ function mix(a,b,t){const o={};for(const k in L0)o[k]=lerp(a[k],b[k],t);
 function current(){
   const vh=innerHeight; let idx=0, local=0;
   for(let i=0;i<chapters.length;i++){const r=chapters[i].el.getBoundingClientRect(); if(r.top<=vh*.5){idx=i;local=clamp((vh*.5-r.top)/r.height);} }
+  if(chapters[idx].id==='vuelo'){if(!VK)vueloKeys(); const base=vueloState(Math.min(local,.9)); if(local<=.9) return {state:base,idx,local};
+    const nb=STATES[chapters[idx+1].id]; const A=Object.assign({},VK[VK.length-1][1]); return {state:mix(A,nb,ease(seg(local,.9,1))),idx,local};}
+  if(idx>0&&chapters[idx].id==='acq'&&false){}
   const a=STATES[chapters[idx].id], nb=chapters[idx+1]?STATES[chapters[idx+1].id]:a;
   const t=ease(seg(local,.62,1)); return {state:mix(a,nb,t),idx,local};
 }
@@ -539,6 +612,7 @@ function drawBase(ctx,o,v,flat){
   fillL(ctx,P.colombia,'#171B25',o.col,1.2,k,'rgba(237,234,226,.45)');
   fillL(ctx,P.boyaca,'rgba(92,116,255,.10)',o.boy,1.6,k,COL.el2);
   if(o.mun>.01){ctx.globalAlpha=o.mun;ctx.strokeStyle='rgba(237,234,226,.22)';ctx.lineWidth=.6/k;ctx.stroke(P.munis);ctx.globalAlpha=1;}
+  fillL(ctx,P.sota,'rgba(92,116,255,.55)',o.sf,0,k);
   fillL(ctx,P.bosques,COL.pos,o.bos*.28,0,k);
   fillL(ctx,P.agricolas,COL.warn,o.agr*.42,0,k);
   fillL(ctx,P.paramos,COL.pos,o.par*.42,1.4,k,COL.pos);
@@ -593,12 +667,13 @@ const tags=[0,1,2].map(i=>document.getElementById('tag'+i));
 function domFX(idx,local,o){
   // panels: enter / exit with depth
   chapters.forEach((c,i)=>{const p=panels[i]; if(!p) return; let a=0,y=0,b=0;
-    if(i===idx){const e=seg(local,0,.14), x=seg(local,.72,.95); a=e*(1-x); y=(1-eout(e))*60 - eout(x)*60; b=(1-e)*10+x*10;}
+    if(i===idx){const e=seg(local,0,c.id==='vuelo'?.05:.14), x=c.id==='vuelo'?seg(local,.9,.99):seg(local,.72,.95); a=e*(1-x); y=(1-eout(e))*60 - eout(x)*60; b=(1-e)*10+x*10;}
     if(c.id==='hero' && i===idx){a=1-seg(local,.35,.7); y=-seg(local,.35,.7)*80; b=seg(local,.35,.7)*10;}
     p.style.opacity=REDUCE?(i===idx?1:0):a; p.style.transform=REDUCE?'none':`translate3d(0,${y}px,0) scale(${1-b*.006})`; p.style.filter=REDUCE?'none':`blur(${b}px)`;});
   // counters
   const ch=chapters[idx]; ch.el.querySelectorAll('[data-count]').forEach(el=>{const t=eout(seg(local,+el.dataset.from,+el.dataset.to)); const v=+el.dataset.count*t; el.textContent=v.toLocaleString('en-US',{minimumFractionDigits:+(el.dataset.dec||0),maximumFractionDigits:+(el.dataset.dec||0)});});
-  if(ch.id==='soil') soilFills.forEach((f,i)=>f.style.transform=`scaleX(${eout(seg(local,.08+i*.05,.4+i*.05))*(+f.dataset.v/70)})`);
+  if(ch.id==='vuelo'){const th=[0,.22,.4,.63,.76,.88];let k=0;th.forEach((v,i)=>{if(local>=v)k=i;});if(!vSteps[k].classList.contains('on'))vSteps.forEach((el,i)=>el.classList.toggle('on',i===k));}
+  if(ch.id==='soil') soilFills.forEach((f,i)=>f.style.transform=`scaleX(${eout(seg(local,.06+i*.035,.3+i*.035))*(+f.dataset.v/70)})`);
   ptsProg = ch.id==='acq' ? seg(local,.05,.6) : (ch.id==='clip'||ch.id==='arch'||ch.id==='bio'||ch.id==='limits'?1:ptsProg);
   if(ch.id==='hero'||ch.id==='problem') ptsProg=0;
   loopP = ch.id==='loop'?eout(seg(local,.1,.7)):0;
@@ -614,10 +689,12 @@ function domFX(idx,local,o){
   cvs[1].style.transform=`translateZ(${170*ex}px)`; cvs[2].style.transform=`translateZ(${340*ex}px)`;
   cvs[0].style.opacity=1-o.dim; cvs[1].style.opacity=1-o.dim; cvs[2].style.opacity=1-o.dim;
   const showTags=ch.id==='arch'&&ex>.6; tags.forEach((t,i)=>{t.style.opacity=showTags?1:0; t.style.left=(v.narrow?W*.55:v.ox+W*.12)+'px'; t.style.top=(v.oy-40-i*(v.narrow?60:105))+'px';});
-  // demo browser flies in
+  // demo browser flies in (hidden outside its chapter)
+  if(ch.id!=='demo') document.getElementById('browser').style.opacity=0;
+  strip.style.opacity = ch.id==='reel'?1:0;
   if(ch.id==='demo'){const b=document.getElementById('browser'); const e=eout(seg(local,0,.16)), x=seg(local,.86,1);
     b.style.opacity=REDUCE?1:e*(1-x); b.style.transform=REDUCE?'none':`perspective(1400px) translateY(${(1-e)*140-x*80}px) rotateX(${(1-e)*28}deg) scale(${.82+.18*e})`;
-    const k=Math.min(4,Math.floor(seg(local,.12,.84)*5)); demoImgs.forEach((im,i)=>im.style.opacity=i===k?1:0); demoLbl.innerHTML=`<span>${DEMO[k][0]}</span><b>${DEMO[k][1]}</b>`;}
+    const k=Math.min(7,Math.floor(seg(local,.12,.86)*8)); demoImgs.forEach((im,i)=>im.style.opacity=i===k?1:0); demoLbl.innerHTML=`<span>${DEMO[k][0]}</span><b>${DEMO[k][1]}</b>`;}
   // polaroids fly
   if(ch.id==='proto'){document.querySelectorAll('.pol').forEach((pEl,i)=>{const e=eout(seg(local,.12+i*.08,.38+i*.08)); pEl.style.transform=REDUCE?'none':`translate3d(${(1-e)*(i-1)*120}px,${(1-e)*200}px,0) rotate(${(1-e)*(i*14-14)+(i-1)*5}deg)`; pEl.style.opacity=e;});}
   // reel
