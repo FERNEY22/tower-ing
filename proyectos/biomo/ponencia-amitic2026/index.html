@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ponencia WebGIS Sotaquirá</title>
+<meta name="description" content="An Open-Source WebGIS for Soil Degradation and Biodiversity Monitoring in the Colombian Andes · AmITIC-TEDUCA 2026">
+<meta name="author" content="Ferney Torres Ome">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* Night survey table: one living map under glass panels; the camera flies with the scroll. */
+:root{
+  --night:#0A0C11; --night-2:#11141B; --glass:rgba(16,19,27,.72); --hair:rgba(237,234,226,.12); --hair-2:rgba(237,234,226,.22);
+  --ink:#EDEAE2; --ink-2:#B8B5AD; --ink-3:#8C8981;
+  --electric:#5C74FF; --electric-2:#8597FF; --spark:#FFD21A;
+  --pos:#3FBF7F; --warn:#F0A040; --neg:#F2546B;
+  --display:'Geist',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace; --serif:'Instrument Serif',Georgia,serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--night);color:var(--ink)}
+body{font-family:var(--display);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--electric-2)}
+img{max-width:100%;display:block}
+
+/* ---------- the stage (fixed map) ---------- */
+#stage{position:fixed;inset:0;z-index:0;perspective:1700px;perspective-origin:50% 40%;overflow:hidden}
+#rig{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+#rig canvas{position:absolute;inset:0;width:100%;height:100%}
+#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 65% 50%,transparent 45%,rgba(10,12,17,.85) 100%),linear-gradient(90deg,rgba(10,12,17,.92) 0%,rgba(10,12,17,.55) 34%,transparent 58%)}
+@media (max-width:820px){#vignette{background:linear-gradient(0deg,rgba(10,12,17,.95) 0%,rgba(10,12,17,.6) 45%,transparent 70%)}}
+.plane-tag{position:fixed;z-index:2;font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:100px;border:1px solid var(--hair-2);background:var(--glass);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s}
+
+/* ---------- chrome ---------- */
+.top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;align-items:center;gap:16px;height:54px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.brand{font:500 12.5px var(--mono);color:var(--ink-2);text-decoration:none;letter-spacing:.04em}
+.brand b{color:var(--ink);font-weight:500}
+.rail{flex:1;display:flex;gap:5px;justify-content:center}
+.rail i{display:block;width:30px;height:3px;border-radius:3px;background:var(--hair-2);transition:background .5s,box-shadow .5s}
+.rail i.on{background:var(--electric);box-shadow:0 0 10px var(--electric)}
+.rail-label{font:12px var(--mono);color:var(--ink-3);white-space:nowrap;min-width:230px;text-align:right}
+@media (max-width:820px){.rail-label{display:none}.rail i{width:16px}}
+
+/* ---------- chapters ---------- */
+main{position:relative;z-index:3}
+.ch{position:relative;height:var(--h,170vh)}
+.ch .sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;
+  padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.panel{width:min(500px,100%);margin-left:max(0px,calc((100vw - 1240px)/2));padding:28px 28px 26px;border-radius:22px;
+  background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.6);will-change:transform,opacity,filter}
+.panel.bare{background:none;border:0;backdrop-filter:none;box-shadow:none;padding:0}
+@media (max-width:820px){.demo .sticky{align-items:center!important}.shot{width:84vw!important}.ch .sticky{align-items:flex-end;padding-bottom:max(24px,env(safe-area-inset-bottom,0px))}.panel{margin:0}}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--electric-2)}
+h1,h2{margin:0;font-weight:600;letter-spacing:-.03em;line-height:1.02;text-wrap:balance}
+h1{font-size:clamp(36px,4.9vw,74px)}
+h2{font-size:clamp(30px,3.6vw,50px);margin:12px 0 14px}
+h2 em,h1 em{font-family:var(--serif);font-weight:400;font-style:italic;letter-spacing:-.01em}
+p{margin:0 0 12px;color:var(--ink-2);max-width:60ch}
+.src{font:12px var(--mono);color:var(--ink-3);letter-spacing:.02em;margin-top:14px}
+.big{font-weight:600;font-size:clamp(52px,7vw,104px);letter-spacing:-.045em;line-height:.95;font-variant-numeric:tabular-nums}
+.big small{font-size:.38em;letter-spacing:-.01em;color:var(--ink-2);margin-left:8px;font-weight:500}
+.neg{color:var(--neg)}.warn{color:var(--warn)}.pos{color:var(--pos)}.el{color:var(--electric-2)}.sp{color:var(--spark)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:12.5px var(--mono);padding:6px 11px;border-radius:100px;border:1px solid var(--hair-2);color:var(--ink-2)}
+.chip b{color:var(--ink);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:100px;font:500 15px var(--display);text-decoration:none;color:var(--ink);border:1px solid var(--hair-2);background:rgba(255,255,255,.03);cursor:pointer;transition:transform .25s var(--ease),background .25s}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.08)}
+.btn.primary{background:var(--electric);border-color:var(--electric);color:#fff;box-shadow:0 10px 30px -10px var(--electric)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--spark);outline-offset:3px}
+
+/* hero */
+.hero .sticky{align-items:center}
+.hero-in{max-width:min(760px,100%);margin-left:max(0px,calc((100vw - 1240px)/2))}
+.hero .authors{margin-top:22px;color:var(--ink-2);font-size:15.5px}
+.speakers{display:flex;gap:22px;flex-wrap:wrap;margin-top:20px}
+.spk{display:flex;align-items:flex-start;gap:12px;max-width:360px}
+.spk .cred{font:12.5px/1.45 var(--display);color:var(--ink-2);margin-top:4px}
+.logos{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.logos{align-items:center;gap:18px}
+.spk .logos img{height:38px;width:auto;border:0;border-radius:0;object-fit:contain;opacity:.92}
+.spk .logos img.tall{height:46px}
+
+.spk img{width:62px;height:62px;border-radius:50%;object-fit:cover;border:2px solid var(--hair-2)}
+.spk b{display:block;font-weight:600;font-size:15px}.spk span{font:12px var(--mono);color:var(--ink-3)}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font:12px var(--mono);color:var(--ink-3);letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-cue i{display:block;width:1px;height:46px;background:linear-gradient(var(--ink-3),transparent);animation:cue 2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.word{display:inline-block;opacity:0;transform:translateY(.4em);filter:blur(8px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.ready .word{opacity:1;transform:none;filter:none}
+
+/* method ring */
+.ring{position:fixed;z-index:2;inset:0;pointer-events:none;opacity:0}
+.ring .node{position:absolute;transform:translate(-50%,-50%);font:500 12px var(--mono);letter-spacing:.06em;padding:8px 12px;border-radius:100px;border:1px solid var(--hair-2);background:var(--glass);backdrop-filter:blur(8px);color:var(--ink-3);white-space:nowrap;transition:all .45s var(--ease)}
+.ring .node.on{color:#fff;border-color:var(--electric);background:var(--electric);box-shadow:0 0 30px -4px var(--electric)}
+.ring .node.done{color:var(--ink);border-color:var(--electric)}
+
+/* bars */
+.bars{display:grid;gap:8px;margin-top:14px}
+.bar{display:grid;grid-template-columns:132px 1fr 58px;gap:10px;align-items:center;font-size:13.5px;color:var(--ink-2)}
+.bar .t{height:10px;border-radius:5px;background:var(--hair);overflow:hidden}
+.bar .f{height:100%;border-radius:5px;transform-origin:left;transform:scaleX(0)}
+.bar .v{font:12.5px var(--mono);text-align:right;color:var(--ink)}
+
+/* browser frame (demo) */
+.demo .sticky{justify-content:center}
+.browser{position:relative;width:min(1080px,92vw);border-radius:16px;overflow:hidden;border:1px solid var(--hair-2);background:#1a1d25;box-shadow:0 60px 120px -40px rgba(0,0,0,.8);will-change:transform,opacity}
+.browser .bar-top{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-bottom:1px solid var(--hair)}
+.browser .bar-top i{width:11px;height:11px;border-radius:50%;background:var(--hair-2)}
+.browser .url{flex:1;margin:0 10px;height:24px;border-radius:7px;background:rgba(255,255,255,.06);font:12px/24px var(--mono);color:var(--ink-3);padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.browser .screen{position:relative;aspect-ratio:16/9;background:#0e1016}
+.browser .screen img,.browser .screen iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;transition:opacity .6s var(--ease)}
+.demo-cap{position:absolute;left:18px;bottom:18px;right:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.demo-cap .lbl{padding:10px 14px;border-radius:12px;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--hair);font-size:14.5px}
+.demo-cap .lbl b{display:block;font-size:16px}
+.demo-cap .lbl span{font:12px var(--mono);color:var(--ink-3)}
+
+/* reel */
+.reel .sticky{display:block;padding:0;overflow:hidden}
+.reel-head{position:absolute;top:84px;left:max(24px,calc((100vw - 1240px)/2 + 24px));right:24px;z-index:2}
+.strip{position:absolute;top:50%;left:0;display:flex;gap:36px;padding:0 50vw;transform-style:preserve-3d;will-change:transform}
+.shot{flex:none;width:min(62vw,860px);aspect-ratio:1600/720;border-radius:18px;overflow:hidden;position:relative;transform-style:preserve-3d;will-change:transform;box-shadow:0 40px 90px -30px rgba(0,0,0,.85);border:1px solid var(--hair)}
+.shot img{width:100%;height:100%;object-fit:cover;transform-origin:center;will-change:transform}
+.shot .n{position:absolute;left:14px;top:12px;font:12px var(--mono);color:#fff;background:rgba(0,0,0,.45);padding:4px 9px;border-radius:100px}
+.reel-foot{position:absolute;bottom:42px;left:max(24px,calc((100vw - 1240px)/2 + 24px));right:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;z-index:2}
+.reel-prog{flex:1;max-width:420px;height:2px;background:var(--hair-2);border-radius:2px;align-self:center}
+.reel-prog i{display:block;height:100%;width:0;background:var(--spark)}
+
+/* protocols */
+.polaroids{position:relative;height:260px;margin-top:18px}
+.pol{position:absolute;width:150px;padding:8px 8px 26px;background:#F3EEE2;border-radius:6px;box-shadow:0 20px 40px -14px rgba(0,0,0,.7);will-change:transform}
+.pol img{aspect-ratio:720/880;object-fit:cover;border-radius:3px}
+.pol span{position:absolute;bottom:6px;left:10px;font:11px var(--mono);color:#474A55}
+.note{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(240,160,64,.12);border:1px solid rgba(240,160,64,.3);font-size:14px;color:var(--ink)}
+.protos{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px}
+.proto{padding:10px 8px;border-radius:10px;border:1px solid var(--hair);font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.proto b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+@media (max-width:820px){.protos{grid-template-columns:repeat(2,1fr)}.polaroids{height:200px}.pol{width:110px}}
+
+/* statement */
+.statement{font-weight:500;font-size:clamp(30px,4.4vw,64px);letter-spacing:-.035em;line-height:1.08;max-width:18ch}
+.statement span{opacity:.14;transition:opacity .25s}
+.statement span.lit{opacity:1}
+.statement span.key{color:var(--spark)}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.tile{border:1px solid var(--hair);border-radius:14px;padding:14px}
+.tile .v{font-weight:600;font-size:30px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--ink-3);line-height:1.35;margin-top:4px}
+
+/* end */
+.end{position:relative;z-index:3;background:linear-gradient(180deg,transparent,var(--night) 120px);padding:160px max(24px,env(safe-area-inset-right,0px)) 80px max(24px,env(safe-area-inset-left,0px))}
+.end .in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media (max-width:820px){.end .in{grid-template-columns:1fr}}
+.refs{list-style:none;padding:0;margin:14px 0 0;font-size:13.5px;color:var(--ink-2)}
+.refs li{margin:7px 0;padding-left:46px;text-indent:-46px;overflow-wrap:anywhere}
+.refs b{display:inline-block;width:46px;text-indent:0;font:500 12px var(--mono);color:var(--ink-3)}
+footer{position:relative;z-index:3;border-top:1px solid var(--hair);padding:26px 24px 60px;text-align:center;font:12.5px var(--mono);color:var(--ink-3);background:var(--night)}
+
+dialog.lb{border:0;padding:0;background:transparent;max-width:94vw}
+dialog.lb::backdrop{background:rgba(5,6,9,.9)}
+dialog.lb img{max-height:88vh;width:auto;border-radius:12px}
+dialog.lb button{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:var(--night-2);color:var(--ink);font-size:20px;cursor:pointer}
+
+@media (prefers-reduced-motion:reduce){.word{opacity:1;transform:none;filter:none;transition:none}.scroll-cue i{animation:none}}
+</style>
+</head>
+<body>
+
+<div id="stage" aria-hidden="true"><div id="rig"><canvas id="cv0"></canvas><canvas id="cv1"></canvas><canvas id="cv2"></canvas></div></div>
+<div id="vignette"></div>
+<div class="plane-tag" id="tag0" style="color:var(--pos)">3 · Leaflet client</div>
+<div class="plane-tag" id="tag1" style="color:var(--warn)">2 · Processing in QGIS</div>
+<div class="plane-tag" id="tag2" style="color:var(--electric-2)">1 · Official sources</div>
+<div class="ring" id="ring" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="brand" href="https://tower-ing.com">tower-ing / <b>biomo</b> / ponencia</a>
+  <div class="rail" id="rail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <span class="rail-label" id="railLabel">Method · 0 / 7</span>
+</header>
+
+<main id="main">
+
+<!-- 0 · HERO -->
+<section class="ch hero" data-ch="hero" style="--h:150vh">
+  <div class="sticky"><div class="hero-in panel bare" id="heroIn" style="width:min(820px,100%)">
+    <div class="eyebrow">AmITIC-TEDUCA 2026 · Virtual session</div>
+    <h1 style="margin-top:18px" id="heroTitle">An open-source <em>WebGIS</em> for soil degradation and biodiversity monitoring in the Colombian Andes</h1>
+    <p class="authors"><b style="color:var(--ink)">Ferney Torres Ome</b> · July Steffany González López · Andrés Felipe Rodríguez · Nicole García Ramos<br><span class="src" style="margin:0">EAN University, Bogotá · Coventry University · UNADE</span></p>
+    <div class="speakers">
+      <div class="spk"><img src="media/ferney.jpg" alt="Ferney Torres Ome"><div><b>Ferney Torres Ome</b><span>SPEAKER</span>
+        <div class="cred">Faculty of Engineering, EAN University, Bogotá</div>
+        <div class="logos"><img src="media/logo_ean_w.png" alt="EAN University"></div></div></div>
+      <div class="spk"><img src="media/july.jpg" alt="July Steffany González López"><div><b>July Steffany González López</b><span>SPEAKER</span>
+        <div class="cred">Environmental Engineer · MSc in Environmental Management, Coventry University · PhD candidate in Project Management, UNADE</div>
+        <div class="logos"><img class="tall" src="media/logo_coventry_w.png" alt="Coventry University"><img src="media/logo_unade_w.png" alt="UNADE, Universidad Americana de Europa"></div></div></div>
+    </div>
+  </div></div>
+  <div class="scroll-cue">Scroll to fly<i></i></div>
+</section>
+
+<!-- 1 · PROBLEM -->
+<section class="ch" data-ch="problem">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">I · Introduction</div>
+    <h2>The data <em>exist.</em><br>They are scattered.</h2>
+    <p>High-mountain municipalities regulate water, form soil, store carbon and connect habitats, yet many lack an operational monitoring system.</p>
+    <p>Information sits in IGAC, IDEAM, the Ministry of Environment, UPRA and GBIF, organized by institution rather than by municipality.</p>
+    <div class="src">Abstract · §I · §II-A</div>
+  </div></div>
+</section>
+
+<!-- 2 · ACQUISITION -->
+<section class="ch" data-ch="acq" style="--h:200vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">Stage 1 · Acquisition</div>
+    <div class="big" style="margin-top:12px"><span data-count="4018" data-from=".05" data-to=".6">0</span><small>records</small></div>
+    <h2 style="font-size:clamp(24px,2.6vw,34px)">Sixteen Andean taxa fall onto the map</h2>
+    <p>Museum, herbarium and citizen-science records reach GBIF in different formats. This is the regional selection integrated in the viewer.</p>
+    <div class="src">Table IV · §III-D</div>
+  </div></div>
+</section>
+
+<!-- 3 · CLEANING + HARMONIZATION -->
+<section class="ch" data-ch="clip" style="--h:200vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">Stages 2–3 · Cleaning and harmonization</div>
+    <h2>Every layer,<br><em>one boundary.</em></h2>
+    <p>Records without useful coordinates and duplicates are removed. Each source is clipped to DANE code 15763 and reprojected to a common reference system.</p>
+    <div class="chips"><span class="chip"><b>123</b> municipalities</span><span class="chip">DANE <b>15763</b></span><span class="chip">EPSG:<b>4326</b></span></div>
+    <div class="src">§III-A · §III-D · Table II</div>
+  </div></div>
+</section>
+
+<!-- 4 · SOTAQUIRÁ -->
+<section class="ch" data-ch="sota">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">II-B · Study area</div>
+    <h2>Sotaquirá</h2>
+    <div class="chips" style="margin-top:0"><span class="chip"><b>284</b> km²</span><span class="chip"><b>30</b> veredas · DANE 2024</span><span class="chip"><b>2,860</b> m a.s.l.</span><span class="chip">Central Province, Boyacá</span></div>
+    <p style="margin-top:16px">Two páramo complexes, Guantiva–La Rusia and Iguaque–Merchán, sit above a rural economy of cattle ranching and agriculture.</p>
+    <div class="src">Table I · Figs. 1–2</div>
+  </div></div>
+</section>
+
+<!-- 5 · ARCHITECTURE (3D explode) -->
+<section class="ch" data-ch="arch" style="--h:240vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">III-A · Stage 4 · Integration</div>
+    <h2>Three levels,<br><em>no map server.</em></h2>
+    <p><b class="el">1 · Sources</b> IDEAM, IGAC, UPRA, MinAmbiente, GBIF, DANE, NASA HLS.</p>
+    <p><b class="warn">2 · QGIS</b> clip, reproject, point-in-polygon overlay, categorize, export GeoJSON.</p>
+    <p><b class="pos">3 · Leaflet client</b> static GeoJSON on plain hosting, fed back by community monitoring.</p>
+    <div class="src">§III-A · Fig. 3</div>
+  </div></div>
+</section>
+
+<!-- 6 · WORKFLOW ring -->
+<section class="ch" data-ch="flow" style="--h:220vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">III-A · Fig. 4</div>
+    <h2>Seven stages.<br><em>A cycle, not a line.</em></h2>
+    <p>Acquisition, cleaning, harmonization, integration, publication, local consultation and participatory monitoring. New community data re-enter the system as GeoJSON.</p>
+    <div class="src">Fig. 4</div>
+  </div></div>
+</section>
+
+<!-- 7 · SOIL -->
+<section class="ch" data-ch="soil" style="--h:200vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">IV-C · Soil degradation</div>
+    <div class="big neg" style="margin-top:12px"><span data-count="62.40" data-dec="2" data-from=".05" data-to=".45">0</span><small>%</small></div>
+    <p style="margin-top:8px">of the municipality under water erosion, 17,764.27 ha. Classes VII and VIII cover <b class="warn">71.74 %</b>.</p>
+    <div class="bars" id="soilBars"></div>
+    <div class="src">Table III · official IGAC classes · RUSLE as conceptual frame only</div>
+  </div></div>
+</section>
+
+<!-- 8 · PÁRAMO -->
+<section class="ch" data-ch="paramo" style="--h:240vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">IV-B · Páramo ∩ agriculture</div>
+    <div class="big neg" style="margin-top:12px"><span data-count="2608.09" data-dec="2" data-from=".45" data-to=".8">0</span><small>ha</small></div>
+    <h2 style="font-size:clamp(24px,2.6vw,34px)">Production inside the páramo</h2>
+    <p>Green: páramos. Ochre: agricultural territories, 55.68 % of the municipality. Red: where they overlap, <b class="el">25.72 %</b> of the páramo area; <b class="warn">47.19 %</b> of Guantiva–La Rusia.</p>
+    <div class="src">§IV-B · depurated layers</div>
+  </div></div>
+</section>
+
+<!-- 9 · BIODIVERSITY -->
+<section class="ch" data-ch="bio">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">IV-D · Access, not absence</div>
+    <div class="big el" style="margin-top:12px"><span data-count="7427" data-from=".05" data-to=".5">0</span><small>records</small></div>
+    <p style="margin-top:8px">Municipal GBIF query, all taxa, 42 datasets [12]. Sotaquirá is not a territory without data, but one whose information was fragmented.</p>
+    <div class="src">§III-D · §IV-D · doi:10.15468/dl.w3cm5z</div>
+  </div></div>
+</section>
+
+<!-- 10 · DEMO -->
+<section class="ch demo" data-ch="demo" style="--h:420vh">
+  <div class="sticky">
+    <div class="browser" id="browser">
+      <div class="bar-top"><i></i><i></i><i></i><div class="url">tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/</div></div>
+      <div class="screen" id="screen">
+        <img src="media/visor_portada.jpg" alt="Geoviewer home screen" data-k="0">
+        <img src="media/visor_clases.jpg" alt="Land-capability classes preset" data-k="1" style="opacity:0">
+        <img src="media/visor_erosion.jpg" alt="Erosion preset" data-k="2" style="opacity:0">
+        <img src="media/visor_coberturas.jpg" alt="Land cover preset" data-k="3" style="opacity:0">
+        <img src="media/visor_regional.jpg" alt="Regional biodiversity preset" data-k="4" style="opacity:0">
+        <div class="demo-cap"><div class="lbl" id="demoLbl"><span>Fig. 5</span><b>Home · two thematic modules</b></div>
+          <div class="btns" style="margin:0"><button class="btn" id="liveBtn">Load live here</button><a class="btn primary" href="https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/" target="_blank" rel="noopener">Open the geoviewer ↗</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · PROTOCOLS -->
+<section class="ch" data-ch="proto" style="--h:200vh">
+  <div class="sticky"><div class="panel" style="width:min(560px,100%)">
+    <div class="eyebrow">III-E · Stage 7 · Participatory monitoring</div>
+    <h2>The community<br><em>closes the cycle.</em></h2>
+    <div class="protos">
+      <div class="proto"><b>Camera traps</b>grid by habitat</div><div class="proto"><b>Awaq-Bio app</b>fauna, climate, water</div>
+      <div class="proto"><b>Soil sampling</b>20 × 20 m plots</div><div class="proto"><b>Educational walks</b>species catalog</div><div class="proto"><b>Climate</b>continuous record</div>
+    </div>
+    <div class="polaroids" id="pols">
+      <div class="pol" style="left:0;top:10px"><img src="media/fibras_1.jpg" alt="Monitor tying a camera trap"><span>installing a camera trap</span></div>
+      <div class="pol" style="left:34%;top:0"><img src="media/fibras_2.jpg" alt="Monitor with a passive station"><span>passive station</span></div>
+      <div class="pol" style="left:68%;top:16px"><img src="media/fibras_3.jpg" alt="Night camera-trap record"><span>night record</span></div>
+    </div>
+    <div class="note"><b>Context only, not Sotaquirá:</b> FIBRAS · Ecopetrol · Instituto Humboldt [26]. In Sotaquirá the protocols are validated designs not yet run in a full campaign.</div>
+    <div class="src">Table V · §III-E <span id="fibrasLink"></span></div>
+  </div></div>
+</section>
+
+<!-- 12 · FIELD REEL -->
+<section class="ch reel" data-ch="reel" style="--h:520vh">
+  <div class="sticky">
+    <div class="reel-head"><div class="eyebrow">Field process · Sotaquirá</div><h2 style="margin-top:8px">What a map <em>does not show</em></h2></div>
+    <div class="strip" id="strip"></div>
+    <div class="reel-foot"><span class="src" style="margin:0">Field trip with the EAN team and Awaq BioTech · Acknowledgment</span><div class="reel-prog"><i id="reelProg"></i></div><span class="src" style="margin:0" id="reelNum">01 / 10</span></div>
+  </div>
+</section>
+
+<!-- 13 · PERFORMANCE -->
+<section class="ch" data-ch="perf">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">IV-A · Performance</div>
+    <h2>One file.<br><em>No map server.</em></h2>
+    <div class="tiles">
+      <div class="tile"><div class="v">3.99 MB</div><div class="l">single HTML, 98.1 % GeoJSON</div></div>
+      <div class="tile"><div class="v">4,665</div><div class="l">features in 44 layers</div></div>
+      <div class="tile"><div class="v">405 ms</div><div class="l">first load in Chromium</div></div>
+      <div class="tile"><div class="v sp">133.9 ms</div><div class="l">heaviest preset, 22 layers</div></div>
+    </div>
+    <div class="src">§IV-A · open code [25], tag v1.0-amitic2026</div>
+  </div></div>
+</section>
+
+<!-- 14 · LIMITS -->
+<section class="ch" data-ch="limits">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">V · Discussion</div>
+    <h2>Limitations</h2>
+    <p>Several layers are not yet validated in systematic field campaigns. NDVI is indicative, not a calibrated index. GBIF depends on sampling effort. The 1:100,000 cartography gives municipal, not parcel, precision. One municipality so far.</p>
+    <div class="src">§V</div>
+  </div></div>
+</section>
+
+<!-- 15 · CONCLUSION statement -->
+<section class="ch" data-ch="concl" style="--h:240vh">
+  <div class="sticky"><div class="panel bare" style="width:auto">
+    <div class="eyebrow">VI · Conclusion</div>
+    <p class="statement" id="statement" style="margin-top:18px">The dominant challenge is data <span class="key">access</span> and <span class="key">integration,</span> not absence of information.</p>
+  </div></div>
+</section>
+
+<!-- 16 · LOOP -->
+<section class="ch" data-ch="loop" style="--h:170vh">
+  <div class="sticky"><div class="panel">
+    <div class="eyebrow">Stage 7 → Stage 1</div>
+    <h2>New data <em>feed back.</em></h2>
+    <p>Monitoring produces GeoJSON-compatible records that return to the layers, and the cycle starts again.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/" target="_blank" rel="noopener">Open the geoviewer ↗</a>
+      <a class="btn" href="https://github.com/FERNEY22/geovisor-sotaquira" target="_blank" rel="noopener">Repository ↗</a>
+      <a class="btn" href="media/Ponencia_AmITIC2026_Sotaquira_WebGIS.pptx" download>Slides .pptx</a>
+    </div>
+  </div></div>
+</section>
+
+</main>
+
+<section class="end">
+  <div class="in">
+    <div>
+      <div class="eyebrow">Speakers</div>
+      <div class="speakers">
+        <div class="spk"><img src="media/ferney.jpg" alt="Ferney Torres Ome"><div><b>Ferney Torres Ome</b><span>aftorres@universidadean.edu.co</span><div class="cred">Faculty of Engineering, EAN University</div><div class="logos"><img src="media/logo_ean_w.png" alt="EAN University"></div></div></div>
+        <div class="spk"><img src="media/july.jpg" alt="July Steffany González López"><div><b>July Steffany González López</b><span>july.gonzalez@unade.edu.mx</span><div class="cred">Environmental Engineer · MSc in Environmental Management, Coventry University · PhD candidate in Project Management, UNADE</div><div class="logos"><img class="tall" src="media/logo_coventry_w.png" alt="Coventry University"><img src="media/logo_unade_w.png" alt="UNADE, Universidad Americana de Europa"></div></div></div>
+      </div>
+      <p style="margin-top:22px">Thanks to the community of Sotaquirá, EAN University and Awaq BioTech.</p>
+    </div>
+    <div>
+      <div class="eyebrow">References · numbered as in the paper</div>
+      <ul class="refs">
+        <li><b>[2]</b>IGAC, Estudio General de Suelos y Zonificación de Tierras del Departamento de Boyacá, 2005.</li>
+        <li><b>[3]</b>IDEAM, Leyenda Nacional de Coberturas de la Tierra, CORINE Land Cover adaptada para Colombia, 1:100.000, 2010.</li>
+        <li><b>[4]</b>MinAmbiente, Res. 1296 de 2017 (Guantiva–La Rusia); Res. 1555 de 2016 (Iguaque–Merchán).</li>
+        <li><b>[7]</b>K. G. Renard et al., Predicting Soil Erosion by Water (RUSLE), USDA Handbook 703, 1997.</li>
+        <li><b>[9]</b>D. E. Bowler et al., “Treating gaps and biases in biodiversity data as a missing data problem,” Biol. Rev., vol. 100, no. 1, 2025.</li>
+        <li><b>[12]</b>GBIF.org, Occurrence Download, all taxa within Sotaquirá, 7,427 records, 42 datasets, 2026, doi:10.15468/dl.w3cm5z.</li>
+        <li><b>[19]</b>DANE, Geovisor del Nivel de Referencia de Veredas, v. 2024.</li>
+        <li><b>[24]</b>A. F. Torres Ome, N. García Ramos, A. F. Rodríguez Cárdenas, “BIODIVERSIDAD Geovisor: Sotaquirá, Boyacá,” Universidad EAN, 2025.</li>
+        <li><b>[25]</b>A. F. Torres Ome, “geovisor-sotaquira,” v1.0-amitic2026, GitHub, 2026.</li>
+        <li><b>[26]</b>FIBRAS · Ecopetrol · Instituto Alexander von Humboldt, «Cámaras trampa», video (visual context only).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<footer>Ferney Torres Ome · tower-ing.com · Universidad EAN · AmITIC-TEDUCA 2026</footer>
+
+<dialog class="lb" id="lb"><img alt=""><button aria-label="Close">×</button></dialog>
+
+<script>
+(()=>{
+const FIBRAS_URL = ''; // enlace oficial del video FIBRAS
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t, seg=(p,a,b)=>clamp((p-a)/(b-a));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, eout=t=>1-Math.pow(1-t,3);
+if (FIBRAS_URL) document.getElementById('fibrasLink').innerHTML=` · <a href="${FIBRAS_URL}" target="_blank" rel="noopener">watch video ↗</a>`;
+
+/* hero words */
+const ht=document.getElementById('heroTitle');
+ht.innerHTML=ht.innerHTML.split(/(<em>.*?<\/em>|\s+)/).filter(s=>s&&s.trim()).map((w,i)=>`<span class="word" style="transition-delay:${i*60}ms">${w}</span>`).join(' ');
+requestAnimationFrame(()=>setTimeout(()=>document.body.classList.add('ready'),120));
+
+/* statement words */
+const st=document.getElementById('statement');
+st.innerHTML=st.innerHTML.split(/(<span class="key">.*?<\/span>|\s+)/).filter(s=>s&&s.trim()).map(w=>w.startsWith('<span')?w:`<span>${w}</span>`).join(' ');
+const stWords=[...st.querySelectorAll('span')];
+
+/* soil bars */
+const SOIL=[['Water erosion',62.40,'--neg'],['Sheet and rill',46.05,'--neg'],['Class VIII',44.03,'--warn'],['Class VII',27.71,'--warn'],['Class IV',17.12,'--warn']];
+document.getElementById('soilBars').innerHTML=SOIL.map(([n,v,c])=>`<div class="bar"><span>${n}</span><div class="t"><div class="f" style="background:var(${c})" data-v="${v}"></div></div><span class="v">${v.toFixed(2)}%</span></div>`).join('');
+const soilFills=[...document.querySelectorAll('#soilBars .f')];
+
+/* reel */
+const strip=document.getElementById('strip');
+for(let i=1;i<=10;i++){const n=String(i).padStart(2,'0');strip.insertAdjacentHTML('beforeend',`<button class="shot" data-full="media/reel_${n}.jpg" aria-label="Open photo ${i}"><img src="media/reel_${n}.jpg" alt="Field trip to Sotaquirá, photo ${i}" loading="lazy"><span class="n">${n}</span></button>`);}
+const shots=[...strip.children];
+const lb=document.getElementById('lb');
+shots.forEach(b=>b.onclick=()=>{lb.querySelector('img').src=b.dataset.full;lb.showModal();});
+lb.querySelector('button').onclick=()=>lb.close(); lb.onclick=e=>{if(e.target===lb)lb.close();};
+
+/* method ring */
+const STAGES=['Acquisition','Cleaning','Harmonization','Integration','Publication','Local consultation','Participatory monitoring'];
+const ring=document.getElementById('ring');
+ring.innerHTML=STAGES.map((s,i)=>`<div class="node" data-i="${i}">${String(i+1).padStart(2,'0')} · ${s}</div>`).join('');
+const nodes=[...ring.children];
+
+/* demo */
+const DEMO=[['Fig. 5','Home · two thematic modules'],['Fig. 10','Land-capability classes · VII and VIII dominate'],['Fig. 9','Erosion types · where to verify'],['Fig. 8b','CORINE land cover · production meets páramo'],['Fig. 11','Regional biodiversity · GBIF records']];
+const demoImgs=[...document.querySelectorAll('#screen img')], demoLbl=document.getElementById('demoLbl');
+document.getElementById('liveBtn').onclick=()=>{const sc=document.getElementById('screen');const f=document.createElement('iframe');f.src='https://tower-ing.com/proyectos/biomo/geovisorbiodiversidadfer/';f.title='BIODIVERSIDAD geoviewer';f.allowFullscreen=true;sc.prepend(f);demoImgs.forEach(i=>i.style.display='none');document.getElementById('liveBtn').remove();};
+
+/* ---------- map renderer ---------- */
+const cvs=[0,1,2].map(i=>document.getElementById('cv'+i)), cx=cvs.map(c=>c.getContext('2d'));
+let D=null, P={}, W=0, H=0, DPR=1, seeds=null;
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cvs.forEach((c,i)=>{c.width=W*DPR;c.height=H*DPR;cx[i].setTransform(DPR,0,0,DPR,0,0);});}
+function build(){
+  for(const k of ['vecinos','colombia','boyaca','munis','sota','veredas','paramos','agricolas','presion','erosion','bosques']){
+    const p=new Path2D(); for(const r of D[k]){p.moveTo(r[0],r[1]);for(let i=2;i<r.length;i+=2)p.lineTo(r[i],r[i+1]);p.closePath();} P[k]=p; }
+  let x=11; const rnd=()=>(x=(x*16807)%2147483647)/2147483647;
+  seeds=[]; for(let i=0;i<D.pts.length/3;i++) seeds.push({a:rnd()*6.283,r:.8+rnd()*1.4,d:rnd()*.45,k:rnd()});
+  const c=D.cams; CAM={colombia:c.colombia,boyaca:c.boyaca,sota:c.sota};
+}
+let CAM={};
+/* chapter states: camera [cx,cy,span], screen-x offset for the map center, layer opacities */
+const L0={vec:0,col:0,boy:0,mun:0,sota:0,ver:0,par:0,agr:0,pre:0,ero:0,bos:0,pts:0,ptsIn:0,clean:0,clip:0,glow:0,tilt:0,expl:0,ring:0,dim:0,loop:0};
+const S=(cam,pad,o)=>Object.assign({},L0,{cam,pad},o);
+let STATES={};
+function defineStates(){
+STATES={
+  hero:   S('colombia',1.05,{vec:.7,col:1,boy:.25,glow:.4}),
+  problem:S('colombia',1.0,{vec:.7,col:1,boy:.6,mun:.2,glow:.3}),
+  acq:    S('boyaca',1.7,{vec:.4,col:.6,boy:1,mun:.45,pts:1,ptsIn:1}),
+  clip:   S('boyaca',1.25,{col:.3,boy:1,mun:.8,pts:.7,ptsIn:1,clean:1,sota:1,clip:1,glow:1}),
+  sota:   S('sota',1.35,{boy:.2,mun:.4,sota:1,ver:1,par:.9,glow:1}),
+  arch:   S('sota',1.45,{sota:1,ver:1,par:.8,agr:.5,pts:.35,ptsIn:1,glow:.6,tilt:1,expl:1}),
+  flow:   S('sota',1.9,{sota:1,ver:.6,par:.5,glow:1,ring:1,dim:.25}),
+  soil:   S('sota',1.3,{sota:1,ver:.5,ero:1,glow:.7}),
+  paramo: S('sota',1.3,{sota:1,ver:.4,par:1,agr:1,pre:1,glow:.7}),
+  bio:    S('boyaca',1.5,{col:.3,boy:1,mun:.45,pts:1,ptsIn:1,sota:1,glow:.6}),
+  demo:   S('sota',1.6,{sota:1,ver:.4,par:.4,dim:.7}),
+  proto:  S('sota',1.4,{sota:1,ver:.7,bos:.6,par:.5,glow:.8}),
+  reel:   S('sota',2.0,{sota:.6,ver:.3,dim:.92}),
+  perf:   S('sota',1.3,{sota:1,ver:.6,par:.6,agr:.4,ero:.4,pre:.6,bos:.3,glow:.6}),
+  limits: S('boyaca',1.6,{col:.3,boy:1,mun:.6,sota:1,glow:.5,pts:.4,ptsIn:1}),
+  concl:  S('sota',1.6,{sota:1,ver:.4,par:.6,pre:.5,glow:1,dim:.35}),
+  loop:   S('sota',1.7,{sota:1,ver:.5,par:.6,glow:1,loop:1,pts:.0}),
+};}
+const chapters=[...document.querySelectorAll('.ch')].map(el=>({el,id:el.dataset.ch}));
+
+function camOf(st){const c=CAM[st.cam];return {x:c[0],y:c[1],s:c[2]*st.pad};}
+function mix(a,b,t){const o={};for(const k in L0)o[k]=lerp(a[k],b[k],t);
+  const A=camOf(a),B=camOf(b); const dist=Math.hypot(B.x-A.x,B.y-A.y), mx=Math.max(A.s,B.s);
+  const bump=clamp(dist/mx,0,3)*Math.sin(Math.PI*t)*.8;
+  o.cx=lerp(A.x,B.x,t); o.cy=lerp(A.y,B.y,t); o.span=Math.exp(lerp(Math.log(A.s),Math.log(B.s),t))*(1+bump); return o;}
+
+/* current state from scroll */
+function current(){
+  const vh=innerHeight; let idx=0, local=0;
+  for(let i=0;i<chapters.length;i++){const r=chapters[i].el.getBoundingClientRect(); if(r.top<=vh*.5){idx=i;local=clamp((vh*.5-r.top)/r.height);} }
+  const a=STATES[chapters[idx].id], nb=chapters[idx+1]?STATES[chapters[idx+1].id]:a;
+  const t=ease(seg(local,.62,1)); return {state:mix(a,nb,t),idx,local};
+}
+
+const COL={ink:'#EDEAE2',ink3:'#8C8981',hair:'rgba(237,234,226,.16)',el:'#5C74FF',el2:'#8597FF',sp:'#FFD21A',pos:'#3FBF7F',warn:'#F0A040',neg:'#F2546B'};
+const PTC=['#8597FF','#EDEAE2','#FFD21A','#3FBF7F'];
+let tNow=0;
+function view(o){const narrow=W<820; const avail=narrow?Math.min(W,H*.62):Math.min(W*.58,H*.86);
+  const k=avail/o.span; const ox=narrow?W/2:W*.66, oy=narrow?H*.36:H*.52; return {k,ox,oy,narrow};}
+function tf(ctx,o,v){ctx.setTransform(DPR*v.k,0,0,DPR*v.k,DPR*(v.ox-o.cx*v.k),DPR*(v.oy-o.cy*v.k));}
+function fillL(ctx,p,col,a,lw,k,stroke){ if(a<=.01)return; ctx.globalAlpha=a; if(col){ctx.fillStyle=col;ctx.fill(p,'evenodd');} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw/k;ctx.stroke(p);} ctx.globalAlpha=1; }
+
+function drawBase(ctx,o,v,flat){
+  ctx.setTransform(DPR,0,0,DPR,0,0); ctx.clearRect(0,0,W,H);
+  tf(ctx,o,v); const k=v.k;
+  fillL(ctx,P.vecinos,'#151922',o.vec,.8,k,'rgba(237,234,226,.10)');
+  fillL(ctx,P.colombia,'#171B25',o.col,1.2,k,'rgba(237,234,226,.45)');
+  fillL(ctx,P.boyaca,'rgba(92,116,255,.10)',o.boy,1.6,k,COL.el2);
+  if(o.mun>.01){ctx.globalAlpha=o.mun;ctx.strokeStyle='rgba(237,234,226,.22)';ctx.lineWidth=.6/k;ctx.stroke(P.munis);ctx.globalAlpha=1;}
+  fillL(ctx,P.bosques,COL.pos,o.bos*.28,0,k);
+  fillL(ctx,P.agricolas,COL.warn,o.agr*.42,0,k);
+  fillL(ctx,P.paramos,COL.pos,o.par*.42,1.4,k,COL.pos);
+  fillL(ctx,P.erosion,COL.neg,o.ero*.42,0,k);
+  if(o.pre>.01){const pulse=.75+.25*Math.sin(tNow/380);fillL(ctx,P.presion,COL.neg,o.pre*pulse,1.2,k,'#FF8394');}
+  if(o.ver>.01){ctx.globalAlpha=o.ver;ctx.strokeStyle='rgba(237,234,226,.42)';ctx.lineWidth=.8/k;ctx.stroke(P.veredas);ctx.globalAlpha=1;}
+  if(o.sota>.01){ctx.globalAlpha=o.sota; if(o.glow>.01){ctx.shadowColor=COL.el;ctx.shadowBlur=24*o.glow;} ctx.strokeStyle=COL.el2;ctx.lineWidth=2.4/k;ctx.stroke(P.sota);ctx.shadowBlur=0;ctx.globalAlpha=1;}
+  // clip mask: everything outside Sotaquirá darkens
+  if(o.clip>.01){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);tf(ctx,o,v);const m=new Path2D();m.addPath(P.sota);ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.restore(); ctx.save(); tf(ctx,o,v); ctx.beginPath(); ctx.rect(o.cx-o.span*4,o.cy-o.span*4,o.span*8,o.span*8); ctx.globalAlpha=.62*o.clip; ctx.fillStyle='#0A0C11';
+    const pth=new Path2D(); pth.rect(o.cx-o.span*4,o.cy-o.span*4,o.span*8,o.span*8); pth.addPath(P.sota); ctx.fill(pth,'evenodd'); ctx.restore(); ctx.globalAlpha=1;}
+  if(!flat) drawPts(ctx,o,v);
+  if(o.loop>.01) drawLoop(ctx,o,v);
+}
+let ptsProg=0;
+function drawPts(ctx,o,v){
+  if(o.pts<=.01||!seeds)return; tf(ctx,o,v); const k=v.k; const pr=o.ptsIn*ptsProg; const R=o.span*1.4;
+  const pts=D.pts, n=pts.length/3;
+  for(let i=0;i<n;i++){const s=seeds[i]; const t=eout(clamp((pr-s.d)/(1-s.d))); if(t<=0)continue;
+    const tx=pts[i*3],ty=pts[i*3+1], sx=o.cx+Math.cos(s.a)*R*s.r, sy=o.cy+Math.sin(s.a)*R*s.r;
+    const x=sx+(tx-sx)*t, y=sy+(ty-sy)*t; const drop=s.k<.12?o.clean:0;
+    ctx.globalAlpha=o.pts*(.35+.6*t)*(1-drop); ctx.fillStyle=PTC[pts[i*3+2]%4];
+    const rad=(1.6+(1-t)*3)/k; ctx.fillRect(x-rad,y-rad,rad*2,rad*2);}
+  ctx.globalAlpha=1;
+}
+function drawLoop(ctx,o,v){
+  ctx.setTransform(DPR,0,0,DPR,0,0); const cxp=v.ox, cyp=v.oy, R=Math.min(W,H)*.34; const t=(tNow/4000)%1;
+  ctx.globalAlpha=o.loop; ctx.strokeStyle='rgba(237,234,226,.15)'; ctx.setLineDash([3,7]); ctx.beginPath(); ctx.arc(cxp,cyp,R,0,6.283); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle=COL.pos; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(cxp,cyp,R,-1.57,-1.57+6.283*((loopP)||0)); ctx.stroke();
+  for(let i=0;i<12;i++){const a=i/12*6.283+t*6.283; const rr=R*(1-.6*(loopP||0)*((i%3)/3+.4)); ctx.fillStyle=i%2?COL.el2:COL.sp; ctx.beginPath(); ctx.arc(cxp+Math.cos(a)*rr,cyp+Math.sin(a)*rr,3.2,0,6.283); ctx.fill();}
+  ctx.globalAlpha=1;
+}
+let loopP=0;
+
+/* plane canvases for the 3D explode */
+function drawPlanes(o,v){
+  const c1=cx[1],c2=cx[2];
+  c1.setTransform(DPR,0,0,DPR,0,0); c1.clearRect(0,0,W,H); c2.setTransform(DPR,0,0,DPR,0,0); c2.clearRect(0,0,W,H);
+  if(o.expl<=.01) return;
+  // plane 2 · processing: veredas grid + clip outline in warm
+  tf(c1,o,v); c1.globalAlpha=o.expl; c1.fillStyle='rgba(240,160,64,.08)'; c1.fill(P.sota); c1.strokeStyle=COL.warn; c1.lineWidth=1/v.k; c1.stroke(P.veredas); c1.lineWidth=2.2/v.k; c1.stroke(P.sota); c1.globalAlpha=1;
+  // plane 3 · sources: points + outline in electric
+  tf(c2,o,v); c2.globalAlpha=o.expl*.9; c2.strokeStyle=COL.el2; c2.lineWidth=1.6/v.k; c2.setLineDash([6/v.k,6/v.k]); c2.stroke(P.sota); c2.setLineDash([]);
+  const pts=D.pts; for(let i=0;i<pts.length;i+=3){c2.fillStyle=PTC[pts[i+2]%4]; const r=2.2/v.k; c2.fillRect(pts[i]-r,pts[i+1]-r,r*2,r*2);} c2.globalAlpha=1;
+}
+
+/* ---------- per-chapter DOM effects ---------- */
+const rail=[...document.querySelectorAll('#rail i')], railLabel=document.getElementById('railLabel');
+const STAGE_OF={acq:1,clip:3,sota:3,arch:4,flow:4,soil:4,paramo:4,bio:4,demo:6,proto:7,reel:7,perf:5,limits:7,concl:7,loop:7};
+const panels=chapters.map(c=>c.el.querySelector('.panel'));
+const tags=[0,1,2].map(i=>document.getElementById('tag'+i));
+function domFX(idx,local,o){
+  // panels: enter / exit with depth
+  chapters.forEach((c,i)=>{const p=panels[i]; if(!p) return; let a=0,y=0,b=0;
+    if(i===idx){const e=seg(local,0,.14), x=seg(local,.72,.95); a=e*(1-x); y=(1-eout(e))*60 - eout(x)*60; b=(1-e)*10+x*10;}
+    if(c.id==='hero' && i===idx){a=1-seg(local,.35,.7); y=-seg(local,.35,.7)*80; b=seg(local,.35,.7)*10;}
+    p.style.opacity=REDUCE?(i===idx?1:0):a; p.style.transform=REDUCE?'none':`translate3d(0,${y}px,0) scale(${1-b*.006})`; p.style.filter=REDUCE?'none':`blur(${b}px)`;});
+  // counters
+  const ch=chapters[idx]; ch.el.querySelectorAll('[data-count]').forEach(el=>{const t=eout(seg(local,+el.dataset.from,+el.dataset.to)); const v=+el.dataset.count*t; el.textContent=v.toLocaleString('en-US',{minimumFractionDigits:+(el.dataset.dec||0),maximumFractionDigits:+(el.dataset.dec||0)});});
+  if(ch.id==='soil') soilFills.forEach((f,i)=>f.style.transform=`scaleX(${eout(seg(local,.08+i*.05,.4+i*.05))*(+f.dataset.v/70)})`);
+  ptsProg = ch.id==='acq' ? seg(local,.05,.6) : (ch.id==='clip'||ch.id==='arch'||ch.id==='bio'||ch.id==='limits'?1:ptsProg);
+  if(ch.id==='hero'||ch.id==='problem') ptsProg=0;
+  loopP = ch.id==='loop'?eout(seg(local,.1,.7)):0;
+  // stage rail
+  const sNum=STAGE_OF[ch.id]||0; rail.forEach((r,i)=>r.classList.toggle('on',i<sNum)); railLabel.textContent=sNum?`Method · ${sNum} / 7 · ${STAGES[sNum-1]}`:'Method · 0 / 7';
+  // ring
+  ring.style.opacity=o.ring; if(o.ring>.01){const v=view(o); const R=Math.min(W,H)*(v.narrow?.36:.33); const act=ch.id==='flow'?Math.floor(seg(local,.08,.7)*7.999):-1;
+    nodes.forEach((n,i)=>{const a=-Math.PI/2+i/7*6.283; n.style.left=(v.ox+Math.cos(a)*R)+'px'; n.style.top=(v.oy+Math.sin(a)*R*.86)+'px'; n.classList.toggle('on',i===act); n.classList.toggle('done',i<act);});}
+  // 3D rig
+  const tilt=REDUCE?0:o.tilt, ex=REDUCE?0:o.expl, v=view(o);
+  const rig=document.getElementById('rig'); rig.style.transformOrigin=`${v.ox}px ${v.oy}px`;
+  rig.style.transform=`rotateX(${58*tilt}deg) rotateZ(${-32*tilt}deg) scale(${1-.18*tilt})`;
+  cvs[1].style.transform=`translateZ(${170*ex}px)`; cvs[2].style.transform=`translateZ(${340*ex}px)`;
+  cvs[0].style.opacity=1-o.dim; cvs[1].style.opacity=1-o.dim; cvs[2].style.opacity=1-o.dim;
+  const showTags=ch.id==='arch'&&ex>.6; tags.forEach((t,i)=>{t.style.opacity=showTags?1:0; t.style.left=(v.narrow?W*.55:v.ox+W*.12)+'px'; t.style.top=(v.oy-40-i*(v.narrow?60:105))+'px';});
+  // demo browser flies in
+  if(ch.id==='demo'){const b=document.getElementById('browser'); const e=eout(seg(local,0,.16)), x=seg(local,.86,1);
+    b.style.opacity=REDUCE?1:e*(1-x); b.style.transform=REDUCE?'none':`perspective(1400px) translateY(${(1-e)*140-x*80}px) rotateX(${(1-e)*28}deg) scale(${.82+.18*e})`;
+    const k=Math.min(4,Math.floor(seg(local,.12,.84)*5)); demoImgs.forEach((im,i)=>im.style.opacity=i===k?1:0); demoLbl.innerHTML=`<span>${DEMO[k][0]}</span><b>${DEMO[k][1]}</b>`;}
+  // polaroids fly
+  if(ch.id==='proto'){document.querySelectorAll('.pol').forEach((pEl,i)=>{const e=eout(seg(local,.12+i*.08,.38+i*.08)); pEl.style.transform=REDUCE?'none':`translate3d(${(1-e)*(i-1)*120}px,${(1-e)*200}px,0) rotate(${(1-e)*(i*14-14)+(i-1)*5}deg)`; pEl.style.opacity=e;});}
+  // reel
+  if(ch.id==='reel'){const p=seg(local,.06,.94); const sw=strip.scrollWidth-innerWidth; strip.style.transform=`translate3d(${-p*(sw)}px,-50%,0)`;
+    const mid=innerWidth/2; let cur=0, best=1e9;
+    shots.forEach((s,i)=>{const r=s.getBoundingClientRect(); const d=(r.left+r.width/2-mid)/innerWidth; if(Math.abs(d)<best){best=Math.abs(d);cur=i;}
+      s.style.transform=REDUCE?'none':`perspective(1200px) rotateY(${clamp(-d*38,-40,40)}deg) translateZ(${-Math.abs(d)*260}px) scale(${1-Math.min(.2,Math.abs(d)*.18)})`;
+      s.querySelector('img').style.transform=REDUCE?'none':`scale(${1.12-.06*(1-Math.min(1,Math.abs(d)*2))}) translateX(${d*-40}px)`;});
+    document.getElementById('reelProg').style.width=(p*100)+'%'; document.getElementById('reelNum').textContent=`${String(cur+1).padStart(2,'0')} / 10`;}
+  // statement
+  if(ch.id==='concl'){const n=Math.round(seg(local,.08,.7)*stWords.length); stWords.forEach((w,i)=>w.classList.toggle('lit',i<n||REDUCE));}
+}
+
+function frame(ts){
+  tNow=ts||0;
+  if(D){const {state:o,idx,local}=current(); const v=view(o); drawBase(cx[0],o,v,false); drawPlanes(o,v); domFX(idx,local,o);}
+  requestAnimationFrame(frame);
+}
+addEventListener('resize',()=>{resize();});
+resize();
+fetch('data/cine.json').then(r=>r.json()).then(d=>{D=d;build();defineStates();requestAnimationFrame(frame);});
+})();
+</script>
+</body>
+</html>

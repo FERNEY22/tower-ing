@@ -1,0 +1,23 @@
+PONENCIA AmITIC-TEDUCA 2026 · WebGIS Sotaquirá
+Autor: Ferney Torres Ome · tower-ing.com
+
+DÓNDE SUBIRLO
+Copia la carpeta completa "ponencia-amitic2026" dentro de:
+  tower-ing/proyectos/biomo/
+Queda publicada en:
+  https://tower-ing.com/proyectos/biomo/ponencia-amitic2026/
+Es una carpeta nueva: no modifica ningún archivo existente del sitio.
+Reemplaza la versión anterior del .zip (si ya la subiste, borra esa carpeta primero).
+
+CONTENIDO
+  index.html     página completa (HTML, CSS y JS en un solo archivo)
+  data/cine.json capas reales proyectadas (Colombia, Boyacá, Sotaquirá, páramos, CORINE, erosión, GBIF)
+  media/         clips de mapa (MP4), fotos, retratos, capturas y la presentación .pptx
+
+PENDIENTE DE COMPLETAR
+  - Enlace oficial del video FIBRAS: en index.html, línea  const FIBRAS_URL = '';
+    pega el enlace entre las comillas y aparecerá el botón «Watch the video».
+
+BUILD EN NETLIFY
+  Es contenido estático: un solo commit dispara un build (aprox. 1–2 min).
+  Peso total aproximado: ver tamaño de la carpeta antes de subir.
