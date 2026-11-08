@@ -12,3 +12,27 @@ __pycache__/
 forms/parcial-automatizacion1/*
 !forms/parcial-automatizacion1/index.html
 !forms/parcial-automatizacion1/calificador.html
+
+# --- Solo local: nunca publicar ---
+# Datos personales, respuestas o credenciales
+students_results/
+ENCUESTA DE EMPLEADORES DE EGRESADOS 2025.xlsx
+proyectos/APREFER1/
+firebase-troubles-security.pdf
+forms/quiz-*/*.docx
+forms/quiz-python-1/*.md
+
+# Material fuente de clase (PDF, QR para imprimir, presentaciones)
+forms/quiz-*/*.pdf
+forms/quiz-*/qr-*
+proyectos/batalla de bots.pdf
+proyectos/semaforo-ia/*.pdf
+proyectos/observatorio/*.pptx
+
+# Notas de trabajo y sistema de diseño local
+diagnostico-*.md
+**/ESTADO-Y-PENDIENTES.md
+training/gemelos/plan-*.md
+.impeccable/
+PRODUCT.md
+towers-ing-v3.html
