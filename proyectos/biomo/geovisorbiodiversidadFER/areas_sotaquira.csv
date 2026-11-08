@@ -1,0 +1,17 @@
+grupo,capa,etiqueta,filtro,n_features,n_unicas,n_duplicadas,area_ha_geodesica,area_ha_planar_9377,pct_area_municipal
+Clases agrológicas,GEO_NILA_C3,Clase III · limitaciones de suelo y clima,,3,3,0,1919.48,1916.44,6.74
+Clases agrológicas,GEO_NILA_C4,Clase IV · limitaciones por erosión y suelo,,5,5,0,4873.52,4865.82,17.12
+Clases agrológicas,GEO_NILA_C5,Clase V · limitaciones hídricas y de suelo,,1,1,0,157.16,156.91,0.55
+Clases agrológicas,GEO_NILA_C6+GEO_NILA_C7,Clase VI · limitaciones por relieve/clima,CLASE=VI,1,1,0,352.55,352.0,1.24
+Clases agrológicas,GEO_NILA_C6+GEO_NILA_C7,Clase VII · limitaciones por pendiente/erosión,CLASE=VII,5,5,0,7889.38,7876.9,27.71
+Clases agrológicas,GEO_NILA_C8,Clase VIII · conservación y protección,,3,3,0,12532.63,12512.87,44.03
+Procesos de erosión,GEO_NILA_ELAM,Erosión hídrica (total),,78,78,0,17764.27,17736.2,62.4
+Procesos de erosión,GEO_NILA_ELAM,· Erosión laminar,CLAS=laminar,23,23,0,1974.16,1971.04,6.93
+Procesos de erosión,GEO_NILA_ELAM,· Erosión laminar y en surcos,CLAS=laminar y surcos,34,34,0,13109.12,13088.41,46.05
+Procesos de erosión,GEO_NILA_ELAM,· Erosión por terraceo y laminar,CLAS=terraceo y laminar,21,21,0,2683.91,2679.66,9.43
+Procesos de erosión,GEO_NILA_ECLIM,Erosión climática,,3,3,0,1919.48,1916.44,6.74
+Geomorfología,GEO_MONTANAS,Montañas estructurales,,15,15,0,10621.76,10605.03,37.31
+Geomorfología,GEO_ALTIPLAN,Altiplanicie estructural,,13,13,0,17048.09,17021.13,59.89
+Cobertura del suelo (CORINE),GEO_BOSQUES,Bosques y áreas seminaturales,,147,147,0,12457.76,12438.13,43.76
+Cobertura del suelo (CORINE),GEO_AGRICOLAS,Territorios agrícolas,,126,126,0,15851.05,15825.99,55.68
+Ecosistemas estratégicos,GEO_PARAMOS,Páramos (Guantiva–La Rusia / Iguaque–Merchán),,3,3,0,10142.1,10126.08,35.63
