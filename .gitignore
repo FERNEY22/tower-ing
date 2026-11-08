@@ -7,3 +7,8 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Parcial automatización: datos de estudiantes (cédulas, notas, entregas). Solo se publican la página del parcial y el calificador.
+forms/parcial-automatizacion1/*
+!forms/parcial-automatizacion1/index.html
+!forms/parcial-automatizacion1/calificador.html

@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calificador · Parcial Corte 1 — IFA00117</title>
+<style>
+  :root{
+    --papel:#e7e5dd; --hoja:#fbfaf6; --panel:#f3f1e9;
+    --tinta:#171816; --grafito:#4a4d47; --tenue:#797d75;
+    --regla:#c8c5ba; --regla2:#e0ddd3;
+    --oxido:#95371a; --verde:#1e5b41; --ambar:#a06b06;
+    --sans:"Helvetica Neue",Helvetica,Arial,"Segoe UI",sans-serif;
+    --mono:"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--papel);color:var(--tinta);font:15px/1.55 var(--sans);padding:22px 16px 70px}
+  .hoja{max-width:1280px;margin:0 auto;background:var(--hoja);border:1px solid var(--tinta)}
+  .franja{height:7px;background:var(--tinta)}
+  .cajetin{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;border-bottom:1px solid var(--tinta)}
+  .cel{padding:9px 13px;border-left:1px solid var(--regla);min-width:0}
+  .cel:first-child{border-left:0}
+  .cel .k{font:600 9.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--tenue)}
+  .cel .v{font:13px/1.35 var(--mono);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cel .v.gr{font:600 15px/1.2 var(--mono)}
+  @media(max-width:760px){.cajetin{grid-template-columns:1fr 1fr}.cel{border-left:1px solid var(--regla);border-top:1px solid var(--regla)}.cel:nth-child(odd){border-left:0}}
+  .lienzo{padding:24px 28px 34px}
+  h2.rot{font:700 19px/1.3 var(--sans);margin:0 0 4px}
+  .lead{font-size:14.5px;color:var(--grafito);margin:0 0 20px;max-width:70ch}
+  .subt{font:600 9.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--tenue);margin:26px 0 9px;padding-bottom:6px;border-bottom:1px solid var(--tinta)}
+  .subt:first-child{margin-top:0}
+  .barra{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 18px}
+  .b{font:600 12px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;padding:11px 18px;border:1px solid var(--tinta);background:var(--tinta);color:var(--hoja);cursor:pointer;border-radius:0}
+  .b.sec{background:transparent;color:var(--tinta)}
+  .b.sec:hover{background:#eceada}
+  .b:disabled{opacity:.32;cursor:not-allowed}
+  .b.der{margin-left:auto}
+  .in{font:15px var(--sans);padding:9px 11px;border:1px solid var(--grafito);background:#fff;border-radius:0;width:100%}
+  .in:focus{outline:0;border-color:var(--tinta);box-shadow:inset 0 -2px 0 var(--oxido)}
+  .in.mono{font:14px var(--mono)}
+  table.dat{border-collapse:collapse;width:100%;font:13px var(--mono)}
+  table.dat th{font:600 9.5px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--tenue);text-align:left;padding:7px 9px;border:1px solid var(--regla);background:var(--panel);white-space:nowrap}
+  table.dat td{padding:6px 9px;border:1px solid var(--regla);vertical-align:top}
+  table.dat td.el{font-weight:700;white-space:nowrap;background:#f7f5ee}
+  table.dat td.num{text-align:right}
+  table.dat tr.click:hover td{background:#f2efe4;cursor:pointer}
+  .scroll{overflow-x:auto}
+  .caja{border:1px solid var(--regla);background:var(--panel);padding:15px 17px;font-size:13.5px;line-height:1.6;margin:0 0 16px}
+  .caja.ojo{border-left:3px solid var(--oxido);background:#f7efe9}
+  .caja.ok{border-left:3px solid var(--verde);background:#eef3ef}
+  .ev{border:1px solid var(--regla);margin:0 0 12px;background:#fff}
+  .ev>.cab{display:flex;gap:11px;align-items:center;padding:9px 12px;background:var(--panel);border-bottom:1px solid var(--regla);flex-wrap:wrap}
+  .cod{font:600 11px/1 var(--mono);background:var(--tinta);color:var(--hoja);padding:5px 8px}
+  .ev .tt{font:600 13.5px var(--sans)}
+  .ev .pt{margin-left:auto;font:12px var(--mono);color:var(--tenue)}
+  .ev>.cue{padding:13px 14px}
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--regla2);margin:0 0 9px}
+  .par>div{padding:8px 11px;min-width:0}
+  .par>div+div{border-left:1px solid var(--regla2);background:#fbf9f3}
+  .par .h{font:600 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin-bottom:5px}
+  .par .t{font:13.5px/1.5 var(--sans);white-space:pre-wrap;word-break:break-word}
+  .par .t.mono{font:13px/1.55 var(--mono)}
+  .par.uno{grid-template-columns:1fr}
+  .crit{border:1px solid var(--regla2);border-left:3px solid var(--grafito);background:#fbf9f3;padding:9px 11px;margin:0 0 9px}
+  .crit .h{font:600 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin-bottom:5px}
+  .crit .t{font:13px/1.55 var(--sans);color:var(--grafito)}
+  @media(max-width:700px){.par{grid-template-columns:1fr}.par>div+div{border-left:0;border-top:1px solid var(--regla2)}}
+  .ok{color:var(--verde);font-weight:700}
+  .no{color:var(--oxido);font-weight:700}
+  .esc{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  .esc .lab{font:600 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin-right:5px}
+  .esc button{font:600 13px var(--mono);width:34px;height:32px;border:1px solid var(--grafito);background:#fff;cursor:pointer;border-radius:0}
+  .esc button:hover{background:#f0ede2}
+  .esc button.on{background:var(--tinta);color:var(--hoja);border-color:var(--tinta)}
+  .esc .auto{font:10px var(--mono);color:var(--tenue);margin-left:6px}
+  .esc .obs{flex:1;min-width:160px;font:13px var(--sans);padding:7px 9px;border:1px solid var(--regla);background:#fff}
+  .tot{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--tinta);margin:0 0 20px}
+  .tot>div{padding:12px 14px;border-left:1px solid var(--regla)}
+  .tot>div:first-child{border-left:0}
+  .tot .k{font:600 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--tenue)}
+  .tot .v{font:700 22px/1.1 var(--mono);margin-top:6px}
+  @media(max-width:700px){.tot{grid-template-columns:1fr 1fr}}
+  .rub{font:12px/1.5 var(--sans);color:var(--tenue);margin:9px 0 0;padding-left:12px;border-left:2px solid var(--regla2)}
+  .rub b{color:var(--grafito)}
+  .pie{border-top:1px solid var(--tinta);padding:12px 14px;font:10.5px var(--mono);color:var(--tenue);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .estado{font:11px var(--mono);color:var(--tenue)}
+  .avance{height:9px;background:#e2dfd3;border:1px solid var(--regla);position:relative}
+  .avance span{display:block;height:100%;background:var(--verde)}
+  .pct{font:11px var(--mono);color:var(--tenue);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="hoja">
+  <div class="franja"></div>
+  <div class="cajetin" id="cajetin"></div>
+  <div id="marco"></div>
+  <div class="pie"><span>PANEL DEL DOCENTE · IFA00117 · CORTE 1 · CRITERIO A</span><span id="pieEstado">—</span></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXThSlDXwOZPSqcGSi2lMNF20bXAk1tfU",
+  authDomain:        "tower-ing.firebaseapp.com",
+  databaseURL:       "https://tower-ing-default-rtdb.firebaseio.com",
+  projectId:         "tower-ing",
+  storageBucket:     "tower-ing.firebasestorage.app",
+  messagingSenderId: "440636238988",
+  appId:             "1:440636238988:web:cb8f3252c3ffd7195b1fa9"
+});
+</script>
+<script>
+/* ══════ DATOS · generado por build_datos.js — NO EDITAR A MANO ══════
+   Fuente de verdad: banco_enunciados.json + banco_evidencias.json.
+   Regenerar con:  node build_datos.js                                 */
+//<DATOS>
+/* Los dos bancos completos, con claves. Esta página es del docente:
+   no la publique en el mismo sitio que index.html. */
+const BANCO_ENUNCIADOS = {
+  "meta": {
+    "curso": "IFA00117 — Automatización de Procesos y Control Distribuido",
+    "institucion": "Universidad EAN — Ingeniería Mecatrónica",
+    "corte": 1,
+    "criterio_syllabus": "A",
+    "criterio_texto": "Aplicar correctamente los principios de control de procesos industriales para diseñar e implementar sistemas automáticos eficientes.",
+    "version": "1.0",
+    "nota_uso": "Cada estudiante recibe UN escenario. El generador asigna escenario por sorteo sin reemplazo hasta agotar los 6, luego reinicia. El mismo escenario se usa en Parte 1 (diseño completo) y Parte 2 (montaje del Sistema A reducido).",
+    "red_electrica": "380 V / 220 V · 60 Hz · sistema trifásico con neutro",
+    "tension_mando_parte1": "220 V AC · fijada para el Corte 1; la pregunta del datasheet asume este valor y el codigo de bobina se deriva de aqui",
+    "tension_mando_parte2": "24 V DC para señalización; mando según bobina real del tablero (verificar A1/A2)"
+  },
+  "datasheet_ingles": {
+    "id": "DS-01",
+    "uso": "Se entrega idéntico a todos los estudiantes. Las preguntas cambian según el motor del escenario.",
+    "titulo": "SELECTION TABLE — AC CONTACTORS AND THERMAL OVERLOAD RELAYS (extract)",
+    "texto": [
+      "AC CONTACTORS — NC1 SERIES",
+      "Rated operational current in AC-3 duty at 380/400 V AC:",
+      "  NC1-0910 : 9 A   |  NC1-1210 : 12 A  |  NC1-1810 : 18 A",
+      "  NC1-2510 : 25 A  |  NC1-3210 : 32 A  |  NC1-4011 : 40 A",
+      "Rated insulation voltage Ui: 690 V. Utilisation category: AC-1 / AC-3 / AC-4.",
+      "Auxiliary contact built in: suffix '10' = 1 N/O, suffix '01' = 1 N/C.",
+      "Coil voltage codes: Z = 24 V DC | B = 24 V AC | F = 110 V AC | M = 220 V AC | Q = 380 V AC (50/60 Hz).",
+      "Order example: NC1-1810/M = 18 A contactor, 1 N/O auxiliary, 220 V AC coil.",
+      "",
+      "THERMAL OVERLOAD RELAYS — NR2-25 SERIES",
+      "Trip class: 10A. Mounts directly onto NC1 contactors.",
+      "Current setting ranges (A): 1.6-2.5 | 2.5-4 | 4-6 | 5.5-8 | 7-10 | 9-13 | 12-18 | 17-25",
+      "Auxiliary contacts: one N/C (terminals 95-96) and one N/O (terminals 97-98), electrically separated.",
+      "The N/C contact must be wired in series with the contactor coil circuit.",
+      "The N/O contact is intended for remote fault signalling (indicator lamp or audible alarm).",
+      "Reset mode: manual or automatic, selectable. STOP button provides manual trip for functional testing.",
+      "Note: the setting dial must be adjusted to the motor rated current, never to a higher value."
+    ],
+    "preguntas": [
+      {
+        "codigo_evidencia": "A.4.3",
+        "sub": 1,
+        "pregunta_en": "From the table, write the full contactor reference (including the coil voltage code) that you would order for the motor in your statement, assuming a 220 V AC control circuit.",
+        "tipo": "texto_corto",
+        "clave_por_escenario": true
+      },
+      {
+        "codigo_evidencia": "A.4.3",
+        "sub": 2,
+        "pregunta_en": "Which terminals must be wired in series with the contactor coil, and which terminals are intended for the audible fault alarm?",
+        "tipo": "texto_corto",
+        "clave": "95-96 in series with the coil circuit (N/C); 97-98 for the fault alarm (N/O)"
+      },
+      {
+        "codigo_evidencia": "A.4.3",
+        "sub": 3,
+        "pregunta_en": "According to the note at the end of the table, what is the rule for adjusting the thermal relay setting dial?",
+        "tipo": "texto_corto",
+        "clave": "It must be set to the motor rated current, never higher"
+      }
+    ]
+  },
+  "motores": [
+    {
+      "id": "M1",
+      "P_kW": 1.5,
+      "V": 380,
+      "cos_fi": 0.8,
+      "eta": 0.82,
+      "rpm": 1740,
+      "In_A": 3.47,
+      "clave": {
+        "Q1_A": 6,
+        "KM_ref": "NC1-0910",
+        "KM_Ie_A": 9,
+        "F2_rango_A": "2.5-4",
+        "F2_ajuste_A": 3.5,
+        "cable_mm2": 2.5
+      }
+    },
+    {
+      "id": "M2",
+      "P_kW": 2.2,
+      "V": 380,
+      "cos_fi": 0.83,
+      "eta": 0.85,
+      "rpm": 1735,
+      "In_A": 4.74,
+      "clave": {
+        "Q1_A": 6,
+        "KM_ref": "NC1-0910",
+        "KM_Ie_A": 9,
+        "F2_rango_A": "4-6",
+        "F2_ajuste_A": 4.7,
+        "cable_mm2": 2.5
+      }
+    },
+    {
+      "id": "M3",
+      "P_kW": 3,
+      "V": 380,
+      "cos_fi": 0.85,
+      "eta": 0.87,
+      "rpm": 1745,
+      "In_A": 6.16,
+      "clave": {
+        "Q1_A": 10,
+        "KM_ref": "NC1-0910",
+        "KM_Ie_A": 9,
+        "F2_rango_A": "5.5-8",
+        "F2_ajuste_A": 6.2,
+        "cable_mm2": 2.5
+      }
+    },
+    {
+      "id": "M4",
+      "P_kW": 4,
+      "V": 380,
+      "cos_fi": 0.86,
+      "eta": 0.89,
+      "rpm": 1750,
+      "In_A": 7.94,
+      "clave": {
+        "Q1_A": 10,
+        "KM_ref": "NC1-0910",
+        "KM_Ie_A": 9,
+        "F2_rango_A": "7-10",
+        "F2_ajuste_A": 7.9,
+        "cable_mm2": 2.5
+      }
+    },
+    {
+      "id": "M5",
+      "P_kW": 7.5,
+      "V": 380,
+      "cos_fi": 0.87,
+      "eta": 0.89,
+      "rpm": 1755,
+      "In_A": 14.72,
+      "clave": {
+        "Q1_A": 20,
+        "KM_ref": "NC1-1810",
+        "KM_Ie_A": 18,
+        "F2_rango_A": "12-18",
+        "F2_ajuste_A": 14.7,
+        "cable_mm2": 2.5
+      }
+    },
+    {
+      "id": "M6",
+      "P_kW": 11,
+      "V": 380,
+      "cos_fi": 0.88,
+      "eta": 0.9,
+      "rpm": 1760,
+      "In_A": 21.1,
+      "clave": {
+        "Q1_A": 32,
+        "KM_ref": "NC1-2510",
+        "KM_Ie_A": 25,
+        "F2_rango_A": "17-25",
+        "F2_ajuste_A": 21.1,
+        "cable_mm2": 4
+      }
+    }
+  ],
+  "nota_clave_motores": "In = P / (raiz(3) · V · cos_fi · eta). Tolerancia de aceptacion ±3 % sobre In. Q1 = primer calibre normalizado >= 1,25·In (serie 6-10-16-20-25-32-40). KM = primer NC1 con Ie(AC-3) >= In. F2 = rango que contiene In, ajustado a In. Cable THHN 90 °C, 3 conductores, ampacidad >= 1,25·In.",
+  "escenarios": [
+    {
+      "id": "P1",
+      "nombre": "Banda de clasificación de bultos",
+      "motor": "M3",
+      "contexto": "Un centro de distribución recibe bultos que llegan por una banda de alimentación y se descargan sobre una banda de clasificación. Un sensor fotoeléctrico detecta el paso de cada bulto en la salida. Una tolva de acumulación cuenta con un transmisor de nivel.",
+      "instrumentacion": {
+        "variable_controlada": "flujo de bultos en la línea de clasificación",
+        "sensor": "sensor fotoeléctrico de barrera (detección discreta de paso de bulto)",
+        "actuador": "motor de la banda a través del contactor",
+        "controlador": "circuito de mando por lógica cableada (contactor + relés)",
+        "lazo": "abierto",
+        "justificacion_lazo": "El sensor cuenta bultos pero su señal no corrige la velocidad ni el estado de la banda: no hay realimentación que modifique la acción de control."
+      },
+      "escalado": {
+        "id": "E5",
+        "variable": "nivel de tolva de acumulación",
+        "LRV": 0,
+        "URV": 3.5,
+        "unidad": "m",
+        "corriente_mA": 7.2,
+        "clave": 0.7
+      },
+      "sistema_A": {
+        "titulo": "Banda de clasificación — tramo único",
+        "descripcion": "Diseñe el mando y la fuerza de la banda de clasificación accionada por un solo motor. Debe arrancar con pulsador de marcha y mantenerse por enclavamiento (sello), detenerse con pulsador de paro, contar con paro de emergencia de retención mecánica y con protección térmica que detenga el sistema y no permita el rearranque automático. Señalización: lámpara verde de banda en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Banda de alimentación + banda de clasificación",
+        "descripcion": "Amplíe el diseño a dos tramos: BANDA 1 de alimentación y BANDA 2 de clasificación. La secuencia de arranque debe ser aguas abajo primero: BANDA 2 arranca y solo entonces se habilita BANDA 1. La secuencia de paro es la inversa: BANDA 1 se detiene primero y BANDA 2 continúa 10 segundos para evacuar el material antes de detenerse. Ninguna banda puede operar si la otra está en falla.",
+        "logica_clave": "secuencia_aguas_abajo + paro_diferido_10s + enclavamiento_mutuo_por_falla",
+        "senalizacion_sonora": {
+          "preaviso": "Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque BANDA 2, y se calla exactamente cuando BANDA 2 arranca.",
+          "alarma": "Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua y se mantiene hasta desenergizar el tablero."
+        },
+        "elementos_extra": [
+          "KM2",
+          "F3",
+          "KT1 (temporizador a la conexión, preaviso)",
+          "KT2 (temporizador al paro, evacuación)",
+          "KA1 (enganche de alarma)",
+          "HA1 (bocina preaviso)",
+          "HA2 (bocina alarma)",
+          "H3 ámbar (advertencia)"
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "nombre": "Estación de dosificación de líquido",
+      "motor": "M2",
+      "contexto": "Una planta de alimentos dosifica un aditivo líquido desde un tanque de almacenamiento hacia una línea de producción. El tanque tiene un transmisor de nivel de 4–20 mA. Un agitador mantiene el producto homogéneo antes de bombearlo.",
+      "instrumentacion": {
+        "variable_controlada": "nivel de líquido en el tanque de almacenamiento",
+        "sensor": "transmisor de nivel hidrostático 4–20 mA",
+        "actuador": "motor de la bomba dosificadora a través del contactor",
+        "controlador": "circuito de mando por lógica cableada",
+        "lazo": "cerrado",
+        "justificacion_lazo": "La señal del transmisor de nivel determina si la bomba debe operar o detenerse: la medición realimenta y modifica la acción de control."
+      },
+      "escalado": {
+        "id": "E1",
+        "variable": "nivel del tanque",
+        "LRV": 0,
+        "URV": 5,
+        "unidad": "m",
+        "corriente_mA": 12,
+        "clave": 2.5
+      },
+      "sistema_A": {
+        "titulo": "Bomba dosificadora — accionamiento único",
+        "descripcion": "Diseñe el mando y la fuerza de la bomba dosificadora. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de bomba en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Agitador + bomba dosificadora",
+        "descripcion": "Amplíe el diseño incorporando el agitador. El agitador debe estar en marcha antes de que se permita arrancar la bomba, y debe haber transcurrido un tiempo mínimo de homogeneización de 5 segundos. Si el agitador se detiene por cualquier causa, la bomba debe detenerse de inmediato. El agitador puede operar solo, sin la bomba.",
+        "logica_clave": "enclavamiento_condicional_agitador_habilita_bomba + temporizacion_homogeneizacion_5s + caida_encadenada",
+        "senalizacion_sonora": {
+          "preaviso": "Al accionar marcha del agitador, la bocina de preaviso suena 3 s antes del arranque y se calla cuando el agitador arranca.",
+          "alarma": "Ante disparo térmico de cualquiera de los dos motores o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero."
+        },
+        "elementos_extra": [
+          "KM2",
+          "F3",
+          "KT1 (preaviso 3 s)",
+          "KT2 (homogeneización 5 s)",
+          "KA1 (enganche de alarma)",
+          "HA1",
+          "HA2",
+          "H3 ámbar"
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "nombre": "Torre de enfriamiento",
+      "motor": "M5",
+      "contexto": "Una torre de enfriamiento evacúa calor del circuito de refrigeración de una planta. Una bomba recircula el agua sobre el relleno de la torre y un ventilador fuerza el aire. Un transmisor mide la temperatura del agua de retorno.",
+      "instrumentacion": {
+        "variable_controlada": "temperatura del agua de retorno",
+        "sensor": "transmisor de temperatura 4–20 mA (Pt100 con transmisor)",
+        "actuador": "motor del ventilador a través del contactor",
+        "controlador": "circuito de mando por lógica cableada con termostato de contacto seco",
+        "lazo": "cerrado",
+        "justificacion_lazo": "La temperatura medida determina el arranque y paro del ventilador: la variable medida realimenta y corrige la acción de control."
+      },
+      "escalado": {
+        "id": "E3",
+        "variable": "temperatura del agua de retorno",
+        "LRV": -10,
+        "URV": 150,
+        "unidad": "°C",
+        "corriente_mA": 9.6,
+        "clave": 46
+      },
+      "sistema_A": {
+        "titulo": "Ventilador de torre — accionamiento único",
+        "descripcion": "Diseñe el mando y la fuerza del ventilador de la torre. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de ventilador en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Bomba de recirculación + ventilador",
+        "descripcion": "Amplíe el diseño incorporando la bomba de recirculación. El ventilador NO puede arrancar si la bomba no está en marcha, porque hacer girar el ventilador sobre un relleno seco daña la torre. La bomba puede operar sola. Si la bomba se detiene, el ventilador debe caer de inmediato. Además, el ventilador arranca por orden del termostato, no por pulsador.",
+        "logica_clave": "permisivo_de_bomba_para_ventilador + arranque_automatico_por_termostato + caida_encadenada",
+        "senalizacion_sonora": {
+          "preaviso": "Al habilitarse el arranque del ventilador, la bocina de preaviso suena 3 s antes de que el ventilador gire y se calla cuando arranca.",
+          "alarma": "Ante disparo térmico de cualquiera de los dos motores o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero."
+        },
+        "elementos_extra": [
+          "KM2",
+          "F3",
+          "ST (termostato, contacto seco)",
+          "KT1 (preaviso 3 s)",
+          "KA1 (enganche de alarma)",
+          "HA1",
+          "HA2",
+          "H3 ámbar"
+        ]
+      }
+    },
+    {
+      "id": "P4",
+      "nombre": "Sistema de extracción de polvo",
+      "motor": "M4",
+      "contexto": "Una planta de molienda cuenta con un sistema de extracción de polvo compuesto por un ventilador extractor que aspira el aire cargado hacia un filtro de mangas, y un tornillo transportador que evacúa el polvo recogido en la tolva del filtro. Un transmisor mide la presión diferencial del filtro.",
+      "instrumentacion": {
+        "variable_controlada": "presión diferencial del filtro de mangas",
+        "sensor": "transmisor de presión diferencial 4–20 mA",
+        "actuador": "motor del ventilador extractor a través del contactor",
+        "controlador": "circuito de mando por lógica cableada con presostato de contacto seco",
+        "lazo": "cerrado",
+        "justificacion_lazo": "La presión diferencial medida indica la colmatación del filtro y condiciona la operación del sistema: la medición realimenta la acción de control."
+      },
+      "escalado": {
+        "id": "E6",
+        "variable": "presión diferencial del filtro",
+        "LRV": 0,
+        "URV": 16,
+        "unidad": "bar",
+        "corriente_mA": 18.4,
+        "clave": 14.4
+      },
+      "sistema_A": {
+        "titulo": "Ventilador extractor — accionamiento único",
+        "descripcion": "Diseñe el mando y la fuerza del ventilador extractor. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de extractor en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Extractor + tornillo transportador de descarga",
+        "descripcion": "Amplíe el diseño incorporando el tornillo transportador. El tornillo solo puede operar si el extractor está en marcha. Al ordenar el paro general, el tornillo se detiene primero y el extractor continúa funcionando 10 segundos adicionales para limpiar el ducto antes de detenerse. Si el tornillo entra en falla, el extractor debe seguir operando pero debe encenderse la señalización de advertencia.",
+        "logica_clave": "permisivo_extractor_para_tornillo + paro_diferido_extractor_10s + falla_parcial_no_detiene_todo",
+        "senalizacion_sonora": {
+          "preaviso": "Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque el extractor y se calla cuando arranca.",
+          "alarma": "Ante paro de emergencia o disparo térmico del extractor, la segunda bocina suena de forma continua hasta desenergizar el tablero. El disparo del tornillo solo enciende la señalización ámbar, sin bocina."
+        },
+        "elementos_extra": [
+          "KM2",
+          "F3",
+          "KT1 (preaviso 3 s)",
+          "KT2 (barrido 10 s)",
+          "KA1 (enganche de alarma)",
+          "HA1",
+          "HA2",
+          "H3 ámbar"
+        ]
+      }
+    },
+    {
+      "id": "P5",
+      "nombre": "Mezclador de pintura",
+      "motor": "M1",
+      "contexto": "Una planta de pinturas homogeneiza el producto en un tanque mediante un agitador que debe invertir su sentido de giro para evitar la sedimentación en un solo sentido. Terminada la mezcla, una bomba descarga el producto hacia la línea de envasado. Un caudalímetro mide la descarga.",
+      "instrumentacion": {
+        "variable_controlada": "caudal de descarga hacia envasado",
+        "sensor": "caudalímetro electromagnético con salida 4–20 mA",
+        "actuador": "motor de la bomba de descarga a través del contactor",
+        "controlador": "circuito de mando por lógica cableada",
+        "lazo": "cerrado",
+        "justificacion_lazo": "El caudal medido condiciona la continuidad de la descarga: la medición realimenta la acción sobre la bomba."
+      },
+      "escalado": {
+        "id": "E4",
+        "variable": "caudal de descarga",
+        "LRV": 0,
+        "URV": 250,
+        "unidad": "L/min",
+        "corriente_mA": 14,
+        "clave": 156.25
+      },
+      "sistema_A": {
+        "titulo": "Agitador — accionamiento único en un sentido",
+        "descripcion": "Diseñe el mando y la fuerza del agitador girando en un solo sentido. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de agitador en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Agitador con inversión de giro + bomba de descarga",
+        "descripcion": "Amplíe el diseño para que el agitador pueda girar en ambos sentidos mediante dos contactores con enclavamiento eléctrico y mecánico entre ellos: en ningún caso pueden cerrar simultáneamente. El cambio de sentido solo se permite tras pasar por paro. La bomba de descarga únicamente puede arrancar cuando el agitador está detenido, nunca durante la mezcla.",
+        "logica_clave": "inversion_de_giro_con_enclavamiento_doble + paro_obligatorio_entre_sentidos + exclusion_mutua_agitador_bomba",
+        "senalizacion_sonora": {
+          "preaviso": "Al ordenar cualquier sentido de giro, la bocina de preaviso suena 3 s antes de que el agitador arranque y se calla cuando arranca.",
+          "alarma": "Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero."
+        },
+        "elementos_extra": [
+          "KM2 (giro inverso)",
+          "KM3 (bomba)",
+          "F3",
+          "KT1 (preaviso 3 s)",
+          "KA1 (enganche de alarma)",
+          "HA1",
+          "HA2",
+          "H3 ámbar"
+        ]
+      }
+    },
+    {
+      "id": "P6",
+      "nombre": "Alimentación de trituradora",
+      "motor": "M6",
+      "contexto": "Una planta de reciclaje tritura material que llega por una banda alimentadora. La trituradora debe alcanzar su régimen de giro antes de recibir material, de lo contrario se atasca. Un transmisor mide la presión de la línea hidráulica de la trituradora.",
+      "instrumentacion": {
+        "variable_controlada": "carga de la trituradora (a través de la presión hidráulica)",
+        "sensor": "transmisor de presión 4–20 mA en la línea hidráulica",
+        "actuador": "motor de la banda alimentadora a través del contactor",
+        "controlador": "circuito de mando por lógica cableada con presostato de contacto seco",
+        "lazo": "cerrado",
+        "justificacion_lazo": "La presión medida refleja la carga de la trituradora y condiciona la alimentación: la medición realimenta y corrige la acción de control."
+      },
+      "escalado": {
+        "id": "E2",
+        "variable": "presión de la línea hidráulica",
+        "LRV": 0,
+        "URV": 10,
+        "unidad": "bar",
+        "corriente_mA": 16,
+        "clave": 7.5
+      },
+      "sistema_A": {
+        "titulo": "Banda alimentadora — accionamiento único",
+        "descripcion": "Diseñe el mando y la fuerza de la banda alimentadora. Marcha-paro con enclavamiento (sello), paro de emergencia de retención mecánica y protección térmica sin rearranque automático. Señalización: lámpara verde de banda en marcha y lámpara roja de falla.",
+        "elementos": [
+          "Q1",
+          "KM1",
+          "F2",
+          "S0 (E-stop)",
+          "S1 (paro)",
+          "S2 (marcha)",
+          "H1 verde",
+          "H2 roja"
+        ]
+      },
+      "sistema_B": {
+        "titulo": "Trituradora + banda alimentadora",
+        "descripcion": "Amplíe el diseño incorporando la trituradora. La trituradora arranca primero y la banda alimentadora solo se habilita 8 segundos después, cuando la trituradora alcanzó su régimen. Al ordenar el paro, la banda se detiene primero y la trituradora continúa 15 segundos para evacuar el material remanente. Si la presión hidráulica supera el límite (presostato), la banda debe detenerse pero la trituradora debe seguir operando.",
+        "logica_clave": "arranque_escalonado_8s + paro_diferido_trituradora_15s + corte_de_alimentacion_por_sobrecarga_sin_detener_trituradora",
+        "senalizacion_sonora": {
+          "preaviso": "Al accionar marcha, la bocina de preaviso suena 3 s antes de que arranque la trituradora y se calla cuando arranca.",
+          "alarma": "Ante disparo térmico o paro de emergencia, la segunda bocina suena de forma continua hasta desenergizar el tablero."
+        },
+        "elementos_extra": [
+          "KM2",
+          "F3",
+          "SP (presostato)",
+          "KT1 (preaviso 3 s)",
+          "KT2 (habilitación banda 8 s)",
+          "KT3 (evacuación 15 s)",
+          "KA1 (enganche de alarma)",
+          "HA1",
+          "HA2",
+          "H3 ámbar"
+        ]
+      }
+    }
+  ],
+  "parte2_reduccion": {
+    "regla": "En la Parte 2 el estudiante monta ÚNICAMENTE el Sistema A de su mismo escenario, con la señalización sonora añadida. No se monta el Sistema B.",
+    "alcance_montaje": [
+      "Circuito de mando: S2 marcha con sello sobre auxiliar de KM1, S1 paro, S0 paro de emergencia, contacto 95-96 de F2 en serie con la bobina.",
+      "Circuito de carga: contactos principales de KM1 alimentando el banco de lámparas que simula el motor.",
+      "Señalización: H1 verde (en marcha), H2 roja (falla) alimentada desde 97-98 de F2, H3 ámbar opcional.",
+      "Sonora: HA1 bocina de preaviso gobernada por KT1 (3 s) y HA2 bocina de alarma enganchada por KA1.",
+      "Se entrega el banco con los componentes ya fijados en riel. El estudiante realiza únicamente el cableado."
+    ],
+    "falla_introducida": {
+      "uso": "Evidencia A.2.11 — el docente introduce UNA falla antes de la verificación final y el estudiante debe localizarla leyendo su propio esquema.",
+      "catalogo": [
+        {
+          "id": "F1",
+          "falla": "Contacto NA del sello cambiado por NC",
+          "sintoma": "El sistema arranca solo al energizar o no sostiene la marcha"
+        },
+        {
+          "id": "F2",
+          "falla": "Bobina de KM1 conectada antes del contacto 95-96 del térmico",
+          "sintoma": "El disparo térmico no detiene el motor"
+        },
+        {
+          "id": "F3",
+          "falla": "Lámpara de falla alimentada desde 95-96 en vez de 97-98",
+          "sintoma": "La lámpara roja se apaga justo cuando hay falla"
+        },
+        {
+          "id": "F4",
+          "falla": "Paro de emergencia cableado con contacto NA",
+          "sintoma": "El E-stop no detiene, o el sistema solo funciona con el E-stop pulsado"
+        },
+        {
+          "id": "F5",
+          "falla": "Un borne del sello suelto",
+          "sintoma": "El motor solo funciona mientras se mantiene pulsado el botón de marcha"
+        },
+        {
+          "id": "F6",
+          "falla": "Bocina de alarma sin el enganche de KA1",
+          "sintoma": "La alarma suena solo mientras dura la condición de falla"
+        }
+      ]
+    },
+    "modificacion_en_vivo": {
+      "uso": "Evidencia A.3.10 — el docente pide UN cambio de lógica en el momento y el estudiante lo ejecuta sobre el montaje.",
+      "catalogo": [
+        {
+          "id": "V1",
+          "peticion": "Que después de un paro de emergencia se exija pulsar un botón de reset antes de poder rearrancar"
+        },
+        {
+          "id": "V2",
+          "peticion": "Que la lámpara ámbar se encienda cuando el sistema está energizado pero detenido (listo para arrancar)"
+        },
+        {
+          "id": "V3",
+          "peticion": "Que la bocina de alarma se pueda silenciar con un pulsador de reconocimiento, sin que se apague la lámpara de falla"
+        },
+        {
+          "id": "V4",
+          "peticion": "Que el sistema no pueda arrancar si el paro de emergencia está pulsado, y que lo señalice con la lámpara ámbar"
+        },
+        {
+          "id": "V5",
+          "peticion": "Agregar un segundo punto de paro en otra ubicación del tablero"
+        },
+        {
+          "id": "V6",
+          "peticion": "Que el preaviso sonoro dure 5 s en lugar de 3 s"
+        }
+      ]
+    }
+  }
+};
+
+const BANCO_EVIDENCIAS = {
+  "meta": {
+    "curso": "IFA00117",
+    "corte": 1,
+    "criterio": "A",
+    "version": "1.0",
+    "escala_ejecucion": {
+      "descripcion": "TODA evidencia se califica con la misma escala de ejecución de 4 puntos. Los puntos de la evidencia se otorgan como puntos_max * ejecucion / 3.",
+      "niveles": [
+        {
+          "valor": 0,
+          "etiqueta": "No lo hace",
+          "descriptor_generico": "Ausente, o presente de forma que no corresponde a lo solicitado."
+        },
+        {
+          "valor": 1,
+          "etiqueta": "Lo intenta",
+          "descriptor_generico": "Se reconoce la intención correcta pero con errores que impiden que funcione o que invalidan el resultado."
+        },
+        {
+          "valor": 2,
+          "etiqueta": "Lo logra con apoyo",
+          "descriptor_generico": "Correcto en lo esencial, con errores menores o tras una indicación puntual del docente."
+        },
+        {
+          "valor": 3,
+          "etiqueta": "Lo logra de forma autónoma",
+          "descriptor_generico": "Correcto y completo, resuelto sin intervención, con criterio propio."
+        }
+      ]
+    },
+    "nota_dos_escalas": "NO CONFUNDIR: 'nivel_contenido' (1-4) indica a qué nivel de desempeño pertenece la evidencia y sirve para el escalonamiento del reporte. 'ejecucion' (0-3) indica qué tan bien lo hizo el estudiante y sirve para la nota. Son dimensiones independientes.",
+    "desempenos": [
+      {
+        "codigo": "A.1",
+        "nombre": "Lectura del proceso y de la instrumentación",
+        "peso_corte_pct": 16
+      },
+      {
+        "codigo": "A.2",
+        "nombre": "Diseño del circuito de mando y fuerza",
+        "peso_corte_pct": 32
+      },
+      {
+        "codigo": "A.3",
+        "nombre": "Implementación y puesta en marcha",
+        "peso_corte_pct": 36
+      },
+      {
+        "codigo": "A.4",
+        "nombre": "Seguridad, normativa y dimensionamiento",
+        "peso_corte_pct": 16
+      }
+    ],
+    "umbral_nivel": 0.67,
+    "nota_umbral": "Umbral de dominio por tier (§5.4): ejecucion media >= 2 de 3."
+  },
+  "parte_1": {
+    "nombre": "Examen Parte 1 — Diseño en simulador",
+    "lugar": "Laboratorio de sistemas",
+    "duracion_min": 120,
+    "caracter": "controlada",
+    "peso_corte_pct": 40,
+    "puntos_totales": 100,
+    "bloques": [
+      {
+        "id": "B1",
+        "nombre": "Bloque digital — formulario web",
+        "calificacion": "automática",
+        "puntos": 40,
+        "nota": "Se responde en el formulario de la página web. El sistema califica solo, contra la clave del escenario asignado."
+      },
+      {
+        "id": "B2",
+        "nombre": "Bloque de archivos — entregables CADe_SIMU",
+        "calificacion": "manual",
+        "puntos": 60,
+        "nota": "El estudiante sube 8 archivos (4 planos × 2 sistemas). El docente solo revisa funcionalidad y coherencia, y marca ejecución 0-3 por evidencia."
+      }
+    ],
+    "evidencias": [
+      {
+        "codigo": "A.1.1",
+        "desempeno": "A.1",
+        "nivel_contenido": 1,
+        "bloque": "B1",
+        "puntos_max": 4,
+        "enunciado": "Identifique en su proceso: variable controlada, sensor, actuador y controlador.",
+        "tipo_captura": "cuatro_campos_texto_corto",
+        "clave": "escenario.instrumentacion (variable_controlada, sensor, actuador, controlador)",
+        "auto": true,
+        "rubrica": {
+          "0": "No identifica ninguno o confunde sensor con actuador.",
+          "1": "Identifica uno o dos elementos correctamente.",
+          "2": "Identifica tres de los cuatro elementos correctamente.",
+          "3": "Identifica los cuatro elementos con la denominación técnica correcta."
+        }
+      },
+      {
+        "codigo": "A.1.2",
+        "desempeno": "A.1",
+        "nivel_contenido": 2,
+        "bloque": "B1",
+        "puntos_max": 4,
+        "enunciado": "¿El sistema descrito opera en lazo abierto o en lazo cerrado? Justifique en una frase.",
+        "tipo_captura": "seleccion_binaria + texto_corto",
+        "clave": "escenario.instrumentacion.lazo + justificacion_lazo",
+        "auto": "parcial",
+        "rubrica": {
+          "0": "Clasifica mal el lazo.",
+          "1": "Clasifica bien pero sin justificar o con justificación incorrecta.",
+          "2": "Clasifica bien y justifica de forma incompleta.",
+          "3": "Clasifica bien y justifica invocando la existencia o ausencia de realimentación que modifica la acción de control."
+        }
+      },
+      {
+        "codigo": "A.1.3",
+        "desempeno": "A.1",
+        "nivel_contenido": 3,
+        "bloque": "B1",
+        "puntos_max": 4,
+        "enunciado": "El transmisor de su proceso entrega la corriente indicada. Calcule el valor de la variable en unidades de ingeniería.",
+        "tipo_captura": "numerico",
+        "clave": "escenario.escalado.clave",
+        "tolerancia_pct": 2,
+        "auto": true,
+        "rubrica": {
+          "0": "Resultado incorrecto sin procedimiento reconocible.",
+          "1": "Plantea la proporción pero se equivoca en el rango o en el offset de 4 mA.",
+          "2": "Resultado correcto con error de redondeo o de unidad.",
+          "3": "Resultado correcto con unidad correcta."
+        }
+      },
+      {
+        "codigo": "A.1.4",
+        "desempeno": "A.1",
+        "nivel_contenido": 4,
+        "bloque": "B1",
+        "puntos_max": 3,
+        "enunciado": "El transmisor de su proceso marca 4,0 mA de forma constante. Indique DOS causas posibles distintas y cómo distinguiría una de otra con una sola medición.",
+        "tipo_captura": "texto_medio",
+        "clave": "Causas admisibles: variable realmente en el LRV; lazo abierto o cable cortado (si la señal fuera 0 mA sería lazo abierto, 4,0 mA exactos apunta a variable en mínimo o transmisor mal configurado); transmisor descalibrado o con span mal parametrizado; sensor obstruido/tomas cerradas. Discriminación válida: medir con pinza/multímetro en serie el lazo y comparar con el valor real del proceso medido por otro medio, o forzar un cambio conocido en la variable y observar si la señal se mueve.",
+        "auto": false,
+        "rubrica": {
+          "0": "No responde o propone causas que no producen ese síntoma.",
+          "1": "Propone una causa válida sin método de discriminación.",
+          "2": "Propone dos causas válidas pero el método de discriminación no distingue entre ellas.",
+          "3": "Propone dos causas válidas y una medición que efectivamente permite distinguirlas."
+        }
+      },
+      {
+        "codigo": "A.2.10",
+        "desempeno": "A.2",
+        "nivel_contenido": 2,
+        "bloque": "B1",
+        "puntos_max": 5,
+        "enunciado": "Complete la tabla de asignación del Sistema A: elemento → borne/contacto → función → tag en inglés.",
+        "tipo_captura": "tabla_estructurada",
+        "clave": "Tags admitidos: START (S2), STOP (S1), E-STOP / EMERGENCY STOP (S0), MOTOR OVERLOAD / THERMAL OVERLOAD (F2), MAIN CONTACTOR (KM1), CIRCUIT BREAKER (Q1), RUNNING (H1), FAULT (H2), READY (H3), START WARNING HORN (HA1), FAULT ALARM (HA2).",
+        "auto": true,
+        "rubrica": {
+          "0": "Tabla ausente o sin correspondencia con el esquema.",
+          "1": "Tabla incompleta o con bornes inventados.",
+          "2": "Tabla completa y coherente con el esquema, con tags en español o con traducciones imprecisas.",
+          "3": "Tabla completa, coherente con el esquema y con tags en inglés correctos y consistentes."
+        }
+      },
+      {
+        "codigo": "A.4.1",
+        "desempeno": "A.4",
+        "nivel_contenido": 2,
+        "bloque": "B1",
+        "puntos_max": 6,
+        "enunciado": "Seleccione la corriente nominal de su motor y la expresión que la calcula.",
+        "tipo_captura": "seleccion_multiple_4",
+        "barajar": true,
+        "nota_barajado": "El formulario baraja el orden de las opciones con una semilla derivada del documento del estudiante: cada quien ve otro orden y el estudiante responde con el TEXTO de la opción, no con su posición.",
+        "auto": true,
+        "preguntas": [
+          {
+            "id": "q1",
+            "tipo": "escenario",
+            "enunciado": "A partir de los datos de placa, ¿cuál es la corriente nominal del motor de su escenario?",
+            "opciones_por": "motor",
+            "nota_distractores": "Correcta = In. Distractores = In omitiendo el rendimiento, In tratando el motor como monofásico (sin raíz de 3) e In omitiendo cos fi y rendimiento.",
+            "opciones": {
+              "M1": [
+                "2,28 A",
+                "2,85 A",
+                "3,47 A",
+                "6,01 A"
+              ],
+              "M2": [
+                "3,34 A",
+                "4,03 A",
+                "4,74 A",
+                "8,21 A"
+              ],
+              "M3": [
+                "4,56 A",
+                "5,36 A",
+                "6,16 A",
+                "10,67 A"
+              ],
+              "M4": [
+                "6,08 A",
+                "7,07 A",
+                "7,94 A",
+                "13,75 A"
+              ],
+              "M5": [
+                "11,40 A",
+                "13,10 A",
+                "14,72 A",
+                "25,50 A"
+              ],
+              "M6": [
+                "16,71 A",
+                "18,99 A",
+                "21,10 A",
+                "36,55 A"
+              ]
+            },
+            "correcta": {
+              "M1": "3,47 A",
+              "M2": "4,74 A",
+              "M3": "6,16 A",
+              "M4": "7,94 A",
+              "M5": "14,72 A",
+              "M6": "21,10 A"
+            }
+          },
+          {
+            "id": "q2",
+            "tipo": "conceptual",
+            "enunciado": "¿Cuál de estas expresiones corresponde a la corriente nominal de un motor trifásico?",
+            "opciones": [
+              "In = P / (√3 · U · cos φ · η)",
+              "In = P / (U · cos φ · η)",
+              "In = P · √3 / (U · cos φ · η)",
+              "In = P / (√3 · U)"
+            ],
+            "correcta": "In = P / (√3 · U · cos φ · η)"
+          }
+        ],
+        "rubrica": {
+          "0": "No acierta ninguna de las dos preguntas.",
+          "1": "Acierta la expresión general pero no la corriente de su motor: reconoce el criterio y no lo aplica.",
+          "2": "Acierta la corriente de su motor pero no la expresión general.",
+          "3": "Acierta las dos: calcula bien y reconoce la expresión trifásica completa."
+        }
+      },
+      {
+        "codigo": "A.4.2",
+        "desempeno": "A.4",
+        "nivel_contenido": 3,
+        "bloque": "B1",
+        "puntos_max": 6,
+        "enunciado": "Seleccione el rango del relé térmico F2 que corresponde a su motor y el criterio de ajuste del dial.",
+        "tipo_captura": "seleccion_multiple_4",
+        "barajar": true,
+        "auto": true,
+        "preguntas": [
+          {
+            "id": "q1",
+            "tipo": "escenario",
+            "enunciado": "Según la corriente nominal de su motor, ¿qué rango de ajuste del relé térmico NR2-25 corresponde?",
+            "opciones_por": "motor",
+            "nota_distractores": "Ventana de cuatro rangos consecutivos de la serie NR2-25 que contiene al correcto.",
+            "opciones": {
+              "M1": [
+                "1,6 – 2,5 A",
+                "2,5 – 4 A",
+                "4 – 6 A",
+                "5,5 – 8 A"
+              ],
+              "M2": [
+                "2,5 – 4 A",
+                "4 – 6 A",
+                "5,5 – 8 A",
+                "7 – 10 A"
+              ],
+              "M3": [
+                "4 – 6 A",
+                "5,5 – 8 A",
+                "7 – 10 A",
+                "9 – 13 A"
+              ],
+              "M4": [
+                "5,5 – 8 A",
+                "7 – 10 A",
+                "9 – 13 A",
+                "12 – 18 A"
+              ],
+              "M5": [
+                "7 – 10 A",
+                "9 – 13 A",
+                "12 – 18 A",
+                "17 – 25 A"
+              ],
+              "M6": [
+                "7 – 10 A",
+                "9 – 13 A",
+                "12 – 18 A",
+                "17 – 25 A"
+              ]
+            },
+            "correcta": {
+              "M1": "2,5 – 4 A",
+              "M2": "4 – 6 A",
+              "M3": "5,5 – 8 A",
+              "M4": "7 – 10 A",
+              "M5": "12 – 18 A",
+              "M6": "17 – 25 A"
+            }
+          },
+          {
+            "id": "q2",
+            "tipo": "conceptual",
+            "enunciado": "Una vez seleccionado el rango, ¿en qué valor debe quedar el dial del relé térmico?",
+            "opciones": [
+              "A la corriente nominal del motor",
+              "Al valor máximo del rango seleccionado",
+              "A 1,25 veces la corriente nominal del motor",
+              "A la corriente de arranque del motor"
+            ],
+            "correcta": "A la corriente nominal del motor"
+          }
+        ],
+        "rubrica": {
+          "0": "No acierta ninguna de las dos preguntas.",
+          "1": "Acierta el criterio de ajuste del dial pero no el rango que corresponde a su motor.",
+          "2": "Acierta el rango de su motor pero ajusta el dial al tope del rango o a un valor distinto de In.",
+          "3": "Acierta las dos: el rango que contiene a In y el dial ajustado a In."
+        }
+      },
+      {
+        "codigo": "A.4.3",
+        "desempeno": "A.4",
+        "nivel_contenido": 3,
+        "bloque": "B1",
+        "puntos_max": 4,
+        "enunciado": "Responda en inglés las tres preguntas sobre el datasheet DS-01.",
+        "tipo_captura": "tres_campos_texto_corto",
+        "clave": "banco_enunciados.datasheet_ingles.preguntas",
+        "auto": true,
+        "componente_ingles": true,
+        "rubrica": {
+          "0": "No responde o las respuestas no corresponden al documento.",
+          "1": "Una respuesta correcta.",
+          "2": "Dos respuestas correctas.",
+          "3": "Las tres respuestas correctas, con la referencia del contactor completa incluyendo el código de bobina."
+        }
+      },
+      {
+        "codigo": "A.4.4",
+        "desempeno": "A.4",
+        "nivel_contenido": 4,
+        "bloque": "B1",
+        "puntos_max": 4,
+        "enunciado": "Explique por qué el paro de emergencia debe ubicarse donde usted lo ubicó en el circuito de mando, y qué ocurriría si estuviera después de la bobina.",
+        "tipo_captura": "texto_medio",
+        "clave": "El E-stop debe interrumpir toda la rama de mando aguas arriba, de modo que su accionamiento desenergice la bobina del contactor sin depender de ningún otro contacto. Debe ser de contacto NC y con retención mecánica. Si estuviera después de la bobina seguiría cortando el circuito, pero se pierde la lógica de rama única y se pueden crear caminos de retorno; el punto de fondo es que el paro de emergencia debe actuar sobre todo el mando y su restablecimiento no debe provocar rearranque automático (principio de IEC 60204-1, dispositivo conforme a ISO 13850).",
+        "auto": false,
+        "rubrica": {
+          "0": "No responde o describe el E-stop como un pulsador de paro más.",
+          "1": "Reconoce que debe cortar el mando pero no distingue el contacto NC ni la retención mecánica.",
+          "2": "Explica la ubicación y el contacto NC correctamente.",
+          "3": "Explica ubicación, contacto NC, retención mecánica y el principio de no rearranque automático tras el restablecimiento."
+        }
+      },
+      {
+        "codigo": "A.2.1",
+        "desempeno": "A.2",
+        "nivel_contenido": 1,
+        "bloque": "B2",
+        "sistema": "A",
+        "puntos_max": 6,
+        "enunciado": "Diagrama de FUERZA del Sistema A.",
+        "entregable": "CADe_SIMU — plano de fuerza",
+        "auto": false,
+        "rubrica": {
+          "0": "Ausente o sin secuencia reconocible de protección-maniobra-protección-carga.",
+          "1": "Presenta los elementos pero en orden incorrecto o con la simbología equivocada.",
+          "2": "Orden correcto Q1 → KM1 → F2 → motor, con simbología IEC, con errores menores de identificación.",
+          "3": "Orden correcto, simbología IEC 60617 completa, tres fases coherentes e identificación de bornes correcta."
+        }
+      },
+      {
+        "codigo": "A.2.2",
+        "desempeno": "A.2",
+        "nivel_contenido": 2,
+        "bloque": "B2",
+        "sistema": "A",
+        "puntos_max": 7,
+        "enunciado": "Diagrama de MANDO del Sistema A con marcha-paro y enclavamiento (sello).",
+        "entregable": "CADe_SIMU — plano de mando",
+        "auto": false,
+        "rubrica": {
+          "0": "Ausente o sin circuito de mando reconocible.",
+          "1": "Dibuja marcha y paro pero sin sello, o con el sello en paralelo al elemento equivocado.",
+          "2": "Sello correcto sobre el auxiliar de KM1, con algún error menor de numeración de bornes.",
+          "3": "Marcha-paro y sello correctos, con el contacto auxiliar 13-14 en paralelo con el pulsador de marcha y numeración de bornes conforme a norma."
+        }
+      },
+      {
+        "codigo": "A.2.3",
+        "desempeno": "A.2",
+        "nivel_contenido": 2,
+        "bloque": "B2",
+        "sistema": "A",
+        "puntos_max": 6,
+        "enunciado": "Integración del paro de emergencia y del contacto 95-96 del relé térmico en el circuito de mando.",
+        "entregable": "CADe_SIMU — plano de mando (mismo archivo)",
+        "auto": false,
+        "rubrica": {
+          "0": "No incluye E-stop ni contacto del térmico.",
+          "1": "Incluye uno de los dos, o los incluye con contacto de tipo equivocado (NA en vez de NC).",
+          "2": "Ambos presentes con contacto NC, pero uno de ellos mal ubicado dentro de la rama.",
+          "3": "Ambos con contacto NC, en serie y aguas arriba de la bobina, de modo que cualquiera de los dos desenergiza todo el mando."
+        }
+      },
+      {
+        "codigo": "A.2.4",
+        "desempeno": "A.2",
+        "nivel_contenido": 2,
+        "bloque": "B2",
+        "sistema": "A",
+        "puntos_max": 5,
+        "enunciado": "Diagrama de CONEXIONADO y vista 3D del Sistema A, coherentes con los planos de fuerza y mando.",
+        "entregable": "CADe_SIMU — plano de conexionado + vista 3D",
+        "auto": false,
+        "rubrica": {
+          "0": "Falta uno de los dos entregables.",
+          "1": "Ambos presentes pero no corresponden al circuito diseñado.",
+          "2": "Ambos presentes y correspondientes, con discrepancias menores respecto a fuerza y mando.",
+          "3": "Ambos presentes y plenamente coherentes: cada borne del conexionado se puede rastrear en los planos de fuerza y mando."
+        }
+      },
+      {
+        "codigo": "A.2.5",
+        "desempeno": "A.2",
+        "nivel_contenido": 3,
+        "bloque": "B2",
+        "sistema": "B",
+        "puntos_max": 10,
+        "enunciado": "Diagramas de FUERZA y MANDO del Sistema B (multi-accionamiento).",
+        "entregable": "CADe_SIMU — planos de fuerza y mando del Sistema B",
+        "auto": false,
+        "rubrica": {
+          "0": "Ausentes o reducidos a copiar el Sistema A.",
+          "1": "Incorpora el segundo accionamiento pero sin relación lógica entre ambos.",
+          "2": "Ambos accionamientos correctamente dibujados y protegidos, con la relación lógica parcialmente resuelta.",
+          "3": "Ambos accionamientos completos, cada uno con su protección y su térmico, y el mando estructurado en ramas legibles."
+        }
+      },
+      {
+        "codigo": "A.2.6",
+        "desempeno": "A.2",
+        "nivel_contenido": 4,
+        "bloque": "B2",
+        "sistema": "B",
+        "puntos_max": 12,
+        "enunciado": "Lógica específica exigida por su enunciado (secuencia, enclavamiento condicional, paro diferido, inversión de giro o arranque escalonado, según el escenario).",
+        "entregable": "CADe_SIMU — plano de mando del Sistema B + simulación funcionando",
+        "referencia_clave": "escenario.sistema_B.logica_clave",
+        "auto": false,
+        "rubrica": {
+          "0": "No implementa la lógica solicitada.",
+          "1": "Intenta la lógica pero la simulación no reproduce la secuencia pedida.",
+          "2": "La secuencia se cumple en la simulación, pero falla alguna condición de borde (orden de paro, caída encadenada o exclusión mutua).",
+          "3": "La secuencia se cumple íntegra en la simulación, incluidas las condiciones de borde del enunciado, y el estudiante usó temporizadores y enclavamientos con criterio y no por ensayo y error."
+        }
+      },
+      {
+        "codigo": "A.2.7",
+        "desempeno": "A.2",
+        "nivel_contenido": 4,
+        "bloque": "B2",
+        "sistema": "B",
+        "puntos_max": 8,
+        "enunciado": "Señalización sonora: preaviso de arranque temporizado y alarma de falla enganchada.",
+        "entregable": "CADe_SIMU — plano de mando del Sistema B",
+        "auto": false,
+        "rubrica": {
+          "0": "No incluye señalización sonora.",
+          "1": "Incluye las bocinas conectadas en paralelo a lámparas, sin temporizador ni enganche.",
+          "2": "Resuelve correctamente una de las dos: o el preaviso temporizado, o la alarma enganchada.",
+          "3": "Resuelve ambas: el preaviso suena antes del arranque y se corta exactamente al arrancar el motor, y la alarma se engancha y se mantiene hasta desenergizar."
+        }
+      },
+      {
+        "codigo": "A.2.8",
+        "desempeno": "A.2",
+        "nivel_contenido": 3,
+        "bloque": "B2",
+        "sistema": "B",
+        "puntos_max": 6,
+        "enunciado": "Diagrama de CONEXIONADO y vista 3D del Sistema B.",
+        "entregable": "CADe_SIMU — plano de conexionado + vista 3D del Sistema B",
+        "auto": false,
+        "rubrica": {
+          "0": "Falta uno de los dos entregables.",
+          "1": "Ambos presentes pero incompletos respecto al número de accionamientos.",
+          "2": "Ambos presentes y correspondientes, con discrepancias menores.",
+          "3": "Ambos completos y plenamente coherentes con fuerza y mando del Sistema B."
+        }
+      }
+    ]
+  },
+  "parte_2": {
+    "nombre": "Examen Parte 2 — Montaje y puesta en marcha",
+    "lugar": "Laboratorio de automatización — banco único, turnos por pareja",
+    "duracion_min_por_turno": 20,
+    "caracter": "controlada",
+    "peso_corte_pct": 40,
+    "puntos_totales": 100,
+    "alcance": "Sistema A del escenario asignado, con señalización luminosa y sonora. Componentes previamente fijados en riel; el estudiante solo cablea.",
+    "evidencias": [
+      {
+        "codigo": "A.4.5",
+        "desempeno": "A.4",
+        "nivel_contenido": 1,
+        "puntos_max": 8,
+        "enunciado": "Procedimiento previo: verifica ausencia de tensión antes de intervenir, usa EPP y mantiene el puesto ordenado.",
+        "rubrica": {
+          "0": "Interviene el tablero sin verificar ausencia de tensión.",
+          "1": "Verifica solo tras indicación del docente.",
+          "2": "Verifica por iniciativa propia, con desorden en el puesto o EPP incompleto.",
+          "3": "Verifica por iniciativa propia, EPP completo, herramienta y conductores ordenados durante todo el turno."
+        }
+      },
+      {
+        "codigo": "A.3.1",
+        "desempeno": "A.3",
+        "nivel_contenido": 1,
+        "puntos_max": 6,
+        "enunciado": "Cableado de la botonera de marcha y paro.",
+        "rubrica": {
+          "0": "No cablea la botonera o usa contactos de tipo equivocado.",
+          "1": "Cablea con el tipo de contacto equivocado en uno de los pulsadores.",
+          "2": "Marcha en NA y paro en NC correctos, con conexiones flojas o cruzadas menores.",
+          "3": "Marcha en NA y paro en NC, conexiones firmes y correctamente identificadas."
+        }
+      },
+      {
+        "codigo": "A.3.2",
+        "desempeno": "A.3",
+        "nivel_contenido": 2,
+        "puntos_max": 12,
+        "enunciado": "Ejecución del enclavamiento (sello) sobre el contacto auxiliar del contactor.",
+        "rubrica": {
+          "0": "No ejecuta el sello.",
+          "1": "Intenta el sello sobre un contacto que no corresponde (principal, o auxiliar NC).",
+          "2": "Sello sobre el auxiliar NA correcto, tras una indicación puntual del docente.",
+          "3": "Sello sobre el auxiliar NA 13-14 en paralelo con el pulsador de marcha, resuelto de forma autónoma."
+        }
+      },
+      {
+        "codigo": "A.3.3",
+        "desempeno": "A.3",
+        "nivel_contenido": 3,
+        "puntos_max": 10,
+        "enunciado": "Integración del paro de emergencia y del contacto 95-96 del relé térmico en la rama de mando.",
+        "rubrica": {
+          "0": "No integra ninguno de los dos.",
+          "1": "Integra uno de los dos, o alguno con contacto de tipo equivocado.",
+          "2": "Ambos integrados en serie con la bobina, con un error de ubicación dentro de la rama.",
+          "3": "Ambos en serie y aguas arriba de la bobina; se demuestra que cualquiera de los dos desenergiza todo el mando."
+        }
+      },
+      {
+        "codigo": "A.3.4",
+        "desempeno": "A.3",
+        "nivel_contenido": 2,
+        "puntos_max": 9,
+        "enunciado": "Cableado de los contactos principales del contactor alimentando el banco de lámparas que simula la carga.",
+        "rubrica": {
+          "0": "No cablea la carga o la alimenta puenteando el contactor.",
+          "1": "Alimenta la carga desde el mando en lugar de los contactos principales.",
+          "2": "Usa los contactos principales, con una fase o polaridad mal resuelta.",
+          "3": "Carga alimentada exclusivamente desde los contactos principales, con la polaridad correcta y protección aguas arriba."
+        }
+      },
+      {
+        "codigo": "A.3.5",
+        "desempeno": "A.3",
+        "nivel_contenido": 3,
+        "puntos_max": 6,
+        "enunciado": "Calidad del montaje: identificación de conductores, apriete de bornes y ordenamiento del cableado.",
+        "rubrica": {
+          "0": "Cableado sin identificar, con hilos sueltos o cobre expuesto.",
+          "1": "Funciona pero sin identificación y con conductores desordenados.",
+          "2": "Identificación parcial, apriete correcto, recorrido de conductores razonable.",
+          "3": "Todos los conductores identificados conforme al esquema, terminales correctamente ponchados, apriete firme y recorrido ordenado."
+        }
+      },
+      {
+        "codigo": "A.3.6",
+        "desempeno": "A.3",
+        "nivel_contenido": 2,
+        "puntos_max": 7,
+        "enunciado": "Asignación de las lámparas a los estados del proceso: listo, en marcha, falla.",
+        "rubrica": {
+          "0": "No cablea señalización.",
+          "1": "Cablea las lámparas sin correspondencia con los estados.",
+          "2": "Dos de los tres estados correctamente señalizados.",
+          "3": "Los tres estados correctamente señalizados y verificables accionando el sistema."
+        }
+      },
+      {
+        "codigo": "A.4.6",
+        "desempeno": "A.4",
+        "nivel_contenido": 3,
+        "puntos_max": 7,
+        "enunciado": "Código de colores de la señalización conforme a IEC 60204-1, justificado oralmente.",
+        "rubrica": {
+          "0": "Colores asignados arbitrariamente.",
+          "1": "Usa rojo para falla pero el resto sin criterio.",
+          "2": "Asignación correcta (rojo falla, verde marcha, ámbar advertencia) sin poder justificarla.",
+          "3": "Asignación correcta y justificada invocando el criterio normativo de significado del color."
+        }
+      },
+      {
+        "codigo": "A.3.11",
+        "desempeno": "A.3",
+        "nivel_contenido": 3,
+        "puntos_max": 6,
+        "enunciado": "Uso del contacto 97-98 del relé térmico para la señalización de falla, independiente del circuito de mando.",
+        "rubrica": {
+          "0": "No usa el 97-98.",
+          "1": "Alimenta la señalización de falla desde el 95-96, con lo cual se apaga cuando debería encenderse.",
+          "2": "Usa el 97-98 pero comparte la rama con el mando.",
+          "3": "Usa el 97-98 en rama independiente: la señalización de falla enciende al disparar y no depende del estado del mando."
+        }
+      },
+      {
+        "codigo": "A.3.7",
+        "desempeno": "A.3",
+        "nivel_contenido": 2,
+        "puntos_max": 6,
+        "enunciado": "Energización y demostración de marcha y paro.",
+        "rubrica": {
+          "0": "No logra energizar sin falla, o el sistema no arranca.",
+          "1": "Arranca pero no sostiene, o no para.",
+          "2": "Arranca, sostiene y para, tras corregir con indicación del docente.",
+          "3": "Arranca, sostiene y para correctamente al primer intento."
+        }
+      },
+      {
+        "codigo": "A.3.8",
+        "desempeno": "A.3",
+        "nivel_contenido": 3,
+        "puntos_max": 7,
+        "enunciado": "Prueba del paro de emergencia y del rearme posterior.",
+        "rubrica": {
+          "0": "El E-stop no detiene el sistema.",
+          "1": "Detiene, pero el sistema rearranca solo al liberar el pulsador.",
+          "2": "Detiene y no rearranca solo; el estudiante no explica por qué.",
+          "3": "Detiene, no rearranca solo, y el estudiante explica que el sello quedó abierto y se requiere una nueva orden de marcha."
+        }
+      },
+      {
+        "codigo": "A.3.9",
+        "desempeno": "A.3",
+        "nivel_contenido": 3,
+        "puntos_max": 6,
+        "enunciado": "Disparo del relé térmico con el botón STOP y verificación del comportamiento y la señalización.",
+        "rubrica": {
+          "0": "El disparo no detiene el sistema.",
+          "1": "Detiene, pero la señalización de falla no responde.",
+          "2": "Detiene y señaliza; el estudiante no ejecuta el rearme con el botón RESET.",
+          "3": "Detiene, señaliza, permanece enclavado en falla, y el estudiante ejecuta el rearme con RESET y vuelve a poner en marcha."
+        }
+      },
+      {
+        "codigo": "A.2.11",
+        "desempeno": "A.2",
+        "nivel_contenido": 4,
+        "puntos_max": 5,
+        "enunciado": "Localización de una falla introducida por el docente, leyendo su propio esquema.",
+        "referencia": "banco_enunciados.parte2_reduccion.falla_introducida.catalogo",
+        "rubrica": {
+          "0": "No localiza la falla ni propone un método de búsqueda.",
+          "1": "Busca por tanteo, sin consultar el esquema.",
+          "2": "Localiza la falla consultando el esquema, con ayuda del docente para acotar la zona.",
+          "3": "Localiza la falla de forma autónoma, razonando desde el síntoma hacia la rama del esquema, y explica por qué produce ese síntoma."
+        }
+      },
+      {
+        "codigo": "A.3.10",
+        "desempeno": "A.3",
+        "nivel_contenido": 4,
+        "puntos_max": 5,
+        "enunciado": "Modificación de la lógica solicitada en el momento por el docente.",
+        "referencia": "banco_enunciados.parte2_reduccion.modificacion_en_vivo.catalogo",
+        "rubrica": {
+          "0": "No comprende la modificación solicitada.",
+          "1": "Comprende qué se pide pero no logra implementarla.",
+          "2": "Implementa la modificación con indicaciones del docente.",
+          "3": "Implementa la modificación de forma autónoma y la demuestra funcionando."
+        }
+      }
+    ]
+  },
+  "evidencias_de_clase": {
+    "nota": "Ya aplicadas. Se cargan como puntaje 0-100 por evidencia. Solo el quiz es de carácter controlado y por tanto participa en la determinación de niveles.",
+    "items": [
+      {
+        "codigo": "CL.1",
+        "nombre": "Actividad en clase 1",
+        "caracter": "proceso",
+        "desempenos": [
+          "A.1"
+        ],
+        "peso_corte_pct": 4
+      },
+      {
+        "codigo": "CL.2",
+        "nombre": "Actividad en clase 2",
+        "caracter": "proceso",
+        "desempenos": [
+          "A.1",
+          "A.2"
+        ],
+        "peso_corte_pct": 4
+      },
+      {
+        "codigo": "CL.3",
+        "nombre": "Quiz",
+        "caracter": "controlada",
+        "desempenos": [
+          "A.1",
+          "A.4"
+        ],
+        "peso_corte_pct": 6,
+        "requiere_desglose_por_item": true
+      },
+      {
+        "codigo": "CL.4",
+        "nombre": "Informe de laboratorio",
+        "caracter": "proceso",
+        "desempenos": [
+          "A.2",
+          "A.3"
+        ],
+        "peso_corte_pct": 6
+      }
+    ]
+  }
+};
+
+/* Qué archivo de CADe_SIMU responde por cada evidencia del bloque B2 —
+   la misma tabla que ve el estudiante, para saber qué plano abrir al calificar. */
+const PLANOS = [
+  {sis:"A", plano:"FUERZA", evid:["A.2.1"], det:"Q1 → KM1 → F2 → motor, simbología IEC 60617, tres fases e identificación de bornes."},
+  {sis:"A", plano:"MANDO", evid:["A.2.2", "A.2.3"], det:"Marcha-paro con sello sobre el auxiliar 13-14 de KM1; E-stop y contacto 95-96 de F2 en serie y aguas arriba de la bobina."},
+  {sis:"A", plano:"CONEXIONADO", evid:["A.2.4"], det:"Cada borne rastreable en los planos de fuerza y mando."},
+  {sis:"A", plano:"3D", evid:["A.2.4"], det:"Vista del tablero coherente con el conexionado."},
+  {sis:"B", plano:"FUERZA", evid:["A.2.5"], det:"Los dos accionamientos, cada uno con su protección y su térmico."},
+  {sis:"B", plano:"MANDO", evid:["A.2.5", "A.2.6", "A.2.7"], det:"Mando en ramas legibles, la lógica exigida por su enunciado con la simulación funcionando, preaviso temporizado y alarma enganchada."},
+  {sis:"B", plano:"CONEXIONADO", evid:["A.2.8"], det:"Coherente con fuerza y mando del Sistema B."},
+  {sis:"B", plano:"3D", evid:["A.2.8"], det:"Vista del tablero con los dos accionamientos."}
+];
+//</DATOS>
+</script>
+<script>
+"use strict";
+const NODO = "parcial_automatizacion1";
+const $ = s => document.querySelector(s);
+const marco = $("#marco"), cajetin = $("#cajetin");
+const db = () => firebase.database();
+const esc = s => (s==null?"":(""+s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const estado = t => { $("#pieEstado").textContent = t; };
+
+/* ═══════════ normalización y comparadores ═══════════ */
+const DIACRITICO = new RegExp("[\u0300-\u036f]", "g");
+const norm = s => (s==null?"":(""+s)).toLowerCase().normalize("NFD").replace(DIACRITICO,"").replace(/\s+/g," ").trim();
+const numero = s => { if(s==null) return null; const v = parseFloat((""+s).replace(",",".").replace(/[^0-9.eE+-]/g,"")); return isNaN(v)?null:v; };
+const errpct = (a,b) => (a==null||b==null||b===0) ? Infinity : Math.abs(a-b)/Math.abs(b)*100;
+const STOP = new Set(["de","del","la","el","los","las","por","con","para","una","uno","que","los","sus","como","este","esta","desde","hacia","sobre","entre","cada","mas","muy"]);
+function claves(s){ return norm(s).split(/[^a-z0-9]+/).filter(w => w.length>=4 && !STOP.has(w)); }
+function parecido(resp, clave, minRatio){
+  const t = claves(clave); if(!t.length) return false;
+  const r = norm(resp); if(!r) return false;
+  const hits = t.filter(w => r.includes(w.slice(0, Math.max(4, w.length-2)))).length;
+  return hits >= Math.max(1, Math.ceil(t.length*(minRatio||0.3)));
+}
+const contiene = (resp, ...frag) => { const r = norm(resp); return frag.every(f => r.includes(norm(f))); };
+const alguno   = (resp, ...frag) => { const r = norm(resp); return frag.some(f => r.includes(norm(f))); };
+
+/* ═══════════ frontera con la base ═══════════
+   Los códigos de evidencia llevan punto y RTDB no admite ".", "#", "$", "/",
+   "[" ni "]" en una clave: viajan como VALOR de fila, no como nombre de campo.
+   aMapa acepta las dos formas por si quedó algún registro viejo. */
+const aFilas = (mapa, campo) => Object.keys(mapa || {}).map(c => ({codigo:c, [campo]:mapa[c]}));
+const aMapa  = (filas, campo) => {
+  const o = {};
+  if(!filas) return o;
+  const esFila = Array.isArray(filas) || Object.prototype.hasOwnProperty.call(filas, "0");
+  if(!esFila) return filas;                       // registro antiguo: ya era un mapa
+  Object.values(filas).forEach(f => { if(f && f.codigo != null) o[f.codigo] = f[campo]; });
+  return o;
+};
+const respuestasDe = ent => aMapa(ent && ent.respuestas, "campos");
+
+/* ═══════════ el banco, incrustado ═══════════ */
+let BANCO = null, EVID = {B1:[],B2:[],P2:[]}, DESEMP = [];
+function cargarBanco(){
+  BANCO   = {en:BANCO_ENUNCIADOS, ev:BANCO_EVIDENCIAS};
+  EVID.B1 = BANCO.ev.parte_1.evidencias.filter(x => x.bloque === "B1");
+  EVID.B2 = BANCO.ev.parte_1.evidencias.filter(x => x.bloque === "B2");
+  EVID.P2 = BANCO.ev.parte_2.evidencias;
+  DESEMP  = BANCO.ev.meta.desempenos;
+}
+const escenario = id => BANCO.en.escenarios.find(x => x.id === id) || null;
+const motorDe   = e  => e ? BANCO.en.motores.find(m => m.id === e.motor) : null;
+
+/* ═══════════ autocalificación del bloque B1 ═══════════ */
+/* Devuelve {ejec:0..3|null, detalle:[{campo, resp, clave, ok}]}.
+   ejec null = la evidencia no es automática y la califica el docente. */
+function autoCalificar(cod, ent){
+  const r  = respuestasDe(ent)[cod] || {};
+  const E  = escenario(ent.escenario_id);
+  const M  = motorDe(E);
+  const d  = [];
+  const fila = (campo, resp, clave, ok) => { d.push({campo, resp, clave, ok}); return ok; };
+
+  if(cod === "A.1.1"){
+    const I = E.instrumentacion;
+    let n = 0;
+    n += fila("Variable controlada", r.variable,    I.variable_controlada, parecido(r.variable,    I.variable_controlada)) ? 1:0;
+    n += fila("Sensor",              r.sensor,      I.sensor,              parecido(r.sensor,      I.sensor))              ? 1:0;
+    n += fila("Actuador",            r.actuador,    I.actuador,            parecido(r.actuador,    I.actuador))            ? 1:0;
+    n += fila("Controlador",         r.controlador, I.controlador,         parecido(r.controlador, I.controlador))         ? 1:0;
+    return {ejec: n===4?3 : n===3?2 : n>=1?1 : 0, detalle:d, resumen:`${n} de 4 elementos`};
+  }
+
+  if(cod === "A.1.2"){
+    const I  = E.instrumentacion;
+    const ok = norm(r.lazo) === norm(I.lazo);
+    fila("Tipo de lazo", r.lazo, I.lazo, ok);
+    const j  = r.justificacion || "";
+    const fuerte = alguno(j, "realiment", "feedback", "corrige la accion", "modifica la accion", "corrige el control", "modifica el control");
+    fila("Justificación", j, I.justificacion_lazo, fuerte);
+    const ejec = !ok ? 0 : (norm(j).length < 15 ? 1 : (fuerte ? 3 : 2));
+    return {ejec, detalle:d, resumen: ok ? (fuerte ? "lazo y justificación correctos" : "lazo correcto, revisar justificación") : "lazo mal clasificado", revisar:true};
+  }
+
+  if(cod === "A.1.3"){
+    const c = E.escalado.clave, u = E.escalado.unidad;
+    const v = numero(r.valor), e = errpct(v, c);
+    const uOk = norm(r.unidad) === norm(u);
+    fila("Valor", r.valor==null?"":r.valor+"", `${c} ${u}  (±2 %)`, e <= 2);
+    fila("Unidad", r.unidad, u, uOk);
+    const sinOffset = E.escalado.LRV + (numero(E.escalado.corriente_mA)/20)*(E.escalado.URV - E.escalado.LRV);
+    let ejec;
+    if(e <= 2)                    ejec = uOk ? 3 : 2;
+    else if(e <= 10)              ejec = 2;
+    else if(errpct(v, sinOffset) <= 3) ejec = 1;   // planteó la proporción pero olvidó los 4 mA
+    else                          ejec = 0;
+    return {ejec, detalle:d, resumen:`error ${isFinite(e)?e.toFixed(1)+" %":"—"}`};
+  }
+
+  if(cod === "A.2.10"){
+    const TAGS = {
+      "Q1":["circuit breaker","main breaker","mcb"],
+      "KM1":["main contactor","contactor"],
+      "F2":["motor overload","thermal overload","overload relay"],
+      "S0":["e-stop","emergency stop","estop"],
+      "S1":["stop"],
+      "S2":["start"],
+      "H1":["running","run"],
+      "H2":["fault"],
+      "H3":["ready"],
+      "HA1":["start warning horn","warning horn","horn"],
+      "HA2":["fault alarm","alarm"]
+    };
+    const els = E.sistema_A.elementos;
+    let ok = 0, llenas = 0;
+    els.forEach((el,i) => {
+      const key = (el.match(/^[A-Z]+[0-9]*/)||[""])[0];
+      const admitidos = TAGS[key] || [];
+      const tag = r["t"+i] || "";
+      const lleno = (r["b"+i]||"").trim() !== "" && (r["f"+i]||"").trim() !== "" && tag.trim() !== "";
+      if(lleno) llenas++;
+      const bien = admitidos.some(a => norm(tag) === norm(a) || norm(tag).includes(norm(a)));
+      if(bien) ok++;
+      fila(el, `${r["b"+i]||"—"} · ${r["f"+i]||"—"} · ${tag||"—"}`, admitidos.join(" / ")||"—", bien && lleno);
+    });
+    const ratio = els.length ? ok/els.length : 0;
+    const ejec = (ratio >= 0.9 && llenas === els.length) ? 3 : ratio >= 0.6 ? 2 : ratio > 0 ? 1 : 0;
+    return {ejec, detalle:d, resumen:`${ok} de ${els.length} tags · ${llenas} filas completas`, revisar:true};
+  }
+
+  /* Selección múltiple: se compara el TEXTO elegido contra la clave del banco,
+     porque el orden que vio el estudiante fue barajado con su documento.
+     La de escenario pesa más que la conceptual: aplicar el criterio > reconocerlo. */
+  if(cod === "A.4.1" || cod === "A.4.2"){
+    const E4 = EVID.B1.find(x => x.codigo === cod);
+    const marca = {};
+    E4.preguntas.forEach(q => {
+      const clave = q.tipo === "escenario" ? q.correcta[E.motor] : q.correcta;
+      const dada  = r[q.id];
+      marca[q.tipo] = norm(dada) === norm(clave);
+      fila(q.enunciado, dada, clave, marca[q.tipo]);
+    });
+    const ejec = (marca.escenario && marca.conceptual) ? 3
+               : marca.escenario ? 2
+               : marca.conceptual ? 1 : 0;
+    return {ejec, detalle:d,
+            resumen:`escenario ${marca.escenario?"✔":"✘"} · conceptual ${marca.conceptual?"✔":"✘"}`};
+  }
+
+  if(cod === "A.4.3"){
+    const ref = M.clave.KM_ref + "/M";
+    let n = 0;
+    n += fila("Q1 · contactor reference", r.q1, ref,
+              norm(r.q1).replace(/\s/g,"").includes(norm(ref).replace(/\s/g,""))) ? 1:0;
+    n += fila("Q2 · terminals", r.q2, "95-96 en serie con la bobina (N/C); 97-98 para la alarma (N/O)",
+              contiene(r.q2, "95", "96") && contiene(r.q2, "97", "98")) ? 1:0;
+    n += fila("Q3 · setting dial", r.q3, "Set to the motor rated current, never higher",
+              alguno(r.q3, "rated current", "motor current", "corriente nominal") &&
+              alguno(r.q3, "never higher", "not higher", "never above", "nunca mayor", "never exceed")) ? 1:0;
+    return {ejec: n===3?3 : n===2?2 : n===1?1 : 0, detalle:d, resumen:`${n} de 3 respuestas`};
+  }
+
+  return null;   // A.1.4 y A.4.4 — manuales
+}
+
+/* ═══════════ cálculo de la nota ═══════════ */
+/* Una ejecución válida es 0, 1, 2 o 3. Cualquier otra cosa —undefined, null,
+   texto, un número fuera de rango— significa SIN CALIFICAR, nunca el máximo.
+   Con auto en 0 la evidencia vale 0. */
+function nivel(v){
+  if(typeof v === "string" && /^[0-3]$/.test(v.trim())) v = +v;
+  return (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= 3) ? v : null;
+}
+const marcaDe = (cal, cod) => nivel(((cal || {}).ejecucion || {})[cod]);
+
+function puntos(evidencia, ejec){ return ejec==null ? null : Math.round(evidencia.puntos_max * ejec / 3 * 100)/100; }
+
+function calcular(ent, cal){
+  const ej = (cal && cal.ejecucion) || {};
+  const res = {b1:0, b1max:0, b2:0, b2max:0, p2:0, p2max:0, pend:[], porDesemp:{}, auto:{}};
+  const acumular = (e, ejec, destino) => {
+    res[destino+"max"] += e.puntos_max;
+    if(ejec == null){ res.pend.push(e.codigo); return; }
+    const p = puntos(e, ejec);
+    res[destino] += p;
+    const D = res.porDesemp[e.desempeno] || (res.porDesemp[e.desempeno] = {p:0, max:0});
+    D.p += p; D.max += e.puntos_max;
+  };
+  EVID.B1.forEach(e => {
+    const a = ent ? autoCalificar(e.codigo, ent) : null;
+    res.auto[e.codigo] = a;
+    const ejec = marcaDe(cal, e.codigo) != null ? marcaDe(cal, e.codigo) : (a ? nivel(a.ejec) : null);
+    acumular(e, ejec, "b1");
+  });
+  EVID.B2.forEach(e => acumular(e, marcaDe(cal, e.codigo), "b2"));
+  EVID.P2.forEach(e => acumular(e, marcaDe(cal, e.codigo), "p2"));
+  res.parte1 = Math.round((res.b1 + res.b2)*100)/100;
+  return res;
+}
+
+/* ═══════════ presencia ═══════════
+   El latido lo estampa el servidor, así que se compara contra la hora del
+   servidor y no contra el reloj del equipo del docente. */
+const VIGENCIA_MS = 120000;
+let desfase = 0;
+try{ db().ref(".info/serverTimeOffset").on("value", s => desfase = s.val() || 0); }catch(e){}
+const ahora = () => Date.now() + desfase;
+const enLinea = x => x && x.visto && (ahora() - x.visto) < VIGENCIA_MS;
+const haceCuanto = t => { const s = Math.max(0, Math.round((ahora() - t)/1000));
+  return s < 60 ? "hace " + s + " s" : "hace " + Math.floor(s/60) + " min"; };
+
+/* ═══════════ estado ═══════════ */
+const S = {user:null, entregas:{}, sesiones:{}, calif:{}, asignacion:{}, vista:"lista", doc:null, refresco:null};
+
+function pintarCajetin(){
+  const n = Object.keys(S.entregas).length,
+        b = Object.keys(S.sesiones).filter(d => enLinea(S.sesiones[d])).length;
+  const cel = (k,v,cls="") => `<div class="cel"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`;
+  cajetin.innerHTML =
+    cel("Instrumento","IFA00117 · Corte 1 · Parte 1") +
+    cel("Docente", S.user ? esc(S.user.email) : "sin sesión") +
+    cel("Entregas", n, "gr") +
+    cel("En línea", b, "gr") +
+    cel("Banco", BANCO ? "v"+BANCO.ev.meta.version : "—");
+}
+
+/* ═══════════ sesión ═══════════ */
+function vLogin(msg){
+  marco.innerHTML = `<div class="lienzo" style="max-width:460px">
+    <h2 class="rot">Panel del docente</h2>
+    <p class="lead">Entre con la cuenta de Firebase del curso para leer las entregas y calificar.</p>
+    ${msg ? `<div class="caja ojo">${esc(msg)}</div>` : ""}
+    <div style="margin-bottom:13px"><input class="in" id="mail" type="email" placeholder="correo" autocomplete="username"></div>
+    <div style="margin-bottom:13px"><input class="in" id="pass" type="password" placeholder="contraseña" autocomplete="current-password"></div>
+    <div class="barra"><button class="b" id="entrar">Entrar</button></div>
+  </div>`;
+  const ir = async () => {
+    const b = $("#entrar"); b.disabled = true; b.textContent = "…";
+    try{ await firebase.auth().signInWithEmailAndPassword($("#mail").value.trim(), $("#pass").value); }
+    catch(e){ vLogin("No se pudo entrar: " + e.message); }
+  };
+  $("#entrar").onclick = ir;
+  $("#pass").addEventListener("keydown", e => { if(e.key === "Enter") ir(); });
+}
+
+/* ═══════════ datos ═══════════ */
+async function cargar(){
+  estado("leyendo la base…");
+  const leer = async ruta => { try{ return (await db().ref(`${NODO}/${ruta}`).once("value")).val() || {}; }
+                              catch(e){ console.warn(ruta, e); return {}; } };
+  const leerRuta = async ruta => { try{ return (await db().ref(ruta).once("value")).val() || {}; }
+                                   catch(e){ console.warn(ruta, e); return {}; } };
+  const [ent, ses, cal, asig, entR, sesR, calR] = await Promise.all([
+    leer("entregas"), leer("sesiones"), leer("calificacion"), leer("asignacion"),
+    leerRuta("diagnostico_control/parcial_c1_entregas"),
+    leerRuta("diagnostico_control/parcial_c1_sesiones"),
+    leerRuta("diagnostico_control/parcial_c1_calificacion")
+  ]);
+  // el respaldo se mezcla con lo principal: para el docente es una sola lista
+  S.entregas   = Object.assign({}, entR, ent);
+  S.sesiones   = Object.assign({}, sesR, ses);
+  S.calif      = Object.assign({}, calR, cal);
+  S.asignacion = asig;
+  Object.keys(S.calif).forEach(d => {
+    S.calif[d].ejecucion   = aMapa(S.calif[d].ejecucion,   "valor");
+    S.calif[d].observacion = aMapa(S.calif[d].observacion, "texto");
+  });
+  pintarCajetin();
+  estado("actualizado " + new Date().toLocaleTimeString("es-CO"));
+}
+
+/* ═══════════ listado ═══════════ */
+function vLista(){
+  S.vista = "lista";
+  const docs = Object.keys(S.entregas).sort((a,b) =>
+    (S.entregas[a].nombre||"").localeCompare(S.entregas[b].nombre||""));
+
+  const filas = docs.map(d => {
+    const e = S.entregas[d], c = S.calif[d], r = calcular(e, c);
+    const pend = r.pend.length;
+    return `<tr class="click" data-doc="${esc(d)}">
+      <td class="el">${esc(d)}</td>
+      <td style="font-family:var(--sans)">${esc(e.nombre||"")}</td>
+      <td>${esc(e.escenario_id)}</td>
+      <td class="num">${e.duracion_min||0}′</td>
+      <td class="num">${r.b1.toFixed(1)} / 40</td>
+      <td class="num">${r.b2.toFixed(1)} / 60</td>
+      <td class="num">${r.p2.toFixed(1)} / 100</td>
+      <td class="${pend?"no":"ok"}">${pend ? pend+" pend." : "cerrada"}</td>
+      <td>${e.cerrado_por_tiempo ? "por tiempo" : ""}</td>
+    </tr>`;
+  }).join("");
+
+  const presentes = Object.keys(S.sesiones).filter(d => !S.entregas[d] && enLinea(S.sesiones[d]));
+  const enCurso = presentes.map(d => {
+    const x = S.sesiones[d];
+    const t = x.inicio ? Math.round((ahora()-x.inicio)/60000) : 0;
+    const pct = x.avance || 0;
+    return `<tr><td class="el">${esc(d)}</td><td style="font-family:var(--sans)">${esc(x.nombre||"")}</td>
+      <td>${esc(x.escenario_id||"—")}</td><td class="num">${t}′</td>
+      <td><div class="avance"><span style="width:${pct}%"></span></div>
+          <div class="pct">${pct} % · ${x.respondidas||0} de ${x.total||9}</div></td>
+      <td>${esc(haceCuanto(x.visto))}</td></tr>`;
+  }).join("");
+
+  const asignados = Object.values(S.asignacion);
+  const reparto = BANCO.en.escenarios.map(x => {
+    const entregados = docs.filter(d => S.entregas[d].escenario_id === x.id).length;
+    const sorteados  = asignados.filter(a => a && a.escenario_id === x.id).length;
+    return `<tr><td class="el">${esc(x.id)}</td><td style="font-family:var(--sans)">${esc(x.nombre)}</td>
+      <td>${esc(x.motor)}</td><td class="num">${sorteados}</td><td class="num">${entregados}</td></tr>`;
+  }).join("");
+
+  marco.innerHTML = `<div class="lienzo">
+    <div class="barra">
+      <button class="b sec" id="rec">Actualizar</button>
+      <button class="b sec" id="csv">Exportar CSV</button>
+      <button class="b sec der" id="salir">Cerrar sesión</button>
+    </div>
+    <div class="subt">Entregas · ${docs.length}</div>
+    ${docs.length ? `<div class="scroll"><table class="dat">
+      <tr><th>Documento</th><th>Nombre</th><th>Esc.</th><th>Dur.</th><th>B1 auto</th><th>B2</th><th>Parte 2</th><th>Estado</th><th></th></tr>
+      ${filas}</table></div>`
+    : `<div class="caja">Todavía no hay entregas.</div>`}
+    <div class="subt">En línea resolviendo · ${presentes.length}</div>
+    ${enCurso ? `<div class="scroll"><table class="dat">
+      <tr><th>Documento</th><th>Nombre</th><th>Esc.</th><th>Tiempo</th><th style="width:220px">Avance</th><th>Último latido</th></tr>
+      ${enCurso}</table></div>`
+     : `<div class="caja">Nadie con el examen abierto en este momento.</div>`}
+    <div class="subt">Reparto de escenarios</div>
+    <div class="scroll"><table class="dat">
+      <tr><th>Id</th><th>Escenario</th><th>Motor</th><th>Sorteados</th><th>Entregados</th></tr>${reparto}</table></div>
+    <p class="estado">Sorteados = asignaciones reales en la base (${asignados.length} en total).</p>
+  </div>`;
+
+  clearInterval(S.refresco);
+  S.refresco = setInterval(async () => { if(S.vista === "lista"){ await cargar(); vLista(); } }, 30000);
+  marco.querySelectorAll("tr.click").forEach(tr => tr.onclick = () => { S.doc = tr.dataset.doc; vEstudiante(); window.scrollTo({top:0}); });
+  $("#rec").onclick   = async () => { await cargar(); vLista(); };
+  $("#csv").onclick   = exportarCSV;
+  $("#salir").onclick = () => firebase.auth().signOut();
+}
+
+/* ═══════════ ficha del estudiante ═══════════ */
+function vEstudiante(){
+  S.vista = "est";
+  clearInterval(S.refresco); S.refresco = null;
+  const d = S.doc, ent = S.entregas[d], cal = S.calif[d] || {ejecucion:{}, observacion:{}};
+  const E = escenario(ent.escenario_id), M = motorDe(E);
+  const r = calcular(ent, cal);
+
+  const bloque = (lista, titulo, auto) => `<div class="subt">${titulo}</div>` + lista.map(e => {
+    const a = auto ? r.auto[e.codigo] : null;
+    const marcado  = marcaDe(cal, e.codigo);
+    const efectivo = marcado != null ? marcado : (a ? nivel(a.ejec) : null);
+    const detalle = a ? a.detalle.map(x => `<div class="par">
+        <div><div class="h">${esc(x.campo)} — respuesta</div><div class="t">${esc(x.resp || "— vacío —")}</div></div>
+        <div><div class="h">clave · <span class="${x.ok?"ok":"no"}">${x.ok?"coincide":"no coincide"}</span></div><div class="t mono">${esc(x.clave)}</div></div>
+      </div>`).join("") : respuestaCruda(e, ent);
+    const rub = e.rubrica ? `<div class="rub">${[0,1,2,3].map(n=>`<b>${n}</b> ${esc(e.rubrica[n]||"")}`).join("<br>")}</div>` : "";
+    return `<div class="ev">
+      <div class="cab"><span class="cod">${esc(e.codigo)}</span><span class="tt">${esc(e.enunciado)}</span>
+        <span class="pt">${e.puntos_max} pts · ${efectivo!=null ? puntos(e, efectivo).toFixed(1) : "sin calificar"}</span></div>
+      <div class="cue">
+        ${detalle || quéRevisar(e, ent)}
+        ${a && a.resumen ? `<div class="estado">auto: ${esc(a.resumen)}${a.revisar ? " · conviene revisar a mano" : ""}</div>` : ""}
+        ${rub}
+        <div class="esc" data-cod="${esc(e.codigo)}">
+          <span class="lab">Ejecución</span>
+          ${[0,1,2,3].map(n=>`<button data-n="${n}" class="${efectivo===n?"on":""}">${n}</button>`).join("")}
+          ${a ? `<span class="auto">auto ${a.ejec}${marcado!=null && marcado!==a.ejec ? " · ajustado" : ""}</span>` : ""}
+          <input class="obs" data-obs="${esc(e.codigo)}" placeholder="observación" value="${esc((cal.observacion||{})[e.codigo]||"")}">
+        </div>
+      </div></div>`;
+  }).join("");
+
+  marco.innerHTML = `<div class="lienzo">
+    <div class="barra">
+      <button class="b sec" id="volver">← Listado</button>
+      <span class="estado" id="gd"></span>
+      <button class="b sec der" id="sortear">Sortear falla y modificación</button>
+    </div>
+    <h2 class="rot">${esc(ent.nombre)}</h2>
+    <p class="lead">Documento ${esc(d)} · ${esc(ent.correo||"")} · escenario <b>${esc(E.id)} — ${esc(E.nombre)}</b> · motor ${esc(M.id)} (I<sub>n</sub> = ${M.In_A} A)
+      · ${ent.duracion_min||0} min · enviado ${esc((ent.enviado_en||"").replace("T"," ").slice(0,16))}${ent.cerrado_por_tiempo?" · cerrado por tiempo":""}</p>
+    <div class="tot">
+      <div><div class="k">B1 digital</div><div class="v">${r.b1.toFixed(1)}<span style="font-size:13px;color:var(--tenue)"> /40</span></div></div>
+      <div><div class="k">B2 planos</div><div class="v">${r.b2.toFixed(1)}<span style="font-size:13px;color:var(--tenue)"> /60</span></div></div>
+      <div><div class="k">Parte 1</div><div class="v">${r.parte1.toFixed(1)}<span style="font-size:13px;color:var(--tenue)"> /100</span></div></div>
+      <div><div class="k">Parte 2</div><div class="v">${r.p2.toFixed(1)}<span style="font-size:13px;color:var(--tenue)"> /100</span></div></div>
+    </div>
+    ${cal.falla || cal.modificacion ? `<div class="caja ojo">
+      <b>Parte 2 · falla introducida:</b> ${esc(textoFalla(cal.falla))}<br>
+      <b>Modificación en vivo:</b> ${esc(textoMod(cal.modificacion))}</div>` : ""}
+    ${bloque(EVID.B1, "Bloque B1 — digital, autocalificado (40 pts)", true)}
+    ${bloque(EVID.B2, "Bloque B2 — planos de CADe_SIMU (60 pts)", false)}
+    ${bloque(EVID.P2, "Parte 2 — montaje en el banco (100 pts)", false)}
+  </div>`;
+
+  $("#volver").onclick  = () => { vLista(); window.scrollTo({top:0}); };
+  $("#sortear").onclick = sortearParte2;
+  marco.querySelectorAll(".esc").forEach(g => {
+    g.querySelectorAll("button").forEach(b => b.onclick = () => marcar(g.dataset.cod, +b.dataset.n));
+  });
+  marco.querySelectorAll("[data-obs]").forEach(i => i.onchange = () => observar(i.dataset.obs, i.value));
+}
+
+/* Qué tiene el docente delante cuando la evidencia no se autocalifica:
+   en el bloque B2, el archivo de CADe_SIMU que le corresponde revisar;
+   en la Parte 2, el montaje en el banco. */
+function quéRevisar(e, ent){
+  if(e.bloque === "B2"){
+    const suyos = PLANOS.filter(p => p.evid.includes(e.codigo));
+    if(!suyos.length) return `<div class="caja">Sin archivo asociado.</div>`;
+    return `<div class="caja"><div class="h" style="font:600 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin-bottom:7px">Archivo${suyos.length>1?"s":""} a revisar</div>` +
+      suyos.map(p => `<div style="font:600 13.5px var(--mono);margin-bottom:3px">` +
+        esc(`${ent.escenario_id}_SIS-${p.sis}_${p.plano}_${ent.documento}`) +
+        `</div><div style="font-size:12.5px;color:var(--tenue);margin-bottom:8px">${esc(p.det)}` +
+        (p.evid.length > 1 ? ` · el mismo plano responde por ${esc(p.evid.join(", "))}` : "") +
+        `</div>`).join("") + `</div>`;
+  }
+  return `<div class="caja">Evidencia presencial — se califica en el banco durante la Parte 2.</div>`;
+}
+
+/* Evidencias sin autocalificación: se muestra la respuesta cruda si existe */
+function respuestaCruda(e, ent){
+  const r = respuestasDe(ent)[e.codigo];
+  if(!r) return "";
+  const campos = Object.keys(r).map(k => `<div class="par uno">
+      <div><div class="h">${esc(k)}</div><div class="t">${esc(r[k] || "— vacío —")}</div></div>
+    </div>`).join("");
+  const criterio = e.clave ? `<div class="crit"><div class="h">Criterio</div><div class="t">${esc(e.clave)}</div></div>` : "";
+  return campos + criterio;
+}
+
+function textoFalla(id){
+  const f = ((BANCO.en.parte2_reduccion.falla_introducida.catalogo)||[]).find(x => x.id === id);
+  return f ? `${f.id} — ${f.falla} (síntoma: ${f.sintoma})` : "sin sortear";
+}
+function textoMod(id){
+  const v = ((BANCO.en.parte2_reduccion.modificacion_en_vivo.catalogo)||[]).find(x => x.id === id);
+  return v ? `${v.id} — ${v.peticion}` : "sin sortear";
+}
+
+/* ═══════════ escritura ═══════════ */
+async function guardarCal(parcial){
+  const d = S.doc;
+  const base = S.calif[d] || {ejecucion:{}, observacion:{}};
+  const nuevo = Object.assign(base, parcial, {
+    documento:d, actualizado_en:new Date().toISOString(),
+    calificado_por: S.user ? S.user.email : ""
+  });
+  S.calif[d] = nuevo;
+  const payload = Object.assign({}, nuevo, {
+    ejecucion:   aFilas(nuevo.ejecucion,   "valor"),
+    observacion: aFilas(nuevo.observacion, "texto")
+  });
+  const gd = $("#gd"); if(gd) gd.textContent = "guardando…";
+  /* Mismo respaldo que usa el formulario: si el nodo del parcial está denegado,
+     la nota se guarda en diagnostico_control, que las reglas vigentes permiten. */
+  try{
+    await db().ref(`${NODO}/calificacion/${d}`).update(payload);
+    if(gd) gd.textContent = "guardado";
+  }catch(e){
+    console.warn("calificación · nodo principal rechazado:", e && e.message);
+    try{
+      await db().ref(`diagnostico_control/parcial_c1_calificacion/${d}`).update(payload);
+      if(gd) gd.textContent = "guardado (respaldo)";
+    }catch(e2){
+      console.error("calificación:", e2);
+      if(gd) gd.textContent = "NO se pudo guardar: " + (e2 && e2.message);
+    }
+  }
+}
+function marcar(cod, n){
+  const cal = S.calif[S.doc] || {ejecucion:{}};
+  const ej = Object.assign({}, cal.ejecucion || {});
+  if(ej[cod] === n) delete ej[cod]; else ej[cod] = n;      // volver a pulsar devuelve el control al automático
+  const y = window.scrollY;
+  guardarCal({ejecucion:ej}).then(() => { vEstudiante(); window.scrollTo(0, y); });
+}
+function observar(cod, txt){
+  const cal = S.calif[S.doc] || {};
+  const ob = Object.assign({}, cal.observacion || {});
+  if(txt.trim()) ob[cod] = txt.trim(); else delete ob[cod];
+  guardarCal({observacion:ob});
+}
+function sortearParte2(){
+  const F = BANCO.en.parte2_reduccion.falla_introducida.catalogo;
+  const V = BANCO.en.parte2_reduccion.modificacion_en_vivo.catalogo;
+  guardarCal({
+    falla:        F[Math.floor(Math.random()*F.length)].id,
+    modificacion: V[Math.floor(Math.random()*V.length)].id
+  }).then(vEstudiante);
+}
+
+/* ═══════════ CSV ═══════════ */
+function exportarCSV(){
+  const cods = [...EVID.B1, ...EVID.B2, ...EVID.P2].map(e => e.codigo);
+  const cab = ["documento","nombre","correo","escenario","motor","duracion_min","enviado_en","B1","B2","parte1","parte2", ...cods];
+  const q = v => `"${(""+(v==null?"":v)).replace(/"/g,'""')}"`;
+  const filas = Object.keys(S.entregas).map(d => {
+    const e = S.entregas[d], c = S.calif[d], r = calcular(e, c);
+    const ej = (c && c.ejecucion) || {};
+    const notas = cods.map(cd => {
+      if(cd in ej) return ej[cd];
+      const a = r.auto[cd];
+      return a ? a.ejec : "";
+    });
+    return [d, e.nombre, e.correo, e.escenario_id, e.motor_id, e.duracion_min, e.enviado_en,
+            r.b1.toFixed(2), r.b2.toFixed(2), r.parte1.toFixed(2), r.p2.toFixed(2), ...notas].map(q).join(";");
+  });
+  const csv = "﻿" + [cab.map(q).join(";"), ...filas].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  a.download = `IFA00117_corte1_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ═══════════ arranque ═══════════ */
+firebase.auth().onAuthStateChanged(async u => {
+  S.user = u;
+  pintarCajetin();
+  if(!u){ vLogin(); return; }
+  marco.innerHTML = `<div class="lienzo"><p class="lead">Cargando…</p></div>`;
+  if(!BANCO) cargarBanco();
+  await cargar();
+  vLista();
+});
+pintarCajetin();
+</script>
+</body>
+</html>

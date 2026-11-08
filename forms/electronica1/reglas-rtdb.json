@@ -1,38 +1,46 @@
 {
-  "_comentario": [
-    "Reglas de la Realtime Database para el nodo 'electronica1'.",
-    "",
-    "IMPORTANTE: esto NO es el archivo completo de reglas del proyecto tower-ing.",
-    "Es SOLO el bloque de este juego. Hay que PEGARLO DENTRO de las reglas que ya",
-    "existen, junto a 'diagnostico_control' y las demas experiencias. Si se pega",
-    "reemplazando todo, se rompen todas las otras.",
-    "",
-    "Modelo de acceso:",
-    "  - El estudiante NO se autentica: se identifica con un hash de su cedula.",
-    "    Por eso escribe y lee solo bajo su propio hash, sin auth.",
-    "  - El listado completo (para el panel docente) solo lo lee el correo",
-    "    autorizado. Un estudiante no puede leer 'participantes' ni 'progreso'",
-    "    enteros, unicamente su propia rama.",
-    "",
-    "Antes de publicarlas: reemplazar CORREO_DEL_DOCENTE por el correo real y",
-    "darlo de alta en Firebase Auth (Authentication > Users > Add user)."
-  ],
+  "rules": {
+    ".read":  "auth != null && (auth.token.email === 'afto17@gmail.com' || auth.token.email === 'a.ferney.torres@gmail.com')",
+    ".write": "auth != null && (auth.token.email === 'afto17@gmail.com' || auth.token.email === 'a.ferney.torres@gmail.com')",
 
-  "electronica1": {
-    ".read": "auth != null && auth.token.email === 'CORREO_DEL_DOCENTE'",
-    ".write": false,
+    "$root": {
+      "$entryId": { ".write": "newData.exists() && !data.exists()" }
+    },
 
-    "participantes": {
-      "$ccHash": { ".read": true, ".write": true }
+    "diagnostico_control": {
+      "intentos": { ".read": true, "$id": { ".write": true } },
+      "$seccion": { "$id": { ".write": true } }
     },
-    "progreso": {
-      "$ccHash": { ".read": true, ".write": true }
+
+    "electronica1": {
+      "participantes": { "$ccHash": { ".read": true, ".write": true } },
+      "progreso":      { "$ccHash": { ".read": true, ".write": true } },
+      "eventos":       { "$ccHash": { ".read": true, ".write": true } },
+      "circuitos":     { "$ccHash": { ".read": true, ".write": true } }
     },
-    "eventos": {
-      "$ccHash": { ".read": true, ".write": true }
+
+    "users": {
+      "$uid": {
+        ".read":  "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
     },
-    "circuitos": {
-      "$ccHash": { ".read": true, ".write": true }
+
+    "apps": {
+      "$app": { "$seccion": { "$ccHash": { ".read": true, ".write": true } } }
+    },
+
+    "parciales": {
+      "$parcial": {
+        "asignacion": { "$est": { ".read": true, ".write": "!data.exists()" } },
+        "conteo":     { ".read": true, "$escenario": { ".write": true, ".validate": "newData.isNumber()" } },
+        "sesiones":   { "$est": { ".read": true, ".write": true } },
+        "entregas":   { "$est": { ".read": true, ".write": "!data.exists()" } }
+      }
+    },
+
+    "actividades": {
+      "$actividad": { "$seccion": { "$id": { ".write": "!data.exists()" } } }
     }
   }
 }

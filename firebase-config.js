@@ -15,6 +15,22 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
 
+// Mensajes de error en español. Firebase no distingue "correo no registrado"
+// de "contraseña incorrecta" (protección contra enumeración de correos).
+const MENSAJES_AUTH = {
+  'auth/invalid-login-credentials': 'Correo o contraseña incorrectos. Si no tienes cuenta, regístrate.',
+  'auth/invalid-credential':        'Correo o contraseña incorrectos. Si no tienes cuenta, regístrate.',
+  'auth/email-already-in-use':      'Ese correo ya está registrado. Inicia sesión.',
+  'auth/weak-password':             'La contraseña debe tener al menos 6 caracteres.',
+  'auth/invalid-email':             'El correo no es válido.',
+  'auth/missing-password':          'Escribe tu contraseña.',
+  'auth/too-many-requests':         'Demasiados intentos. Espera unos minutos.',
+  'auth/network-request-failed':    'Sin conexión. Revisa tu internet e inténtalo de nuevo.'
+};
+function mensajeAuth(error) {
+  return MENSAJES_AUTH[error.code] || 'No se pudo completar. Inténtalo de nuevo.';
+}
+
 // Función para mostrar/ocultar formularios
 function showLoginForm() {
   document.getElementById('login-form').style.display = 'block';
@@ -70,7 +86,7 @@ function registerUser(name, lastname, cedula, date, email, password) {
     })
     .catch((error) => {
       const messageElement = document.getElementById('auth-message');
-      messageElement.textContent = error.message;
+      messageElement.textContent = mensajeAuth(error);
     });
 }
 
@@ -114,7 +130,7 @@ function loginUser(email, password) {
     })
     .catch((error) => {
       const messageElement = document.getElementById('auth-message');
-      messageElement.textContent = error.message;
+      messageElement.textContent = mensajeAuth(error);
     });
 }
 
