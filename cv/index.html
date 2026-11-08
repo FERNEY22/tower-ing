@@ -323,7 +323,7 @@
           <dt>Canales</dt><dd>Industria · Formación · Docencia · Investigación · Software</dd>
           <dt>Variables</dt><dd>Datos · Energía · Software</dd>
           <dt>Muestreo</dt><dd>1 lectura / mes</dd>
-          <dt>Ventana</dt><dd>2013 → oct 2026</dd>
+          <dt>Ventana</dt><dd>2013 → nov 2026</dd>
           <dt>Resolución</dt><dd>×3 desde 2025</dd>
           <dt>Estado</dt><dd><span class="live-state">En línea</span></dd>
         </dl>
@@ -372,7 +372,7 @@
         </div>
         <div class="readout">
           <svg width="30" height="18" viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 9h6l3-7 4 14 3-9 2 2h10"/></svg>
-          <span>Última lectura: <b>oct 2026</b> · tres canales activos: docencia, investigación y software.</span>
+          <span>Última lectura: <b>nov 2026</b> · tres canales activos: docencia, investigación y software.</span>
         </div>
       </div>
 
@@ -405,6 +405,10 @@
     <div style="margin-top:40px;">
       <a href="../index.html" class="btn btn-ghost">← Volver al inicio</a>
     </div>
+
+    <p class="aviso-datos" style="margin-top:28px;max-width:72ch;font-size:12.5px;line-height:1.55;color:var(--ink-3);">
+      <b>Aviso de privacidad.</b> Esta página registra datos técnicos de cada visita: fecha, ciudad y país aproximados, sitio de procedencia, tipo de dispositivo, idioma del navegador y una IP parcial. Se usan solo para saber cuándo y desde dónde se consulta esta hoja de vida; no incluyen nombres ni correos y no se usan con fines publicitarios. Puedes pedir la consulta o eliminación de tu registro escribiendo a <a href="mailto:a.ferney.torres@gmail.com">a.ferney.torres@gmail.com</a>. Tratamiento conforme a la Ley 1581 de 2012.
+    </p>
   </main>
 
   <!-- Drawer de detalle -->
@@ -514,12 +518,15 @@ const ITEMS = [
    enlaces:[["Capítulo en Editora Artemis","https://editoraartemis.com.br/catalogo/post/investigacion-y-aplicacion-de-energias-limpias-a-traves-de-energia-solar-en-la-ciudad-de-neiva"]]},
   {t:"inv", en:[2026,7], fecha:"2026", titulo:"2 manuscritos + 2 ponencias", org:"IJGE · AmITIC · ICEO LATAM · UNIMINUTO",
    puntos:["Suministro híbrido eólico-solar para bombas electrosumergibles en la Orinoquía colombiana. International Journal of Green Energy (sometido el 15 jul 2026).","Visor WebGIS de código abierto para degradación del suelo y biodiversidad en Sotaquirá. AmITIC & TEDUCA 2026 (aceptado).","Ponente invitado: programa AWAQ Biotech, 2.º Congreso Internacional de Organizaciones Ambientales ICEO LATAM.","Ponente: plataforma web de inmuebles con geolocalización y lenguaje natural, Mesa Sur Pacífico 2026 (UNIMINUTO)."]},
+  {t:"inv", en:[2026,11], fecha:"nov 2026", titulo:"Ponencia AmITIC-TEDUCA 2026", org:"WebGIS de Sotaquirá",
+   puntos:["An Open-Source WebGIS for Soil Degradation and Biodiversity Monitoring in the Colombian Andes.","Ponencia con July Steffany González López: del dato oficial al visor comunitario de Sotaquirá (Boyacá)."],
+   enlaces:[["Ver la ponencia","../proyectos/biomo/ponencia-amitic2026/"]]},
 
   /* ---- Software (fechas de GitHub) ---- */
-  {t:"sw", ini:[2025,1], fin:[2026,10], curso:true, fecha:"2025 – hoy", titulo:"Geovisor Sotaquirá", org:"WebGIS de suelo y biodiversidad",
+  {t:"sw", ini:[2025,1], fin:[2026,11], curso:true, fecha:"2025 – hoy", titulo:"Geovisor Sotaquirá", org:"WebGIS de suelo y biodiversidad",
    puntos:["Visor WebGIS de código abierto que integra degradación del suelo y biodiversidad para monitoreo comunitario en Sotaquirá (Boyacá).","Base de dos trabajos de grado dirigidos y de un manuscrito aceptado en AmITIC 2026."],
    enlaces:[["Repositorio","https://github.com/FERNEY22/geovisor-sotaquira"]]},
-  {t:"sw", ini:[2025,9], fin:[2026,10], curso:true, fecha:"sep 2025 – hoy", titulo:"tower-ing.com", org:"Portal de ingeniería analítica",
+  {t:"sw", ini:[2025,9], fin:[2026,11], curso:true, fecha:"sep 2025 – hoy", titulo:"tower-ing.com", org:"Portal de ingeniería analítica",
    puntos:["Full-stack con base de datos en tiempo real (Firebase) y arquitectura modular en JavaScript.","Tableros analíticos con KPI cards, filtros de fecha y hora y múltiples tipos de gráficos."],
    enlaces:[["tower-ing.com","https://tower-ing.com/"],["Repositorio","https://github.com/FERNEY22/tower-ing"]]},
   {t:"sw", ini:[2025,10], fin:[2026,6], fecha:"oct 2025 – jun 2026", titulo:"FERIM", org:"Gestión de propiedades y operaciones",
@@ -566,6 +573,7 @@ const PROYECTOS = [
 const PUBS = [
   {y:"2026", t:"Hybrid Wind–Solar Energy Supply for Electrical Submersible Pumps in Oil Extraction: Case Studies of High- and Low-Rate Wells in the Colombian Orinoquia", v:"International Journal of Green Energy", st:["Sometido","wait"]},
   {y:"2026", t:"Open-Source WebGIS Viewer for Integrating Soil Degradation and Biodiversity Information in an Andean Territory", v:"AmITIC & TEDUCA 2026", st:["Aceptado","ok"]},
+  {y:"2026", t:"An Open-Source WebGIS for Soil Degradation and Biodiversity Monitoring in the Colombian Andes", v:"AmITIC-TEDUCA 2026", st:["Ponencia","ok"], url:"../proyectos/biomo/ponencia-amitic2026/", btn:"Ver la ponencia"},
   {y:"2023", t:"Viabilidad técnica y económica de un sistema híbrido eólico-solar para la extracción de hidrocarburos en Colombia", v:"Tesis de maestría · Universidad de la Costa", url:"https://hdl.handle.net/11323/10635", lbl:"Repositorio CUC", cita:"hdl 11323/10635"},
   {y:"2022", t:"Investigación y aplicación de energías limpias a través de energía solar en la ciudad de Neiva", v:"Capítulo de libro · Editora Artemis", url:"https://editoraartemis.com.br/catalogo/post/investigacion-y-aplicacion-de-energias-limpias-a-traves-de-energia-solar-en-la-ciudad-de-neiva", lbl:"Editora Artemis", cita:"DOI 10.37572/EdArt_29052259015"},
   {y:"2020", t:"Aprendizaje basado en problemas y su utilidad en la difusión de energías renovables", v:"Revista ITEES 4(4)", url:"https://revistaseidec.com/index.php/ITEES/article/view/285", lbl:"Revista ITEES", cita:"DOI 10.34893/itees.v4i4.285"},
@@ -594,7 +602,7 @@ const TESIS = [
    ============================================================ */
 const Y0 = 2013, NM = 14*12, A = 6, B = 18;
 const SPLIT = (2025-Y0)*12;
-const HOY = (2026-Y0)*12 + 9;            // octubre 2026
+const HOY = (2026-Y0)*12 + 10;           // noviembre 2026
 const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const idx = ([y,m]) => (y-Y0)*12 + (m-1);
 const ypos = i => i <= SPLIT ? i*A : SPLIT*A + (i-SPLIT)*B;
@@ -629,7 +637,7 @@ for(let i=0;i<=NM;i+=3){
 }
 grid += `<div class="scale-band" style="top:${ypos(SPLIT)}px;height:${H+FONDO-ypos(SPLIT)}px"></div>`;
 grid += `<div class="planned" style="top:${ypos(HOY+1)}px;height:${H+FONDO-ypos(HOY+1)}px"></div>`;
-grid += `<div class="now" style="top:${ypos(HOY+1)}px"><span>HOY · oct 2026</span></div>`;
+grid += `<div class="now" style="top:${ypos(HOY+1)}px"><span>HOY · nov 2026</span></div>`;
 cols.insertAdjacentHTML("beforeend", grid);
 
 /* Regla de tiempo */
@@ -815,9 +823,42 @@ document.getElementById("projects").innerHTML = PROYECTOS.map((p,i)=>`
 document.getElementById("pubs").innerHTML = PUBS.map(p=>`
   <li><span class="y">${p.y}</span><span><span class="t">${esc(p.t)}</span>. <span class="v">${esc(p.v)}</span>
   ${p.st?`<span class="st ${p.st[1]}">${p.st[0]}</span>`:""}
-  ${p.url?`<span class="acc"><a href="${esc(p.url)}" target="_blank" rel="noopener">Leer en ${esc(p.lbl)} ↗</a>${p.cita?`<span class="cita">${esc(p.cita)}</span>`:""}</span>`:""}</span></li>`).join("");
+  ${p.url?`<span class="acc"><a href="${esc(p.url)}" target="_blank" rel="noopener">${p.btn?esc(p.btn):"Leer en "+esc(p.lbl)} ↗</a>${p.cita?`<span class="cita">${esc(p.cita)}</span>`:""}</span>`:""}</span></li>`).join("");
 document.getElementById("thesis").innerHTML = TESIS.map(([t,y],i)=>`
   <li><span class="k">${String(i+1).padStart(2,"0")}</span><span>${esc(t)}<small>${y}</small></span></li>`).join("");
+</script>
+<script>
+/* Aviso de visita: una vez cada 30 min por navegador. Para no contarte a ti mismo,
+   abre el CV una vez con ?yo=1 (y con ?yo=0 vuelves a contar). */
+(function(){
+  try{
+    const q = new URLSearchParams(location.search);
+    if(q.get("yo")==="1") localStorage.setItem("cv_yo","1");
+    if(q.get("yo")==="0") localStorage.removeItem("cv_yo");
+    if(localStorage.getItem("cv_yo")==="1") return;
+    const ult = +localStorage.getItem("cv_visita_t") || 0;
+    if(Date.now() - ult < 30*60*1000) return;
+    localStorage.setItem("cv_visita_t", String(Date.now()));
+  }catch(e){}
+  const enviar = () => fetch("/api/cv-visita", {
+    method:"POST", keepalive:true, headers:{"content-type":"application/json"},
+    body: JSON.stringify({
+      ref: document.referrer || "",
+      utm: new URLSearchParams(location.search).get("utm_source") || "",
+      idioma: navigator.language || "",
+      pantalla: screen.width + "x" + screen.height,
+      zona: (Intl.DateTimeFormat().resolvedOptions().timeZone) || "",
+      movil: matchMedia("(pointer:coarse)").matches,
+      webdriver: navigator.webdriver === true
+    })
+  }).catch(()=>{});
+  /* Solo cuenta si la página estuvo visible 3 s: descarta precargas y pestañas abiertas sin mirar. */
+  let t = null;
+  const armar = () => { if(document.visibilityState==="visible" && !t) t = setTimeout(enviar, 3000); };
+  const desarmar = () => { if(document.visibilityState!=="visible" && t){ clearTimeout(t); t = null; } };
+  document.addEventListener("visibilitychange", () => { armar(); desarmar(); });
+  armar();
+})();
 </script>
 </body>
 </html>

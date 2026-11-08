@@ -31,6 +31,7 @@
   <script src="render-lab-electro.js"></script>
   <script src="render-lab-automa-v2.js"></script>
   <script src="render-lab-electro-v2.js"></script>
+  <script src="render-cv-visitas.js"></script>
   <style>
     /* ===== Dashboard · sistema v3 "Papel & Voltaje" =====
        Solo presentación. Se conservan TODOS los selectores que usan
@@ -261,6 +262,7 @@
     <option value="labElectro">Quiz Laboratorio · Electrónica</option>
     <option value="labAutomaV2">Quiz Laboratorio v2 · Automatización de Procesos</option>
     <option value="labElectroV2">Quiz Laboratorio v2 · Electrónica</option>
+    <option value="cvVisitas">Visitas a la hoja de vida</option>
   </select>
   <span class="badge-count" id="badge-count"></span>
 </div>
@@ -658,6 +660,8 @@
 
 <div class="vista" id="vista-labAutomaV2"></div>
 
+<div class="vista" id="vista-cvVisitas"></div>
+
 <div class="vista" id="vista-labElectroV2"></div>
 
 </main>
@@ -685,7 +689,7 @@
     roles: {}, geo: {}, ac: {},
     mate: {}, taller: {}, taller10: {}, yuncarEnc: {}, yuncarEnt: {},
     flipflopsSD: {}, coordenadasGeo: {}, percepcion: {}, encuestas: [], ingles: {},
-    labAutoma: {}, labElectro: {}, labAutomaV2: {}, labElectroV2: {}
+    labAutoma: {}, labElectro: {}, labAutomaV2: {}, labElectroV2: {}, cvVisitas: {}
   };
   let CHARTS       = {};
   let vistaActiva  = '';
@@ -775,6 +779,7 @@
     if(vistaActiva==='labElectro')   renderLabElectro();
     if(vistaActiva==='labElectroV2') renderLabElectroV2();
   });
+  db.ref('visitas_cv').on('value', snap => { DATA.cvVisitas = snap.val()||{}; if(vistaActiva==='cvVisitas') renderCvVisitas(); });
 
 
   }
@@ -808,7 +813,8 @@
       labAutoma: [renderLabAutoma, DATA.labAutoma],
       labElectro: [renderLabElectro, DATA.labElectro],
       labAutomaV2: [renderLabAutomaV2, DATA.labAutomaV2],
-      labElectroV2: [renderLabElectroV2, DATA.labElectroV2]
+      labElectroV2: [renderLabElectroV2, DATA.labElectroV2],
+      cvVisitas: [renderCvVisitas, DATA.cvVisitas]
     };
     if (MAP[sel]) {
       MAP[sel][0]();
