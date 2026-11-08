@@ -182,6 +182,20 @@ const proyectos = [
     link: "electronica-integrador/",
     destacado: true,
     variante: "electro"
+  },
+  {
+    id: "ponencia-amitic2026",
+    titulo: "Ponencia AmITIC-TEDUCA 2026 — WebGIS de Sotaquirá",
+    estado: "Finalizado",
+    fecha: "",
+    periodo: "2026",
+    descripcion:
+      "Ponencia internacional sobre un WebGIS de código abierto para el monitoreo de la degradación del suelo y la biodiversidad en los Andes colombianos, con el geovisor de Sotaquirá como caso.",
+    tecnologias: ["AmITIC-TEDUCA", "WebGIS", "QGIS", "Leaflet"],
+    link: "biomo/ponencia-amitic2026/",
+    boton: "Ver ponencia",
+    destacado: true,
+    variante: "geo"
   }
 
   // =====================================================
