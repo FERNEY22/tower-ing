@@ -519,6 +519,9 @@ table.io tr.mod td{color:var(--muted)}
           <textarea id="ex-text" spellcheck="false"></textarea>
           <div class="row">
             <button class="btn" id="ex-copy">Copiar</button>
+            <button class="btn" id="ex-down">Exportar .json</button>
+            <button class="btn" id="ex-file">Importar archivo…</button>
+            <input type="file" id="ex-file-in" accept=".json,application/json,.txt" hidden>
             <button class="btn primary" id="ex-load">Cargar este programa</button>
             <span class="hint" id="ex-msg" style="font-size:.84rem;color:var(--muted)"></span>
           </div>
@@ -3689,6 +3692,16 @@ $('ex-copy').addEventListener('click',()=>{ REG.log('exportar',{});
   if(p) p.then(()=>{exMsg.textContent='Copiado.';},()=>{exText.select();exMsg.textContent='Texto seleccionado: cópialo con Ctrl+C.';});
   else {exText.select();exMsg.textContent='Texto seleccionado: cópialo con Ctrl+C.';}
 });
+$('ex-down').addEventListener('click',()=>{ REG.log('exportar',{});
+  const fn=`PROGRAMA_${stamp()}.json`;
+  bajarArchivo({filename:fn,data:exText.value||exportJSON()}); exMsg.textContent='Descargado: '+fn;
+});
+const exFileIn=$('ex-file-in');
+$('ex-file').addEventListener('click',()=>{exFileIn.value=''; exFileIn.click();});
+exFileIn.addEventListener('change',()=>{
+  const f=exFileIn.files&&exFileIn.files[0]; if(!f) return;
+  f.text().then(t=>{exText.value=t; $('ex-load').click();},()=>{exMsg.textContent='No se pudo leer el archivo.';});
+});
 $('ex-load').addEventListener('click',()=>{
   try{
     const p=JSON.parse(exText.value);
@@ -4043,12 +4056,19 @@ function sheet(parts){
   return c;
 }
 const toBlob=c=>new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('No se pudo crear la imagen.')),'image/png'));
-let downloads=null;
-if(window.claude&&window.claude.use) window.claude.use('downloads').then(d=>{downloads=d;}).catch(()=>{});
+/* Descarga directa del navegador (funciona local y en tower-ing.com) */
+function bajarArchivo(f){
+  const tipo=/\.json$/i.test(f.filename)?'application/json':/\.txt$/i.test(f.filename)?'text/plain;charset=utf-8':'application/octet-stream';
+  const blob=f.data instanceof Blob?f.data:new Blob([f.data],{type:tipo});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=f.filename; a.style.display='none';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+const downloads={ save:async f=>{ bajarArchivo(f); await new Promise(r=>setTimeout(r,400)); } };
 $('save-go').addEventListener('click',async()=>{ REG.log('guardar',{});
   const want=k=>$('sv-'+k).checked;
   const sep=$('sv-sep').checked;
-  if(!downloads){ saveMsg.textContent='Esta vista no permite descargar archivos. Abre la página en claude.ai; mientras tanto puedes copiar el programa desde “Exportar / importar”.'; return; }
   const st=stamp(), files=[];
   try{
     saveMsg.textContent='Preparando…';
@@ -4065,7 +4085,7 @@ $('save-go').addEventListener('click',async()=>{ REG.log('guardar',{});
     if(!files.length){saveMsg.textContent='Marca al menos una opción.';return;}
     const ok=[];
     for(let i=0;i<files.length;i++){
-      saveMsg.textContent=`Confirma la descarga ${i+1} de ${files.length}: ${files[i].filename}`;
+      saveMsg.textContent=`Descargando ${i+1} de ${files.length}: ${files[i].filename}`;
       try{ await downloads.save(files[i]); ok.push(files[i].filename); }
       catch(e){ if(e&&e.code==='declined'){continue;} if(e&&e.code==='rate_limited'){await new Promise(r=>setTimeout(r,1500)); i--; continue;} throw e; }
     }
